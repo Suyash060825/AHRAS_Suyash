@@ -1,0 +1,18 @@
+% AHRAS Publication Results Table
+\begin{table}[ht]
+\centering
+\caption{AHRAS Multi-Modal Threat Detection Performance across OCSF Schema Classes}
+\label{tab:ahras_results}
+\begin{tabular}{l l c c c c}
+\hline
+\textbf{Threat Scenario} & \textbf{OCSF Class} & \textbf{Precision} & \textbf{Recall} & \textbf{F1-Score} & \textbf{Latency (ms)} \\
+\hline
+Network: Port Scanning & network_activity & 1.000 & 1.000 & 1.000 & 40.97 \\
+Network: SYN Flood & network_activity & 1.000 & 1.000 & 1.000 & 40.78 \\
+Network: SSH Brute Force & network_activity & 1.000 & 1.000 & 1.000 & 41.34 \\
+Host File: Ransomware Entropy & file_activity & 1.000 & 1.000 & 1.000 & 39.89 \\
+Host Process: Credential Dump & process_activity & 1.000 & 1.000 & 1.000 & 39.27 \\
+Cloud API: Defense Evasion & cloud_api & 1.000 & 1.000 & 1.000 & 38.27 \\
+\hline
+\end{tabular}
+\end{table}
