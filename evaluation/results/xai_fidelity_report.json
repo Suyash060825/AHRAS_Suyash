@@ -1,0 +1,65 @@
+{
+  "targeted_scenarios": [
+    {
+      "scenario": "External Attacker (Signature + ML)",
+      "risk_score": 0.7000000000000001,
+      "reconstructed_score": 0.7,
+      "reconstruction_error": 1.1102230246251565e-16,
+      "is_faithful": true,
+      "fap": 1.0,
+      "far": 0.5
+    },
+    {
+      "scenario": "Benign Internal Host (Clean)",
+      "risk_score": 0.0,
+      "reconstructed_score": 0.0,
+      "reconstruction_error": 0.0,
+      "is_faithful": true,
+      "fap": null,
+      "far": null
+    },
+    {
+      "scenario": "Ransomware Mass Encryption",
+      "risk_score": 1.0,
+      "reconstructed_score": 1.0,
+      "reconstruction_error": 0.0,
+      "is_faithful": true,
+      "fap": 1.0,
+      "far": 0.4
+    },
+    {
+      "scenario": "Historical Recidivism Repeat IP",
+      "risk_score": 0.46499999999999997,
+      "reconstructed_score": 0.46499999999999997,
+      "reconstruction_error": 0.0,
+      "is_faithful": true,
+      "fap": 1.0,
+      "far": 0.5
+    },
+    {
+      "scenario": "Cloud Privilege Escalation",
+      "risk_score": 0.948,
+      "reconstructed_score": 0.948,
+      "reconstruction_error": 0.0,
+      "is_faithful": true,
+      "fap": 1.0,
+      "far": 0.5
+    },
+    {
+      "scenario": "Maximal Coordinated Assault (Capped)",
+      "risk_score": 1.0,
+      "reconstructed_score": 1.0,
+      "reconstruction_error": 0.0,
+      "is_faithful": true,
+      "fap": 1.0,
+      "far": 0.4
+    }
+  ],
+  "fuzz_sweep": {
+    "n_samples": 200,
+    "max_error": 2.220446049250313e-16,
+    "mean_error": 1.6237011735142913e-17,
+    "cases_faithful": 200,
+    "tolerance": 0.01
+  }
+}

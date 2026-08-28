@@ -1,0 +1,365 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>AHRAS — Adaptive Security Operations Center (SOC)</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=JetBrains+Mono:wght@400;500;700&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --bg-dark: #090d16;
+            --card-bg: rgba(18, 26, 43, 0.75);
+            --card-border: rgba(255, 255, 255, 0.08);
+            --accent-cyan: #00f2fe;
+            --accent-blue: #4facfe;
+            --accent-red: #ff4b4b;
+            --accent-amber: #ffb703;
+            --accent-green: #00e676;
+            --text-main: #f1f5f9;
+            --text-muted: #94a3b8;
+        }
+
+        * { box-sizing: border-box; margin: 0; padding: 0; }
+        body {
+            font-family: 'Inter', sans-serif;
+            background: var(--bg-dark);
+            color: var(--text-main);
+            min-height: 100vh;
+            padding: 24px;
+            background-image: 
+                radial-gradient(at 0% 0%, rgba(0, 242, 254, 0.08) 0px, transparent 50%),
+                radial-gradient(at 100% 100%, rgba(79, 172, 254, 0.08) 0px, transparent 50%);
+        }
+
+        /* Header Navigation */
+        header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 16px 24px;
+            background: var(--card-bg);
+            backdrop-filter: blur(12px);
+            border: 1px solid var(--card-border);
+            border-radius: 16px;
+            margin-bottom: 24px;
+            box-shadow: 0 8px 32px rgba(0,0,0,0.3);
+        }
+
+        .logo-group {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+
+        .logo-icon {
+            width: 40px;
+            height: 40px;
+            background: linear-gradient(135deg, var(--accent-cyan), var(--accent-blue));
+            border-radius: 10px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: 700;
+            color: #090d16;
+            font-size: 20px;
+        }
+
+        .logo-text h1 { font-size: 20px; font-weight: 700; letter-spacing: 0.5px; }
+        .logo-text p { font-size: 12px; color: var(--text-muted); }
+
+        .status-badge {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            padding: 6px 14px;
+            background: rgba(0, 230, 118, 0.1);
+            border: 1px solid var(--accent-green);
+            border-radius: 20px;
+            color: var(--accent-green);
+            font-size: 13px;
+            font-weight: 500;
+        }
+
+        .pulse-dot {
+            width: 8px;
+            height: 8px;
+            background: var(--accent-green);
+            border-radius: 50%;
+            box-shadow: 0 0 10px var(--accent-green);
+            animation: pulse 1.5s infinite;
+        }
+
+        @keyframes pulse {
+            0% { opacity: 1; transform: scale(1); }
+            50% { opacity: 0.4; transform: scale(1.2); }
+            100% { opacity: 1; transform: scale(1); }
+        }
+
+        /* Metric Grid */
+        .metrics-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+            gap: 16px;
+            margin-bottom: 24px;
+        }
+
+        .metric-card {
+            background: var(--card-bg);
+            backdrop-filter: blur(12px);
+            border: 1px solid var(--card-border);
+            border-radius: 16px;
+            padding: 20px;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .metric-card::before {
+            content: '';
+            position: absolute;
+            top: 0; left: 0; width: 4px; height: 100%;
+            background: linear-gradient(to bottom, var(--accent-cyan), var(--accent-blue));
+        }
+
+        .metric-title { font-size: 13px; color: var(--text-muted); text-transform: uppercase; letter-spacing: 0.8px; }
+        .metric-value { font-size: 32px; font-weight: 700; margin-top: 8px; font-family: 'JetBrains Mono', monospace; }
+
+        /* Main Content Layout */
+        .dashboard-layout {
+            display: grid;
+            grid-template-columns: 2fr 1fr;
+            gap: 24px;
+        }
+
+        .card {
+            background: var(--card-bg);
+            backdrop-filter: blur(12px);
+            border: 1px solid var(--card-border);
+            border-radius: 16px;
+            padding: 24px;
+            box-shadow: 0 8px 32px rgba(0,0,0,0.3);
+        }
+
+        .card-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 20px;
+            padding-bottom: 12px;
+            border-bottom: 1px solid var(--card-border);
+        }
+
+        .card-title { font-size: 16px; font-weight: 600; color: var(--text-main); }
+
+        /* Threat Feed Table */
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            font-size: 14px;
+        }
+
+        th {
+            text-align: left;
+            padding: 12px;
+            color: var(--text-muted);
+            font-weight: 500;
+            border-bottom: 1px solid var(--card-border);
+            text-transform: uppercase;
+            font-size: 12px;
+        }
+
+        td {
+            padding: 14px 12px;
+            border-bottom: 1px solid rgba(255,255,255,0.03);
+            font-family: 'JetBrains Mono', monospace;
+        }
+
+        .badge-critical { padding: 4px 10px; background: rgba(255, 75, 75, 0.15); border: 1px solid var(--accent-red); color: var(--accent-red); border-radius: 6px; font-size: 12px; font-weight: 600; }
+        .badge-high { padding: 4px 10px; background: rgba(255, 183, 3, 0.15); border: 1px solid var(--accent-amber); color: var(--accent-amber); border-radius: 6px; font-size: 12px; font-weight: 600; }
+        .badge-info { padding: 4px 10px; background: rgba(79, 172, 254, 0.15); border: 1px solid var(--accent-blue); color: var(--accent-blue); border-radius: 6px; font-size: 12px; font-weight: 600; }
+
+        .btn-action {
+            padding: 6px 14px;
+            background: linear-gradient(135deg, var(--accent-cyan), var(--accent-blue));
+            border: none;
+            border-radius: 8px;
+            color: #090d16;
+            font-weight: 600;
+            font-size: 12px;
+            cursor: pointer;
+            transition: transform 0.2s;
+        }
+
+        .btn-action:hover { transform: translateY(-2px); }
+
+        /* Sidebar Panels */
+        .mitre-list {
+            display: flex;
+            flex-direction: column;
+            gap: 12px;
+        }
+
+        .mitre-item {
+            background: rgba(255,255,255,0.02);
+            border: 1px solid var(--card-border);
+            padding: 12px;
+            border-radius: 10px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .mitre-code { font-family: 'JetBrains Mono', monospace; color: var(--accent-cyan); font-weight: 600; }
+
+        @media (max-width: 900px) {
+            .dashboard-layout { grid-template-columns: 1fr; }
+        }
+    </style>
+</head>
+<body>
+
+    <!-- Header -->
+    <header>
+        <div class="logo-group">
+            <div class="logo-icon">A</div>
+            <div class="logo-text">
+                <h1>AHRAS SOC Operations</h1>
+                <p>Adaptive Hybrid Risk-Aware Security Framework v4.0</p>
+            </div>
+        </div>
+        <div class="status-badge">
+            <div class="pulse-dot"></div>
+            SYSTEM OPERATIONAL
+        </div>
+    </header>
+
+    <!-- Operational Metrics -->
+    <div class="metrics-grid">
+        <div class="metric-card">
+            <div class="metric-title">Tracked Entities</div>
+            <div class="metric-value" id="val-entities">1,420</div>
+        </div>
+        <div class="metric-card">
+            <div class="metric-title">Events Scored</div>
+            <div class="metric-value" id="val-events">452,890</div>
+        </div>
+        <div class="metric-card">
+            <div class="metric-title">Active Mitigations</div>
+            <div class="metric-value" id="val-mitigations" style="color: var(--accent-cyan);">14</div>
+        </div>
+        <div class="metric-card">
+            <div class="metric-title">Staged Approvals</div>
+            <div class="metric-value" id="val-pending" style="color: var(--accent-amber);">2</div>
+        </div>
+    </div>
+
+    <!-- Main Layout -->
+    <div class="dashboard-layout">
+        <!-- Live Threat Feed -->
+        <div class="card">
+            <div class="card-header">
+                <div class="card-title">🚨 Live Multi-Modal Threat Feed</div>
+                <button class="btn-action" onclick="fetchAlerts()">Refresh Feed</button>
+            </div>
+            <table>
+                <thead>
+                    <tr>
+                        <th>Time</th>
+                        <th>Target Entity</th>
+                        <th>Class</th>
+                        <th>Severity</th>
+                        <th>Risk Score</th>
+                        <th>MITRE</th>
+                        <th>Action</th>
+                    </tr>
+                </thead>
+                <tbody id="threat-feed">
+                    <tr>
+                        <td>15:45:12</td>
+                        <td>192.168.1.50</td>
+                        <td>file_activity</td>
+                        <td><span class="badge-critical">CRITICAL</span></td>
+                        <td>0.962</td>
+                        <td>T1486</td>
+                        <td><button class="btn-action">Isolated</button></td>
+                    </tr>
+                    <tr>
+                        <td>15:44:30</td>
+                        <td>workstation-02</td>
+                        <td>process_activity</td>
+                        <td><span class="badge-high">HIGH</span></td>
+                        <td>0.784</td>
+                        <td>T1059</td>
+                        <td><button class="btn-action">Approve</button></td>
+                    </tr>
+                    <tr>
+                        <td>15:42:01</td>
+                        <td>alice@corp.com</td>
+                        <td>cloud_api</td>
+                        <td><span class="badge-info">INFO</span></td>
+                        <td>0.210</td>
+                        <td>T1078</td>
+                        <td><button class="btn-action" style="background: transparent; color: var(--text-muted); border: 1px solid var(--card-border);">Log</button></td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+
+        <!-- Sidebar / MITRE ATT&CK Matrix -->
+        <div class="card">
+            <div class="card-header">
+                <div class="card-title">🛡️ Active MITRE ATT&CK Matrix</div>
+            </div>
+            <div class="mitre-list">
+                <div class="mitre-item">
+                    <div>
+                        <div class="mitre-code">T1486</div>
+                        <div style="font-size: 12px; color: var(--text-muted);">Data Encrypted for Impact</div>
+                    </div>
+                    <span class="badge-critical">5 Hits</span>
+                </div>
+                <div class="mitre-item">
+                    <div>
+                        <div class="mitre-code">T1059</div>
+                        <div style="font-size: 12px; color: var(--text-muted);">Command & Scripting Interpreter</div>
+                    </div>
+                    <span class="badge-high">3 Hits</span>
+                </div>
+                <div class="mitre-item">
+                    <div>
+                        <div class="mitre-code">T1048</div>
+                        <div style="font-size: 12px; color: var(--text-muted);">Exfiltration Over Alternative Protocol</div>
+                    </div>
+                    <span class="badge-high">2 Hits</span>
+                </div>
+                <div class="mitre-item">
+                    <div>
+                        <div class="mitre-code">T1078</div>
+                        <div style="font-size: 12px; color: var(--text-muted);">Valid Accounts / Peer Anomaly</div>
+                    </div>
+                    <span class="badge-info">8 Hits</span>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        async function fetchMetrics() {
+            try {
+                const res = await fetch('/metrics');
+                if (res.ok) {
+                    const data = await res.json();
+                    document.getElementById('val-entities').innerText = data.tracked_entities.toLocaleString();
+                    document.getElementById('val-events').innerText = data.total_events_scored.toLocaleString();
+                    document.getElementById('val-mitigations').innerText = data.active_mitigations;
+                    document.getElementById('val-pending').innerText = data.pending_approvals;
+                }
+            } catch (e) {
+                console.log('Using static demo metrics');
+            }
+        }
+
+        setInterval(fetchMetrics, 3000);
+        fetchMetrics();
+    </script>
+</body>
+</html>

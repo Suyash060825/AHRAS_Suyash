@@ -1,0 +1,154 @@
+{
+  "timestamp": "2026-08-28 17:58:45 UTC",
+  "1_detector_ablation": {
+    "1_Signature_Only": {
+      "accuracy": 0.8107,
+      "precision": 0.6254,
+      "recall": 0.9655,
+      "f1": 0.7591,
+      "auc": 0.8755,
+      "false_positive_rate": 0.2586,
+      "detection_rate": 0.9655,
+      "brier_score": 0.1533,
+      "ece": 0.1336
+    },
+    "2_ML_Ensemble_Only": {
+      "accuracy": 0.309,
+      "precision": 0.309,
+      "recall": 1.0,
+      "f1": 0.4721,
+      "auc": 0.9068,
+      "false_positive_rate": 1.0,
+      "detection_rate": 1.0,
+      "brier_score": 0.3833,
+      "ece": 0.4871
+    },
+    "3_Statistical_Only": {
+      "accuracy": 0.6913,
+      "precision": 1.0,
+      "recall": 0.0011,
+      "f1": 0.0022,
+      "auc": 0.7351,
+      "false_positive_rate": 0.0,
+      "detection_rate": 0.0011,
+      "brier_score": 0.2567,
+      "ece": 0.2765
+    },
+    "4_Full_Hybrid_Ensemble": {
+      "accuracy": 0.8107,
+      "precision": 0.6254,
+      "recall": 0.9655,
+      "f1": 0.7591,
+      "auc": 0.9624,
+      "false_positive_rate": 0.2586,
+      "detection_rate": 0.9655,
+      "brier_score": 0.1529,
+      "ece": 0.192
+    }
+  },
+  "2_trust_ablation": {
+    "Static_Trust_Constant": {
+      "accuracy": 0.786,
+      "precision": 0.5942,
+      "recall": 0.9698,
+      "f1": 0.7369,
+      "auc": 0.8849,
+      "false_positive_rate": 0.2962,
+      "detection_rate": 0.9698,
+      "brier_score": 0.1563,
+      "ece": 0.1508
+    },
+    "Dynamic_Trust_Decay": {
+      "accuracy": 0.7763,
+      "precision": 0.5819,
+      "recall": 0.9806,
+      "f1": 0.7304,
+      "auc": 0.8993,
+      "false_positive_rate": 0.315,
+      "detection_rate": 0.9806,
+      "brier_score": 0.1571,
+      "ece": 0.1919
+    }
+  },
+  "3_historical_risk": {
+    "repeat_offenders_mean_boost": 0.15,
+    "one_off_attackers_mean_boost": 0.0,
+    "recidivism_discrimination_gain": 0.15
+  },
+  "4_graph_correlation": {
+    "normal_path_risk": 1.0,
+    "lateral_movement_risk": 1.0,
+    "lateral_movement_detected": true
+  },
+  "5_threat_intel": {
+    "known_ioc_match_count": 1,
+    "known_ioc_threat_score": 0.95,
+    "unknown_ioc_threat_score": 0.0
+  },
+  "6_xai_fidelity": {
+    "total_checked": 100,
+    "mean_error": 0.0,
+    "max_error": 0.0,
+    "fidelity_rate": 1.0,
+    "mean_fap": 1.0,
+    "mean_far": 0.5,
+    "mean_faf1": 0.6667
+  },
+  "7_forecasting": {
+    "escalating_mae": 0.0,
+    "escalating_rmse": 0.0,
+    "stable_control_mae": 0.022,
+    "early_warning_lead_time_events": 2
+  },
+  "8_honeypot_feedback": {
+    "lure_deployed": true,
+    "interaction_caught": true,
+    "zero_false_positive_property": true
+  },
+  "9_response_automation": {
+    "actions_executed": 1,
+    "action_type": "ISOLATE_HOST",
+    "time_to_mitigation_ms": 0.047
+  },
+  "10_weight_sensitivity": {
+    "Sig_Biased": {
+      "accuracy": 0.7977,
+      "precision": 0.6088,
+      "recall": 0.9655,
+      "f1": 0.7468,
+      "auc": 0.8286,
+      "false_positive_rate": 0.2774,
+      "detection_rate": 0.9655,
+      "brier_score": 0.183,
+      "ece": 0.2107
+    },
+    "Balanced_Production": {
+      "accuracy": 0.7567,
+      "precision": 0.5615,
+      "recall": 0.9698,
+      "f1": 0.7112,
+      "auc": 0.8067,
+      "false_positive_rate": 0.3386,
+      "detection_rate": 0.9698,
+      "brier_score": 0.2171,
+      "ece": 0.2371
+    },
+    "ML_Biased": {
+      "accuracy": 0.3667,
+      "precision": 0.3279,
+      "recall": 1.0,
+      "f1": 0.4939,
+      "auc": 0.5779,
+      "false_positive_rate": 0.9165,
+      "detection_rate": 1.0,
+      "brier_score": 0.4618,
+      "ece": 0.4899
+    }
+  },
+  "11_calibration": {
+    "raw_brier_score": 0.15599905693666666,
+    "raw_ece": 0.19489163333333331,
+    "calibrated_brier_score": 0.16541430556648784,
+    "calibrated_ece": 0.1921622816457198
+  }
+}

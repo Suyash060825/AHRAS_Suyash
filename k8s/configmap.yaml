@@ -1,0 +1,11 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: ahras-config
+  namespace: ahras
+data:
+  AHRAS_DEV_MODE: "True"
+  AHRAS_MODEL_DIR: "/app/ahras/detection/models"
+  IF_CONTAMINATION: "0.05"
+  SVM_NU: "0.02"
+  AE_ERROR_PCTILE: "97"

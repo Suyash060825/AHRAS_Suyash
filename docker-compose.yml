@@ -1,0 +1,37 @@
+version: '3.8'
+
+services:
+  ahras-api:
+    build: .
+    container_name: ahras_soc_api
+    ports:
+      - "8000:8000"
+    environment:
+      - AHRAS_DEV_MODE=True
+      - AHRAS_SECRET_KEY=ahras-production-hardening-secret-2026
+      - AHRAS_MODEL_DIR=/app/ahras/detection/models
+    volumes:
+      - ./ahras/logs:/app/ahras/logs
+      - ./ahras/detection/models:/app/ahras/detection/models
+    restart: unless-stopped
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:8000/health"]
+      interval: 30s
+      timeout: 5s
+      retries: 3
+
+  # Optional production MongoDB backend
+  mongodb:
+    image: mongo:6.0
+    container_name: ahras_mongodb
+    ports:
+      - "27017:27017"
+    environment:
+      - MONGO_INITDB_DATABASE=ahras
+    volumes:
+      - mongo_data:/data/db
+    profiles:
+      - prod
+
+volumes:
+  mongo_data:
