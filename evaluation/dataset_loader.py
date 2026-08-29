@@ -13,6 +13,7 @@ Generates machine-readable provenance manifest:
   - SHA-256 Checksum
   - Rows, features, class distribution
   - Split policy & Preprocessing configuration
+  - True dataset timestamp parsing and provenance tracking
 """
 
 import os
@@ -46,6 +47,39 @@ def safe_float(val: Any, default: float = 0.0) -> float:
         return default
 
 
+def parse_timestamp_field(ts_str: Optional[str], default_t: float) -> Tuple[float, str]:
+    """Parses various dataset timestamp string formats into UTC epoch float."""
+    if not ts_str:
+        return default_t, "synthetic_monotonic"
+    
+    # Try direct numeric float
+    try:
+        val = float(ts_str)
+        return val, "numeric_epoch"
+    except ValueError:
+        pass
+
+    # Common dataset date formats (CIC-IDS2017, CSE-CIC-IDS2018, UNSW-NB15)
+    formats = [
+        "%d/%m/%Y %H:%M:%S",
+        "%d/%m/%Y %H:%M",
+        "%Y-%m-%d %H:%M:%S",
+        "%Y-%m-%d %H:%M:%S.%f",
+        "%m/%d/%Y %I:%M:%S %p",
+        "%m/%d/%Y %H:%M",
+        "%Y-%m-%dT%H:%M:%S",
+        "%Y-%m-%dT%H:%M:%SZ",
+    ]
+    for fmt in formats:
+        try:
+            dt = _dt.strptime(ts_str.strip(), fmt)
+            return dt.timestamp(), "parsed_datetime"
+        except ValueError:
+            continue
+
+    return default_t, "unparseable_fallback"
+
+
 def compute_file_sha256(filepath: str) -> str:
     """Computes SHA-256 hash of a dataset file for cryptographic provenance."""
     if not os.path.exists(filepath):
@@ -59,22 +93,28 @@ def compute_file_sha256(filepath: str) -> str:
 
 @dataclass
 class DatasetRecord:
-    src_ip:           str
-    features:         Dict[str, float]
-    label:            int                  # 0 = Benign, 1 = Attack
-    attack_category:  str
-    raw_row:          Dict[str, str]
-    event_time:       Optional[float] = None
-    dst_ip:           Optional[str] = "10.0.0.1"
+    src_ip:                  str
+    features:                Dict[str, float]
+    label:                   int                  # 0 = Benign, 1 = Attack
+    attack_category:         str
+    raw_row:                 Dict[str, str]
+    event_time:              float
+    dst_ip:                  Optional[str] = "10.0.0.1"
+    timestamp_parse_status:  str = "synthetic_monotonic"
+
+    @property
+    def timestamp(self) -> float:
+        return self.event_time
 
     def to_dict(self) -> dict:
         return {
-            "src_ip":          self.src_ip,
-            "dst_ip":          self.dst_ip,
-            "features":        self.features,
-            "label":           self.label,
-            "attack_category": self.attack_category,
-            "event_time":      self.event_time,
+            "src_ip":                 self.src_ip,
+            "dst_ip":                 self.dst_ip,
+            "features":               self.features,
+            "label":                  self.label,
+            "attack_category":        self.attack_category,
+            "event_time":             self.event_time,
+            "timestamp_parse_status": self.timestamp_parse_status,
         }
 
 
@@ -125,7 +165,7 @@ class DatasetLoader:
             reader = csv.DictReader(fh)
             count = 0
             for row in reader:
-                rec = self._parse_row(row)
+                rec = self._parse_row(row, row_idx=count)
                 if rec is not None:
                     yield rec
                     count += 1
@@ -167,7 +207,7 @@ class DatasetLoader:
             preprocessing_version="v2.1-OCSF",
         )
 
-    def _parse_row(self, row: Dict[str, str]) -> Optional[DatasetRecord]:
+    def _parse_row(self, row: Dict[str, str], row_idx: int = 0) -> Optional[DatasetRecord]:
         clean_row = {k.strip().strip('"'): v.strip().strip('"') for k, v in row.items() if k}
         
         # Label extraction
@@ -175,13 +215,25 @@ class DatasetLoader:
         is_attack = 0 if label_str.lower() in _BENIGN_TOKENS else 1
         attack_cat = "Benign" if is_attack == 0 else label_str
 
-        src_ip = clean_row.get("Source IP") or clean_row.get("src_ip") or f"192.168.1.{(hash(str(row)) % 250) + 1}"
-        dst_ip = clean_row.get("Destination IP") or clean_row.get("dst_ip") or "10.0.0.1"
+        # Entity IP extraction
+        src_ip = clean_row.get("Source IP") or clean_row.get("src_ip") or clean_row.get("srcip")
+        if not src_ip:
+            src_ip = f"192.168.1.{(row_idx % 250) + 1}"
+            
+        dst_ip = clean_row.get("Destination IP") or clean_row.get("dst_ip") or clean_row.get("dstip") or "10.0.0.1"
+
+        # Timestamp extraction from dataset
+        raw_ts = (
+            clean_row.get("Timestamp") or clean_row.get("timestamp") or
+            clean_row.get("Time") or clean_row.get("time") or
+            clean_row.get("Stime") or clean_row.get("event_time")
+        )
+        parsed_t, t_status = parse_timestamp_field(raw_ts, default_t=1000000.0 + float(row_idx))
 
         # Feature mapping
         features = {}
         for k, v in clean_row.items():
-            if k.lower() not in ("label", "attack_cat", "source ip", "destination ip", "timestamp", "time"):
+            if k.lower() not in ("label", "attack_cat", "source ip", "destination ip", "timestamp", "time", "stime"):
                 features[k] = safe_float(v)
 
         # Standardized OCSF feature keys
@@ -198,5 +250,6 @@ class DatasetLoader:
             label=is_attack,
             attack_category=attack_cat,
             raw_row=clean_row,
-            event_time=time.time(),
+            event_time=parsed_t,
+            timestamp_parse_status=t_status,
         )

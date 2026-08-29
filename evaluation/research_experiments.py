@@ -4,15 +4,15 @@ AHRAS Scientific Research Evaluation Engine & Formal E0–E12 Matrix
 -------------------------------------------------------------------
 Implements rigorous, leakage-safe experimental evaluation across:
   Part A: Synthetic Controlled Mechanism Evaluation (Ablations, Sensitivity, Edge cases)
-  Part B: Real-World Benchmark Evaluation (CIC-IDS2017 & UNSW-NB15 Schemas)
+  Part B: Incident Response State-Machine Simulation (B0–B5 Active Defense Baselines)
 
 Research Tables Generated Automatically:
   Table 1  — Dataset Characteristics & Provenance Manifest
   Table 2  — Detector Baselines & Multi-Engine Comparison
   Table 3  — E0–E12 Architectural Evolution Matrix
-  Table 4  — 12 Controlled Ablation Studies with Paired Significance
+  Table 4  — 12 Controlled Ablation Studies with Exact Paired Permutation Tests
   Table 5  — Calibration Metrics (ECE, Brier Score, Reliability)
-  Table 6  — Causal Early-Warning & Forecasting Lead Times
+  Table 6  — Causal Early-Warning & Forecasting Lead Times (True Walk-Forward)
   Table 7  — Operational Response Outcome Simulation (B0–B5 Baselines & RASE)
   Table 8  — XAI Fidelity & Replayability Ledger
   Table 9  — Adversarial & Red-Team Resilience
@@ -25,6 +25,7 @@ import time
 import json
 import random
 import math
+from collections import defaultdict
 from typing import Dict, List, Any, Optional, Tuple
 
 _ROOT = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
@@ -53,6 +54,27 @@ from response.orchestrator import ResponseOrchestrator
 HERE = os.path.dirname(os.path.abspath(__file__))
 RESULTS_DIR = os.path.join(HERE, "results")
 os.makedirs(RESULTS_DIR, exist_ok=True)
+
+
+def paired_permutation_test(errors_base: np.ndarray, errors_abl: np.ndarray, n_permutations: int = 2000, seed: int = 42) -> Tuple[float, float]:
+    """
+    Executes a two-sided paired permutation test on sample absolute errors.
+    Returns: (observed_mean_difference, two_sided_p_value)
+    """
+    diffs = errors_abl - errors_base
+    obs_stat = float(np.mean(diffs))
+    if np.all(diffs == 0):
+        return 0.0, 1.0
+
+    rng = np.random.default_rng(seed)
+    n = len(diffs)
+    perm_stats = np.empty(n_permutations)
+    for i in range(n_permutations):
+        signs = rng.choice([-1.0, 1.0], size=n)
+        perm_stats[i] = np.mean(diffs * signs)
+
+    p_val = float(np.mean(np.abs(perm_stats) >= np.abs(obs_stat)))
+    return obs_stat, max(1.0 / n_permutations, p_val)
 
 
 # ── Table 1: Dataset Characteristics & Provenance Manifest ───────────────────
@@ -159,13 +181,20 @@ def run_e0_e12_matrix(train_recs: List[DatasetRecord], test_recs: List[DatasetRe
         s_e9.append(rr.risk_score)
     matrix_reports["E9_Full_AHRAS_Risk"] = calc.compute(y_true, s_e9, latencies_ms=latencies, dataset_name="E9_Full_AHRAS_Risk").to_dict()
 
-    # E10: Full AHRAS + Forecast Early Warning
+    # E10: Full AHRAS + Genuine Walk-Forward Forecast Early Warning
     predictor = AttackPredictor(horizon=5)
     cfg_e10 = RiskConfig(use_trust=True, use_history=True, use_graph=True, use_forecast=True, use_uncertainty=True, use_ti=True)
     s_e10 = []
+    entity_history: Dict[str, List[float]] = defaultdict(list)
     for (r, ocsf, res), base_s in zip(det_results, s_e9):
-        f_res = predictor.predict(r.src_ip, [max(0.0, base_s - 0.2), max(0.0, base_s - 0.1), base_s])
-        p_fore = 0.10 if f_res.trend_label == "ESCALATING" else 0.0
+        past_scores = entity_history[r.src_ip]
+        if len(past_scores) >= 2:
+            f_res = predictor.predict(r.src_ip, past_scores)
+            p_fore = 0.10 if f_res.trend_label == "ESCALATING" else 0.0
+        else:
+            p_fore = 0.0
+        entity_history[r.src_ip].append(base_s)
+        
         rr = risk_eng.score_risk(r.src_ip, res.signature_matches if res else [], res.anomaly_result if res else None, res.stat_result if res else None, ocsf, p_fore=p_fore, override_config=cfg_e10)
         s_e10.append(rr.risk_score)
     matrix_reports["E10_Full_AHRAS_Forecast"] = calc.compute(y_true, s_e10, latencies_ms=latencies, dataset_name="E10_Full_AHRAS_Forecast").to_dict()
@@ -185,7 +214,7 @@ def run_e0_e12_matrix(train_recs: List[DatasetRecord], test_recs: List[DatasetRe
     return matrix_reports
 
 
-# ── Table 4: 12 Controlled Ablation Studies with Paired Significance ──────────
+# ── Table 4: 12 Controlled Ablation Studies with Paired Permutation Significance ──
 def run_12_ablations_rigorous(test_recs: List[DatasetRecord]) -> Dict[str, Any]:
     calc = MetricsCalculator()
     combiner = get_combiner()
@@ -194,7 +223,7 @@ def run_12_ablations_rigorous(test_recs: List[DatasetRecord]) -> Dict[str, Any]:
     hist_eng = HistoricalRiskEngine()
     graph = EntityGraphEngine()
     
-    y_true = [r.label for r in test_recs]
+    y_true = np.array([r.label for r in test_recs])
     processed = [(r, record_to_ocsf(r), combiner.process(record_to_ocsf(r))) for r in test_recs]
 
     # Baseline Full System
@@ -207,7 +236,9 @@ def run_12_ablations_rigorous(test_recs: List[DatasetRecord]) -> Dict[str, Any]:
         rr = risk_eng.score_risk(r.src_ip, res.signature_matches if res else [], res.anomaly_result if res else None, res.stat_result if res else None, ocsf, h_boost=h_b, g_corr=g_c, ti_score=t_s, p_fore=0.05, override_config=full_cfg)
         baseline_scores.append(rr.risk_score)
     
-    base_report = calc.compute(y_true, baseline_scores, dataset_name="Full_Baseline")
+    base_scores_arr = np.array(baseline_scores)
+    base_errors = np.abs(base_scores_arr - y_true)
+    base_report = calc.compute(y_true.tolist(), baseline_scores, dataset_name="Full_Baseline")
     base_f1 = base_report.f1
 
     def _eval_ablation(ablation_cfg: RiskConfig, name: str) -> Dict[str, Any]:
@@ -220,13 +251,14 @@ def run_12_ablations_rigorous(test_recs: List[DatasetRecord]) -> Dict[str, Any]:
             rr = risk_eng.score_risk(r.src_ip, res.signature_matches if res else [], res.anomaly_result if res else None, res.stat_result if res else None, ocsf, h_boost=h_b, g_corr=g_c, ti_score=t_s, p_fore=p_f, override_config=ablation_cfg)
             scores.append(rr.risk_score)
             
-        rep = calc.compute(y_true, scores, dataset_name=name)
+        scores_arr = np.array(scores)
+        abl_errors = np.abs(scores_arr - y_true)
+        rep = calc.compute(y_true.tolist(), scores, dataset_name=name)
         delta = rep.f1 - base_f1
         rel_delta = (delta / max(base_f1, 1e-4)) * 100.0
         
-        # Paired Wilcoxon / sign difference test proxy on absolute errors
-        err_diff = np.abs(np.array(baseline_scores) - np.array(y_true)) - np.abs(np.array(scores) - np.array(y_true))
-        p_val = float(np.clip(1.0 / (1.0 + np.exp(np.mean(err_diff) * 10.0)), 0.001, 0.50))
+        # Paired permutation test on absolute estimation errors
+        _, p_val = paired_permutation_test(base_errors, abl_errors, n_permutations=2000, seed=42)
 
         return {
             "baseline_f1": round(base_f1, 4),
@@ -283,7 +315,7 @@ def run_all_research_evaluations() -> Dict[str, Any]:
     matrix_results = run_e0_e12_matrix(train_recs, test_recs)
 
     # 4. 12 Controlled Ablations (Table 4)
-    print("Executing 12 controlled ablation studies with paired significance...")
+    print("Executing 12 controlled ablation studies with paired permutation test...")
     ablation_results = run_12_ablations_rigorous(test_recs)
 
     # 5. Operational Incident Response Simulation (Table 7)
@@ -302,6 +334,7 @@ def run_all_research_evaluations() -> Dict[str, Any]:
 
     report = {
         "timestamp": time.strftime("%Y-%m-%d %H:%M:%S UTC", time.gmtime()),
+        "evaluation_type": "CONTROLLED_SYNTHETIC",
         "table_1_dataset_manifest": manifest,
         "leakage_audit": leak_audit,
         "table_3_experiment_matrix": matrix_results,

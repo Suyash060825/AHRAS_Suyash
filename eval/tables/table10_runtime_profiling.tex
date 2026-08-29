@@ -1,23 +1,23 @@
 \begin{table}[htbp]
 \centering\small
-\caption{End-to-End Stage Latency Profiling (Throughput: 81.9 eps)}
+\caption{End-to-End Stage Latency Profiling (Throughput: 79.0 eps)}
 \label{tab:performance_profile}
 \begin{tabular}{l c c c c}
 \hline
 \textbf{Pipeline Stage} & \textbf{Mean (ms)} & \textbf{P50 (ms)} & \textbf{P95 (ms)} & \textbf{\% Total} \\
 \hline
-1. Normalization & 0.027 & 0.024 & 0.040 & 0.2\% \\
-2. Feature Extraction & 0.043 & 0.037 & 0.064 & 0.4\% \\
-3. Signature Matching & 0.015 & 0.013 & 0.023 & 0.1\% \\
-4. ML Ensemble Anomaly & 11.825 & 11.557 & 13.750 & 96.9\% \\
-5. Statistical Baseline & 0.058 & 0.054 & 0.089 & 0.5\% \\
-6. Evidence Hash Chaining & 0.066 & 0.061 & 0.094 & 0.5\% \\
-7. Temporal Graph Update & 0.011 & 0.009 & 0.020 & 0.1\% \\
-8. Adaptive Risk & Uncertainty & 0.136 & 0.125 & 0.203 & 1.1\% \\
-9. Forecasting & Trend & 0.022 & 0.020 & 0.031 & 0.2\% \\
-10. Safety Policy & Active Defense & 0.002 & 0.001 & 0.022 & 0.0\% \\
+1. Normalization & 0.037 & 0.034 & 0.054 & 0.3\% \\
+2. Feature Extraction & 0.062 & 0.057 & 0.093 & 0.5\% \\
+3. Signature Matching & 0.018 & 0.016 & 0.026 & 0.1\% \\
+4. ML Ensemble Anomaly & 12.167 & 11.671 & 14.094 & 96.1\% \\
+5. Statistical Baseline & 0.076 & 0.070 & 0.107 & 0.6\% \\
+6. Evidence Hash Chaining & 0.091 & 0.085 & 0.129 & 0.7\% \\
+7. Temporal Graph Update & 0.020 & 0.018 & 0.029 & 0.2\% \\
+8. Adaptive Risk & Uncertainty & 0.155 & 0.140 & 0.232 & 1.2\% \\
+9. Forecasting & Trend & 0.027 & 0.025 & 0.042 & 0.2\% \\
+10. Safety Policy & Active Defense & 0.003 & 0.001 & 0.025 & 0.0\% \\
 \hline
-\textbf{Total End-to-End Pipeline} & \textbf{12.208} & \textbf{11.911} & \textbf{14.246} & \textbf{100.0\%} \\
+\textbf{Total End-to-End Pipeline} & \textbf{12.657} & \textbf{12.165} & \textbf{14.654} & \textbf{100.0\%} \\
 \hline
 \end{tabular}
 \end{table}
