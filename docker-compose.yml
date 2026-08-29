@@ -10,9 +10,9 @@ services:
     ports:
       - "${AHRAS_PORT:-8000}:8000"
     environment:
-      - AHRAS_ENV=${AHRAS_ENV:-DEV}
-      - AHRAS_DEV_MODE=${AHRAS_DEV_MODE:-true}
-      - AHRAS_SECRET_KEY=${AHRAS_SECRET_KEY:-dev-mode-only-insecure-fallback-key-32-bytes-long!}
+      - AHRAS_ENV=${AHRAS_ENV:-PRODUCTION}
+      - AHRAS_DEV_MODE=${AHRAS_DEV_MODE:-false}
+      - AHRAS_SECRET_KEY=${AHRAS_SECRET_KEY}
       - AHRAS_MODEL_DIR=/app/ahras/detection/models
       - AHRAS_ALLOWED_ORIGINS=${AHRAS_ALLOWED_ORIGINS:-http://localhost:8000,http://127.0.0.1:8000}
       - MONGO_URI=mongodb://mongodb:27017

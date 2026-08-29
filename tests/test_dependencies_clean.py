@@ -50,6 +50,9 @@ class TestModuleImports(unittest.TestCase):
         "evaluation.dataset_loader",
         "evaluation.leakage_audit",
         "evaluation.adversarial_suite",
+        "sensors.host_agent",
+        "sensors.network_sensor",
+        "sensors.cloud_adapter",
         "api.server",
     ]
 

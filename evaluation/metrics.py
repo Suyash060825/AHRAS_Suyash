@@ -139,9 +139,9 @@ class MetricsCalculator:
         latencies_ms = latencies_ms or [0.0] * len(y_true)
         n = len(y_true)
 
-        max_s = max(y_score) if y_score else 0.0
-        normalized_scores = [s / 100.0 if max_s > 1.0 else float(s) for s in y_score]
-        norm_threshold = threshold / 100.0 if threshold > 1.0 else float(threshold)
+        # Deterministic per-element score contract: [0, 1] preserved; [0, 100] converted to [0, 1]
+        normalized_scores = [float(s) / 100.0 if float(s) > 1.0 else float(s) for s in y_score]
+        norm_threshold = float(threshold) / 100.0 if float(threshold) > 1.0 else float(threshold)
 
         y_pred = [1 if s >= norm_threshold else 0 for s in normalized_scores]
 

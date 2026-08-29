@@ -1,6 +1,6 @@
 {
-  "experiment_id": "EXP-AHRAS-1788042823",
-  "timestamp_utc": "2026-08-29 22:33:43 UTC",
+  "experiment_id": "EXP-AHRAS-1788045123",
+  "timestamp_utc": "2026-08-29 23:12:03 UTC",
   "rng_seed": 42,
   "dataset_provenance": {
     "raw_dataset_path": "/home/suyashpradhan/Downloads/AHRAS_Suyash-master/evaluation/data/synthetic_eval_dataset.csv",
@@ -14,13 +14,13 @@
     "dataset_loader_sha256": "6909cf473e0d5ded7be9de1dc99b95a04e734fcd52d2fa1719626b1638a18562"
   },
   "artifact_hashes": {
-    "research_experiments_report_sha256": "08be4b115b27c130a686f102602bc81fb220bac85e1f1c5710aa88b1b9eb7dfc",
-    "research_tables_all_sha256": "ab6dafe0c20f9a04fc961e63fe786d41d1e8784b7e9cd3ade39f7a4654af9e9f",
+    "research_experiments_report_sha256": "eefbe2eed6cb174845b1a589e6f75a927e86023aff6416ce5daee3f406e373cc",
+    "research_tables_all_sha256": "d8eb9aeb0cca76e7b3cf3e574bded5194ea74c1f6e7ae6e011c02076c175ee71",
     "table1_sha256": "6435c6d92a7b9af2d3d7915797f9315324d352a941e0cb728951414dcc2c6467",
-    "table3_sha256": "1b5d3cef97820f2c31763b19fcdb48de05caec464194bae77b742c6a6d85a7c7",
-    "table4_sha256": "cabec3ead8e987b53f19f1619e5a821e378404aa6b987a1538448b9cd2d2b9e4",
+    "table3_sha256": "df7789db3e327bd5ec93dac2e3e64bce9d6e0b2b86e55c981fe69844e6f99fda",
+    "table4_sha256": "c924e1cc336d637d04847b9130ba27c24661bc55979d455ecbeb2e9889d95b5c",
     "table7_sha256": "c166d4dae143000e626e3f28d7cc9be36133314e08f5778edb561fc5193d0cfc",
-    "table10_sha256": "f629f33cbb80f653c7dbf7d72cbb156b864e1f1adc7118605e506e9cb1ab47fd"
+    "table10_sha256": "bbb81522f0691b4b7dd1f595b9bd9f015a7d5ae4890666a504702a3c21ef8090"
   },
   "scientific_integrity_assertions": {
     "test_label_leakage_in_train": false,
