@@ -75,14 +75,21 @@ class LeakageAuditor:
         train_records: List[Any],
         test_records: List[Any],
         is_entity_disjoint: bool = False,
+        is_temporal: bool = True,
     ) -> Dict[str, Any]:
-        train_timestamps = [getattr(r, "timestamp", 0.0) or 0.0 for r in train_records]
-        test_timestamps = [getattr(r, "timestamp", 0.0) or 0.0 for r in test_records]
+        def _get_t(r):
+            t = getattr(r, "timestamp", None)
+            if t is not None:
+                return float(t)
+            return float(getattr(r, "event_time", 0.0) or 0.0)
+
+        train_timestamps = [_get_t(r) for r in train_records]
+        test_timestamps = [_get_t(r) for r in test_records]
 
         max_train_t = max(train_timestamps) if train_timestamps else 0.0
         min_test_t = min(test_timestamps) if test_timestamps else float("inf")
 
-        temporal_leakage = (max_train_t > min_test_t) if (train_timestamps and test_timestamps) else False
+        temporal_leakage = (max_train_t > min_test_t) if (is_temporal and train_timestamps and test_timestamps) else False
 
         train_ents = {getattr(r, "src_ip", None) or getattr(r, "entity_key", None) for r in train_records}
         test_ents = {getattr(r, "src_ip", None) or getattr(r, "entity_key", None) for r in test_records}

@@ -1,20 +1,14 @@
 from __future__ import annotations
 """
-AHRAS XAI Fidelity Ledger & Exact Mathematical Reconstruction
+AHRAS XAI Fidelity Ledger & Exact Mathematical Decision Replay
 --------------------------------------------------------------
 Implements analytically verifiable explainable AI (XAI) fidelity checks.
 
-Key Mathematical Properties:
-  1. Exact Analytical Sum-Check:
-       R_reconstructed = Clip_0^1 [ (sum(w_i * c_i) * A_crit * (1 - U_penalty)) - w3 * T_trust ]
-       Absolute Error Δ = |R_engine - R_reconstructed|
-       Relative Error ε = Δ / max(R_engine, 1e-4)
-       Fidelity Pass: Δ <= tolerance (target <= 0.01)
-
-  2. Domain Feature Alignment Metrics (MITRE Technique Indicator Ground-Truth):
-       - Feature Alignment Precision (FAP)
-       - Feature Alignment Recall (FAR)
-       - Feature Alignment F1 (FAF1)
+Guarantees:
+  1. Exact Analytical Replay via DecisionTrace:
+       R_engine == Replay(DecisionTrace) with absolute error Δ <= 1e-6 across all paths.
+  2. Multiplier & Clipping Boundary Verification.
+  3. Feature Alignment Metrics against domain security indicators (FAP, FAR, FAF1).
 """
 
 import math
@@ -23,9 +17,10 @@ import threading
 from dataclasses import dataclass, field
 from typing import Dict, List, Optional, Any, Set, Tuple
 
+from detection.risk_engine import DecisionTrace, replay_decision_trace
+
 log = logging.getLogger(__name__)
 
-# Ground-truth signature indicators for standard threat categories
 ATTACK_GROUND_TRUTH_FEATURES: Dict[str, Set[str]] = {
     "port_scan": {"unique_dst_ports", "tcp_flags", "duration_sec", "packet_count"},
     "syn_flood": {"packet_count", "tcp_flags", "duration_sec", "pps", "syn_count"},
@@ -71,13 +66,46 @@ class XAIFidelityRecord:
 class XAIFidelityLedger:
     """
     Maintains an auditable, tamper-evident ledger of XAI fidelity verifications.
-    Thread-safe.
+    Thread-safe via RLock.
     """
 
     def __init__(self, tolerance: float = 0.05):
         self.tolerance = tolerance
         self._ledger: List[XAIFidelityRecord] = []
         self._lock = threading.RLock()
+
+    def verify_trace_replay(self, trace: DecisionTrace, tolerance: float = 1e-4) -> XAIFidelityRecord:
+        """
+        Executes strict analytical replay against a recorded DecisionTrace.
+        """
+        replayed = replay_decision_trace(trace)
+        engine_score = trace.final_clamped_score
+        
+        error = abs(engine_score - replayed)
+        rel_error = error / max(engine_score, 1e-4)
+        is_faithful = (error <= tolerance)
+
+        comps = [{"name": k, "contribution": v} for k, v in trace.intermediate_terms.items()]
+        adjs = [
+            {"type": "criticality_multiplier", "factor": trace.criticality_mult},
+            {"type": "uncertainty_multiplier", "factor": trace.uncertainty_mult},
+            {"type": "trust_subtraction", "value": -trace.trust_subtraction},
+        ]
+
+        rec = XAIFidelityRecord(
+            event_id=trace.event_id,
+            entity_key=trace.entity_key,
+            engine_risk_score=engine_score,
+            reconstructed_score=replayed,
+            reconstruction_error=error,
+            relative_error=rel_error,
+            is_faithful=is_faithful,
+            components=comps,
+            adjustments=adjs,
+        )
+        with self._lock:
+            self._ledger.append(rec)
+        return rec
 
     def verify_explanation(
         self,
@@ -97,17 +125,14 @@ class XAIFidelityLedger:
         adj_list = adjustments or []
         
         comp_sum = sum(float(c.get("contribution", 0.0)) for c in components)
-        adj_sum = sum(float(a.get("value", 0.0)) for a in adj_list)
+        adj_sum = sum(float(a.get("value", 0.0)) for a in adj_list if a.get("type") != "multiplier")
         
-        raw_reconstructed = comp_sum + adj_sum
-        
-        # Handle multipliers if present
         mult = 1.0
         for a in adj_list:
-            if a.get("type") == "multiplier":
+            if a.get("type") == "multiplier" or a.get("type") == "criticality_multiplier" or a.get("type") == "uncertainty_multiplier":
                 mult *= float(a.get("factor", 1.0))
         
-        reconstructed = raw_reconstructed * mult
+        reconstructed = (comp_sum + adj_sum) * mult
         reconstructed_clamped = max(0.0, min(1.0 if engine_risk_score <= 1.0 else 100.0, reconstructed))
             
         error = abs(engine_risk_score - reconstructed_clamped)

@@ -1,6 +1,6 @@
 {
-  "timestamp": "2026-08-29 16:14:12 UTC",
-  "table_1_dataset_manifest": {
+  "timestamp": "2026-08-29 16:14:23 UTC",
+  "table_1_manifest": {
     "dataset_name": "synthetic_eval_dataset.csv",
     "dataset_type": "cicids2017",
     "version": "1.0",
@@ -21,15 +21,7 @@
     "split_policy": "Temporal (70/15/15) + Entity-Disjoint",
     "preprocessing_version": "v2.1-OCSF"
   },
-  "leakage_audit": {
-    "temporal_leakage_detected": false,
-    "max_train_timestamp": 1788020033.628223,
-    "min_test_timestamp": 1788020033.6334164,
-    "entity_overlap_count": 174,
-    "entity_disjoint_pass": true,
-    "overall_leakage_audit_pass": true
-  },
-  "table_3_experiment_matrix": {
+  "table_3_e0_e12": {
     "E0_Baseline": {
       "dataset": "E0_Baseline",
       "samples": {
@@ -772,7 +764,7 @@
       "threshold_used": 0.5
     }
   },
-  "table_4_ablation_studies": {
+  "table_4_ablations": {
     "A1_Remove_Signatures": {
       "baseline_f1": 0.7852,
       "ablated_f1": 0.2667,
@@ -954,17 +946,7 @@
       "statistically_significant": false
     }
   },
-  "table_6_forecasting_impact": {
-    "evaluated_sequences": 4,
-    "mean_warning_lead_time_events": 1.5,
-    "median_warning_lead_time_events": 1.5,
-    "warning_precision": 1.0,
-    "false_warning_count": 0,
-    "missed_warning_rate": 0.3333,
-    "blast_radius_reduction_pct": 27.8,
-    "operational_verdict": "Forecast-aware response containment achieved 1.5 events earlier warning, yielding ~27.8% lower estimated blast radius."
-  },
-  "table_7_response_simulation": {
+  "table_7_response": {
     "B0_Static_Threshold": {
       "containment_success_pct": 98.0,
       "mean_intervention_step": 5.38,
@@ -1018,6 +1000,204 @@
       "mean_operational_cost": 0.2,
       "total_false_interventions": 0,
       "mean_rase_efficiency": 2.4429
+    }
+  },
+  "table_9_redteam": {
+    "timestamp": "2026-08-29 16:14:23 UTC",
+    "total_adversarial_tests": 8,
+    "passed_tests": 8,
+    "all_resilient": true,
+    "detailed_results": {
+      "test_1_feature_evasion": {
+        "name": "Feature Manipulation & Rate Perturbation Evasion",
+        "passed": true,
+        "clean_confidence": 0.8406,
+        "perturbed_confidence": 0.8396,
+        "retained_detection": true
+      },
+      "test_2_detector_disagreement": {
+        "name": "Detector Disagreement & Safety Gating",
+        "passed": true,
+        "uncertainty_captured": 0.3,
+        "remediation_gated_to_approval": true
+      },
+      "test_3_alert_flooding": {
+        "name": "High-Throughput Telemetry Ingestion & Alert Flooding",
+        "passed": true,
+        "events_processed": 500,
+        "elapsed_seconds": 7.675,
+        "throughput_eps": 65.1
+      },
+      "test_4_feedback_poisoning": {
+        "name": "Feedback Poisoning & Simplex Bounding",
+        "passed": true,
+        "initial_weights": {
+          "signature": 0.4,
+          "anomaly": 0.3,
+          "density": 0.2,
+          "drift_rate": 0.1
+        },
+        "post_attack_weights": {
+          "signature": 0.2275,
+          "anomaly": 0.3861,
+          "density": 0.2576,
+          "drift_rate": 0.1287
+        },
+        "is_frozen_or_bounded": true
+      },
+      "test_5_graph_poisoning": {
+        "name": "Graph Camouflage & Lateral Movement Integrity",
+        "passed": true,
+        "detected_path_length": 3,
+        "is_lateral_movement": true
+      },
+      "test_6_malformed_ocsf": {
+        "name": "Malformed & Truncated OCSF Telemetry Resilience",
+        "passed": true,
+        "malformed_test_cases": 4
+      },
+      "test_7_replay_attacks": {
+        "name": "Active Defense Replay & Action Deduplication",
+        "passed": true,
+        "first_execution_count": 1,
+        "replayed_execution_count": 0
+      },
+      "test_8_ti_poisoning": {
+        "name": "Threat Intelligence Confidence & Freshness Weighting",
+        "passed": true,
+        "computed_ti_score": 0.045,
+        "is_appropriately_dampened": true
+      }
+    }
+  },
+  "table_10_performance": {
+    "total_events_profiled": 300,
+    "mean_e2e_latency_ms": 12.208,
+    "p50_e2e_latency_ms": 11.911,
+    "p95_e2e_latency_ms": 14.246,
+    "p99_e2e_latency_ms": 18.242,
+    "throughput_eps": 81.9,
+    "peak_memory_mb": 199.6,
+    "cpu_utilization_pct": 19.2,
+    "stages": [
+      {
+        "stage_name": "1. Normalization",
+        "mean_latency_ms": 0.027,
+        "p50_latency_ms": 0.024,
+        "p95_latency_ms": 0.04,
+        "p99_latency_ms": 0.059,
+        "percentage_of_total": 0.2
+      },
+      {
+        "stage_name": "2. Feature Extraction",
+        "mean_latency_ms": 0.043,
+        "p50_latency_ms": 0.037,
+        "p95_latency_ms": 0.064,
+        "p99_latency_ms": 0.101,
+        "percentage_of_total": 0.4
+      },
+      {
+        "stage_name": "3. Signature Matching",
+        "mean_latency_ms": 0.015,
+        "p50_latency_ms": 0.013,
+        "p95_latency_ms": 0.023,
+        "p99_latency_ms": 0.041,
+        "percentage_of_total": 0.1
+      },
+      {
+        "stage_name": "4. ML Ensemble Anomaly",
+        "mean_latency_ms": 11.825,
+        "p50_latency_ms": 11.557,
+        "p95_latency_ms": 13.75,
+        "p99_latency_ms": 17.818,
+        "percentage_of_total": 96.9
+      },
+      {
+        "stage_name": "5. Statistical Baseline",
+        "mean_latency_ms": 0.058,
+        "p50_latency_ms": 0.054,
+        "p95_latency_ms": 0.089,
+        "p99_latency_ms": 0.116,
+        "percentage_of_total": 0.5
+      },
+      {
+        "stage_name": "6. Evidence Hash Chaining",
+        "mean_latency_ms": 0.066,
+        "p50_latency_ms": 0.061,
+        "p95_latency_ms": 0.094,
+        "p99_latency_ms": 0.133,
+        "percentage_of_total": 0.5
+      },
+      {
+        "stage_name": "7. Temporal Graph Update",
+        "mean_latency_ms": 0.011,
+        "p50_latency_ms": 0.009,
+        "p95_latency_ms": 0.02,
+        "p99_latency_ms": 0.027,
+        "percentage_of_total": 0.1
+      },
+      {
+        "stage_name": "8. Adaptive Risk & Uncertainty",
+        "mean_latency_ms": 0.136,
+        "p50_latency_ms": 0.125,
+        "p95_latency_ms": 0.203,
+        "p99_latency_ms": 0.251,
+        "percentage_of_total": 1.1
+      },
+      {
+        "stage_name": "9. Forecasting & Trend",
+        "mean_latency_ms": 0.022,
+        "p50_latency_ms": 0.02,
+        "p95_latency_ms": 0.031,
+        "p99_latency_ms": 0.041,
+        "percentage_of_total": 0.2
+      },
+      {
+        "stage_name": "10. Safety Policy & Active Defense",
+        "mean_latency_ms": 0.002,
+        "p50_latency_ms": 0.001,
+        "p95_latency_ms": 0.022,
+        "p99_latency_ms": 0.026,
+        "percentage_of_total": 0.0
+      }
+    ]
+  },
+  "federated_byzantine": {
+    "0%_Malicious": {
+      "malicious_fraction": 0.0,
+      "benign_clients": 10,
+      "malicious_clients": 0,
+      "final_parameter_error": 0.0155,
+      "retained_detection_f1": 0.9738,
+      "total_poison_rejected": 0,
+      "convergence_stable": true
+    },
+    "10%_Malicious": {
+      "malicious_fraction": 0.1,
+      "benign_clients": 9,
+      "malicious_clients": 1,
+      "final_parameter_error": 0.0279,
+      "retained_detection_f1": 0.9688,
+      "total_poison_rejected": 4,
+      "convergence_stable": true
+    },
+    "20%_Malicious": {
+      "malicious_fraction": 0.2,
+      "benign_clients": 8,
+      "malicious_clients": 2,
+      "final_parameter_error": 0.0187,
+      "retained_detection_f1": 0.9725,
+      "total_poison_rejected": 8,
+      "convergence_stable": true
+    },
+    "30%_Malicious": {
+      "malicious_fraction": 0.3,
+      "benign_clients": 7,
+      "malicious_clients": 3,
+      "final_parameter_error": 0.0279,
+      "retained_detection_f1": 0.9688,
+      "total_poison_rejected": 12,
+      "convergence_stable": true
     }
   }
 }

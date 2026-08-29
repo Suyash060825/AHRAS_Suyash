@@ -1,0 +1,24 @@
+\begin{table}[htbp]
+\centering\small
+\caption{AHRAS E0--E12 Formal Experiment Matrix Across Evaluation Records}
+\label{tab:e0_e12_matrix}
+\begin{tabular}{l c c c c c}
+\hline
+\textbf{Experiment Stage} & \textbf{Precision} & \textbf{Recall} & \textbf{F1-Score} & \textbf{Brier Score} & \textbf{Latency (ms)} \\
+\hline
+E0 Baseline & 0.276 & 0.436 & \textbf{0.338} & 0.3495 & 17.94 \\
+E1 Signature Only & 0.635 & 0.966 & \textbf{0.766} & 0.1493 & 17.94 \\
+E2 ML Only & 0.312 & 1.000 & \textbf{0.476} & 0.3738 & 17.94 \\
+E3 Statistical Only & 0.000 & 0.000 & \textbf{0.000} & 0.3024 & 17.94 \\
+E4 Fixed Hybrid & 0.635 & 0.966 & \textbf{0.766} & 0.1344 & 17.94 \\
+E5 Adaptive Hybrid & 1.000 & 0.017 & \textbf{0.034} & 0.1403 & 17.94 \\
+E6 Hybrid Trust & 0.000 & 0.000 & \textbf{0.000} & 0.1655 & 17.94 \\
+E7 Hybrid Graph & 0.000 & 0.000 & \textbf{0.000} & 0.1755 & 17.94 \\
+E8 Hybrid Uncertainty & 0.000 & 0.000 & \textbf{0.000} & 0.1792 & 17.94 \\
+E9 Full AHRAS Risk & 0.589 & 0.735 & \textbf{0.654} & 0.1089 & 17.94 \\
+E10 Full AHRAS Forecast & 0.636 & 0.897 & \textbf{0.745} & 0.1098 & 17.94 \\
+E11 Full AHRAS Policy & 0.636 & 0.897 & \textbf{0.745} & 0.1118 & 17.94 \\
+E12 Full Closed Loop AHRAS & 0.636 & 0.897 & \textbf{0.745} & 0.1118 & 17.94 \\
+\hline
+\end{tabular}
+\end{table}
