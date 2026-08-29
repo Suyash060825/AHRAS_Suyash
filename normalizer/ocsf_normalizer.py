@@ -46,24 +46,38 @@ def _eid(raw: dict) -> str:
 # Per-source normalizers
 # ─────────────────────────────────────────────────────────────────────────────
 
+def _safe_str(v, default=""):
+    return str(v) if v is not None else default
+
+def _safe_int(v, default=0):
+    try:
+        return int(v)
+    except (ValueError, TypeError):
+        return default
+
+def _safe_float(v, default=0.0):
+    try:
+        return float(v)
+    except (ValueError, TypeError):
+        return default
+
 def _norm_network(raw: dict) -> dict:
-    src_ip = raw.get("src_ip", "")
-    dst_ip = raw.get("dst_ip", "")
+    if not isinstance(raw, dict):
+        raw = {}
+    src_ip = _safe_str(raw.get("src_ip"))
+    dst_ip = _safe_str(raw.get("dst_ip"))
     src_enrich = enrich_ip(src_ip)
     dst_enrich = enrich_ip(dst_ip)
 
-    # Derive severity hint from enrichment
     severity = 1
     if src_enrich["is_threat_intel_hit"]:
         severity = 3
     if src_enrich["is_high_risk"]:
         severity = 4
 
-    # Detect port scan signature inline
-    unique_ports = raw.get("unique_dst_ports", 0)
-    flags = raw.get("tcp_flags", [])
-    port_scan = (isinstance(unique_ports, int) and unique_ports > 20
-                 and "SYN" in flags and "ACK" not in flags)
+    unique_ports = _safe_int(raw.get("unique_dst_ports"))
+    flags = raw.get("tcp_flags", []) if isinstance(raw.get("tcp_flags"), (list, tuple)) else []
+    port_scan = (unique_ports > 20 and "SYN" in flags and "ACK" not in flags)
 
     return {
         "ocsf_class_id": 1001,
@@ -73,19 +87,19 @@ def _norm_network(raw: dict) -> dict:
         "severity_id":   severity,
         "src_endpoint": {
             "ip":   src_ip,
-            "port": raw.get("src_port", 0),
+            "port": _safe_int(raw.get("src_port")),
             "geo":  src_enrich["geo"],
         },
         "dst_endpoint": {
             "ip":   dst_ip,
-            "port": raw.get("dst_port", 0),
+            "port": _safe_int(raw.get("dst_port")),
             "geo":  dst_enrich["geo"],
         },
-        "protocol": raw.get("protocol", "OTHER"),
+        "protocol": _safe_str(raw.get("protocol"), "OTHER"),
         "traffic": {
-            "packets":      raw.get("packet_count", 0),
-            "bytes":        raw.get("byte_count", 0),
-            "duration_sec": raw.get("duration_sec", 0.0),
+            "packets":      _safe_int(raw.get("packet_count")),
+            "bytes":        _safe_int(raw.get("byte_count")),
+            "duration_sec": _safe_float(raw.get("duration_sec")),
         },
         "tcp_flags":        flags,
         "unique_dst_ports": unique_ports,

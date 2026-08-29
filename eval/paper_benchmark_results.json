@@ -1,0 +1,116 @@
+[
+  {
+    "scenario_name": "Network: Port Scanning",
+    "ocsf_class": "network_activity",
+    "total_events": 140,
+    "true_positives": 40,
+    "false_positives": 0,
+    "true_negatives": 100,
+    "false_negatives": 0,
+    "precision": 1.0,
+    "recall": 1.0,
+    "f1_score": 1.0,
+    "brier_score": 0.0436,
+    "avg_latency_ms": 17.07,
+    "p95_latency_ms": 21.53,
+    "ci_95_f1": [
+      1.0,
+      1.0
+    ]
+  },
+  {
+    "scenario_name": "Network: SYN Flood",
+    "ocsf_class": "network_activity",
+    "total_events": 140,
+    "true_positives": 40,
+    "false_positives": 0,
+    "true_negatives": 100,
+    "false_negatives": 0,
+    "precision": 1.0,
+    "recall": 1.0,
+    "f1_score": 1.0,
+    "brier_score": 0.0475,
+    "avg_latency_ms": 16.9,
+    "p95_latency_ms": 20.1,
+    "ci_95_f1": [
+      1.0,
+      1.0
+    ]
+  },
+  {
+    "scenario_name": "Network: SSH Brute Force",
+    "ocsf_class": "network_activity",
+    "total_events": 140,
+    "true_positives": 40,
+    "false_positives": 0,
+    "true_negatives": 100,
+    "false_negatives": 0,
+    "precision": 1.0,
+    "recall": 1.0,
+    "f1_score": 1.0,
+    "brier_score": 0.0474,
+    "avg_latency_ms": 22.8,
+    "p95_latency_ms": 28.91,
+    "ci_95_f1": [
+      1.0,
+      1.0
+    ]
+  },
+  {
+    "scenario_name": "Host File: Ransomware Entropy",
+    "ocsf_class": "file_activity",
+    "total_events": 140,
+    "true_positives": 40,
+    "false_positives": 0,
+    "true_negatives": 100,
+    "false_negatives": 0,
+    "precision": 1.0,
+    "recall": 1.0,
+    "f1_score": 1.0,
+    "brier_score": 0.0051,
+    "avg_latency_ms": 22.11,
+    "p95_latency_ms": 28.05,
+    "ci_95_f1": [
+      1.0,
+      1.0
+    ]
+  },
+  {
+    "scenario_name": "Host Process: Credential Dump",
+    "ocsf_class": "process_activity",
+    "total_events": 140,
+    "true_positives": 40,
+    "false_positives": 0,
+    "true_negatives": 100,
+    "false_negatives": 0,
+    "precision": 1.0,
+    "recall": 1.0,
+    "f1_score": 1.0,
+    "brier_score": 0.051,
+    "avg_latency_ms": 21.39,
+    "p95_latency_ms": 27.61,
+    "ci_95_f1": [
+      1.0,
+      1.0
+    ]
+  },
+  {
+    "scenario_name": "Cloud API: Defense Evasion",
+    "ocsf_class": "cloud_api",
+    "total_events": 140,
+    "true_positives": 40,
+    "false_positives": 0,
+    "true_negatives": 100,
+    "false_negatives": 0,
+    "precision": 1.0,
+    "recall": 1.0,
+    "f1_score": 1.0,
+    "brier_score": 0.0375,
+    "avg_latency_ms": 22.18,
+    "p95_latency_ms": 29.5,
+    "ci_95_f1": [
+      1.0,
+      1.0
+    ]
+  }
+]

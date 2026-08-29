@@ -1,8 +1,9 @@
 from __future__ import annotations
 """
-AHRAS FastAPI Authentication Dependencies
-------------------------------------------
-Extracts and validates current active user from Bearer token.
+AHRAS FastAPI Authentication Dependencies (Hardened)
+-----------------------------------------------------
+Extracts, validates, and authorizes active user identity from Bearer token.
+Enforces fail-closed behavior (no unverified dynamic payload fallback).
 """
 
 from typing import Optional, Dict, Any
@@ -15,18 +16,22 @@ security_scheme = HTTPBearer(auto_error=False)
 
 
 def get_current_user(credentials: Optional[HTTPAuthorizationCredentials] = Security(security_scheme)) -> Dict[str, Any]:
+    """
+    Extracts and authenticates user from Bearer JWT.
+    Fails closed if token is invalid, expired, revoked, or user does not exist in store.
+    """
     if credentials is None:
         raise HTTPException(
             status_code=status.HTTP_401_UNAUTHORIZED,
-            detail="Authentication token required",
+            detail="Authentication Bearer token required",
             headers={"WWW-Authenticate": "Bearer"},
         )
     token = credentials.credentials
-    payload = verify_token(token)
+    payload = verify_token(token, expected_type="access")
     if not payload:
         raise HTTPException(
             status_code=status.HTTP_401_UNAUTHORIZED,
-            detail="Invalid or expired token",
+            detail="Invalid, expired, or revoked authentication token",
             headers={"WWW-Authenticate": "Bearer"},
         )
     username = payload.get("sub")
@@ -36,10 +41,22 @@ def get_current_user(credentials: Optional[HTTPAuthorizationCredentials] = Secur
             detail="Token payload missing subject identifier",
             headers={"WWW-Authenticate": "Bearer"},
         )
+        
     user = get_user(username)
     if not user:
-        # Fallback to payload info if user registered dynamically
-        return {"username": username, "role": payload.get("role", "soc_analyst"), "is_active": True}
+        # Secure Fail-Closed: Never trust unverified payload claim info if user record is missing
+        raise HTTPException(
+            status_code=status.HTTP_401_UNAUTHORIZED,
+            detail="User account no longer exists or authorization failed",
+            headers={"WWW-Authenticate": "Bearer"},
+        )
+        
+    if not user.get("is_active", True):
+        raise HTTPException(
+            status_code=status.HTTP_403_FORBIDDEN,
+            detail="User account is inactive or disabled",
+        )
+        
     return user
 
 

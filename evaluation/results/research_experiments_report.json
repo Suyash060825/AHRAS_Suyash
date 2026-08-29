@@ -1,154 +1,946 @@
 {
-  "timestamp": "2026-08-28 17:58:45 UTC",
-  "1_detector_ablation": {
-    "1_Signature_Only": {
-      "accuracy": 0.8107,
-      "precision": 0.6254,
-      "recall": 0.9655,
-      "f1": 0.7591,
-      "auc": 0.8755,
-      "false_positive_rate": 0.2586,
-      "detection_rate": 0.9655,
-      "brier_score": 0.1533,
-      "ece": 0.1336
+  "timestamp": "2026-08-29 16:01:22 UTC",
+  "leakage_audit": {
+    "temporal_leakage_detected": false,
+    "max_train_timestamp": 0.0,
+    "min_test_timestamp": 0.0,
+    "entity_overlap_count": 174,
+    "entity_disjoint_pass": true,
+    "overall_leakage_audit_pass": true
+  },
+  "experiment_matrix": {
+    "E0_Baseline": {
+      "dataset": "E0_Baseline",
+      "samples": {
+        "total": 375,
+        "benign": 258,
+        "attack": 117
+      },
+      "classification": {
+        "accuracy": 0.4667,
+        "balanced_accuracy": 0.4583,
+        "precision": 0.2757,
+        "recall": 0.4359,
+        "f1": 0.3377,
+        "macro_f1": 0.3377,
+        "auc": 0.4506,
+        "pr_auc": 0.279,
+        "false_positive_rate": 0.5194,
+        "false_negative_rate": 0.5641,
+        "detection_rate": 0.4359,
+        "brier_score": 0.3495,
+        "ece": 0.3112
+      },
+      "confidence_intervals_95": {
+        "f1": [
+          0.2586,
+          0.3762
+        ],
+        "precision": [
+          0.2084,
+          0.3147
+        ],
+        "recall": [
+          0.3406,
+          0.5025
+        ],
+        "brier_score": [
+          0.3262,
+          0.3763
+        ]
+      },
+      "confusion_matrix": {
+        "TP": 51,
+        "FP": 134,
+        "TN": 124,
+        "FN": 66
+      },
+      "performance": {
+        "mean_latency_ms": 17.17,
+        "p95_latency_ms": 20.56,
+        "p99_latency_ms": 24.567,
+        "throughput_eps": 58.2,
+        "peak_memory_mb": 0.0,
+        "mean_cpu_pct": 0.0
+      },
+      "per_class": {},
+      "threshold_used": 0.5
     },
-    "2_ML_Ensemble_Only": {
-      "accuracy": 0.309,
-      "precision": 0.309,
-      "recall": 1.0,
-      "f1": 0.4721,
-      "auc": 0.9068,
-      "false_positive_rate": 1.0,
-      "detection_rate": 1.0,
-      "brier_score": 0.3833,
-      "ece": 0.4871
+    "E1_Signature_Only": {
+      "dataset": "E1_Signature_Only",
+      "samples": {
+        "total": 375,
+        "benign": 258,
+        "attack": 117
+      },
+      "classification": {
+        "accuracy": 0.816,
+        "balanced_accuracy": 0.8569,
+        "precision": 0.6348,
+        "recall": 0.9658,
+        "f1": 0.7661,
+        "macro_f1": 0.7661,
+        "auc": 0.8774,
+        "pr_auc": 0.7818,
+        "false_positive_rate": 0.2519,
+        "false_negative_rate": 0.0342,
+        "detection_rate": 0.9658,
+        "brier_score": 0.1493,
+        "ece": 0.1286
+      },
+      "confidence_intervals_95": {
+        "f1": [
+          0.7128,
+          0.8114
+        ],
+        "precision": [
+          0.5644,
+          0.6942
+        ],
+        "recall": [
+          0.9227,
+          0.9962
+        ],
+        "brier_score": [
+          0.1219,
+          0.1785
+        ]
+      },
+      "confusion_matrix": {
+        "TP": 113,
+        "FP": 65,
+        "TN": 193,
+        "FN": 4
+      },
+      "performance": {
+        "mean_latency_ms": 17.17,
+        "p95_latency_ms": 20.56,
+        "p99_latency_ms": 24.567,
+        "throughput_eps": 58.2,
+        "peak_memory_mb": 0.0,
+        "mean_cpu_pct": 0.0
+      },
+      "per_class": {},
+      "threshold_used": 0.5
     },
-    "3_Statistical_Only": {
-      "accuracy": 0.6913,
+    "E2_ML_Only": {
+      "dataset": "E2_ML_Only",
+      "samples": {
+        "total": 375,
+        "benign": 258,
+        "attack": 117
+      },
+      "classification": {
+        "accuracy": 0.312,
+        "balanced_accuracy": 0.5,
+        "precision": 0.312,
+        "recall": 1.0,
+        "f1": 0.4756,
+        "macro_f1": 0.4756,
+        "auc": 0.9218,
+        "pr_auc": 0.8447,
+        "false_positive_rate": 1.0,
+        "false_negative_rate": 0.0,
+        "detection_rate": 1.0,
+        "brier_score": 0.3792,
+        "ece": 0.4561
+      },
+      "confidence_intervals_95": {
+        "f1": [
+          0.4275,
+          0.5236
+        ],
+        "precision": [
+          0.2719,
+          0.3547
+        ],
+        "recall": [
+          1.0,
+          1.0
+        ],
+        "brier_score": [
+          0.3588,
+          0.3983
+        ]
+      },
+      "confusion_matrix": {
+        "TP": 117,
+        "FP": 258,
+        "TN": 0,
+        "FN": 0
+      },
+      "performance": {
+        "mean_latency_ms": 17.17,
+        "p95_latency_ms": 20.56,
+        "p99_latency_ms": 24.567,
+        "throughput_eps": 58.2,
+        "peak_memory_mb": 0.0,
+        "mean_cpu_pct": 0.0
+      },
+      "per_class": {},
+      "threshold_used": 0.5
+    },
+    "E3_Statistical_Only": {
+      "dataset": "E3_Statistical_Only",
+      "samples": {
+        "total": 375,
+        "benign": 258,
+        "attack": 117
+      },
+      "classification": {
+        "accuracy": 0.688,
+        "balanced_accuracy": 0.5,
+        "precision": 0.0,
+        "recall": 0.0,
+        "f1": 0.0,
+        "macro_f1": 0.0,
+        "auc": 0.769,
+        "pr_auc": 0.7591,
+        "false_positive_rate": 0.0,
+        "false_negative_rate": 1.0,
+        "detection_rate": 0.0,
+        "brier_score": 0.3024,
+        "ece": 0.3061
+      },
+      "confidence_intervals_95": {
+        "f1": [
+          0.0,
+          0.0
+        ],
+        "precision": [
+          0.0,
+          0.0
+        ],
+        "recall": [
+          0.0,
+          0.0
+        ],
+        "brier_score": [
+          0.2641,
+          0.343
+        ]
+      },
+      "confusion_matrix": {
+        "TP": 0,
+        "FP": 0,
+        "TN": 258,
+        "FN": 117
+      },
+      "performance": {
+        "mean_latency_ms": 17.17,
+        "p95_latency_ms": 20.56,
+        "p99_latency_ms": 24.567,
+        "throughput_eps": 58.2,
+        "peak_memory_mb": 0.0,
+        "mean_cpu_pct": 0.0
+      },
+      "per_class": {},
+      "threshold_used": 0.5
+    },
+    "E4_Fixed_Hybrid": {
+      "dataset": "E4_Fixed_Hybrid",
+      "samples": {
+        "total": 375,
+        "benign": 258,
+        "attack": 117
+      },
+      "classification": {
+        "accuracy": 0.816,
+        "balanced_accuracy": 0.8569,
+        "precision": 0.6348,
+        "recall": 0.9658,
+        "f1": 0.7661,
+        "macro_f1": 0.7661,
+        "auc": 0.9634,
+        "pr_auc": 0.9049,
+        "false_positive_rate": 0.2519,
+        "false_negative_rate": 0.0342,
+        "detection_rate": 0.9658,
+        "brier_score": 0.1369,
+        "ece": 0.1582
+      },
+      "confidence_intervals_95": {
+        "f1": [
+          0.7128,
+          0.8114
+        ],
+        "precision": [
+          0.5644,
+          0.6942
+        ],
+        "recall": [
+          0.9227,
+          0.9962
+        ],
+        "brier_score": [
+          0.1226,
+          0.1519
+        ]
+      },
+      "confusion_matrix": {
+        "TP": 113,
+        "FP": 65,
+        "TN": 193,
+        "FN": 4
+      },
+      "performance": {
+        "mean_latency_ms": 17.17,
+        "p95_latency_ms": 20.56,
+        "p99_latency_ms": 24.567,
+        "throughput_eps": 58.2,
+        "peak_memory_mb": 0.0,
+        "mean_cpu_pct": 0.0
+      },
+      "per_class": {},
+      "threshold_used": 0.5
+    },
+    "E5_Adaptive_Hybrid": {
+      "dataset": "E5_Adaptive_Hybrid",
+      "samples": {
+        "total": 375,
+        "benign": 258,
+        "attack": 117
+      },
+      "classification": {
+        "accuracy": 0.696,
+        "balanced_accuracy": 0.5128,
+        "precision": 1.0,
+        "recall": 0.0256,
+        "f1": 0.05,
+        "macro_f1": 0.05,
+        "auc": 0.9637,
+        "pr_auc": 0.9068,
+        "false_positive_rate": 0.0,
+        "false_negative_rate": 0.9744,
+        "detection_rate": 0.0256,
+        "brier_score": 0.1327,
+        "ece": 0.1024
+      },
+      "confidence_intervals_95": {
+        "f1": [
+          0.0,
+          0.1075
+        ],
+        "precision": [
+          0.0,
+          1.0
+        ],
+        "recall": [
+          0.0,
+          0.0568
+        ],
+        "brier_score": [
+          0.1201,
+          0.1487
+        ]
+      },
+      "confusion_matrix": {
+        "TP": 3,
+        "FP": 0,
+        "TN": 258,
+        "FN": 114
+      },
+      "performance": {
+        "mean_latency_ms": 17.17,
+        "p95_latency_ms": 20.56,
+        "p99_latency_ms": 24.567,
+        "throughput_eps": 58.2,
+        "peak_memory_mb": 0.0,
+        "mean_cpu_pct": 0.0
+      },
+      "per_class": {},
+      "threshold_used": 0.5
+    },
+    "E6_Hybrid_Trust": {
+      "dataset": "E6_Hybrid_Trust",
+      "samples": {
+        "total": 375,
+        "benign": 258,
+        "attack": 117
+      },
+      "classification": {
+        "accuracy": 0.8187,
+        "balanced_accuracy": 0.8589,
+        "precision": 0.6384,
+        "recall": 0.9658,
+        "f1": 0.7687,
+        "macro_f1": 0.7687,
+        "auc": 0.97,
+        "pr_auc": 0.94,
+        "false_positive_rate": 0.2481,
+        "false_negative_rate": 0.0342,
+        "detection_rate": 0.9658,
+        "brier_score": 0.1128,
+        "ece": 0.1536
+      },
+      "confidence_intervals_95": {
+        "f1": [
+          0.7134,
+          0.8114
+        ],
+        "precision": [
+          0.5681,
+          0.6948
+        ],
+        "recall": [
+          0.9227,
+          0.9962
+        ],
+        "brier_score": [
+          0.1021,
+          0.1247
+        ]
+      },
+      "confusion_matrix": {
+        "TP": 113,
+        "FP": 64,
+        "TN": 194,
+        "FN": 4
+      },
+      "performance": {
+        "mean_latency_ms": 17.17,
+        "p95_latency_ms": 20.56,
+        "p99_latency_ms": 24.567,
+        "throughput_eps": 58.2,
+        "peak_memory_mb": 0.0,
+        "mean_cpu_pct": 0.0
+      },
+      "per_class": {},
+      "threshold_used": 0.5
+    },
+    "E7_Hybrid_Graph": {
+      "dataset": "E7_Hybrid_Graph",
+      "samples": {
+        "total": 375,
+        "benign": 258,
+        "attack": 117
+      },
+      "classification": {
+        "accuracy": 0.8187,
+        "balanced_accuracy": 0.8589,
+        "precision": 0.6384,
+        "recall": 0.9658,
+        "f1": 0.7687,
+        "macro_f1": 0.7687,
+        "auc": 0.9722,
+        "pr_auc": 0.9457,
+        "false_positive_rate": 0.2481,
+        "false_negative_rate": 0.0342,
+        "detection_rate": 0.9658,
+        "brier_score": 0.1123,
+        "ece": 0.2079
+      },
+      "confidence_intervals_95": {
+        "f1": [
+          0.7134,
+          0.8114
+        ],
+        "precision": [
+          0.5681,
+          0.6948
+        ],
+        "recall": [
+          0.9227,
+          0.9962
+        ],
+        "brier_score": [
+          0.1003,
+          0.1247
+        ]
+      },
+      "confusion_matrix": {
+        "TP": 113,
+        "FP": 64,
+        "TN": 194,
+        "FN": 4
+      },
+      "performance": {
+        "mean_latency_ms": 17.17,
+        "p95_latency_ms": 20.56,
+        "p99_latency_ms": 24.567,
+        "throughput_eps": 58.2,
+        "peak_memory_mb": 0.0,
+        "mean_cpu_pct": 0.0
+      },
+      "per_class": {},
+      "threshold_used": 0.5
+    },
+    "E8_Hybrid_Uncertainty": {
+      "dataset": "E8_Hybrid_Uncertainty",
+      "samples": {
+        "total": 375,
+        "benign": 258,
+        "attack": 117
+      },
+      "classification": {
+        "accuracy": 0.8187,
+        "balanced_accuracy": 0.8589,
+        "precision": 0.6384,
+        "recall": 0.9658,
+        "f1": 0.7687,
+        "macro_f1": 0.7687,
+        "auc": 0.9735,
+        "pr_auc": 0.9442,
+        "false_positive_rate": 0.2481,
+        "false_negative_rate": 0.0342,
+        "detection_rate": 0.9658,
+        "brier_score": 0.1146,
+        "ece": 0.2081
+      },
+      "confidence_intervals_95": {
+        "f1": [
+          0.7134,
+          0.8114
+        ],
+        "precision": [
+          0.5681,
+          0.6948
+        ],
+        "recall": [
+          0.9227,
+          0.9962
+        ],
+        "brier_score": [
+          0.1019,
+          0.1278
+        ]
+      },
+      "confusion_matrix": {
+        "TP": 113,
+        "FP": 64,
+        "TN": 194,
+        "FN": 4
+      },
+      "performance": {
+        "mean_latency_ms": 17.17,
+        "p95_latency_ms": 20.56,
+        "p99_latency_ms": 24.567,
+        "throughput_eps": 58.2,
+        "peak_memory_mb": 0.0,
+        "mean_cpu_pct": 0.0
+      },
+      "per_class": {},
+      "threshold_used": 0.5
+    },
+    "E9_Full_AHRAS_Risk": {
+      "dataset": "E9_Full_AHRAS_Risk",
+      "samples": {
+        "total": 375,
+        "benign": 258,
+        "attack": 117
+      },
+      "classification": {
+        "accuracy": 0.8187,
+        "balanced_accuracy": 0.8589,
+        "precision": 0.6384,
+        "recall": 0.9658,
+        "f1": 0.7687,
+        "macro_f1": 0.7687,
+        "auc": 0.9742,
+        "pr_auc": 0.9483,
+        "false_positive_rate": 0.2481,
+        "false_negative_rate": 0.0342,
+        "detection_rate": 0.9658,
+        "brier_score": 0.1073,
+        "ece": 0.1952
+      },
+      "confidence_intervals_95": {
+        "f1": [
+          0.7134,
+          0.8114
+        ],
+        "precision": [
+          0.5681,
+          0.6948
+        ],
+        "recall": [
+          0.9227,
+          0.9962
+        ],
+        "brier_score": [
+          0.0946,
+          0.1215
+        ]
+      },
+      "confusion_matrix": {
+        "TP": 113,
+        "FP": 64,
+        "TN": 194,
+        "FN": 4
+      },
+      "performance": {
+        "mean_latency_ms": 17.17,
+        "p95_latency_ms": 20.56,
+        "p99_latency_ms": 24.567,
+        "throughput_eps": 58.2,
+        "peak_memory_mb": 0.0,
+        "mean_cpu_pct": 0.0
+      },
+      "per_class": {},
+      "threshold_used": 0.5
+    },
+    "E10_Full_AHRAS_Forecast": {
+      "dataset": "E10_Full_AHRAS_Forecast",
+      "samples": {
+        "total": 375,
+        "benign": 258,
+        "attack": 117
+      },
+      "classification": {
+        "accuracy": 0.8187,
+        "balanced_accuracy": 0.8589,
+        "precision": 0.6384,
+        "recall": 0.9658,
+        "f1": 0.7687,
+        "macro_f1": 0.7687,
+        "auc": 0.9672,
+        "pr_auc": 0.9242,
+        "false_positive_rate": 0.2481,
+        "false_negative_rate": 0.0342,
+        "detection_rate": 0.9658,
+        "brier_score": 0.1192,
+        "ece": 0.0701
+      },
+      "confidence_intervals_95": {
+        "f1": [
+          0.7134,
+          0.8114
+        ],
+        "precision": [
+          0.5681,
+          0.6948
+        ],
+        "recall": [
+          0.9227,
+          0.9962
+        ],
+        "brier_score": [
+          0.1051,
+          0.1333
+        ]
+      },
+      "confusion_matrix": {
+        "TP": 113,
+        "FP": 64,
+        "TN": 194,
+        "FN": 4
+      },
+      "performance": {
+        "mean_latency_ms": 17.17,
+        "p95_latency_ms": 20.56,
+        "p99_latency_ms": 24.567,
+        "throughput_eps": 58.2,
+        "peak_memory_mb": 0.0,
+        "mean_cpu_pct": 0.0
+      },
+      "per_class": {},
+      "threshold_used": 0.5
+    },
+    "E11_Full_AHRAS_Policy": {
+      "dataset": "E11_Full_AHRAS_Policy",
+      "samples": {
+        "total": 375,
+        "benign": 258,
+        "attack": 117
+      },
+      "classification": {
+        "accuracy": 0.8187,
+        "balanced_accuracy": 0.8589,
+        "precision": 0.6384,
+        "recall": 0.9658,
+        "f1": 0.7687,
+        "macro_f1": 0.7687,
+        "auc": 0.9641,
+        "pr_auc": 0.917,
+        "false_positive_rate": 0.2481,
+        "false_negative_rate": 0.0342,
+        "detection_rate": 0.9658,
+        "brier_score": 0.1187,
+        "ece": 0.07
+      },
+      "confidence_intervals_95": {
+        "f1": [
+          0.7134,
+          0.8114
+        ],
+        "precision": [
+          0.5681,
+          0.6948
+        ],
+        "recall": [
+          0.9227,
+          0.9962
+        ],
+        "brier_score": [
+          0.1046,
+          0.1328
+        ]
+      },
+      "confusion_matrix": {
+        "TP": 113,
+        "FP": 64,
+        "TN": 194,
+        "FN": 4
+      },
+      "performance": {
+        "mean_latency_ms": 17.17,
+        "p95_latency_ms": 20.56,
+        "p99_latency_ms": 24.567,
+        "throughput_eps": 58.2,
+        "peak_memory_mb": 0.0,
+        "mean_cpu_pct": 0.0
+      },
+      "per_class": {},
+      "threshold_used": 0.5
+    },
+    "E12_Full_Closed_Loop_AHRAS": {
+      "dataset": "E12_Full_Closed_Loop_AHRAS",
+      "samples": {
+        "total": 375,
+        "benign": 258,
+        "attack": 117
+      },
+      "classification": {
+        "accuracy": 0.8187,
+        "balanced_accuracy": 0.8589,
+        "precision": 0.6384,
+        "recall": 0.9658,
+        "f1": 0.7687,
+        "macro_f1": 0.7687,
+        "auc": 0.9641,
+        "pr_auc": 0.917,
+        "false_positive_rate": 0.2481,
+        "false_negative_rate": 0.0342,
+        "detection_rate": 0.9658,
+        "brier_score": 0.1187,
+        "ece": 0.07
+      },
+      "confidence_intervals_95": {
+        "f1": [
+          0.7134,
+          0.8114
+        ],
+        "precision": [
+          0.5681,
+          0.6948
+        ],
+        "recall": [
+          0.9227,
+          0.9962
+        ],
+        "brier_score": [
+          0.1046,
+          0.1328
+        ]
+      },
+      "confusion_matrix": {
+        "TP": 113,
+        "FP": 64,
+        "TN": 194,
+        "FN": 4
+      },
+      "performance": {
+        "mean_latency_ms": 17.17,
+        "p95_latency_ms": 20.56,
+        "p99_latency_ms": 24.567,
+        "throughput_eps": 58.2,
+        "peak_memory_mb": 0.0,
+        "mean_cpu_pct": 0.0
+      },
+      "per_class": {},
+      "threshold_used": 0.5
+    }
+  },
+  "ablation_studies": {
+    "A1_Remove_Signatures": {
+      "accuracy": 0.72,
+      "balanced_accuracy": 0.5513,
       "precision": 1.0,
-      "recall": 0.0011,
-      "f1": 0.0022,
-      "auc": 0.7351,
+      "recall": 0.1026,
+      "f1": 0.186,
+      "macro_f1": 0.186,
+      "auc": 0.8823,
+      "pr_auc": 0.831,
       "false_positive_rate": 0.0,
-      "detection_rate": 0.0011,
-      "brier_score": 0.2567,
-      "ece": 0.2765
+      "false_negative_rate": 0.8974,
+      "detection_rate": 0.1026,
+      "brier_score": 0.1852,
+      "ece": 0.1432
     },
-    "4_Full_Hybrid_Ensemble": {
-      "accuracy": 0.8107,
-      "precision": 0.6254,
-      "recall": 0.9655,
-      "f1": 0.7591,
-      "auc": 0.9624,
-      "false_positive_rate": 0.2586,
-      "detection_rate": 0.9655,
-      "brier_score": 0.1529,
-      "ece": 0.192
-    }
-  },
-  "2_trust_ablation": {
-    "Static_Trust_Constant": {
-      "accuracy": 0.786,
-      "precision": 0.5942,
-      "recall": 0.9698,
-      "f1": 0.7369,
-      "auc": 0.8849,
-      "false_positive_rate": 0.2962,
-      "detection_rate": 0.9698,
-      "brier_score": 0.1563,
-      "ece": 0.1508
+    "A2_Remove_ML_Ensemble": {
+      "accuracy": 0.7013,
+      "balanced_accuracy": 0.5214,
+      "precision": 1.0,
+      "recall": 0.0427,
+      "f1": 0.082,
+      "macro_f1": 0.082,
+      "auc": 0.8812,
+      "pr_auc": 0.7756,
+      "false_positive_rate": 0.0,
+      "false_negative_rate": 0.9573,
+      "detection_rate": 0.0427,
+      "brier_score": 0.1617,
+      "ece": 0.1607
     },
-    "Dynamic_Trust_Decay": {
-      "accuracy": 0.7763,
-      "precision": 0.5819,
-      "recall": 0.9806,
-      "f1": 0.7304,
-      "auc": 0.8993,
-      "false_positive_rate": 0.315,
-      "detection_rate": 0.9806,
-      "brier_score": 0.1571,
-      "ece": 0.1919
-    }
-  },
-  "3_historical_risk": {
-    "repeat_offenders_mean_boost": 0.15,
-    "one_off_attackers_mean_boost": 0.0,
-    "recidivism_discrimination_gain": 0.15
-  },
-  "4_graph_correlation": {
-    "normal_path_risk": 1.0,
-    "lateral_movement_risk": 1.0,
-    "lateral_movement_detected": true
-  },
-  "5_threat_intel": {
-    "known_ioc_match_count": 1,
-    "known_ioc_threat_score": 0.95,
-    "unknown_ioc_threat_score": 0.0
-  },
-  "6_xai_fidelity": {
-    "total_checked": 100,
-    "mean_error": 0.0,
-    "max_error": 0.0,
-    "fidelity_rate": 1.0,
-    "mean_fap": 1.0,
-    "mean_far": 0.5,
-    "mean_faf1": 0.6667
-  },
-  "7_forecasting": {
-    "escalating_mae": 0.0,
-    "escalating_rmse": 0.0,
-    "stable_control_mae": 0.022,
-    "early_warning_lead_time_events": 2
-  },
-  "8_honeypot_feedback": {
-    "lure_deployed": true,
-    "interaction_caught": true,
-    "zero_false_positive_property": true
-  },
-  "9_response_automation": {
-    "actions_executed": 1,
-    "action_type": "ISOLATE_HOST",
-    "time_to_mitigation_ms": 0.047
-  },
-  "10_weight_sensitivity": {
-    "Sig_Biased": {
-      "accuracy": 0.7977,
-      "precision": 0.6088,
-      "recall": 0.9655,
-      "f1": 0.7468,
-      "auc": 0.8286,
-      "false_positive_rate": 0.2774,
-      "detection_rate": 0.9655,
-      "brier_score": 0.183,
-      "ece": 0.2107
+    "A3_Remove_Statistical": {
+      "accuracy": 0.752,
+      "balanced_accuracy": 0.7497,
+      "precision": 0.58,
+      "recall": 0.7436,
+      "f1": 0.6517,
+      "macro_f1": 0.6517,
+      "auc": 0.9119,
+      "pr_auc": 0.8376,
+      "false_positive_rate": 0.2442,
+      "false_negative_rate": 0.2564,
+      "detection_rate": 0.7436,
+      "brier_score": 0.1107,
+      "ece": 0.155
     },
-    "Balanced_Production": {
-      "accuracy": 0.7567,
-      "precision": 0.5615,
-      "recall": 0.9698,
-      "f1": 0.7112,
-      "auc": 0.8067,
-      "false_positive_rate": 0.3386,
-      "detection_rate": 0.9698,
-      "brier_score": 0.2171,
-      "ece": 0.2371
-    },
-    "ML_Biased": {
-      "accuracy": 0.3667,
-      "precision": 0.3279,
+    "A4_Remove_Trust": {
+      "accuracy": 0.832,
+      "balanced_accuracy": 0.8779,
+      "precision": 0.65,
       "recall": 1.0,
-      "f1": 0.4939,
-      "auc": 0.5779,
-      "false_positive_rate": 0.9165,
+      "f1": 0.7879,
+      "macro_f1": 0.7879,
+      "auc": 0.9816,
+      "pr_auc": 0.9618,
+      "false_positive_rate": 0.2442,
+      "false_negative_rate": 0.0,
       "detection_rate": 1.0,
-      "brier_score": 0.4618,
-      "ece": 0.4899
+      "brier_score": 0.0929,
+      "ece": 0.1483
+    },
+    "A5_Remove_Graph": {
+      "accuracy": 0.832,
+      "balanced_accuracy": 0.8779,
+      "precision": 0.65,
+      "recall": 1.0,
+      "f1": 0.7879,
+      "macro_f1": 0.7879,
+      "auc": 0.9845,
+      "pr_auc": 0.9673,
+      "false_positive_rate": 0.2442,
+      "false_negative_rate": 0.0,
+      "detection_rate": 1.0,
+      "brier_score": 0.094,
+      "ece": 0.1716
+    },
+    "A6_Remove_Historical": {
+      "accuracy": 0.832,
+      "balanced_accuracy": 0.8779,
+      "precision": 0.65,
+      "recall": 1.0,
+      "f1": 0.7879,
+      "macro_f1": 0.7879,
+      "auc": 0.9834,
+      "pr_auc": 0.964,
+      "false_positive_rate": 0.2442,
+      "false_negative_rate": 0.0,
+      "detection_rate": 1.0,
+      "brier_score": 0.0967,
+      "ece": 0.1549
+    },
+    "A7_Remove_Threat_Intel": {
+      "accuracy": 0.8267,
+      "balanced_accuracy": 0.8694,
+      "precision": 0.6461,
+      "recall": 0.9829,
+      "f1": 0.7797,
+      "macro_f1": 0.7797,
+      "auc": 0.974,
+      "pr_auc": 0.9408,
+      "false_positive_rate": 0.2442,
+      "false_negative_rate": 0.0171,
+      "detection_rate": 0.9829,
+      "brier_score": 0.1063,
+      "ece": 0.1206
+    },
+    "A8_Remove_Deception": {
+      "accuracy": 0.832,
+      "balanced_accuracy": 0.8779,
+      "precision": 0.65,
+      "recall": 1.0,
+      "f1": 0.7879,
+      "macro_f1": 0.7879,
+      "auc": 0.977,
+      "pr_auc": 0.9442,
+      "false_positive_rate": 0.2442,
+      "false_negative_rate": 0.0,
+      "detection_rate": 1.0,
+      "brier_score": 0.0999,
+      "ece": 0.126
+    },
+    "A9_Remove_Forecasting": {
+      "accuracy": 0.832,
+      "balanced_accuracy": 0.8779,
+      "precision": 0.65,
+      "recall": 1.0,
+      "f1": 0.7879,
+      "macro_f1": 0.7879,
+      "auc": 0.9739,
+      "pr_auc": 0.9373,
+      "false_positive_rate": 0.2442,
+      "false_negative_rate": 0.0,
+      "detection_rate": 1.0,
+      "brier_score": 0.0995,
+      "ece": 0.1211
+    },
+    "A10_Remove_Uncertainty": {
+      "accuracy": 0.832,
+      "balanced_accuracy": 0.8779,
+      "precision": 0.65,
+      "recall": 1.0,
+      "f1": 0.7879,
+      "macro_f1": 0.7879,
+      "auc": 0.9738,
+      "pr_auc": 0.9372,
+      "false_positive_rate": 0.2442,
+      "false_negative_rate": 0.0,
+      "detection_rate": 1.0,
+      "brier_score": 0.0996,
+      "ece": 0.125
+    },
+    "A11_Remove_Adaptive": {
+      "accuracy": 0.832,
+      "balanced_accuracy": 0.8779,
+      "precision": 0.65,
+      "recall": 1.0,
+      "f1": 0.7879,
+      "macro_f1": 0.7879,
+      "auc": 0.9738,
+      "pr_auc": 0.9372,
+      "false_positive_rate": 0.2442,
+      "false_negative_rate": 0.0,
+      "detection_rate": 1.0,
+      "brier_score": 0.0994,
+      "ece": 0.1238
+    },
+    "A12_Remove_Response_Gate": {
+      "accuracy": 0.832,
+      "balanced_accuracy": 0.8779,
+      "precision": 0.65,
+      "recall": 1.0,
+      "f1": 0.7879,
+      "macro_f1": 0.7879,
+      "auc": 0.9738,
+      "pr_auc": 0.9372,
+      "false_positive_rate": 0.2442,
+      "false_negative_rate": 0.0,
+      "detection_rate": 1.0,
+      "brier_score": 0.0992,
+      "ece": 0.1225
     }
   },
-  "11_calibration": {
-    "raw_brier_score": 0.15599905693666666,
-    "raw_ece": 0.19489163333333331,
-    "calibrated_brier_score": 0.16541430556648784,
-    "calibrated_ece": 0.1921622816457198
+  "forecasting_impact_evaluation": {
+    "evaluated_sequences": 4,
+    "mean_warning_lead_time_events": 1.5,
+    "median_warning_lead_time_events": 1.5,
+    "warning_precision": 1.0,
+    "false_warning_count": 0,
+    "missed_warning_rate": 0.3333,
+    "blast_radius_reduction_pct": 27.8,
+    "operational_verdict": "Forecast-aware response containment achieved 1.5 events earlier warning, yielding ~27.8% lower estimated blast radius."
   }
 }

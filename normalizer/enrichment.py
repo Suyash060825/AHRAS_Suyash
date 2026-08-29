@@ -36,6 +36,8 @@ _GEO_RATE_LIMIT = 45   # ip-api.com free tier: 45 req/min
 
 
 def _is_private(ip: str) -> bool:
+    if not ip or not isinstance(ip, str):
+        return True
     return any(ip.startswith(p) for p in _PRIVATE_PREFIXES)
 
 

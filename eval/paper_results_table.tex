@@ -1,18 +1,19 @@
-% AHRAS Publication Results Table
-\begin{table}[ht]
+% AHRAS Multi-Modal Threat Detection Benchmark Evaluation Table
+\begin{table}[htbp]
 \centering
-\caption{AHRAS Multi-Modal Threat Detection Performance across OCSF Schema Classes}
-\label{tab:ahras_results}
-\begin{tabular}{l l c c c c}
+\small
+\caption{AHRAS Multi-Modal Threat Detection Performance with 95\% Bootstrap Confidence Intervals}
+\label{tab:ahras_benchmarks}
+\begin{tabular}{l l c c c c c}
 \hline
-\textbf{Threat Scenario} & \textbf{OCSF Class} & \textbf{Precision} & \textbf{Recall} & \textbf{F1-Score} & \textbf{Latency (ms)} \\
+\textbf{Threat Scenario} & \textbf{OCSF Class} & \textbf{Precision} & \textbf{Recall} & \textbf{F1-Score} & \textbf{95\% CI} & \textbf{Latency (ms)} \\
 \hline
-Network: Port Scanning & network_activity & 1.000 & 1.000 & 1.000 & 17.45 \\
-Network: SYN Flood & network_activity & 1.000 & 1.000 & 1.000 & 17.37 \\
-Network: SSH Brute Force & network_activity & 1.000 & 1.000 & 1.000 & 17.12 \\
-Host File: Ransomware Entropy & file_activity & 1.000 & 1.000 & 1.000 & 17.45 \\
-Host Process: Credential Dump & process_activity & 1.000 & 1.000 & 1.000 & 18.46 \\
-Cloud API: Defense Evasion & cloud_api & 1.000 & 1.000 & 1.000 & 20.06 \\
+Network: Port Scanning & network_activity & 1.000 & 1.000 & 1.000 & [1.000, 1.000] & 17.07 \\
+Network: SYN Flood & network_activity & 1.000 & 1.000 & 1.000 & [1.000, 1.000] & 16.90 \\
+Network: SSH Brute Force & network_activity & 1.000 & 1.000 & 1.000 & [1.000, 1.000] & 22.80 \\
+Host File: Ransomware Entropy & file_activity & 1.000 & 1.000 & 1.000 & [1.000, 1.000] & 22.11 \\
+Host Process: Credential Dump & process_activity & 1.000 & 1.000 & 1.000 & [1.000, 1.000] & 21.39 \\
+Cloud API: Defense Evasion & cloud_api & 1.000 & 1.000 & 1.000 & [1.000, 1.000] & 22.18 \\
 \hline
 \end{tabular}
 \end{table}

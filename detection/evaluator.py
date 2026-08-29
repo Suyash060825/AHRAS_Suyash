@@ -478,7 +478,7 @@ def export_latex_table(
     ]
 
     for cls_idx, (cls, det_metrics) in enumerate(class_results.items()):
-        cls_label = cls.replace("_", "\_")
+        cls_label = cls.replace("_", r"\_")
         first = True
         for det in detectors:
             m = det_metrics.get(det)

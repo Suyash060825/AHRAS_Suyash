@@ -1,12 +1,3 @@
-# AHRAS — Adaptive Hybrid Risk-Aware Security System
-# Dependency Manifest for Production & Research Evaluation
-
-fastapi>=0.110.0
-uvicorn>=0.28.0
-pydantic>=2.6.0
-starlette>=0.36.0
-httpx>=0.27.0
-numpy>=1.24.0
-scikit-learn>=1.4.0
-joblib>=1.3.0
-psutil>=5.9.0
+# AHRAS — Adaptive Hybrid Risk-Aware Security Framework
+# Primary Dependency Manifest (Includes Core + Essential Modules)
+-r requirements-core.txt

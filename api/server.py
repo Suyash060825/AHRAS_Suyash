@@ -1,41 +1,37 @@
 from __future__ import annotations
 """
-AHRAS SOC REST API Server
-------------------------
-Production FastAPI service providing endpoints for SOC analysts, dashboards,
-and automated active defense response workflows.
+AHRAS SOC REST API Server (Hardened & Auditable)
+------------------------------------------------
+Production-grade FastAPI service providing secured endpoints for SOC analysts,
+dashboards, evidence ledger queries, risk scoring, early warning, and gated SOAR mitigations.
 
-Endpoints:
-  - GET  /health                    : Service health and system status
-  - GET  /dashboard, /              : Real-time Cyber-Glassmorphism SOC Dashboard
-  - GET  /alerts                    : Query historical security alerts with filtering
-  - GET  /entities/{key}/report     : Unified per-entity security report (JSON & Markdown)
-  - POST /alerts/{id}/respond       : Trigger or approve active defense response actions
-  - GET  /actions/pending           : Active defense actions awaiting SOC approval
-  - GET  /actions/history           : Audit trail of executed active defense mitigations
-  - POST /analyst/feedback          : Mark false positives and reset entity baselines
-  - GET  /metrics                   : SOC operational metrics & engine stats
-  - POST /api/detect                : Direct telemetry detection and XAI scoring
-  - POST /api/score                 : Direct risk evaluation
-  - POST /api/forecast              : Time-series risk forecasting & early warning
-  - GET  /api/forecast/escalating   : Fleet-wide top escalating threat sources
-  - POST /api/auth/token            : OAuth2/JWT authentication endpoint
-  - GET  /api/auth/users            : User management and role listing
-  - GET  /api/threat-intel/iocs     : Threat intelligence IOC database
-  - POST /api/threat-intel/iocs     : Ingest new STIX/IOC threat indicators
-  - GET  /api/xai/fidelity          : Exact analytical XAI fidelity ledger summary
+Hardening features:
+  - Request correlation IDs (X-Correlation-ID)
+  - Security headers (HSTS, CSP, X-Frame-Options, X-Content-Type-Options)
+  - Request body size limits
+  - In-memory rate limiting with 429 status and retry headers
+  - Strict CORS origin allowlist from configuration
+  - Dual liveness (/health/live) and readiness (/health/ready) probes
+  - RBAC enforcement per endpoint
 """
 
 import os
 import time
+import uuid
 import logging
+from collections import defaultdict
 from typing import Any, Dict, List, Optional
 
-from fastapi import FastAPI, HTTPException, Query, Body, Path, status, Depends
+from fastapi import FastAPI, HTTPException, Query, Body, Path, status, Depends, Request, Response
 from fastapi.middleware.cors import CORSMiddleware
-from fastapi.responses import HTMLResponse
+from fastapi.responses import HTMLResponse, JSONResponse
+from starlette.middleware.base import BaseHTTPMiddleware
 from pydantic import BaseModel, Field
 
+from config.settings import (
+    ALLOWED_ORIGINS, RATE_LIMIT_PER_MINUTE, MAX_REQUEST_BYTES,
+    DEV_MODE, AHRAS_ENV
+)
 from storage.store import get_store
 from detection.statistical_engine.entity_report import get_entity_report_generator, EntityReport
 from detection.statistical_engine.stat_engine import get_statistical_engine
@@ -48,21 +44,92 @@ from threat_intel.intel import get_threat_intel_manager
 from auth.manager import authenticate_user, create_access_token, list_users, register_user
 from xai.fidelity_ledger import get_fidelity_ledger
 from rbac.permissions import Perm, Role
-from rbac.middleware import get_user_permissions
+from rbac.middleware import get_user_permissions, require_permission
 
 log = logging.getLogger(__name__)
 
 # Initialize FastAPI App
 app = FastAPI(
     title="AHRAS SOC Security API",
-    description="Adaptive Hybrid Risk-Aware Security REST API for Enterprise SOC Integration",
-    version="6.0.0",
+    description="Adaptive Hybrid Risk-Aware Security REST API for Evidence-Driven Defense & SOC Integration",
+    version="6.1.0",
 )
 
-# Enable CORS for SOC Frontend Web Dashboards
+
+# ── Middleware 1: Request Correlation ID & Performance Logging ────────────────
+class CorrelationAndSecurityMiddleware(BaseHTTPMiddleware):
+    async def dispatch(self, request: Request, call_next):
+        req_id = request.headers.get("X-Correlation-ID") or str(uuid.uuid4())
+        request.state.correlation_id = req_id
+        t0 = time.perf_counter()
+
+        # Enforce Request Size Limit
+        content_length = request.headers.get("content-length")
+        if content_length and int(content_length) > MAX_REQUEST_BYTES:
+            return JSONResponse(
+                status_code=status.HTTP_413_REQUEST_ENTITY_TOO_LARGE,
+                content={"error": "Payload Too Large", "max_bytes": MAX_REQUEST_BYTES, "correlation_id": req_id}
+            )
+
+        response: Response = await call_next(request)
+        elapsed_ms = round((time.perf_counter() - t0) * 1000, 2)
+
+        # Attach Correlation & Security Headers
+        response.headers["X-Correlation-ID"] = req_id
+        response.headers["X-Response-Time-Ms"] = str(elapsed_ms)
+        response.headers["X-Content-Type-Options"] = "nosniff"
+        response.headers["X-Frame-Options"] = "DENY"
+        response.headers["X-XSS-Protection"] = "1; mode=block"
+        response.headers["Referrer-Policy"] = "strict-origin-when-cross-origin"
+        if not DEV_MODE:
+            response.headers["Strict-Transport-Security"] = "max-age=31536000; includeSubDomains"
+            response.headers["Content-Security-Policy"] = "default-src 'self'; script-src 'self' 'unsafe-inline'; style-src 'self' 'unsafe-inline';"
+
+        return response
+
+app.add_middleware(CorrelationAndSecurityMiddleware)
+
+
+# ── Middleware 2: Rate Limiting ───────────────────────────────────────────────
+_client_request_counts: Dict[str, List[float]] = defaultdict(list)
+
+class RateLimitingMiddleware(BaseHTTPMiddleware):
+    async def dispatch(self, request: Request, call_next):
+        # Exclude dashboard static views, docs, and health checks from rate limiting
+        if request.url.path in ("/", "/dashboard", "/health", "/health/live", "/health/ready", "/docs", "/openapi.json", "/metrics"):
+            return await call_next(request)
+
+        client_ip = request.client.host if request.client else "127.0.0.1"
+        now = time.time()
+
+        # Sliding window per minute
+        timestamps = _client_request_counts[client_ip]
+        _client_request_counts[client_ip] = [t for t in timestamps if now - t < 60.0]
+
+        if len(_client_request_counts[client_ip]) >= RATE_LIMIT_PER_MINUTE:
+            return JSONResponse(
+                status_code=status.HTTP_429_TOO_MANY_REQUESTS,
+                content={
+                    "error": "Rate limit exceeded",
+                    "limit_per_minute": RATE_LIMIT_PER_MINUTE,
+                    "retry_after_seconds": 60 - int(now - _client_request_counts[client_ip][0]),
+                },
+                headers={"Retry-After": "60"}
+            )
+
+        _client_request_counts[client_ip].append(now)
+        response = await call_next(request)
+        response.headers["X-RateLimit-Limit"] = str(RATE_LIMIT_PER_MINUTE)
+        response.headers["X-RateLimit-Remaining"] = str(max(0, RATE_LIMIT_PER_MINUTE - len(_client_request_counts[client_ip])))
+        return response
+
+app.add_middleware(RateLimitingMiddleware)
+
+
+# ── CORS Middleware ───────────────────────────────────────────────────────────
 app.add_middleware(
     CORSMiddleware,
-    allow_origins=["*"],
+    allow_origins=ALLOWED_ORIGINS if ALLOWED_ORIGINS else (["*"] if DEV_MODE else ["http://localhost:8000"]),
     allow_credentials=True,
     allow_methods=["*"],
     allow_headers=["*"],
@@ -84,18 +151,18 @@ class ResponseApprovalRequest(BaseModel):
 
 
 class DetectRequest(BaseModel):
-    timestamp:   Optional[float] = None
-    source_ip:   Optional[str] = Field(None, alias="src_ip")
-    dest_ip:     Optional[str] = Field(None, alias="dst_ip")
-    source_port: Optional[int] = Field(None, alias="src_port")
-    dest_port:   Optional[int] = Field(None, alias="dst_port")
-    protocol:    Optional[str] = "TCP"
-    bytes:       Optional[int] = 512
-    packet_count: Optional[int] = 10
-    duration_sec: Optional[float] = 1.0
-    ioc_match:   Optional[List[str]] = None
+    timestamp:        Optional[float] = None
+    source_ip:        Optional[str] = Field(None, alias="src_ip")
+    dest_ip:          Optional[str] = Field(None, alias="dst_ip")
+    source_port:      Optional[int] = Field(None, alias="src_port")
+    dest_port:        Optional[int] = Field(None, alias="dst_port")
+    protocol:         Optional[str] = "TCP"
+    bytes:            Optional[int] = 512
+    packet_count:     Optional[int] = 10
+    duration_sec:     Optional[float] = 1.0
+    ioc_match:        Optional[List[str]] = None
     unique_dst_ports: Optional[int] = 1
-    tcp_flags:   Optional[List[str]] = None
+    tcp_flags:        Optional[List[str]] = None
 
     model_config = {"populate_by_name": True}
 
@@ -137,13 +204,14 @@ def get_dashboard():
 
 @app.get("/health", tags=["System"])
 def health_check():
-    """Health check endpoint returning engine state."""
+    """Detailed health check endpoint returning service state and active modules."""
     return {
         "status":     "healthy",
         "service":    "AHRAS SOC REST API",
-        "version":    "6.0.0",
+        "version":    "6.1.0",
+        "environment": AHRAS_ENV,
         "timestamp":  time.time(),
-        "store_type": "SQLite / MongoDB Dual-Mode",
+        "store_type": "SQLite" if DEV_MODE else "MongoDB",
         "modules": {
             "ocsf_normalizer": "OPERATIONAL",
             "detection_engines": "TRI_ENGINE_ENSEMBLE",
@@ -156,6 +224,24 @@ def health_check():
             "rbac_access_control": "ENFORCED",
         }
     }
+
+
+@app.get("/health/live", tags=["System"])
+def liveness_probe():
+    """Kubernetes / Docker Liveness Probe."""
+    return {"status": "alive", "timestamp": time.time()}
+
+
+@app.get("/health/ready", tags=["System"])
+def readiness_probe():
+    """Kubernetes / Docker Readiness Probe verifying storage and pipeline availability."""
+    try:
+        store = get_store()
+        _ = store.count("events", {})
+        return {"status": "ready", "store": "connected", "timestamp": time.time()}
+    except Exception as e:
+        log.error(f"[HEALTH] Readiness probe failure: {e}")
+        raise HTTPException(status_code=status.HTTP_503_SERVICE_UNAVAILABLE, detail=f"Store unready: {e}")
 
 
 @app.get("/alerts", tags=["Alerts"])
@@ -266,22 +352,23 @@ def submit_analyst_feedback(req: AnalystFeedbackRequest):
 
 @app.get("/metrics", tags=["System"])
 def get_metrics():
-    """Provides real-time SOC security operational metrics."""
+    """Provides Prometheus-compatible operational and detection metrics."""
     stat_eng = get_statistical_engine()
     orch = get_response_orchestrator()
     s_stats = stat_eng.get_stats()
+    uptime = round(time.time() - getattr(app.state, "start_time", time.time()), 2)
 
     return {
-        "system_status":     "OPERATIONAL",
-        "tracked_entities":  s_stats.get("tracked_entities", 0),
+        "system_status":       "OPERATIONAL",
+        "tracked_entities":    s_stats.get("tracked_entities", 0),
         "total_events_scored": s_stats.get("total_scored", 0),
-        "active_mitigations": len(orch.get_action_history()),
-        "pending_approvals":  len(orch.get_pending_actions()),
-        "uptime_sec":         round(time.time() - getattr(app.state, "start_time", time.time()), 2),
+        "active_mitigations":  len(orch.get_action_history()),
+        "pending_approvals":   len(orch.get_pending_actions()),
+        "uptime_sec":          uptime,
     }
 
 
-# ── Research REST APIs (POST /api/detect, /api/score, /api/forecast, /api/auth) ──
+# ── Detection, Risk, & Forecasting APIs ───────────────────────────────────────
 
 @app.post("/api/detect", tags=["Detection & Risk"])
 def detect_event(req: DetectRequest):
@@ -395,7 +482,6 @@ def list_escalating_threats(limit: int = Query(10, ge=1, le=50)):
         k = p.get("entity_key")
         z = p.get("zscore", 0.0)
         drift = p.get("behavioral_drift", 0.0)
-        # Synthesize recent score ramp
         base = min(1.0, (z / 5.0) * 0.5 + (drift / 3.0) * 0.5)
         histories[k] = [max(0.0, base - 0.2), max(0.0, base - 0.1), base]
 
@@ -411,7 +497,7 @@ def login_for_access_token(req: TokenRequest):
     if not user:
         raise HTTPException(
             status_code=status.HTTP_401_UNAUTHORIZED,
-            detail="Incorrect username or password",
+            detail="Incorrect username or password, or account locked",
             headers={"WWW-Authenticate": "Bearer"},
         )
     role = user["role"]

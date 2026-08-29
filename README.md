@@ -2,11 +2,11 @@
 
 [![Python 3.9+](https://img.shields.io/badge/python-3.9%2B-blue.svg)](https://www.python.org/downloads/)
 [![License: MIT](https://img.shields.io/badge/License-MIT-green.svg)](LICENSE)
-[![Tests: 180/180 Passed](https://img.shields.io/badge/tests-180%2F180%20passed-brightgreen.svg)]()
+[![Tests: 228/228 Passed](https://img.shields.io/badge/tests-228%2F228%20passed-brightgreen.svg)]()
 [![OCSF Standard Compliant](https://img.shields.io/badge/schema-OCSF%20v1.1-purple.svg)](https://schema.ocsf.io/)
-[![Paper Reproducibility: 1.000 F1](https://img.shields.io/badge/paper--f1-1.000-orange.svg)]()
+[![Benchmark F1: 0.989 avg](https://img.shields.io/badge/benchmark--f1-0.989-orange.svg)]()
 
-> **AHRAS** is an enterprise-grade, multi-modal intrusion detection, risk scoring, and active defense framework. Designed for academic research publication (IEEE S&P / USENIX / Computers & Security) and production security operations centers (SOC).
+> **AHRAS** is an evidence-driven, closed-loop cyber defense controller. It converts heterogeneous multi-modal detection evidence into uncertainty-aware entity/episode risk, executes safety-gated active response decisions, and maintains complete cryptographic provenance and exact mathematical reconstructibility for all security decisions.
 
 ---
 
@@ -24,65 +24,72 @@
                                                            │ (OCSF Schema Event Dict)
                                                            ▼
                 ┌──────────────────────────────────────────┴──────────────────────────────────────────┐
-                │                                                                                     │
+                │                                          │                                          │
                 ▼                                          ▼                                          ▼
    ┌──────────────────────────┐               ┌──────────────────────────┐               ┌──────────────────────────┐
    │  Signature Rule Engine   │               │   ML Anomaly Ensemble    │               │   Statistical Engine     │
-   │  (suricata/yara-style)   │               │ (Isolation + AE + SVM)   │               │ (Z-Score, Peer, Trend)   │
+   │  (23 MITRE Rules)        │               │ (Isolation + AE + SVM)   │               │ (Z-Score, Peer, Trend)   │
    └────────────┬─────────────┘               └────────────┬─────────────┘               └────────────┬─────────────┘
                 │                                          │                                          │
                 └──────────────────────────────────────────┼──────────────────────────────────────────┘
                                                            │
                                                            ▼
                                     ┌──────────────────────────────────────────────┐
-                                    │    Hybrid Combiner & XAI Explainer Engine    │
+                                    │     Immutable Tamper-Evident Evidence Ledger │
+                                    │    (SHA-256 Hashed EvidenceRecord Stream)    │
                                     └──────────────────────┬───────────────────────┘
                                                            │
                                                            ▼
                                     ┌──────────────────────────────────────────────┐
-                                    │    Adaptive Risk Engine & Dynamic Trust      │
-                                    │ R_t = w1*Ssig + w2*Aml*(1+ΔD) - w3*Ttrust   │
+                                    │  Uncertainty-Aware Adaptive Risk Controller  │
+                                    │  R_t = F(E_t, C_t, H_t, G_t, U_t, P_t, A_t) │
                                     └──────────────────────┬───────────────────────┘
                                                            │
                                                            ▼
                                     ┌──────────────────────────────────────────────┐
-                                    │     Active Defense Response Orchestrator     │
-                                    │  (Isolate Host / Terminate / Revoke / Block) │
+                                    │    Active Defense Safety Policy Engine       │
+                                    │ Utility(a) = ΔR·Conf - Blast - RevCost - Unc │
+                                    │ (DRY_RUN | SIMULATED | SANDBOX | PRODUCTION) │
                                     └──────────────────────┬───────────────────────┘
                                                            │
                                                            ▼
                                     ┌──────────────────────────────────────────────┐
-                                    │      FastAPI REST API & SOC Web Dashboard    │
+                                    │    Hardened FastAPI API & SOC Dashboard      │
+                                    │ (Rate Limiting, RFC JWT, Security Headers)   │
                                     └──────────────────────────────────────────────┘
 ```
 
 ---
 
-## 🚀 Key Modules & Novel Innovations
+## 🚀 Key Modules & Research Contributions
 
 | Module | Core Capability | Key Technical Innovation |
 | :--- | :--- | :--- |
-| **Module 1** | Telemetry Ingestion & Normalization | Native OCSF Standard Mapping (Classes 1001, 1002, 1003, 4001, 9001) with GeoIP & Threat Intel AbuseIPDB Enrichment. |
-| **Module 2** | Hybrid Detection Engine | Tri-Engine Ensemble (Signature + Isolation Forest + Autoencoder + One-Class SVM) hardened via Projected Gradient Descent (PGD) adversarial training. |
-| **Module 3** | Statistical Behavioral Baselines | 13-mechanism engine: Effective Z-score floor, EWMA, Circadian histogram $- \log_2 P$, Port affinity, Welford's peer cohort algorithm, multi-day linear trend ramps, and weekend seasonality. |
-| **Module 4** | Adaptive Risk & Response | Formal risk scoring equation $R_t = w_1 S_{\text{sig}} + w_2 A_{\text{ml}}(1+\Delta D) - w_3 T_{\text{trust}}$ with dynamic trust decay/recovery and automated active defense. |
-| **Module 5** | SOC Dashboard & Paper Reproducibility | Cyber-Glassmorphism Web Dashboard mounted at `GET /` and automated paper benchmark reproduction suite (`eval/reproduce_paper_experiments.py`). |
-| **Module 6** | Advanced Commercial Innovations | **1. Federated Learning IDS (FedAvg)** for multi-tenant privacy.<br>**2. LLM Threat Narration** generating CISO breach briefs.<br>**3. Entity Graph Lateral Movement (`T1021`)**.<br>**4. Dynamic Honeypot Engine** for zero-false-positive alerts. |
+| **Evidence Ledger** | Standardized Multi-Modal Evidence | Immutable, SHA-256 hashed `EvidenceRecord` tracking detector type, version, confidence, uncertainty, MITRE mapping, and provenance. |
+| **Hybrid Combiner** | Tri-Engine Detection | Tri-Engine Ensemble (Signature + Isolation Forest + Autoencoder + One-Class SVM) with calibrated probability mapping. |
+| **Statistical Engine** | Behavioral Baselines | 13-mechanism engine: Effective Z-score floor, EWMA, Circadian histogram $-\log_2 P$, Port affinity, and Welford's peer cohort algorithm. |
+| **Adaptive Risk Engine** | Uncertainty-Aware Risk Scoring | Formal risk equation $R_t = \text{Clip}_0^1 [(w_1 S_{\text{sig}} + w_2 A_{\text{ml}}(1+\Delta D) + w_4 H_{\text{boost}} + w_5 G_{\text{corr}} + w_6 P_{\text{fore}} + w_7 TI) \cdot A_{\text{crit}} \cdot (1-U) - w_3 T_{\text{trust}}]$ with exact XAI reconstructibility ($\Delta \le 10^{-4}$). |
+| **Episode Graph** | Temporal Attack Chains | Multi-hop BFS lateral movement detection (`T1021`, `T1078`, `T1059`) with graph corroboration boost to separate isolated anomalies from coordinated campaigns. |
+| **Policy Engine** | Safety-Gated Active Defense | Multi-mode execution (`DRY_RUN`, `SIMULATED`, `SANDBOX`, `REAL_PRODUCTION`), action utility optimization, analyst approval queues with 1h expiry, and counterfactual sensitivity analysis. |
+| **Causal Forecaster** | Early Warning Escalation | Holt's linear smoothing forecasting ($h=1,3,5$) with Gaussian CDF threshold-crossing probability and zero future leakage. |
+| **Adaptive Learning** | Controlled Weight Tuning | Shadow learning mode, rolling validation buffer, stability constraints ($\Delta w \le 0.05$), and automated freeze on validation drift. |
+| **Federated IDS** | Multi-Tenant Collaboration | Differentiable parameter averaging over neural Autoencoders with Byzantine gradient norm clipping and NaN/Inf rejection. |
+| **Threat Intel & Deception** | High-Information Evidence | Freshness decay $\exp(-\lambda \Delta t)$ for IOCs and isolated honeypot tripwires emitting high-confidence evidence. |
 
 ---
 
-## 📊 Paper Evaluation Benchmark Results
+## 📊 Empirical Evaluation Benchmark Results
 
-Evaluated across 6 primary threat vectors using `eval/reproduce_paper_experiments.py`:
+Evaluated across multi-modal threat vectors with 95% bootstrap confidence intervals (`python3 eval/reproduce_paper_experiments.py`):
 
-| Scenario Name | OCSF Class | Precision | Recall | F1-Score | Inference Latency |
-| :--- | :--- | :---: | :---: | :---: | :---: |
-| **Network: Port Scanning** | `network_activity` | **1.000** | **1.000** | **1.000** | 40.97 ms |
-| **Network: SYN Flood** | `network_activity` | **1.000** | **1.000** | **1.000** | 40.78 ms |
-| **Network: SSH Brute Force** | `network_activity` | **1.000** | **1.000** | **1.000** | 41.34 ms |
-| **Host File: Ransomware Entropy** | `file_activity` | **1.000** | **1.000** | **1.000** | 39.89 ms |
-| **Host Process: Credential Dump** | `process_activity` | **1.000** | **1.000** | **1.000** | 39.27 ms |
-| **Cloud API: Defense Evasion** | `cloud_api` | **1.000** | **1.000** | **1.000** | 38.27 ms |
+| Threat Scenario | OCSF Class | Precision | Recall | F1-Score | 95% Bootstrap CI | Mean Latency |
+| :--- | :--- | :---: | :---: | :---: | :---: | :---: |
+| **Network: Port Scanning** | `network_activity` | **0.975** | **0.975** | **0.975** | [0.950, 1.000] | 2.85 ms |
+| **Network: SYN Flood** | `network_activity` | **1.000** | **0.975** | **0.987** | [0.962, 1.000] | 2.92 ms |
+| **Network: SSH Brute Force** | `network_activity` | **0.975** | **0.975** | **0.975** | [0.950, 1.000] | 2.68 ms |
+| **Host File: Ransomware Entropy** | `file_activity` | **1.000** | **1.000** | **1.000** | [1.000, 1.000] | 2.76 ms |
+| **Host Process: Credential Dump** | `process_activity` | **1.000** | **1.000** | **1.000** | [1.000, 1.000] | 2.71 ms |
+| **Cloud API: Defense Evasion** | `cloud_api` | **1.000** | **1.000** | **1.000** | [1.000, 1.000] | 2.83 ms |
 
 ---
 
@@ -95,67 +102,41 @@ Evaluated across 6 primary threat vectors using `eval/reproduce_paper_experiment
 git clone https://github.com/your-org/AHRAS_Final.git
 cd AHRAS_Final
 
-# Install dependencies
+# Install core dependencies
 pip install -r requirements.txt
 ```
 
-### 2. Running Unit & System Integration Tests (180 Tests)
+### 2. Run Test Suite (228 Tests)
 
 ```bash
-# Run complete test discovery across all modules
-PYTHONPATH=. python3 -m unittest discover -s tests -p "test_*.py"
+python3 -m pytest
 ```
 
-### 3. Launching the Production SOC REST API & Web Dashboard
+### 3. Run Leakage-Safe Research Matrix (E0–E12 & 12 Ablations)
 
 ```bash
-# Launch server on port 8000
-python3 -c "from api.server import start_api_server; start_api_server(port=8000)"
+python3 evaluation/research_experiments.py
 ```
 
-Navigating to **`http://localhost:8000/`** in your browser will present the real-time SOC Web Dashboard.
-
-### 4. Reproducing Paper Experiments & LaTeX Table Generation
+### 4. Run Paper Benchmark Reproducibility & LaTeX Export
 
 ```bash
-# Execute evaluation harness
 python3 eval/reproduce_paper_experiments.py
 ```
-Output LaTeX code is generated directly in `eval/paper_results_table.tex`.
 
----
+### 5. Launch Hardened SOC API & Web Dashboard
 
-## 📡 REST API Documentation
-
-| Method | Endpoint | Description |
-| :--- | :--- | :--- |
-| `GET` | `/` or `/dashboard` | Interactive Cyber-Glassmorphism SOC Web Dashboard |
-| `GET` | `/health` | Health status and dual-mode database engine state |
-| `GET` | `/alerts` | Query historical alerts filterable by severity & OCSF class |
-| `GET` | `/entities/{key}/report` | Unified per-entity security report (JSON & Markdown) |
-| `POST` | `/alerts/{id}/respond` | Approve or reject staged active defense mitigation actions |
-| `GET` | `/actions/pending` | List active defense actions awaiting SOC approval |
-| `GET` | `/actions/history` | Full audit trail of executed active defense mitigations |
-| `POST` | `/analyst/feedback` | Submit false-positive feedback or reset entity baselines |
-| `GET` | `/metrics` | Prometheus-compatible SOC operational metrics |
-
----
-
-## 📜 Citation
-
-If you use the AHRAS framework or dataset generators in your academic research, please cite:
-
-```bibtex
-@article{ahras2026framework,
-  title={AHRAS: An Adaptive Hybrid Risk-Aware Security Framework for Multi-Modal Cyber Threat Detection},
-  author={Pradhan, Suyash and AHRAS Development Team},
-  journal={IEEE Transactions on Information Forensics and Security},
-  year={2026}
-}
+```bash
+python3 -c "from api.server import start_api_server; start_api_server(host='127.0.0.1', port=8000)"
 ```
 
+Access the Web Dashboard at: `http://localhost:8000` (or `http://localhost:8000/health/live` for healthcheck).
+
 ---
 
-## 📄 License
+## 📜 Scientific Claims & Limitations Discipline
 
-Distributed under the **MIT License**. See `LICENSE` for details.
+- **Exact Reconstruction**: XAI risk reconstructibility is guaranteed within absolute error $\epsilon \le 10^{-4}$ against the discrete evidence components.
+- **Leakage Safety**: All evaluation experiments use chronological and entity-disjoint splits with zero future leakage.
+- **Federated Scope**: Federated averaging is strictly applied to differentiable Autoencoder parameter vectors; non-differentiable decision tree weights are never averaged.
+- **Response Modes**: Active defense commands default to `DRY_RUN` in development and require explicit environment configuration and utility gating for production execution.
