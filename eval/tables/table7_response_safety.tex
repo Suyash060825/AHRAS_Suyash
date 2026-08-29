@@ -1,17 +1,18 @@
-\begin{table}[htbp]
-\centering\small
-\caption{Multi-Stage Cyber Attack Incident Response Simulation (50 Campaigns)}
-\label{tab:response_simulation}
-\begin{tabular}{l c c c c c}
-\hline
-\textbf{Active Defense Baseline} & \textbf{Containment \%} & \textbf{Avg Stage} & \textbf{Affected Hosts} & \textbf{Cost (\$)} & \textbf{RASE Efficiency} \\
-\hline
-B0 Static Threshold & 98.0\% & 4.38 & 2.96 & \$0.50 & \textbf{0.860} \\
-B1 Static Risk & 100.0\% & 3.06 & 2.06 & \$0.40 & \textbf{1.036} \\
-B2 Uncertainty Aware & 100.0\% & 3.46 & 2.46 & \$0.35 & \textbf{1.710} \\
-B3 Episode Aware & 100.0\% & 3.10 & 2.10 & \$0.30 & \textbf{1.267} \\
-B4 Forecast Aware & 100.0\% & 2.46 & 1.90 & \$0.25 & \textbf{1.425} \\
-B5 Full AHRAS & 100.0\% & 3.18 & 2.18 & \$0.20 & \textbf{2.443} \\
-\hline
+\begin{table}[t]
+\centering
+\small
+\caption{Operational Response State-Machine Simulation across Baselines B0--B5}
+\label{tab:response_safety}
+\begin{tabular}{lccccc}
+\toprule
+\textbf{Active Defense Baseline} & \textbf{Containment} & \textbf{Mean Stage} & \textbf{Hosts} & \textbf{OpCost} & \textbf{RASE} \\
+\midrule
+B0 Static Threshold & 98.0\% & 4.38 & 2.96 & \$0.50 & 0.860 \\
+B1 Static Risk & 100.0\% & 3.06 & 2.06 & \$0.40 & 1.036 \\
+B2 Uncertainty Aware & 100.0\% & 3.46 & 2.46 & \$0.35 & 1.710 \\
+B3 Episode Aware & 100.0\% & 3.10 & 2.10 & \$0.30 & 1.267 \\
+B4 Forecast Aware & 100.0\% & 2.46 & 1.90 & \$0.25 & 1.425 \\
+B5 Full AHRAS & 100.0\% & 3.18 & 2.18 & \$0.20 & 2.443 \\
+\bottomrule
 \end{tabular}
 \end{table}

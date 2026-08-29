@@ -1,5 +1,16 @@
 from __future__ import annotations
+"""
+AHRAS Causal Walk-Forward Forecaster Test Suite
+-----------------------------------------------
+Verifies:
+  1. Strict walk-forward past-only history ingestion (R_1 ... R_{t-1})
+  2. Trend categorization (ESCALATING, STABLE, DE-ESCALATING)
+  3. Accuracy vs Naive Persistence & Moving Average baselines
+  4. Early warning lead time measurement
+"""
+
 import unittest
+import numpy as np
 from forecast.predictor import (
     AttackPredictor, ForecastResult,
     walk_forward_errors, forecast_accuracy, threshold_crossing_lead_time,
@@ -16,7 +27,6 @@ class TestForecastPredictor(unittest.TestCase):
         self.assertEqual(len(res.forecast_next), 0)
 
     def test_02_escalating_series(self):
-        # Escalating risk curve
         history = [0.20, 0.35, 0.50, 0.65, 0.80]
         res = self.predictor.predict("10.0.0.2", history, critical_threshold=0.85)
         self.assertEqual(res.trend_label, "ESCALATING")
@@ -37,15 +47,20 @@ class TestForecastPredictor(unittest.TestCase):
         self.assertEqual(res.trend_label, "DE-ESCALATING")
         self.assertTrue(res.trend < 0)
 
-    def test_05_walk_forward_accuracy(self):
-        history = [0.10, 0.20, 0.30, 0.40, 0.50, 0.60]
-        acc = forecast_accuracy(self.predictor, history)
-        self.assertGreater(acc["n"], 0)
-        self.assertLess(acc["mae"], 0.20)
-        self.assertLess(acc["rmse"], 0.20)
+    def test_05_walk_forward_accuracy_vs_baselines(self):
+        # Linear escalating trajectory
+        history = [0.10, 0.20, 0.30, 0.40, 0.50, 0.60, 0.70, 0.80]
+        acc_holt = forecast_accuracy(self.predictor, history)
+        
+        # Compute baseline naive persistence (y_{t+1} = y_t)
+        naive_errors = [abs(history[i] - history[i-1]) for i in range(3, len(history))]
+        mae_naive = float(np.mean(naive_errors))
+        
+        self.assertGreater(acc_holt["n"], 0)
+        self.assertLessEqual(acc_holt["mae"], mae_naive)
+        self.assertLess(acc_holt["rmse"], 0.15)
 
     def test_06_lead_time_measurement(self):
-        # Starts low, ramps up to cross 0.85 at index 5
         series = [0.10, 0.25, 0.40, 0.55, 0.70, 0.88]
         lead_time = threshold_crossing_lead_time(self.predictor, series, threshold=0.85)
         self.assertIsNotNone(lead_time)
@@ -58,7 +73,7 @@ class TestForecastPredictor(unittest.TestCase):
             "ip3": [0.8, 0.6, 0.4, 0.2, 0.1],
         }
         top = self.predictor.top_escalating(fleet, n=2)
-        self.assertGreater(len(top), 0)
+        self.assertEqual(len(top), 1)
         self.assertEqual(top[0].indicator, "ip1")
 
 

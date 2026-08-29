@@ -1,10 +1,10 @@
 {
-  "experiment_id": "EXP-AHRAS-1788045123",
-  "timestamp_utc": "2026-08-29 23:12:03 UTC",
+  "experiment_id": "EXP-AHRAS-1788047911",
+  "timestamp_utc": "2026-08-29 23:58:31 UTC",
   "rng_seed": 42,
   "dataset_provenance": {
     "raw_dataset_path": "/home/suyashpradhan/Downloads/AHRAS_Suyash-master/evaluation/data/synthetic_eval_dataset.csv",
-    "raw_dataset_sha256": "930067a197437025debbafb0da71e5d3f2113e5deb8c3f6461e8803cd7c312cc",
+    "raw_dataset_sha256": "5c33998b9586b60543ab6a82b4aef1055f8a814f82ad896a86bd64ac502cebcd",
     "split_policy": "Temporal (70/15/15) + Entity-Disjoint"
   },
   "code_and_model_hashes": {
@@ -14,13 +14,13 @@
     "dataset_loader_sha256": "6909cf473e0d5ded7be9de1dc99b95a04e734fcd52d2fa1719626b1638a18562"
   },
   "artifact_hashes": {
-    "research_experiments_report_sha256": "eefbe2eed6cb174845b1a589e6f75a927e86023aff6416ce5daee3f406e373cc",
-    "research_tables_all_sha256": "d8eb9aeb0cca76e7b3cf3e574bded5194ea74c1f6e7ae6e011c02076c175ee71",
+    "research_experiments_report_sha256": "a6b76be03660da2eecbe1ed2ff9f145af91eb804a27581d0177e3566c072db7f",
+    "research_tables_all_sha256": "b9d235d925bb07ab686d3d57c2af071372d6cd4f8ae0efb5e0446d64b9f44a80",
     "table1_sha256": "6435c6d92a7b9af2d3d7915797f9315324d352a941e0cb728951414dcc2c6467",
-    "table3_sha256": "df7789db3e327bd5ec93dac2e3e64bce9d6e0b2b86e55c981fe69844e6f99fda",
-    "table4_sha256": "c924e1cc336d637d04847b9130ba27c24661bc55979d455ecbeb2e9889d95b5c",
-    "table7_sha256": "c166d4dae143000e626e3f28d7cc9be36133314e08f5778edb561fc5193d0cfc",
-    "table10_sha256": "bbb81522f0691b4b7dd1f595b9bd9f015a7d5ae4890666a504702a3c21ef8090"
+    "table3_sha256": "ef3ec1287dda5e2a099b313f9ad967d92fc5b70e6af3ced6ae4f25186ccfc42d",
+    "table4_sha256": "4c7a3de7d8555519828ef38d556b8dd3fe24e4656010162a42b77b0dcc4f31fa",
+    "table7_sha256": "87ce46951c27598ed1d34450886bcfa3689b5f2ac482d1fcb34ded17acefc070",
+    "table10_sha256": "dc7569b491b44cb9f29cfca036b09c99c14d460ba48232b3901c570dae506ead"
   },
   "scientific_integrity_assertions": {
     "test_label_leakage_in_train": false,

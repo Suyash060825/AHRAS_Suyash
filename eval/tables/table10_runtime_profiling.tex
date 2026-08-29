@@ -1,23 +1,24 @@
-\begin{table}[htbp]
-\centering\small
-\caption{End-to-End Stage Latency Profiling (Throughput: 66.3 eps)}
-\label{tab:performance_profile}
-\begin{tabular}{l c c c c}
-\hline
-\textbf{Pipeline Stage} & \textbf{Mean (ms)} & \textbf{P50 (ms)} & \textbf{P95 (ms)} & \textbf{\% Total} \\
-\hline
-1. Normalization & 0.044 & 0.040 & 0.063 & 0.3\% \\
-2. Feature Extraction & 0.075 & 0.069 & 0.104 & 0.5\% \\
-3. Signature Matching & 0.021 & 0.019 & 0.032 & 0.1\% \\
-4. ML Ensemble Anomaly & 14.503 & 14.003 & 19.428 & 96.1\% \\
-5. Statistical Baseline & 0.088 & 0.082 & 0.120 & 0.6\% \\
-6. Evidence Hash Chaining & 0.109 & 0.100 & 0.152 & 0.7\% \\
-7. Temporal Graph Update & 0.023 & 0.021 & 0.035 & 0.2\% \\
-8. Adaptive Risk & Uncertainty & 0.185 & 0.165 & 0.268 & 1.2\% \\
-9. Forecasting & Trend & 0.033 & 0.029 & 0.048 & 0.2\% \\
-10. Safety Policy & Active Defense & 0.004 & 0.001 & 0.028 & 0.0\% \\
-\hline
-\textbf{Total End-to-End Pipeline} & \textbf{15.087} & \textbf{14.625} & \textbf{20.063} & \textbf{100.0\%} \\
-\hline
+\begin{table}[t]
+\centering
+\small
+\caption{Direct End-to-End Latency Microbenchmark (300 Invocations)}
+\label{tab:runtime_latency}
+\begin{tabular}{lcccc}
+\toprule
+\textbf{Pipeline Stage} & \textbf{Mean (ms)} & \textbf{P50 (ms)} & \textbf{P95 (ms)} & \textbf{\% Time} \\
+\midrule
+1. Normalization & 0.042 & 0.038 & 0.073 & 0.3\% \\
+2. Feature Extraction & 0.070 & 0.065 & 0.113 & 0.4\% \\
+3. Signature Matching & 0.022 & 0.020 & 0.035 & 0.1\% \\
+4. Ml Ensemble Anomaly & 15.394 & 14.472 & 21.530 & 96.3\% \\
+5. Statistical Baseline & 0.096 & 0.084 & 0.155 & 0.6\% \\
+6. Evidence Hash Chaining & 0.106 & 0.096 & 0.176 & 0.7\% \\
+7. Temporal Graph Update & 0.022 & 0.020 & 0.033 & 0.1\% \\
+8. Adaptive Risk & Uncertainty & 0.191 & 0.167 & 0.361 & 1.2\% \\
+9. Forecasting & Trend & 0.032 & 0.028 & 0.055 & 0.2\% \\
+10. Safety Policy & Active Defense & 0.004 & 0.001 & 0.026 & 0.0\% \\
+\midrule
+\textbf{Total Measured Direct} & \textbf{15.981} & \textbf{15.066} & \textbf{22.344} & \textbf{100.0\%} \\
+\bottomrule
 \end{tabular}
 \end{table}

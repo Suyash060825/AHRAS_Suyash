@@ -1,23 +1,24 @@
-\begin{table}[htbp]
-\centering\small
-\caption{12 Controlled Ablation Studies with Paired Statistical Significance}
+\begin{table}[t]
+\centering
+\small
+\caption{Twelve Controlled Ablation Studies with Paired Permutation Significance}
 \label{tab:ablations}
-\begin{tabular}{l c c c c c}
-\hline
-\textbf{Ablation Configuration} & \textbf{Ablated F1} & \textbf{$\Delta$ F1} & \textbf{\% Drop} & \textbf{Brier} & \textbf{$p$-value} \\
-\hline
-A1 Remove Signatures & 0.295 & -0.705 & -70.5\% & 0.4532 & 0.0005 \\
-A2 Remove ML Ensemble & 0.463 & -0.537 & -53.7\% & 0.3969 & 0.0005 \\
-A3 Remove Statistical & 0.871 & -0.130 & -12.9\% & 0.1461 & 0.0005 \\
-A4 Remove Trust & 1.000 & +0.000 & +0.0\% & 0.0840 & 0.0005 \\
-A5 Remove Graph & 0.999 & -0.001 & -0.1\% & 0.0858 & 0.0005 \\
-A6 Remove Historical & 1.000 & +0.000 & +0.0\% & 0.0842 & 0.0005 \\
-A7 Remove Threat Intel & 0.992 & -0.008 & -0.8\% & 0.1064 & 0.0005 \\
-A8 Remove Deception & 1.000 & +0.000 & +0.0\% & 0.0840 & 0.0005 \\
-A9 Remove Forecasting & 1.000 & +0.000 & +0.0\% & 0.0853 & 0.0005 \\
-A10 Remove Uncertainty & 1.000 & +0.000 & +0.0\% & 0.0719 & 0.0005 \\
-A11 Remove Adaptive & 1.000 & +0.000 & +0.0\% & 0.0840 & 0.0005 \\
-A12 Remove Response Gate & 1.000 & +0.000 & +0.0\% & 0.0840 & 0.0005 \\
-\hline
+\begin{tabular}{lccccc}
+\toprule
+\textbf{Ablation Configuration} & \textbf{F1} & $\mathbf{\Delta F1}$ & \textbf{Rel \%} & $\mathbf{p}$\textbf{-value} & \textbf{Sig.} \\
+\midrule
+A1 Remove Signatures & 0.000 & -0.018 & -100.0\% & 0.0005 & Yes ($p < 0.05$) \\
+A2 Remove ML Ensemble & 0.000 & -0.018 & -100.0\% & 0.0005 & Yes ($p < 0.05$) \\
+A3 Remove Statistical & 0.018 & +0.000 & +0.0\% & 0.0005 & Yes ($p < 0.05$) \\
+A4 Remove Trust & 0.017 & -0.001 & -2.6\% & 0.0005 & Yes ($p < 0.05$) \\
+A5 Remove Graph & 0.018 & +0.000 & +0.0\% & 0.0030 & Yes ($p < 0.05$) \\
+A6 Remove Historical & 0.018 & -0.000 & -0.9\% & 0.0005 & Yes ($p < 0.05$) \\
+A7 Remove Threat Intel & 0.018 & -0.000 & -0.9\% & 0.0005 & Yes ($p < 0.05$) \\
+A8 Remove Deception & 0.018 & -0.000 & -0.9\% & 0.0005 & Yes ($p < 0.05$) \\
+A9 Remove Forecasting & 0.018 & -0.000 & -0.9\% & 0.0005 & Yes ($p < 0.05$) \\
+A10 Remove Uncertainty & 0.018 & -0.000 & -1.8\% & 0.0005 & Yes ($p < 0.05$) \\
+A11 Remove Adaptive & 0.018 & -0.000 & -1.8\% & 0.0005 & Yes ($p < 0.05$) \\
+A12 Remove Response Gate & 0.018 & -0.000 & -1.8\% & 0.0005 & Yes ($p < 0.05$) \\
+\bottomrule
 \end{tabular}
 \end{table}

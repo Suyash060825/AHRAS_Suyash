@@ -1,0 +1,98 @@
+{
+  "mappings": {
+    "CICIDS2017": {
+      "Source IP": {
+        "ahras_field": "src_ip",
+        "type": "string",
+        "semantic": "Source Host / Endpoint IP address",
+        "missing_strategy": "fallback_synthetic_entity"
+      },
+      "Destination Port": {
+        "ahras_field": "dst_port",
+        "type": "integer",
+        "semantic": "Target service port",
+        "missing_strategy": "default_80"
+      },
+      "Flow Duration": {
+        "ahras_field": "duration_sec",
+        "type": "float",
+        "transformation": "divide_by_1e6",
+        "semantic": "Flow duration in seconds",
+        "missing_strategy": "default_1.0"
+      },
+      "Total Fwd Packets": {
+        "ahras_field": "packet_count",
+        "type": "integer",
+        "semantic": "Total forward packet volume",
+        "missing_strategy": "default_10"
+      },
+      "Total Length of Fwd Packets": {
+        "ahras_field": "byte_count",
+        "type": "integer",
+        "semantic": "Total forward byte volume",
+        "missing_strategy": "default_500"
+      },
+      "Timestamp": {
+        "ahras_field": "event_time",
+        "type": "float_epoch",
+        "transformation": "strptime_dmy_hms",
+        "semantic": "Chronological flow initiation time",
+        "missing_strategy": "monotonic_increment"
+      },
+      "Label": {
+        "ahras_field": "label",
+        "type": "integer_binary",
+        "transformation": "0_if_BENIGN_else_1",
+        "semantic": "Ground-truth intrusion label",
+        "missing_strategy": "default_0"
+      }
+    },
+    "UNSW_NB15": {
+      "srcip": {
+        "ahras_field": "src_ip",
+        "type": "string",
+        "semantic": "Source IP address",
+        "missing_strategy": "fallback_synthetic_entity"
+      },
+      "dsport": {
+        "ahras_field": "dst_port",
+        "type": "integer",
+        "semantic": "Destination port",
+        "missing_strategy": "default_80"
+      },
+      "dur": {
+        "ahras_field": "duration_sec",
+        "type": "float",
+        "transformation": "identity",
+        "semantic": "Flow duration in seconds",
+        "missing_strategy": "default_1.0"
+      },
+      "spkts": {
+        "ahras_field": "packet_count",
+        "type": "integer",
+        "semantic": "Source packets",
+        "missing_strategy": "default_10"
+      },
+      "sbytes": {
+        "ahras_field": "byte_count",
+        "type": "integer",
+        "semantic": "Source bytes",
+        "missing_strategy": "default_500"
+      },
+      "Stime": {
+        "ahras_field": "event_time",
+        "type": "float_epoch",
+        "transformation": "float_parse",
+        "semantic": "Record start time epoch",
+        "missing_strategy": "monotonic_increment"
+      },
+      "label": {
+        "ahras_field": "label",
+        "type": "integer_binary",
+        "transformation": "int_cast",
+        "semantic": "Binary attack indicator (0=normal, 1=attack)",
+        "missing_strategy": "default_0"
+      }
+    }
+  }
+}

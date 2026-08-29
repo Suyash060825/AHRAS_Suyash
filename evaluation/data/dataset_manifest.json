@@ -1,0 +1,52 @@
+{
+  "datasets": [
+    {
+      "dataset_name": "CIC-IDS2017",
+      "source": "Canadian Institute for Cybersecurity (UNB)",
+      "version_date": "2017-07",
+      "download_url": "https://www.unb.ca/cic/datasets/ids-2017.html",
+      "expected_sha256": {
+        "Wednesday-workingHours.pcap_ISCX.csv": "808c4e47a98b449b82877a5dd18ab93707010fdf441c9b2ee0de08f2374bbdc0"
+      },
+      "flow_count": 692703,
+      "feature_count": 78,
+      "timestamp_field": "Timestamp",
+      "timestamp_format": "%d/%m/%Y %H:%M:%S",
+      "entity_field": "Source IP",
+      "attack_families": ["DoS Hulk", "DoS GoldenEye", "DoS slowloris", "DoS Slowhttptest", "Heartbleed"],
+      "preprocessing_policy": "Drop infinite/NaN flows; normalize column headers; map to standardized OCSF v1.1 Network Activity"
+    },
+    {
+      "dataset_name": "UNSW-NB15",
+      "source": "Australian Centre for Cyber Security (ACCS)",
+      "version_date": "2015",
+      "download_url": "https://research.unsw.edu.au/projects/unsw-nb15-dataset",
+      "expected_sha256": {
+        "UNSW-NB15_1.csv": "d8ba6f73e7215f795db253457a414e0404ec18991a04d55b0a70ec828d5fb4e2"
+      },
+      "flow_count": 700000,
+      "feature_count": 49,
+      "timestamp_field": "Stime / Ltime",
+      "timestamp_format": "UNIX_EPOCH_FLOAT",
+      "entity_field": "srcip",
+      "attack_families": ["Fuzzers", "Analysis", "Backdoors", "DoS", "Exploits", "Generic", "Reconnaissance", "Shellcode", "Worms"],
+      "preprocessing_policy": "Epoch timestamp parsing; map service/proto tokens; map to standardized OCSF v1.1 Network Activity"
+    },
+    {
+      "dataset_name": "AHRAS Controlled Synthetic Multi-Difficulty Benchmark",
+      "source": "AHRAS In-Tree Deterministic Generator",
+      "version_date": "2026-08",
+      "download_url": "Local generator (evaluation/generate_synthetic_dataset.py)",
+      "expected_sha256": {
+        "synthetic_eval_dataset.csv": "930067a197437025debbafb0da71e5d3f2113e5deb8c3f6461e8803cd7c312cc"
+      },
+      "flow_count": 6000,
+      "feature_count": 13,
+      "timestamp_field": "Timestamp",
+      "timestamp_format": "%d/%m/%Y %H:%M:%S",
+      "entity_field": "Source IP",
+      "attack_families": ["PortScan", "DoS Hulk", "DDoS", "SSH-Patator", "Bot"],
+      "preprocessing_policy": "Temporal monotonic generation with controlled difficulty scenarios (EASY, MODERATE, HARD, ADVERSARIAL)"
+    }
+  ]
+}

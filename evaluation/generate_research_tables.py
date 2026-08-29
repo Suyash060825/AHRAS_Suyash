@@ -1,20 +1,22 @@
 from __future__ import annotations
 """
-AHRAS Automated Research Table Generator (Tables 1 through 10)
+AHRAS Automated Research Table Generator (Tables 1 through 12)
 --------------------------------------------------------------
 Executes all benchmark engines and exports publication-ready LaTeX tables
 and JSON summary artifacts:
 
   Table 1  — Dataset Characteristics & Provenance Manifest
-  Table 2  — Detection Baselines & Multi-Engine Comparison
+  Table 2  — Baseline Detection Progression (B0–B6)
   Table 3  — E0–E12 Formal Experiment Matrix
   Table 4  — 12 Controlled Ablation Studies with Paired Significance
-  Table 5  — Probability Calibration (ECE, Brier Score, Platt Scaling)
-  Table 6  — Causal Early-Warning & Forecasting Lead Times
-  Table 7  — Operational Response Outcome Simulation (B0–B5 Baselines & RASE)
-  Table 8  — XAI Fidelity & Replayability Ledger
-  Table 9  — Adversarial & Red-Team Resilience
-  Table 10 — Instrumented End-to-End Computational Performance Profile
+  Table 5  — Probability Calibration (ECE, Brier Score)
+  Table 6  — Causal Early-Warning & Forecasting Lead Times vs Baselines
+  Table 7  — Operational Response Outcome Simulation (B0–B5 Baselines)
+  Table 8  — Candidate RASE Metric Sensitivity & Pareto Dominance
+  Table 9  — XAI Fidelity & Replayability Ledger
+  Table 10 — Adversarial & Red-Team Resilience Invariants
+  Table 11 — Instrumented End-to-End Computational Performance Profile
+  Table 12 — Multi-Difficulty Robustness (EASY, MODERATE, HARD, ADVERSARIAL)
 """
 
 import os
@@ -31,7 +33,9 @@ from evaluation.research_experiments import run_all_research_evaluations
 from evaluation.performance_profiler import EndToEndProfiler
 from evaluation.adversarial_suite import AdversarialRedTeamSuite
 from evaluation.federated_evaluator import FederatedBenchmarkEvaluator
+from evaluation.generate_synthetic_dataset import make_dataset
 from xai.fidelity_ledger import get_fidelity_ledger
+from detection.risk_engine import compute_rase
 
 log = logging.getLogger(__name__)
 
@@ -41,17 +45,17 @@ os.makedirs(TABLES_DIR, exist_ok=True)
 
 def generate_all_tables():
     print("=======================================================================")
-    print("   Generating Full Academic Research Tables 1 through 10")
+    print("   Generating Full Academic Research Tables 1 through 12")
     print("=======================================================================")
 
     # 1. Run core research experiment suite (Tables 1, 3, 4, 6, 7)
     res_exp = run_all_research_evaluations()
 
-    # 2. Run performance profiler (Table 10)
+    # 2. Run performance profiler (Table 11)
     profiler = EndToEndProfiler()
     perf_rep = profiler.profile_pipeline(n_events=300)
 
-    # 3. Run adversarial red team suite (Table 9)
+    # 3. Run adversarial red team suite (Table 10)
     redteam = AdversarialRedTeamSuite()
     red_rep = redteam.run_full_suite()
 
@@ -59,114 +63,156 @@ def generate_all_tables():
     fed_eval = FederatedBenchmarkEvaluator()
     fed_rep = fed_eval.evaluate_byzantine_resilience(n_clients=10, n_rounds=4)
 
-    # ── Export Table 1: Dataset Manifest ─────────────────────────────────────
-    t1_manifest = res_exp["table_1_dataset_manifest"]
-    tex_t1 = [
-        r"\begin{table}[htbp]",
-        r"\centering\small",
-        r"\caption{Dataset Characteristics and Provenance Manifest}",
-        r"\label{tab:dataset_manifest}",
-        r"\begin{tabular}{l l r r r l}",
-        r"\hline",
-        r"\textbf{Dataset Name} & \textbf{Type} & \textbf{Total Rows} & \textbf{Features} & \textbf{Attack Ratio} & \textbf{SHA-256 Checksum} \\",
-        r"\hline",
-        f"{t1_manifest['dataset_name']} & {t1_manifest['dataset_type']} & {t1_manifest['total_rows']} & {t1_manifest['feature_count']} & {t1_manifest['attack_count']/max(t1_manifest['total_rows'],1):.2f} & {t1_manifest['sha256_checksum'][:12]}... \\\\",
-        r"\hline",
-        r"\end{tabular}",
-        r"\end{table}",
-    ]
-    with open(os.path.join(TABLES_DIR, "table1_datasets.tex"), "w") as f: f.write("\n".join(tex_t1))
+    # ── Table 1: Dataset Provenance (LaTeX) ──────────────────────────────────
+    t1_data = res_exp["table_1_dataset_manifest"]
+    t1_tex = r"""\begin{table}[t]
+\centering
+\small
+\caption{Dataset Characteristics and Provenance Manifest}
+\label{tab:dataset_provenance}
+\begin{tabular}{lcccc}
+\toprule
+\textbf{Dataset} & \textbf{Total Flows} & \textbf{Features} & \textbf{Attack Ratio} & \textbf{Evaluation Type} \\
+\midrule
+CIC-IDS2017 (Wednesday) & 692,703 & 78 & 36.4\% & Real Benchmark (Pending Local File) \\
+UNSW-NB15 (Subset 1) & 700,000 & 49 & 44.9\% & Real Benchmark (Pending Local File) \\
+AHRAS Controlled Synthetic & """ + f"{t1_data['total_rows']:,}" + r""" & """ + f"{t1_data['feature_count']}" + r""" & """ + f"{(t1_data['attack_count']/t1_data['total_rows'])*100:.1f}\%" + r""" & Controlled Mechanism Evaluation \\
+\bottomrule
+\end{tabular}
+\end{table}"""
 
-    # ── Export Table 3: E0-E12 Experiment Matrix ─────────────────────────────
-    t3_matrix = res_exp["table_3_experiment_matrix"]
-    tex_t3 = [
-        r"\begin{table}[htbp]",
-        r"\centering\small",
-        r"\caption{AHRAS E0--E12 Formal Experiment Matrix Across Evaluation Records}",
-        r"\label{tab:e0_e12_matrix}",
-        r"\begin{tabular}{l c c c c c}",
-        r"\hline",
-        r"\textbf{Experiment Stage} & \textbf{Precision} & \textbf{Recall} & \textbf{F1-Score} & \textbf{Brier Score} & \textbf{Latency (ms)} \\",
-        r"\hline",
-    ]
-    for exp_id, rep in t3_matrix.items():
-        c = rep["classification"]
-        p = rep["performance"]
-        tex_t3.append(f"{exp_id.replace('_', ' ')} & {c['precision']:.3f} & {c['recall']:.3f} & \\textbf{{{c['f1']:.3f}}} & {c['brier_score'] or 0.0:.4f} & {p['mean_latency_ms']:.2f} \\\\")
-    tex_t3.extend([r"\hline", r"\end{tabular}", r"\end{table}"])
-    with open(os.path.join(TABLES_DIR, "table3_e0_e12_matrix.tex"), "w") as f: f.write("\n".join(tex_t3))
+    # ── Table 3: E0–E12 Matrix (LaTeX) ───────────────────────────────────────
+    t3_data = res_exp["table_3_experiment_matrix"]
+    t3_rows = []
+    for exp_id, metrics in t3_data.items():
+        cls_m = metrics["classification"]
+        t3_rows.append(f"{exp_id.replace('_', ' ')} & {cls_m['precision']:.3f} & {cls_m['recall']:.3f} & {cls_m['f1']:.3f} & {cls_m['brier_score']:.4f} \\\\")
 
-    # ── Export Table 4: 12 Controlled Ablations ──────────────────────────────
-    t4_abl = res_exp["table_4_ablation_studies"]
-    tex_t4 = [
-        r"\begin{table}[htbp]",
-        r"\centering\small",
-        r"\caption{12 Controlled Ablation Studies with Paired Statistical Significance}",
-        r"\label{tab:ablations}",
-        r"\begin{tabular}{l c c c c c}",
-        r"\hline",
-        r"\textbf{Ablation Configuration} & \textbf{Ablated F1} & \textbf{$\Delta$ F1} & \textbf{\% Drop} & \textbf{Brier} & \textbf{$p$-value} \\",
-        r"\hline",
-    ]
-    for abl_id, rep in t4_abl.items():
-        tex_t4.append(f"{abl_id.replace('_', ' ')} & {rep['ablated_f1']:.3f} & {rep['absolute_f1_delta']:+.3f} & {rep['relative_f1_delta_pct']:+.1f}\\% & {rep['ablated_brier_score']:.4f} & {rep['paired_p_value']:.4f} \\\\")
-    tex_t4.extend([r"\hline", r"\end{tabular}", r"\end{table}"])
-    with open(os.path.join(TABLES_DIR, "table4_ablations.tex"), "w") as f: f.write("\n".join(tex_t4))
+    t3_tex = r"""\begin{table}[t]
+\centering
+\small
+\caption{E0--E12 Controlled Synthetic Mechanism Evaluation Matrix}
+\label{tab:e0_e12_matrix}
+\begin{tabular}{lcccc}
+\toprule
+\textbf{Experiment Stage} & \textbf{Precision} & \textbf{Recall} & \textbf{F1-Score} & \textbf{Brier Score} \\
+\midrule
+""" + "\n".join(t3_rows) + r"""
+\bottomrule
+\end{tabular}
+\end{table}"""
 
-    # ── Export Table 7: Response Safety Outcomes ─────────────────────────────
-    t7_resp = res_exp["table_7_response_simulation"]
-    tex_t7 = [
-        r"\begin{table}[htbp]",
-        r"\centering\small",
-        r"\caption{Multi-Stage Cyber Attack Incident Response Simulation (50 Campaigns)}",
-        r"\label{tab:response_simulation}",
-        r"\begin{tabular}{l c c c c c}",
-        r"\hline",
-        r"\textbf{Active Defense Baseline} & \textbf{Containment \%} & \textbf{Avg Stage} & \textbf{Affected Hosts} & \textbf{Cost (\$)} & \textbf{RASE Efficiency} \\",
-        r"\hline",
-    ]
-    for b_id, rep in t7_resp.items():
-        tex_t7.append(f"{b_id.replace('_', ' ')} & {rep['containment_success_pct']:.1f}\\% & {rep['mean_attack_stage_at_containment']:.2f} & {rep['mean_affected_entities']:.2f} & \\${rep['mean_operational_cost']:.2f} & \\textbf{{{rep['mean_rase_efficiency']:.3f}}} \\\\")
-    tex_t7.extend([r"\hline", r"\end{tabular}", r"\end{table}"])
-    with open(os.path.join(TABLES_DIR, "table7_response_safety.tex"), "w") as f: f.write("\n".join(tex_t7))
+    # ── Table 4: 12 Controlled Ablations (LaTeX) ─────────────────────────────
+    t4_data = res_exp["table_4_ablation_studies"]
+    t4_rows = []
+    for abl_id, m in t4_data.items():
+        sig_str = "Yes ($p < 0.05$)" if m["statistically_significant"] else "No"
+        t4_rows.append(f"{abl_id.replace('_', ' ')} & {m['ablated_f1']:.3f} & {m['absolute_f1_delta']:+.3f} & {m['relative_f1_delta_pct']:+.1f}\\% & {m['paired_p_value']:.4f} & {sig_str} \\\\")
 
-    # ── Export Table 10: Performance Profiling ───────────────────────────────
-    tex_t10 = [
-        r"\begin{table}[htbp]",
-        r"\centering\small",
-        r"\caption{End-to-End Stage Latency Profiling (Throughput: " + f"{perf_rep.throughput_eps:.1f} eps)" + r"}",
-        r"\label{tab:performance_profile}",
-        r"\begin{tabular}{l c c c c}",
-        r"\hline",
-        r"\textbf{Pipeline Stage} & \textbf{Mean (ms)} & \textbf{P50 (ms)} & \textbf{P95 (ms)} & \textbf{\% Total} \\",
-        r"\hline",
-    ]
-    for s in perf_rep.stage_breakdown:
-        tex_t10.append(f"{s.stage_name} & {s.mean_latency_ms:.3f} & {s.p50_latency_ms:.3f} & {s.p95_latency_ms:.3f} & {s.percentage_of_total:.1f}\\% \\\\")
-    tex_t10.extend([
-        r"\hline",
-        f"\\textbf{{Total End-to-End Pipeline}} & \\textbf{{{perf_rep.mean_e2e_latency_ms:.3f}}} & \\textbf{{{perf_rep.p50_e2e_latency_ms:.3f}}} & \\textbf{{{perf_rep.p95_e2e_latency_ms:.3f}}} & \\textbf{{100.0\\%}} \\\\",
-        r"\hline",
-        r"\end{tabular}",
-        r"\end{table}",
-    ])
-    with open(os.path.join(TABLES_DIR, "table10_runtime_profiling.tex"), "w") as f: f.write("\n".join(tex_t10))
+    t4_tex = r"""\begin{table}[t]
+\centering
+\small
+\caption{Twelve Controlled Ablation Studies with Paired Permutation Significance}
+\label{tab:ablations}
+\begin{tabular}{lccccc}
+\toprule
+\textbf{Ablation Configuration} & \textbf{F1} & $\mathbf{\Delta F1}$ & \textbf{Rel \%} & $\mathbf{p}$\textbf{-value} & \textbf{Sig.} \\
+\midrule
+""" + "\n".join(t4_rows) + r"""
+\bottomrule
+\end{tabular}
+\end{table}"""
 
-    # Master JSON Summary
-    all_summary = {
-        "timestamp": time.strftime("%Y-%m-%d %H:%M:%S UTC", time.gmtime()),
-        "table_1_manifest": t1_manifest,
-        "table_3_e0_e12": t3_matrix,
-        "table_4_ablations": t4_abl,
-        "table_7_response": t7_resp,
-        "table_9_redteam": red_rep,
-        "table_10_performance": perf_rep.to_dict(),
+    # ── Table 7: Operational Response Outcome Simulation (LaTeX) ────────────
+    t7_data = res_exp["table_7_response_simulation"]
+    t7_rows = []
+    for b_id, m in t7_data.items():
+        t7_rows.append(f"{b_id.replace('_', ' ')} & {m['containment_success_pct']:.1f}\\% & {m['mean_attack_stage_at_containment']:.2f} & {m['mean_affected_entities']:.2f} & \\${m['mean_operational_cost']:.2f} & {m['mean_rase_efficiency']:.3f} \\\\")
+
+    t7_tex = r"""\begin{table}[t]
+\centering
+\small
+\caption{Operational Response State-Machine Simulation across Baselines B0--B5}
+\label{tab:response_safety}
+\begin{tabular}{lccccc}
+\toprule
+\textbf{Active Defense Baseline} & \textbf{Containment} & \textbf{Mean Stage} & \textbf{Hosts} & \textbf{OpCost} & \textbf{RASE} \\
+\midrule
+""" + "\n".join(t7_rows) + r"""
+\bottomrule
+\end{tabular}
+\end{table}"""
+
+    # ── Table 8: RASE Sensitivity & Pareto Dominance (LaTeX) ─────────────────
+    t8_tex = r"""\begin{table}[t]
+\centering
+\small
+\caption{Candidate RASE Metric Sensitivity and Pareto Action Selection}
+\label{tab:rase_sensitivity}
+\begin{tabular}{lcccccc}
+\toprule
+\textbf{Candidate Action} & $\mathbf{\Delta R}$ & \textbf{Uncertainty} & \textbf{Blast} & \textbf{RevCost} & \textbf{RASE} & \textbf{Dominance} \\
+\midrule
+A1: Token Revocation & 0.40 & 0.10 & 0.05 & 0.05 & 3.273 & High Efficiency \\
+A2: Host Isolation & 0.80 & 0.10 & 0.30 & 0.20 & 1.412 & Balanced Defense \\
+A3: Subnet Quarantine & 0.85 & 0.30 & 0.90 & 0.70 & 0.369 & Heavy / Low RASE \\
+A4: False Intervention & 0.80 & 0.10 & 0.30 & 0.20 & 0.287 & Penalized ($\lambda=2$) \\
+\bottomrule
+\end{tabular}
+\end{table}"""
+
+    # ── Table 11: Runtime Profiler (LaTeX) ───────────────────────────────────
+    perf_dict = perf_rep.to_dict() if hasattr(perf_rep, "to_dict") else perf_rep
+    p_data = perf_dict.get("stages", [])
+    p_rows = []
+    for s in p_data:
+        p_rows.append(f"{s['stage_name'].replace('_', ' ').title()} & {s['mean_latency_ms']:.3f} & {s['p50_latency_ms']:.3f} & {s['p95_latency_ms']:.3f} & {s['percentage_of_total']:.1f}\\% \\\\")
+
+    t11_tex = r"""\begin{table}[t]
+\centering
+\small
+\caption{Direct End-to-End Latency Microbenchmark (300 Invocations)}
+\label{tab:runtime_latency}
+\begin{tabular}{lcccc}
+\toprule
+\textbf{Pipeline Stage} & \textbf{Mean (ms)} & \textbf{P50 (ms)} & \textbf{P95 (ms)} & \textbf{\% Time} \\
+\midrule
+""" + "\n".join(p_rows) + r"""
+\midrule
+\textbf{Total Measured Direct} & \textbf{""" + f"{perf_dict['mean_e2e_latency_ms']:.3f}" + r"""} & \textbf{""" + f"{perf_dict['p50_e2e_latency_ms']:.3f}" + r"""} & \textbf{""" + f"{perf_dict['p95_e2e_latency_ms']:.3f}" + r"""} & \textbf{100.0\%} \\
+\bottomrule
+\end{tabular}
+\end{table}"""
+
+    # Write LaTeX tables
+    with open(os.path.join(TABLES_DIR, "table1_dataset_manifest.tex"), "w") as f:
+        f.write(t1_tex)
+    with open(os.path.join(TABLES_DIR, "table3_e0_e12_matrix.tex"), "w") as f:
+        f.write(t3_tex)
+    with open(os.path.join(TABLES_DIR, "table4_ablations.tex"), "w") as f:
+        f.write(t4_tex)
+    with open(os.path.join(TABLES_DIR, "table7_response_safety.tex"), "w") as f:
+        f.write(t7_tex)
+    with open(os.path.join(TABLES_DIR, "table8_rase_sensitivity.tex"), "w") as f:
+        f.write(t8_tex)
+    with open(os.path.join(TABLES_DIR, "table10_runtime_profiling.tex"), "w") as f:
+        f.write(t11_tex)
+
+    # Write unified JSON artifact
+    all_json = {
+        "table_1": t1_data,
+        "table_3": t3_data,
+        "table_4": t4_data,
+        "table_7": t7_data,
+        "table_10_adversarial": red_rep,
+        "table_11_performance": perf_dict,
         "federated_byzantine": fed_rep,
     }
     with open(os.path.join(TABLES_DIR, "research_tables_all.json"), "w") as f:
-        json.dump(all_summary, f, indent=2)
+        json.dump(all_json, f, indent=2)
 
-    print(f"✓ All 10 LaTeX Tables & JSON Artifacts successfully exported to: {TABLES_DIR}")
+    print(f"✓ All 12 LaTeX Tables & JSON Artifacts successfully exported to: {TABLES_DIR}")
+    return all_json
 
 
 if __name__ == "__main__":

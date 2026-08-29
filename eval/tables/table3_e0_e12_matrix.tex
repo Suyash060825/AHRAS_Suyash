@@ -1,24 +1,25 @@
-\begin{table}[htbp]
-\centering\small
-\caption{AHRAS E0--E12 Formal Experiment Matrix Across Evaluation Records}
+\begin{table}[t]
+\centering
+\small
+\caption{E0--E12 Controlled Synthetic Mechanism Evaluation Matrix}
 \label{tab:e0_e12_matrix}
-\begin{tabular}{l c c c c c}
-\hline
-\textbf{Experiment Stage} & \textbf{Precision} & \textbf{Recall} & \textbf{F1-Score} & \textbf{Brier Score} & \textbf{Latency (ms)} \\
-\hline
-E0 Baseline & 1.000 & 0.493 & \textbf{0.661} & 0.3385 & 15.90 \\
-E1 Signature Only & 1.000 & 0.976 & \textbf{0.988} & 0.0372 & 15.90 \\
-E2 ML Only & 1.000 & 1.000 & \textbf{1.000} & 0.0442 & 15.90 \\
-E3 Statistical Only & 0.000 & 0.000 & \textbf{0.000} & 0.8871 & 15.90 \\
-E4 Fixed Hybrid & 1.000 & 0.976 & \textbf{0.988} & 0.1086 & 15.90 \\
-E5 Adaptive Hybrid & 0.000 & 0.000 & \textbf{0.000} & 0.4850 & 15.90 \\
-E6 Hybrid Trust & 0.000 & 0.000 & \textbf{0.000} & 0.6555 & 15.90 \\
-E7 Hybrid Graph & 0.000 & 0.000 & \textbf{0.000} & 0.6735 & 15.90 \\
-E8 Hybrid Uncertainty & 0.000 & 0.000 & \textbf{0.000} & 0.6972 & 15.90 \\
-E9 Full AHRAS Risk & 1.000 & 0.803 & \textbf{0.890} & 0.1394 & 15.90 \\
-E10 Full AHRAS Forecast & 1.000 & 0.848 & \textbf{0.918} & 0.1441 & 15.90 \\
-E11 Full AHRAS Policy & 1.000 & 0.848 & \textbf{0.918} & 0.1412 & 15.90 \\
-E12 Full Closed Loop AHRAS & 1.000 & 0.848 & \textbf{0.918} & 0.1412 & 15.90 \\
-\hline
+\begin{tabular}{lcccc}
+\toprule
+\textbf{Experiment Stage} & \textbf{Precision} & \textbf{Recall} & \textbf{F1-Score} & \textbf{Brier Score} \\
+\midrule
+E0 Baseline & 0.016 & 0.500 & 0.031 & 0.3263 \\
+E1 Signature Only & 0.009 & 0.167 & 0.017 & 0.2368 \\
+E2 ML Only & 0.016 & 1.000 & 0.032 & 0.5175 \\
+E3 Statistical Only & 0.000 & 0.000 & 0.000 & 0.0160 \\
+E4 Fixed Hybrid & 0.009 & 0.167 & 0.017 & 0.1503 \\
+E5 Adaptive Hybrid & 0.000 & 0.000 & 0.000 & 0.0352 \\
+E6 Hybrid Trust & 0.000 & 0.000 & 0.000 & 0.0254 \\
+E7 Hybrid Graph & 0.000 & 0.000 & 0.000 & 0.0245 \\
+E8 Hybrid Uncertainty & 0.000 & 0.000 & 0.000 & 0.0233 \\
+E9 Full AHRAS Risk & 0.000 & 0.000 & 0.000 & 0.0918 \\
+E10 Full AHRAS Forecast & 0.000 & 0.000 & 0.000 & 0.0963 \\
+E11 Full AHRAS Policy & 0.000 & 0.000 & 0.000 & 0.1008 \\
+E12 Full Closed Loop AHRAS & 0.000 & 0.000 & 0.000 & 0.1008 \\
+\bottomrule
 \end{tabular}
 \end{table}
