@@ -433,19 +433,50 @@ class AdaptiveRiskEngine:
         risk_score = float(np.clip(raw_risk, 0.0, 1.0))
         risk_score = round(risk_score, 4)
 
-        # 6. Temporal Risk Dynamics
+        # 5b. Exact Causal Marginal Contributions: Delta R_i = R(full) - R(without E_i)
+        def _calc_marginal(zero_term: float) -> float:
+            sub_threat = additive_threat - zero_term
+            sub_raw = (sub_threat * mult_crit * mult_unc) - trust_sub
+            sub_clamped = float(np.clip(sub_raw, 0.0, 1.0))
+            return round(risk_score - sub_clamped, 4)
+
+        marginal_contributions = {
+            "S_sig": _calc_marginal(term_sig),
+            "A_ml": _calc_marginal(term_ml),
+            "H_boost": _calc_marginal(term_hist),
+            "G_corr": _calc_marginal(term_graph),
+            "P_fore": _calc_marginal(term_fore),
+            "TI_score": _calc_marginal(term_ti),
+            "R_ep": _calc_marginal(term_ep),
+            "T_trust": round(float(np.clip((additive_threat * mult_crit * mult_unc), 0.0, 1.0)) - risk_score, 4),
+        }
+
+        # 6. Temporal Risk Dynamics & Trajectory Vector [R_t, dR/dt, d^2R/dt^2, P_crit, U_future]
         with self._lock:
             history = self._recent_scores[entity_key]
-            if history:
+            if len(history) >= 2:
                 mean_hist = float(np.mean(history))
                 risk_delta = round(risk_score - mean_hist, 4)
-                risk_velocity = round((risk_score - history[-1]) / max(0.1, time.time() - self._last_update[entity_key]), 4)
+                dt = max(0.1, time.time() - self._last_update[entity_key])
+                v1 = (risk_score - history[-1]) / dt
+                v0 = (history[-1] - history[-2]) / dt if len(history) >= 3 else v1
+                risk_velocity = round(v1, 4)
+                risk_accel = round((v1 - v0) / dt, 4)
+            elif history:
+                risk_delta = round(risk_score - history[-1], 4)
+                risk_velocity = round(risk_score - history[-1], 4)
+                risk_accel = 0.0
             else:
                 risk_delta = 0.0
                 risk_velocity = 0.0
+                risk_accel = 0.0
             history.append(risk_score)
 
-        # 7. Severity & Remediation Action Mapping
+        p_future_crit = min(1.0, max(0.0, effective_p_fore * 3.5))
+        u_future = round(min(1.0, uncertainty * 1.15), 4)
+        risk_trajectory = [risk_score, risk_velocity, risk_accel, round(p_future_crit, 4), u_future]
+
+        # 7. Forecast-Aware Policy & Remediation Action Mapping
         if risk_score >= THRESHOLD_CRITICAL:
             severity = "CRITICAL"
             severity_id = 5
@@ -459,11 +490,19 @@ class AdaptiveRiskEngine:
             risk_state = "ESCALATING"
             is_alert = True
         elif risk_score >= THRESHOLD_MEDIUM:
-            severity = "MEDIUM"
-            severity_id = 3
-            remediation = "STAGE_APPROVAL"
-            risk_state = "ELEVATED"
-            is_alert = True
+            # Forecast-Aware Proactive Escalation
+            if p_future_crit >= 0.60 and uncertainty < 0.30:
+                severity = "HIGH"
+                severity_id = 4
+                remediation = "STAGED_CONTAINMENT"
+                risk_state = "PROACTIVE_ESCALATION"
+                is_alert = True
+            else:
+                severity = "MEDIUM"
+                severity_id = 3
+                remediation = "STAGE_APPROVAL"
+                risk_state = "ELEVATED"
+                is_alert = True
         elif risk_score >= THRESHOLD_LOW:
             severity = "LOW"
             severity_id = 2
@@ -493,7 +532,7 @@ class AdaptiveRiskEngine:
             autonomy_dec = "AUTONOMOUS_ACT" if is_alert else "AUTONOMOUS_PASS"
             conformal_tau = 0.25
 
-        # 9. Causal Explanations
+        # 9. Causal Explanations with True Marginal Contributions
         raw_inputs_dict = {
             "S_sig": S_sig,
             "A_ml": A_ml,
@@ -517,6 +556,8 @@ class AdaptiveRiskEngine:
             "w_ep_R": term_ep,
             "w_trust_T": trust_sub,
             "u_penalty": u_penalty,
+            "marginal_contributions": marginal_contributions,
+            "risk_trajectory": risk_trajectory,
         }
         
         causal_report = self.causal_explainer.explain_decision(

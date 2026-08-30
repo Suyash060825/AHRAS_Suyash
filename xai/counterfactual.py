@@ -79,7 +79,8 @@ class CounterfactualExplainer:
         
         # 1. Identify primary escalation driver
         terms = trace.intermediate_terms
-        sorted_terms = sorted(terms.items(), key=lambda kv: kv[1], reverse=True)
+        numeric_terms = {k: float(v) for k, v in terms.items() if isinstance(v, (int, float)) and not isinstance(v, bool)}
+        sorted_terms = sorted(numeric_terms.items(), key=lambda kv: kv[1], reverse=True)
         top_driver_name, top_driver_val = sorted_terms[0] if sorted_terms else ("none", 0.0)
         
         escalation_cause = (
