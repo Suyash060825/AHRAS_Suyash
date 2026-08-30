@@ -290,6 +290,25 @@ def run_12_ablations_rigorous(test_recs: List[DatasetRecord]) -> Dict[str, Any]:
         "A11_Remove_Adaptive":        _eval_ablation(RiskConfig(adaptive_weights=False), "A11_Remove_Adaptive"),
         "A12_Remove_Response_Gate":   _eval_ablation(RiskConfig(), "A12_Remove_Response_Gate"),
     }
+
+    # Apply Holm-Bonferroni step-down correction across all 12 ablation tests
+    ablation_keys = list(ablations.keys())
+    raw_p_values = [ablations[k]["paired_p_value"] for k in ablation_keys]
+    m = len(raw_p_values)
+    indexed_p = sorted(enumerate(raw_p_values), key=lambda x: x[1])
+    
+    holm_adj = [0.0] * m
+    running_max = 0.0
+    for rank, (orig_idx, p_raw) in enumerate(indexed_p):
+        mult = m - rank
+        p_step = min(1.0, p_raw * mult)
+        running_max = max(running_max, p_step)
+        holm_adj[orig_idx] = round(running_max, 4)
+
+    for idx, k in enumerate(ablation_keys):
+        ablations[k]["holm_adjusted_p_value"] = holm_adj[idx]
+        ablations[k]["statistically_significant_holm"] = (holm_adj[idx] < 0.05)
+
     return ablations
 
 

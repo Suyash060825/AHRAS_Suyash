@@ -106,19 +106,23 @@ AHRAS Controlled Synthetic & """ + f"{t1_data['total_rows']:,}" + r""" & """ + f
     t4_data = res_exp["table_4_ablation_studies"]
     t4_rows = []
     for abl_id, m in t4_data.items():
-        sig_str = "Yes ($p < 0.05$)" if m["statistically_significant"] else "No"
-        t4_rows.append(f"{abl_id.replace('_', ' ')} & {m['ablated_f1']:.3f} & {m['absolute_f1_delta']:+.3f} & {m['relative_f1_delta_pct']:+.1f}\\% & {m['paired_p_value']:.4f} & {sig_str} \\\\")
+        p_raw = m["paired_p_value"]
+        p_holm = m.get("holm_adjusted_p_value", p_raw)
+        sig_str = "Yes" if m.get("statistically_significant_holm", p_holm < 0.05) else "No"
+        t4_rows.append(f"{abl_id.replace('_', ' ')} & {m['ablated_f1']:.3f} & {m['absolute_f1_delta']:+.3f} & {m['relative_f1_delta_pct']:+.1f}\\% & {p_raw:.4f} & {p_holm:.4f} & {sig_str} \\\\")
 
     t4_tex = r"""\begin{table}[t]
 \centering
 \small
-\caption{Twelve Controlled Ablation Studies with Paired Permutation Significance}
+\caption{Twelve Controlled Ablation Studies with Paired Permutation \& Holm--Bonferroni Correction}
 \label{tab:ablations}
-\begin{tabular}{lccccc}
+\begin{tabular}{lcccccc}
 \toprule
-\textbf{Ablation Configuration} & \textbf{F1} & $\mathbf{\Delta F1}$ & \textbf{Rel \%} & $\mathbf{p}$\textbf{-value} & \textbf{Sig.} \\
+\textbf{Ablation Configuration} & \textbf{F1} & $\mathbf{\Delta F1}$ & \textbf{Rel \%} & \textbf{Raw }$\mathbf{p}$ & \textbf{Holm }$\mathbf{p}$ & \textbf{Sig.} \\
 \midrule
 """ + "\n".join(t4_rows) + r"""
+\midrule
+\multicolumn{7}{l}{\footnotesize Significance threshold $\alpha = 0.05$ after Holm--Bonferroni step-down correction.} \\
 \bottomrule
 \end{tabular}
 \end{table}"""

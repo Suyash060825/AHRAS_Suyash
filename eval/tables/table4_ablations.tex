@@ -1,24 +1,26 @@
 \begin{table}[t]
 \centering
 \small
-\caption{Twelve Controlled Ablation Studies with Paired Permutation Significance}
+\caption{Twelve Controlled Ablation Studies with Paired Permutation \& Holm--Bonferroni Correction}
 \label{tab:ablations}
-\begin{tabular}{lccccc}
+\begin{tabular}{lcccccc}
 \toprule
-\textbf{Ablation Configuration} & \textbf{F1} & $\mathbf{\Delta F1}$ & \textbf{Rel \%} & $\mathbf{p}$\textbf{-value} & \textbf{Sig.} \\
+\textbf{Ablation Configuration} & \textbf{F1} & $\mathbf{\Delta F1}$ & \textbf{Rel \%} & \textbf{Raw }$\mathbf{p}$ & \textbf{Holm }$\mathbf{p}$ & \textbf{Sig.} \\
 \midrule
-A1 Remove Signatures & 0.000 & -0.017 & -100.0\% & 0.0005 & Yes ($p < 0.05$) \\
-A2 Remove ML Ensemble & 0.000 & -0.017 & -100.0\% & 0.0005 & Yes ($p < 0.05$) \\
-A3 Remove Statistical & 0.018 & +0.000 & +0.9\% & 0.0005 & Yes ($p < 0.05$) \\
-A4 Remove Trust & 0.017 & -0.000 & -0.9\% & 0.0005 & Yes ($p < 0.05$) \\
-A5 Remove Graph & 0.017 & +0.000 & +0.0\% & 0.0005 & Yes ($p < 0.05$) \\
-A6 Remove Historical & 0.017 & +0.000 & +0.0\% & 0.0005 & Yes ($p < 0.05$) \\
-A7 Remove Threat Intel & 0.017 & +0.000 & +0.0\% & 0.0005 & Yes ($p < 0.05$) \\
-A8 Remove Deception & 0.017 & +0.000 & +0.0\% & 0.0005 & Yes ($p < 0.05$) \\
-A9 Remove Forecasting & 0.017 & +0.000 & +0.0\% & 0.0005 & Yes ($p < 0.05$) \\
-A10 Remove Uncertainty & 0.017 & +0.000 & +0.0\% & 0.0005 & Yes ($p < 0.05$) \\
-A11 Remove Adaptive & 0.017 & +0.000 & +0.0\% & 0.0005 & Yes ($p < 0.05$) \\
-A12 Remove Response Gate & 0.017 & +0.000 & +0.0\% & 0.0005 & Yes ($p < 0.05$) \\
+A1 Remove Signatures & 0.000 & -0.018 & -100.0\% & 0.0005 & 0.0060 & Yes \\
+A2 Remove ML Ensemble & 0.000 & -0.018 & -100.0\% & 0.0005 & 0.0060 & Yes \\
+A3 Remove Statistical & 0.018 & +0.000 & +0.0\% & 0.0005 & 0.0060 & Yes \\
+A4 Remove Trust & 0.017 & -0.001 & -2.6\% & 0.0005 & 0.0060 & Yes \\
+A5 Remove Graph & 0.018 & +0.000 & +0.0\% & 0.0030 & 0.0060 & Yes \\
+A6 Remove Historical & 0.018 & -0.000 & -0.9\% & 0.0005 & 0.0060 & Yes \\
+A7 Remove Threat Intel & 0.018 & -0.000 & -0.9\% & 0.0005 & 0.0060 & Yes \\
+A8 Remove Deception & 0.018 & -0.000 & -0.9\% & 0.0005 & 0.0060 & Yes \\
+A9 Remove Forecasting & 0.018 & -0.000 & -0.9\% & 0.0005 & 0.0060 & Yes \\
+A10 Remove Uncertainty & 0.018 & -0.000 & -1.8\% & 0.0005 & 0.0060 & Yes \\
+A11 Remove Adaptive & 0.018 & -0.000 & -1.8\% & 0.0005 & 0.0060 & Yes \\
+A12 Remove Response Gate & 0.018 & -0.000 & -1.8\% & 0.0005 & 0.0060 & Yes \\
+\midrule
+\multicolumn{7}{l}{\footnotesize Significance threshold $\alpha = 0.05$ after Holm--Bonferroni step-down correction.} \\
 \bottomrule
 \end{tabular}
 \end{table}
