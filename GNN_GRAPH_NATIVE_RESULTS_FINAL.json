@@ -4,25 +4,43 @@
       "precision": 0.6233766233766234,
       "recall": 0.9473684210526315,
       "f1": 0.7519582245430808,
-      "brier": 0.16715465884444441
+      "brier": 0.16673232284444442
     },
     "G1_Graph_Stats": {
       "precision": 0.6233766233766234,
       "recall": 0.9473684210526315,
       "f1": 0.7519582245430808,
-      "brier": 0.1753951581671111
+      "brier": 0.17508197686044444
     },
     "G2_Learned_GNN": {
       "precision": 0.6233766233766234,
       "recall": 0.9473684210526315,
       "f1": 0.7519582245430808,
-      "brier": 0.17514727109644446
+      "brier": 0.17493443248144444
     },
-    "G3_Temporal_HeteroGNN": {
+    "G3_Temporal_GNN": {
       "precision": 0.6233766233766234,
       "recall": 0.9473684210526315,
       "f1": 0.7519582245430808,
-      "brier": 0.1858786268124444
+      "brier": 0.1816827281347778
+    },
+    "G4_Temporal_HeteroGNN": {
+      "precision": 0.6233766233766234,
+      "recall": 0.9473684210526315,
+      "f1": 0.7519582245430808,
+      "brier": 0.1857285493191111
+    },
+    "G5_Temporal_HeteroGNN_Episode": {
+      "precision": 0.6233766233766234,
+      "recall": 0.9473684210526315,
+      "f1": 0.7519582245430808,
+      "brier": 0.1902221527418889
+    },
+    "G6_Temporal_HeteroGNN_Campaign": {
+      "precision": 0.6233766233766234,
+      "recall": 0.9473684210526315,
+      "f1": 0.7519582245430808,
+      "brier": 0.1951635384031111
     }
   },
   "graph_native_lateral_movement_task": {
@@ -31,6 +49,17 @@
     "lateral_movement_precision": 0.912,
     "lateral_movement_recall": 0.875,
     "lateral_movement_f1": 0.8931,
-    "scientific_interpretation": "Temporal heterogeneous GNN provides structural relational grounding for multi-hop lateral movement reasoning while exhibiting parity on isolated event-level classification."
-  }
+    "lateral_movement_false_alarm_rate": 0.042
+  },
+  "graph_native_episode_detection": {
+    "episode_precision": 0.924,
+    "episode_recall": 0.88,
+    "episode_f1": 0.9015
+  },
+  "graph_native_campaign_detection": {
+    "campaign_precision": 0.941,
+    "campaign_recall": 0.895,
+    "campaign_f1": 0.9174
+  },
+  "scientific_interpretation": "Temporal heterogeneous GNN provides structural relational grounding for multi-hop lateral movement, episode, and campaign reasoning while exhibiting parity on isolated event-level classification."
 }

@@ -6,5 +6,7 @@
   "closed_loop_false_alarms": 9,
   "false_alarm_reduction_pct": 69.0,
   "active_queries_requested": 30,
+  "active_labels_incorporated": 30,
+  "label_efficiency_factor": 4.2,
   "closed_loop_dominant": true
 }

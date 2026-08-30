@@ -1,0 +1,64 @@
+{
+  "validator_version": "2.0.0-NextGen-JournalAudit",
+  "all_checks_passed": true,
+  "rules_evaluated": 14,
+  "rule_results": {
+    "Rule_01_Results_Exist_In_Results_Final": {
+      "passed": true,
+      "status": "PASSED"
+    },
+    "Rule_02_Results_Map_To_Live_Computation": {
+      "passed": true,
+      "status": "PASSED"
+    },
+    "Rule_03_Dataset_Split_Mapping": {
+      "passed": true,
+      "status": "PASSED"
+    },
+    "Rule_04_Claims_Manifest_Mapping": {
+      "passed": true,
+      "status": "PASSED"
+    },
+    "Rule_05_Per_Sample_Paired_Observations": {
+      "passed": true,
+      "status": "PASSED"
+    },
+    "Rule_06_Bootstrap_Confidence_Intervals": {
+      "passed": true,
+      "status": "PASSED"
+    },
+    "Rule_07_GNN_Graph_Native_Evidence": {
+      "passed": true,
+      "status": "PASSED"
+    },
+    "Rule_08_Continual_Longitudinal_Evidence": {
+      "passed": true,
+      "status": "PASSED"
+    },
+    "Rule_09_External_Validation_Honest_Disclosure": {
+      "passed": true,
+      "status": "PASSED"
+    },
+    "Rule_10_XAI_Tolerance_Exact_Match": {
+      "passed": true,
+      "status": "PASSED"
+    },
+    "Rule_11_Closed_Loop_Future_State_Change": {
+      "passed": true,
+      "status": "PASSED"
+    },
+    "Rule_12_Table_And_Figure_Sync": {
+      "passed": true,
+      "status": "PASSED"
+    },
+    "Rule_13_Zero_Stale_Metrics": {
+      "passed": true,
+      "status": "PASSED"
+    },
+    "Rule_14_No_Contradictory_Leakage_Statements": {
+      "passed": true,
+      "status": "PASSED"
+    }
+  },
+  "failed_rules": []
+}

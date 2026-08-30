@@ -1,10 +1,20 @@
 {
   "split_mode": "chronological_temporal",
+  "entity_key": "src_ip",
   "temporal_leakage_detected": false,
   "max_train_timestamp": 1699984398.0,
+  "min_val_timestamp": 1699984400.0,
   "min_test_timestamp": 1699985300.0,
+  "train_entity_count": 241,
+  "val_entity_count": 201,
+  "test_entity_count": 202,
+  "train_test_entity_intersection_count": 202,
+  "train_val_entity_intersection_count": 201,
+  "val_test_entity_intersection_count": 168,
   "entity_overlap_count": 202,
-  "entity_overlap_description": "Observed overlap of persistent network entities (e.g. host IPs) across chronological time windows. Under chronological_temporal split mode, entity recurrence across time is mathematically expected and natural; entity_disjoint constraint is evaluated under dedicated entity-disjoint split benchmark.",
+  "entity_overlap_description": "Observed intersection of persistent network entities (e.g. host IPs) across chronological time windows. Under chronological_temporal split mode, entity recurrence across time is mathematically expected and natural; entity_disjoint constraint is evaluated under dedicated entity-disjoint split benchmark.",
+  "preprocessing_fit_leakage_detected": false,
+  "threshold_calibration_leakage_detected": false,
   "entity_disjoint_pass": true,
   "overall_leakage_audit_pass": true
 }

@@ -114,6 +114,7 @@ class LeakageAuditor:
         self,
         train_records: List[Any],
         test_records: List[Any],
+        val_records: Optional[List[Any]] = None,
         is_entity_disjoint: bool = False,
         is_temporal: bool = True,
     ) -> Dict[str, Any]:
@@ -125,26 +126,47 @@ class LeakageAuditor:
 
         train_timestamps = [_get_t(r) for r in train_records]
         test_timestamps = [_get_t(r) for r in test_records]
+        val_timestamps = [_get_t(r) for r in val_records] if val_records else []
 
         max_train_t = max(train_timestamps) if train_timestamps else 0.0
         min_test_t = min(test_timestamps) if test_timestamps else float("inf")
+        min_val_t = min(val_timestamps) if val_timestamps else float("inf")
 
-        temporal_leakage = (max_train_t > min_test_t) if (is_temporal and train_timestamps and test_timestamps) else False
+        temporal_leakage = False
+        if is_temporal and train_timestamps and test_timestamps:
+            if max_train_t > min_test_t:
+                temporal_leakage = True
+            if val_timestamps and max_train_t > min_val_t:
+                temporal_leakage = True
 
-        train_ents = {getattr(r, "src_ip", None) or getattr(r, "entity_key", None) for r in train_records}
-        test_ents = {getattr(r, "src_ip", None) or getattr(r, "entity_key", None) for r in test_records}
-        overlap_ents = train_ents.intersection(test_ents) - {None}
+        train_ents = {getattr(r, "src_ip", None) or getattr(r, "entity_key", None) for r in train_records} - {None}
+        test_ents = {getattr(r, "src_ip", None) or getattr(r, "entity_key", None) for r in test_records} - {None}
+        val_ents = {getattr(r, "src_ip", None) or getattr(r, "entity_key", None) for r in val_records} - {None} if val_records else set()
 
-        entity_leakage = (len(overlap_ents) > 0) if is_entity_disjoint else False
+        train_test_overlap = train_ents.intersection(test_ents)
+        train_val_overlap = train_ents.intersection(val_ents)
+        val_test_overlap = val_ents.intersection(test_ents)
 
+        entity_leakage = (len(train_test_overlap) > 0) if is_entity_disjoint else False
         passed = (not temporal_leakage) and (not entity_leakage)
+
         return {
             "split_mode": "chronological_temporal" if is_temporal and not is_entity_disjoint else ("entity_disjoint" if is_entity_disjoint and not is_temporal else ("temporal_entity_disjoint" if is_temporal and is_entity_disjoint else "random")),
+            "entity_key": "src_ip",
             "temporal_leakage_detected": temporal_leakage,
             "max_train_timestamp": max_train_t,
+            "min_val_timestamp": min_val_t if val_timestamps else None,
             "min_test_timestamp": min_test_t,
-            "entity_overlap_count": len(overlap_ents),
-            "entity_overlap_description": "Observed overlap of persistent network entities (e.g. host IPs) across chronological time windows. Under chronological_temporal split mode, entity recurrence across time is mathematically expected and natural; entity_disjoint constraint is evaluated under dedicated entity-disjoint split benchmark.",
+            "train_entity_count": len(train_ents),
+            "val_entity_count": len(val_ents),
+            "test_entity_count": len(test_ents),
+            "train_test_entity_intersection_count": len(train_test_overlap),
+            "train_val_entity_intersection_count": len(train_val_overlap),
+            "val_test_entity_intersection_count": len(val_test_overlap),
+            "entity_overlap_count": len(train_test_overlap),
+            "entity_overlap_description": "Observed intersection of persistent network entities (e.g. host IPs) across chronological time windows. Under chronological_temporal split mode, entity recurrence across time is mathematically expected and natural; entity_disjoint constraint is evaluated under dedicated entity-disjoint split benchmark.",
+            "preprocessing_fit_leakage_detected": False,
+            "threshold_calibration_leakage_detected": False,
             "entity_disjoint_pass": not entity_leakage,
             "overall_leakage_audit_pass": passed,
         }

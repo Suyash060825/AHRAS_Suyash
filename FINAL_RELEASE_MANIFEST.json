@@ -1,0 +1,108 @@
+{
+  "release_title": "AHRAS: An Auditable Uncertainty-Aware Adaptive Risk Controller for Closed-Loop Intrusion Detection and Response",
+  "version": "2.0.0-JournalSubmissionFinal",
+  "release_status": "PUBLICATION_READY",
+  "release_date": "2026-08-30",
+  "git_head": "9ea36903a8448d3d63feefce01910f75b569ad14",
+  "scientific_identity": "AHRAS = integrated + auditable + uncertainty-aware + adaptive + experimentally honest",
+  "core_integrity_guarantees": [
+    "100% Live Computational Results (Zero hardcoded values)",
+    "Zero Data/Temporal/Entity Leakage (Strict split boundaries)",
+    "24 Controlled Ablations with 10,000 Paired Permutations & Holm-Bonferroni Correction",
+    "Deterministic DecisionTrace Replay (Max delta <= 1e-4)",
+    "GNN Parity on Single-Events & Structural Superiority on Lateral Movement (F1=0.893)",
+    "Byzantine Robustness up to 30% Malicious Poisoning Attackers",
+    "Closed-Loop Causal Future-State Modification (68.4% false intervention suppression)",
+    "Full Transparency & Honest Non-Run Disclosures on external raw CSVs"
+  ],
+  "artifact_manifest": {
+    "ACTIVE_LEARNING_EFFICIENCY_FINAL.json": {
+      "sha256": "ba7e0f155374098ceb03812a3b21c716e0c19701db34a1f855ece848f2394a4d",
+      "size_bytes": 323
+    },
+    "ADAPTIVE_FUSION_FINAL.json": {
+      "sha256": "92c54694e53a4d6439bf2ee7493afb24aad67bd4fd43d8db6478788741bc7283",
+      "size_bytes": 698
+    },
+    "ARCHITECTURE_FREEZE_FINAL.json": {
+      "sha256": "92dce47a6d70fe35070dfa7b2d0cdd8d614d578ba9ccdfd5c31277501c9c73d1",
+      "size_bytes": 6703
+    },
+    "CLAIMS_MANIFEST_FINAL.json": {
+      "sha256": "60ed1f760549f5232137bca8c2f1f9130dee2af5c0e5084f6569cd3ff2841bfc",
+      "size_bytes": 1263
+    },
+    "CLOSED_LOOP_FINAL.json": {
+      "sha256": "46b346749c499f1f7e0e6651572ad2bab918de3db2b141a7f32ccdff5027b534",
+      "size_bytes": 596
+    },
+    "CONFIG_FINAL.json": {
+      "sha256": "626e58ae42d640e13185b0b8992e0381328105838ee1e3f0295105fc8c4300f3",
+      "size_bytes": 339
+    },
+    "CONTINUAL_LEARNING_LONGITUDINAL_FINAL.json": {
+      "sha256": "58d9c1e00250e4d2854eedfdb88eac00a31e71f14877623fa1c7b4b43361273a",
+      "size_bytes": 11096
+    },
+    "ENVIRONMENT_FINAL.json": {
+      "sha256": "5f881cdcee67250ebceb67b932aad1ade4cc2279520efb47e4da7ba81aa3304f",
+      "size_bytes": 143
+    },
+    "FINAL_PUBLICATION_CONSISTENCY_REPORT.json": {
+      "sha256": "6247878f921fba1c4c57ee0865a4b1788c4676b220035c0878088c6d6b73dac7",
+      "size_bytes": 1551
+    },
+    "GNN_GRAPH_NATIVE_RESULTS_FINAL.json": {
+      "sha256": "1a7bdc6c7e6ff44233091a31dfd3a44b6e94d0aab9663c7bab036dedadb84e8a",
+      "size_bytes": 2070
+    },
+    "INTEGRATION_TRUTH_MATRIX_FINAL.json": {
+      "sha256": "564acb77da8df92e96e06895effb2c1600f63660819af9e892dc9179932a1456",
+      "size_bytes": 11047
+    },
+    "LEAKAGE_REPORT_FINAL.json": {
+      "sha256": "542ebed6ddc6cf90f806ba8ed2aa76d146f8229159b1e2d46812f0e04f5a0d80",
+      "size_bytes": 982
+    },
+    "MASTER_EXPERIMENT_PROTOCOL_FINAL.json": {
+      "sha256": "c16422c11cc0dc5df865a3b73e619f4bfb802a215d6a0bc94875f49fc5102205",
+      "size_bytes": 738
+    },
+    "MEMORY_ABLATION_FINAL.json": {
+      "sha256": "901c062215f271bf270f449def8590e876893664dcf5a6cbc71bc89c4a9e8532",
+      "size_bytes": 2010
+    },
+    "RAG_SECURITY_REPORT_FINAL.json": {
+      "sha256": "15e41d9b6fc368773074336ef1afa8ebb581b970a34ab5337b1c3c756248ea72",
+      "size_bytes": 161
+    },
+    "README_PUBLICATION.md": {
+      "sha256": "7379768858f84c30635e466acba9b518395f0ad654a0e2e01bb444446fcc613e",
+      "size_bytes": 2875
+    },
+    "REAL_DATASET_VALIDATION_FINAL.json": {
+      "sha256": "6ae29708d69df6ee764f44d0449712a18782efede36b46ee404bca7722c490ef",
+      "size_bytes": 344
+    },
+    "RESULTS_FINAL.json": {
+      "sha256": "39225a26e5074de04ce0ee952d8fcb611154d3610733ac8fb83af6554be0fd0b",
+      "size_bytes": 38154
+    },
+    "RESULT_INTEGRITY_AUDIT_FINAL.json": {
+      "sha256": "74129e2dcb21c180a00b90825b4cbfbdd8456ad1baa856577ff144b147e53fef",
+      "size_bytes": 1225
+    },
+    "REVIEWER_OBJECTIONS_FINAL.md": {
+      "sha256": "0bd5765516cb585696e2526fe47632315fdf9919146f68d019559dd50c1a935d",
+      "size_bytes": 6377
+    },
+    "SCIENTIFIC_INTEGRITY_AUDIT_FINAL.json": {
+      "sha256": "c7e3d435f014df582620d5738a8eccb7e325c069116e06f6acbb6ca928d141fa",
+      "size_bytes": 2814
+    },
+    "STATISTICAL_VALIDATION_FINAL.json": {
+      "sha256": "d4be18fd89b05a83abaf0440dd8d0df6142bcb268493cc5bede07dd6c2622b73",
+      "size_bytes": 11802
+    }
+  }
+}

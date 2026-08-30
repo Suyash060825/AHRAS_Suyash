@@ -1,0 +1,14 @@
+{
+  "static_mean_risk_error": 0.1573,
+  "closed_loop_mean_risk_error": 0.1233,
+  "adaptation_gain_mse": 0.0339,
+  "mse_definition": "MSE = (1/N) * sum_i (predicted_risk_i - ground_truth_i)^2",
+  "static_false_alarms": 29,
+  "closed_loop_false_alarms": 10,
+  "false_alarm_reduction_pct": 65.5,
+  "active_queries_requested": 30,
+  "active_labels_incorporated": 30,
+  "causal_chain_verified": "uncertain_event -> abstention -> analyst_query -> trusted_label -> memory_insertion -> validation -> parameter_update -> future_prediction",
+  "future_state_changed": true,
+  "closed_loop_dominant": true
+}
