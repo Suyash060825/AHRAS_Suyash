@@ -51,119 +51,120 @@ def make_dataset(
     label_noise = 0.0 if difficulty == "EASY" else (0.01 if difficulty == "MODERATE" else 0.05)
     adv_perturb = (difficulty == "ADVERSARIAL")
 
-    # 1. Benign Traffic
-    for i in range(n_benign):
-        ts_str = time.strftime("%d/%m/%Y %H:%M:%S", time.gmtime(base_ts + i * 2))
-        fwd_pkts = int(rng.integers(2, 25))
-        bwd_pkts = int(rng.integers(2, 30))
-        bytes_sec = float(rng.uniform(100.0, 5000.0))
-        pkts_sec = float(rng.uniform(1.0, 50.0))
-        syn_cnt = int(py_rand.choice([0, 1]))
-        ack_cnt = int(rng.integers(2, 12))
-        avg_pkt_sz = float(rng.uniform(64.0, 512.0))
-        pkt_std = float(rng.uniform(10.0, 100.0))
-        dst_port = int(py_rand.choice([80, 443, 53, 8080, 22]))
-
-        # Noise injection in HARD/ADVERSARIAL
-        if rng.uniform(0, 1) < overlap:
-            bytes_sec *= float(rng.uniform(1.5, 3.0))
-            pkts_sec *= float(rng.uniform(1.5, 3.0))
-
-        lbl = "BENIGN"
-        if label_noise > 0 and rng.uniform(0, 1) < label_noise:
-            lbl = "PortScan"  # Label noise
-
-        rows.append({
-            "Source IP": f"192.168.1.{py_rand.randint(10, 200)}",
-            "Destination Port": dst_port,
-            "Flow Duration": int(rng.integers(500, 50000)),
-            "Total Fwd Packets": fwd_pkts,
-            "Total Backward Packets": bwd_pkts,
-            "Flow Bytes/s": round(bytes_sec, 2),
-            "Flow Packets/s": round(pkts_sec, 2),
-            "SYN Flag Count": syn_cnt,
-            "ACK Flag Count": ack_cnt,
-            "Average Packet Size": round(avg_pkt_sz, 2),
-            "Packet Length Std": round(pkt_std, 2),
-            "Timestamp": ts_str,
-            "Label": lbl
-        })
-
-    # 2. Attack Traffic
+    # Generate events along an interleaved chronological timeline
     attack_types = ["PortScan", "DoS Hulk", "DDoS", "SSH-Patator", "Bot"]
-    for i in range(n_attack):
-        atype = py_rand.choice(attack_types)
-        ts_str = time.strftime("%d/%m/%Y %H:%M:%S", time.gmtime(base_ts + n_benign * 2 + i * 2))
+    
+    for i in range(n_total):
+        curr_ts = base_ts + i * 2.0
+        ts_str = time.strftime("%d/%m/%Y %H:%M:%S", time.gmtime(curr_ts))
         
-        if atype == "PortScan":
-            dst_port = int(rng.integers(1, 65535))
-            fwd_pkts = int(rng.integers(1, 4))
-            bwd_pkts = int(rng.integers(0, 2))
-            bytes_sec = float(rng.uniform(50.0, 400.0))
-            pkts_sec = float(rng.uniform(10.0, 200.0))
-            syn_cnt = 1
-            ack_cnt = 0
-            avg_pkt_sz = 40.0
-            pkt_std = 0.0
-        elif atype in ("DoS Hulk", "DDoS"):
-            dst_port = int(py_rand.choice([80, 443]))
-            fwd_pkts = int(rng.integers(50, 500))
-            bwd_pkts = int(rng.integers(0, 10))
-            bytes_sec = float(rng.uniform(10000.0, 500000.0))
-            pkts_sec = float(rng.uniform(500.0, 5000.0))
-            syn_cnt = int(rng.integers(10, 50))
-            ack_cnt = int(rng.integers(0, 5))
-            avg_pkt_sz = float(rng.uniform(500.0, 1400.0))
-            pkt_std = float(rng.uniform(50.0, 200.0))
-        elif atype == "SSH-Patator":
-            dst_port = 22
-            fwd_pkts = int(rng.integers(10, 40))
-            bwd_pkts = int(rng.integers(10, 30))
-            bytes_sec = float(rng.uniform(1000.0, 10000.0))
-            pkts_sec = float(rng.uniform(20.0, 100.0))
-            syn_cnt = 1
-            ack_cnt = int(rng.integers(5, 20))
-            avg_pkt_sz = float(rng.uniform(100.0, 300.0))
-            pkt_std = float(rng.uniform(20.0, 80.0))
-        else:  # Bot / C2
-            dst_port = int(py_rand.choice([8080, 4444, 6667]))
-            fwd_pkts = int(rng.integers(5, 25))
-            bwd_pkts = int(rng.integers(5, 25))
-            bytes_sec = float(rng.uniform(500.0, 3000.0))
-            pkts_sec = float(rng.uniform(2.0, 20.0))
-            syn_cnt = 1
-            ack_cnt = int(rng.integers(3, 10))
-            avg_pkt_sz = float(rng.uniform(128.0, 512.0))
-            pkt_std = float(rng.uniform(15.0, 60.0))
+        # Decide if this event is an attack or benign
+        is_attack_sample = (py_rand.random() < attack_frac)
+        
+        if not is_attack_sample:
+            # Benign event
+            fwd_pkts = int(rng.integers(2, 25))
+            bwd_pkts = int(rng.integers(2, 30))
+            bytes_sec = float(rng.uniform(100.0, 5000.0))
+            pkts_sec = float(rng.uniform(1.0, 50.0))
+            syn_cnt = int(py_rand.choice([0, 1]))
+            ack_cnt = int(rng.integers(2, 12))
+            avg_pkt_sz = float(rng.uniform(64.0, 512.0))
+            pkt_std = float(rng.uniform(10.0, 100.0))
+            dst_port = int(py_rand.choice([80, 443, 53, 8080, 22]))
 
-        # Adversarial Perturbation (mimic benign statistics to evade single detector)
-        if adv_perturb:
-            bytes_sec = float(rng.uniform(200.0, 3000.0))  # Low profile
-            pkts_sec = float(rng.uniform(5.0, 30.0))
-            fwd_pkts = int(rng.integers(3, 15))
+            if rng.uniform(0, 1) < overlap:
+                bytes_sec *= float(rng.uniform(1.5, 3.0))
+                pkts_sec *= float(rng.uniform(1.5, 3.0))
 
-        lbl = atype
-        if label_noise > 0 and rng.uniform(0, 1) < label_noise:
-            lbl = "BENIGN"  # Noise in attack labels
+            lbl = "BENIGN"
+            if label_noise > 0 and rng.uniform(0, 1) < label_noise:
+                lbl = "PortScan"
 
-        rows.append({
-            "Source IP": f"192.168.1.{py_rand.randint(201, 250)}",
-            "Destination Port": dst_port,
-            "Flow Duration": int(rng.integers(100, 20000)),
-            "Total Fwd Packets": fwd_pkts,
-            "Total Backward Packets": bwd_pkts,
-            "Flow Bytes/s": round(bytes_sec, 2),
-            "Flow Packets/s": round(pkts_sec, 2),
-            "SYN Flag Count": syn_cnt,
-            "ACK Flag Count": ack_cnt,
-            "Average Packet Size": round(avg_pkt_sz, 2),
-            "Packet Length Std": round(pkt_std, 2),
-            "Timestamp": ts_str,
-            "Label": lbl
-        })
+            rows.append({
+                "Source IP": f"192.168.1.{py_rand.randint(10, 200)}",
+                "Destination Port": dst_port,
+                "Flow Duration": int(rng.integers(500, 50000)),
+                "Total Fwd Packets": fwd_pkts,
+                "Total Backward Packets": bwd_pkts,
+                "Flow Bytes/s": round(bytes_sec, 2),
+                "Flow Packets/s": round(pkts_sec, 2),
+                "SYN Flag Count": syn_cnt,
+                "ACK Flag Count": ack_cnt,
+                "Average Packet Size": round(avg_pkt_sz, 2),
+                "Packet Length Std": round(pkt_std, 2),
+                "Timestamp": ts_str,
+                "Label": lbl
+            })
+        else:
+            # Attack event
+            atype = py_rand.choice(attack_types)
+            if atype == "PortScan":
+                dst_port = int(rng.integers(1, 65535))
+                fwd_pkts = int(rng.integers(1, 4))
+                bwd_pkts = int(rng.integers(0, 2))
+                bytes_sec = float(rng.uniform(50.0, 400.0))
+                pkts_sec = float(rng.uniform(10.0, 200.0))
+                syn_cnt = 1
+                ack_cnt = 0
+                avg_pkt_sz = 40.0
+                pkt_std = 0.0
+            elif atype in ("DoS Hulk", "DDoS"):
+                dst_port = int(py_rand.choice([80, 443]))
+                fwd_pkts = int(rng.integers(50, 500))
+                bwd_pkts = int(rng.integers(0, 10))
+                bytes_sec = float(rng.uniform(10000.0, 500000.0))
+                pkts_sec = float(rng.uniform(500.0, 5000.0))
+                syn_cnt = int(rng.integers(10, 50))
+                ack_cnt = int(rng.integers(0, 5))
+                avg_pkt_sz = float(rng.uniform(500.0, 1400.0))
+                pkt_std = float(rng.uniform(50.0, 200.0))
+            elif atype == "SSH-Patator":
+                dst_port = 22
+                fwd_pkts = int(rng.integers(10, 40))
+                bwd_pkts = int(rng.integers(10, 40))
+                bytes_sec = float(rng.uniform(1000.0, 8000.0))
+                pkts_sec = float(rng.uniform(20.0, 100.0))
+                syn_cnt = 1
+                ack_cnt = int(rng.integers(5, 20))
+                avg_pkt_sz = float(rng.uniform(100.0, 300.0))
+                pkt_std = float(rng.uniform(20.0, 80.0))
+            else:  # Bot / C2
+                dst_port = int(py_rand.choice([8080, 4444, 6667]))
+                fwd_pkts = int(rng.integers(5, 25))
+                bwd_pkts = int(rng.integers(5, 25))
+                bytes_sec = float(rng.uniform(500.0, 3000.0))
+                pkts_sec = float(rng.uniform(2.0, 20.0))
+                syn_cnt = 1
+                ack_cnt = int(rng.integers(3, 10))
+                avg_pkt_sz = float(rng.uniform(128.0, 512.0))
+                pkt_std = float(rng.uniform(15.0, 60.0))
 
-    # Chronological sort
-    rows.sort(key=lambda r: r["Timestamp"])
+            if adv_perturb:
+                bytes_sec = float(rng.uniform(200.0, 3000.0))
+                pkts_sec = float(rng.uniform(5.0, 30.0))
+                fwd_pkts = int(rng.integers(3, 15))
+
+            lbl = atype
+            if label_noise > 0 and rng.uniform(0, 1) < label_noise:
+                lbl = "BENIGN"
+
+            rows.append({
+                "Source IP": f"192.168.1.{py_rand.randint(201, 250)}",
+                "Destination Port": dst_port,
+                "Flow Duration": int(rng.integers(100, 20000)),
+                "Total Fwd Packets": fwd_pkts,
+                "Total Backward Packets": bwd_pkts,
+                "Flow Bytes/s": round(bytes_sec, 2),
+                "Flow Packets/s": round(pkts_sec, 2),
+                "SYN Flag Count": syn_cnt,
+                "ACK Flag Count": ack_cnt,
+                "Average Packet Size": round(avg_pkt_sz, 2),
+                "Packet Length Std": round(pkt_std, 2),
+                "Timestamp": ts_str,
+                "Label": lbl
+            })
+
     return rows
 
 

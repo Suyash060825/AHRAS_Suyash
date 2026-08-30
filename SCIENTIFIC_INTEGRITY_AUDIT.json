@@ -1,0 +1,32 @@
+{
+  "audit_date": "2026-08-30",
+  "auditor": "Principal Research Systems Engineer",
+  "directive": "Eliminate all hardcoded/static dictionary results in research evaluation scripts and replace with 100% live computational model evaluation.",
+  "findings": [
+    {
+      "file": "evaluation/run_comprehensive_research.py",
+      "function": "run_full_research_pipeline",
+      "problem": "table_8_ood, table_9_gnn, table_10_continual, table_11_fl, and baselines_matrix contained static dictionary metric summaries instead of computing metrics from live model executions.",
+      "severity": "CRITICAL_SCIENTIFIC_INTEGRITY",
+      "scientific_impact": "Metrics did not directly reflect runtime algorithmic outputs across hyperparameter or dataset changes.",
+      "required_fix": "Refactor all sections to execute live model predictions on dataset splits, compute actual metrics via sklearn/MetricsCalculator, and record only computed values."
+    },
+    {
+      "file": "evaluation/federated_evaluator.py",
+      "function": "evaluate_byzantine_resilience",
+      "problem": "Estimated retained F1 was computed via a linear proxy formula (0.98 - loss * 0.4) rather than running test-set inference on aggregated weights.",
+      "severity": "HIGH",
+      "scientific_impact": "Federated test accuracy did not evaluate actual test data classifications.",
+      "required_fix": "Execute local and global model inference on non-IID test partitions for each client round to measure empirical F1."
+    },
+    {
+      "file": "detection/gnn_engine.py",
+      "function": "compute_gnn_node_score",
+      "problem": "GNN forward pass used randomly initialized un-trained weights for graph scoring.",
+      "severity": "HIGH",
+      "scientific_impact": "GNN representations were stochastic rather than trained on relational topology.",
+      "required_fix": "Train GNN layers via node-classification / link-prediction cross-entropy on graph edges before inference."
+    }
+  ],
+  "remediation_status": "IN_PROGRESS"
+}

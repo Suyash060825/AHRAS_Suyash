@@ -108,6 +108,42 @@ class SecurityGNN:
         scores = 1.0 / (1.0 + np.exp(-np.clip(logits, -10.0, 10.0)))
         return H2, scores.flatten()
 
+    def train(self, X: np.ndarray, adj_matrix: np.ndarray, y_labels: np.ndarray, epochs: int = 25, lr: float = 0.02) -> float:
+        """
+        Trains GNN message-passing and classification layers via Binary Cross-Entropy on node labels.
+        """
+        if len(X) == 0 or len(y_labels) == 0:
+            return 0.0
+        y = np.array(y_labels, dtype=np.float64).flatten()
+        for epoch in range(epochs):
+            # Forward pass
+            H1 = self.layer1.forward(X, adj_matrix)
+            H2 = self.layer2.forward(H1, adj_matrix)
+            logits = np.dot(H2, self.W_out) + self.b_out
+            preds = 1.0 / (1.0 + np.exp(-np.clip(logits.flatten(), -10.0, 10.0)))
+
+            # Binary cross-entropy gradient
+            error = (preds - y)[:, np.newaxis]
+            grad_W_out = np.dot(H2.T, error) / len(y)
+            grad_b_out = np.mean(error)
+
+            # Backprop through output linear layer
+            grad_H2 = np.dot(error, self.W_out.T) * (H2 > 0).astype(np.float64)
+            grad_W_self2 = np.dot(H1.T, grad_H2) / len(y)
+            grad_W_agg2 = np.dot(np.dot(adj_matrix, H1).T, grad_H2) / len(y)
+
+            # Update weights with gradient clipping
+            self.W_out -= lr * np.clip(grad_W_out, -1.0, 1.0)
+            self.b_out -= lr * np.clip(grad_b_out, -1.0, 1.0)
+            self.layer2.W_self -= lr * np.clip(grad_W_self2, -1.0, 1.0)
+            self.layer2.W_agg -= lr * np.clip(grad_W_agg2, -1.0, 1.0)
+
+        # Final BCE loss
+        _, final_preds = self.forward(X, adj_matrix)
+        eps = 1e-7
+        bce = -np.mean(y * np.log(final_preds + eps) + (1.0 - y) * np.log(1.0 - final_preds + eps))
+        return round(float(bce), 4)
+
 
 @dataclass
 class AttackEpisode:

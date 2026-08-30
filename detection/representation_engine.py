@@ -105,6 +105,59 @@ class SecurityRepresentationModel:
         norms[norms == 0] = 1.0
         return z / norms
 
+    def train(self, X_train: np.ndarray, epochs: int = 15, lr: float = 0.01) -> float:
+        """
+        Trains encoder and decoder on feature matrix X_train using reconstruction loss optimization.
+        Returns final mean squared reconstruction loss.
+        """
+        with self._lock:
+            X = np.atleast_2d(X_train).astype(np.float64)
+            if len(X) == 0:
+                return 0.0
+
+            if X.shape[1] < self.in_dim:
+                padded = np.zeros((X.shape[0], self.in_dim), dtype=np.float64)
+                padded[:, :X.shape[1]] = X
+                X = padded
+            elif X.shape[1] > self.in_dim:
+                X = X[:, :self.in_dim]
+
+            n_samples = len(X)
+            batch_size = min(64, n_samples)
+
+            for epoch in range(epochs):
+                indices = np.random.permutation(n_samples)
+                for i in range(0, n_samples, batch_size):
+                    batch_idx = indices[i:i + batch_size]
+                    x_b = X[batch_idx]
+
+                    # Forward pass
+                    hidden = np.dot(x_b, self.W_enc) + self.b_enc
+                    z = np.maximum(0.0, hidden)
+                    x_hat = np.dot(z, self.W_dec) + self.b_dec
+
+                    # Gradients
+                    diff = (x_hat - x_b)
+                    grad_W_dec = np.dot(z.T, diff) / len(x_b)
+                    grad_b_dec = np.mean(diff, axis=0)
+
+                    grad_z = np.dot(diff, self.W_dec.T)
+                    grad_hidden = grad_z * (hidden > 0).astype(np.float64)
+                    grad_W_enc = np.dot(x_b.T, grad_hidden) / len(x_b)
+                    grad_b_enc = np.mean(grad_hidden, axis=0)
+
+                    # Update with gradient clipping
+                    self.W_dec -= lr * np.clip(grad_W_dec, -1.0, 1.0)
+                    self.b_dec -= lr * np.clip(grad_b_dec, -1.0, 1.0)
+                    self.W_enc -= lr * np.clip(grad_W_enc, -1.0, 1.0)
+                    self.b_enc -= lr * np.clip(grad_b_enc, -1.0, 1.0)
+
+            # Final loss calculation
+            z_final = np.maximum(0.0, np.dot(X, self.W_enc) + self.b_enc)
+            x_hat_final = np.dot(z_final, self.W_dec) + self.b_dec
+            final_loss = float(np.mean((x_hat_final - X) ** 2))
+            return round(final_loss, 4)
+
     def decode(self, Z: np.ndarray) -> np.ndarray:
         """Reconstructs original feature space from latent embedding: x_hat = Z W_dec + b_dec."""
         Z = np.atleast_2d(Z).astype(np.float64)

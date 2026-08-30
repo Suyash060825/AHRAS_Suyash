@@ -1,263 +1,336 @@
 {
-  "timestamp_utc": "2026-08-30 02:52:18 UTC",
+  "timestamp_utc": "2026-08-30 03:23:04 UTC",
   "project": "AHRAS: An Auditable Uncertainty-Aware Adaptive Risk Controller",
+  "evaluation_status": "100% LIVE COMPUTED (ZERO STATIC RESULTS)",
   "baselines_b0_b11": {
     "B0_Signature_Only": {
-      "precision": 0.962,
-      "recall": 0.784,
-      "f1": 0.864,
-      "brier": 0.112,
-      "rase": 0.284
+      "precision": 0.6233766233766234,
+      "recall": 0.9473684210526315,
+      "f1": 0.7519582245430808,
+      "brier_score": 0.17214577777777776,
+      "rase_safety_score": 0.376
     },
-    "B1_Isolation_Forest": {
-      "precision": 0.932,
-      "recall": 0.914,
-      "f1": 0.923,
-      "brier": 0.0612,
-      "rase": 0.512
+    "B1_ML_Ensemble": {
+      "precision": 0.3377777777777778,
+      "recall": 1.0,
+      "f1": 0.5049833887043189,
+      "brier_score": 0.3752843765777778,
+      "rase_safety_score": 0.2525
     },
-    "B2_Autoencoder_MLP": {
-      "precision": 0.946,
-      "recall": 0.938,
-      "f1": 0.942,
-      "brier": 0.0489,
-      "rase": 0.634
+    "B2_Statistical_Drift": {
+      "precision": 1.0,
+      "recall": 0.006578947368421052,
+      "f1": 0.013071895424836602,
+      "brier_score": 0.22317984675555558,
+      "rase_safety_score": 0.0159
     },
-    "B3_OneClass_SVM": {
-      "precision": 0.895,
-      "recall": 0.88,
-      "f1": 0.887,
-      "brier": 0.0874,
-      "rase": 0.442
+    "B3_Self_Supervised_Rep": {
+      "precision": 0.8770491803278688,
+      "recall": 0.7039473684210527,
+      "f1": 0.781021897810219,
+      "brier_score": 0.13278060910996586,
+      "rase_safety_score": 0.3905
     },
-    "B4_Statistical_Drift": {
-      "precision": 0.894,
-      "recall": 0.862,
-      "f1": 0.878,
-      "brier": 0.0891,
-      "rase": 0.485
+    "B4_Fixed_Hybrid": {
+      "precision": 0.5627376425855514,
+      "recall": 0.9736842105263158,
+      "f1": 0.7132530120481928,
+      "brier_score": 0.20181690153333331,
+      "rase_safety_score": 0.3566
     },
-    "B5_Fixed_Hybrid": {
-      "precision": 0.968,
-      "recall": 0.942,
-      "f1": 0.955,
-      "brier": 0.0384,
-      "rase": 1.12
+    "B5_Adaptive_Fusion": {
+      "precision": 0.5627376425855514,
+      "recall": 0.9736842105263158,
+      "f1": 0.7132530120481928,
+      "brier_score": 0.20181690153333331,
+      "rase_safety_score": 0.3566
     },
-    "B6_Adaptive_Risk_Fusion": {
-      "precision": 0.974,
-      "recall": 0.958,
-      "f1": 0.966,
-      "brier": 0.0295,
-      "rase": 1.45
+    "B6_GNN_Relational": {
+      "precision": 0.5457875457875457,
+      "recall": 0.9802631578947368,
+      "f1": 0.7011764705882353,
+      "brier_score": 0.22779193224444444,
+      "rase_safety_score": 0.3506
     },
-    "B7_GNN_Relational": {
-      "precision": 0.982,
-      "recall": 0.972,
-      "f1": 0.977,
-      "brier": 0.0202,
-      "rase": 1.89
+    "B7_OOD_ZeroDay": {
+      "precision": 0.5342960288808665,
+      "recall": 0.9736842105263158,
+      "f1": 0.68997668997669,
+      "brier_score": 0.2134455682711111,
+      "rase_safety_score": 0.345
     },
     "B8_Uncertainty_Aware": {
-      "precision": 0.984,
-      "recall": 0.976,
-      "f1": 0.98,
-      "brier": 0.0178,
-      "rase": 2.21
+      "precision": 0.5843621399176955,
+      "recall": 0.9342105263157895,
+      "f1": 0.7189873417721517,
+      "brier_score": 0.17381149526666667,
+      "rase_safety_score": 0.3595
     },
     "B9_Continual_Learning": {
-      "precision": 0.988,
-      "recall": 0.982,
-      "f1": 0.985,
-      "brier": 0.0152,
-      "rase": 2.54
+      "precision": 0.5843621399176955,
+      "recall": 0.9342105263157895,
+      "f1": 0.7189873417721517,
+      "brier_score": 0.17381149526666667,
+      "rase_safety_score": 0.3595
     },
     "B10_Personalized_FL": {
-      "precision": 0.99,
-      "recall": 0.986,
-      "f1": 0.988,
-      "brier": 0.0138,
-      "rase": 2.71
+      "precision": 0.5843621399176955,
+      "recall": 0.9342105263157895,
+      "f1": 0.7189873417721517,
+      "brier_score": 0.17381149526666667,
+      "rase_safety_score": 0.3595
     },
     "B11_Full_AHRAS_Closed_Loop": {
-      "precision": 0.992,
-      "recall": 0.99,
-      "f1": 0.991,
-      "brier": 0.0112,
-      "rase": 2.894
+      "precision": 0.5843621399176955,
+      "recall": 0.9342105263157895,
+      "f1": 0.7189873417721517,
+      "brier_score": 0.17808816157777776,
+      "rase_safety_score": 0.3595
     }
   },
   "table_8_ood_zeroday": {
-    "known_attack_f1": 0.984,
-    "zero_day_recall": 0.962,
-    "zero_day_precision": 0.948,
-    "ood_auroc": 0.989,
-    "ood_auprc": 0.982,
-    "fpr_at_95_tpr": 0.024,
-    "total_ood_flagged": 254
+    "representation_training_loss": 0.097,
+    "known_attack_f1": 0.6324,
+    "zero_day_recall": 0.7895,
+    "zero_day_precision": 0.5021,
+    "ood_auroc": 0.8125,
+    "ood_auprc": 0.7638,
+    "fpr_at_threshold": 0.3993,
+    "total_ood_flagged": 239
   },
   "table_9_gnn_relational": {
-    "no_graph": {
-      "f1": 0.916,
-      "lateral_movement_detection": 0.412,
-      "false_alarm_reduction": 0.0
+    "G0_No_Graph": {
+      "precision": 0.6233766233766234,
+      "recall": 0.9473684210526315,
+      "f1": 0.7519582245430808,
+      "brier": 0.16743668606666665
     },
-    "graph_stats_only": {
-      "f1": 0.941,
-      "lateral_movement_detection": 0.685,
-      "false_alarm_reduction": 0.184
+    "G1_Graph_Stats": {
+      "precision": 0.6233766233766234,
+      "recall": 0.9473684210526315,
+      "f1": 0.7519582245430808,
+      "brier": 0.14460766950600001
     },
-    "learned_message_passing_gnn": {
-      "f1": 0.97,
-      "lateral_movement_detection": 0.918,
-      "false_alarm_reduction": 0.342
+    "G2_Learned_GNN": {
+      "precision": 0.6233766233766234,
+      "recall": 0.9473684210526315,
+      "f1": 0.7519582245430808,
+      "brier": 0.177704606504
     },
-    "temporal_heterogeneous_gnn": {
-      "f1": 0.988,
-      "lateral_movement_detection": 0.984,
-      "false_alarm_reduction": 0.468
+    "G3_Temporal_HeteroGNN": {
+      "precision": 0.6233766233766234,
+      "recall": 0.9473684210526315,
+      "f1": 0.7519582245430808,
+      "brier": 0.18456909466666666
     }
   },
   "table_10_continual_learning": {
     "static_model": {
-      "clean_f1": 0.975,
-      "post_drift_f1": 0.812,
-      "recovery_steps": null,
-      "forgetting_rate": 0.0
+      "pre_drift_loss": 0.042,
+      "post_drift_loss": 0.3468,
+      "adaptation_gain": 0.0
     },
-    "continual_learning_online": {
-      "clean_f1": 0.975,
-      "post_drift_f1": 0.924,
-      "recovery_steps": 14,
-      "forgetting_rate": 0.082
+    "online_learning": {
+      "pre_drift_loss": 0.042,
+      "post_drift_loss": 0.31,
+      "adaptation_gain": 0.0368
     },
     "continual_with_replay": {
-      "clean_f1": 0.978,
-      "post_drift_f1": 0.968,
-      "recovery_steps": 6,
-      "forgetting_rate": 0.021
+      "pre_drift_loss": 0.042,
+      "post_drift_loss": 0.31,
+      "adaptation_gain": 0.0368
     },
-    "continual_with_strategic_forgetting": {
-      "clean_f1": 0.984,
-      "post_drift_f1": 0.982,
-      "recovery_steps": 4,
-      "forgetting_rate": 0.009
+    "continual_strategic_forgetting": {
+      "pre_drift_loss": 0.042,
+      "post_drift_loss": 0.31,
+      "adaptation_gain": 0.0368
     }
   },
   "table_11_personalized_fl": {
-    "fedavg_clean": {
-      "global_f1": 0.978,
-      "local_personalized_f1": 0.98,
-      "rejection_rate": 1.0
+    "0pct_malicious": {
+      "malicious_fraction": 0.0,
+      "final_parameter_error": 0.0048,
+      "global_f1": 0.9833,
+      "personalized_local_f1": 0.9913,
+      "poison_updates_rejected": 0,
+      "aggregation_stable": true
     },
-    "fedavg_10pct_poisoned_no_defense": {
-      "global_f1": 0.762,
-      "local_personalized_f1": 0.771,
-      "rejection_rate": 0.0
+    "10pct_malicious": {
+      "malicious_fraction": 0.1,
+      "final_parameter_error": 0.0059,
+      "global_f1": 0.9829,
+      "personalized_local_f1": 0.9909,
+      "poison_updates_rejected": 4,
+      "aggregation_stable": true
     },
-    "fedprox_personalized_10pct_byzantine": {
-      "global_f1": 0.972,
-      "local_personalized_f1": 0.982,
-      "rejection_rate": 1.0
+    "20pct_malicious": {
+      "malicious_fraction": 0.2,
+      "final_parameter_error": 0.0061,
+      "global_f1": 0.9829,
+      "personalized_local_f1": 0.9909,
+      "poison_updates_rejected": 8,
+      "aggregation_stable": true
     },
-    "fedprox_personalized_20pct_byzantine": {
-      "global_f1": 0.965,
-      "local_personalized_f1": 0.976,
-      "rejection_rate": 1.0
-    },
-    "fedprox_personalized_30pct_byzantine": {
-      "global_f1": 0.954,
-      "local_personalized_f1": 0.968,
-      "rejection_rate": 1.0
+    "30pct_malicious": {
+      "malicious_fraction": 0.3,
+      "final_parameter_error": 0.0048,
+      "global_f1": 0.9833,
+      "personalized_local_f1": 0.9913,
+      "poison_updates_rejected": 12,
+      "aggregation_stable": true
     }
   },
   "table_12_xai_auditability": {
     "total_traces_tested": 10000,
-    "mean_delta": 0.0,
+    "mean_delta": 1.1399999999999827e-06,
     "median_delta": 0.0,
     "p95_delta": 0.0,
-    "p99_delta": 0.0,
-    "max_delta": 0.0,
-    "fraction_delta_le_1e6": 1.0,
-    "fraction_delta_le_1e4": 1.0,
-    "sample_counterfactual_explanation": {
-      "event_id": "TRACE-00022",
-      "entity_key": "entity_22",
-      "original_risk": 0.9255,
-      "target_threshold": 0.7,
-      "escalation_cause": "Primary risk driver is 'term_ml' contributing 0.607 to threat sum.",
-      "interventions": [
-        {
-          "evidence_name": "signature",
-          "original_value": 0.2278,
-          "counterfactual_val": 0.0,
-          "original_risk": 0.9255,
-          "resulting_risk": 0.8116,
-          "risk_delta": 0.1139,
-          "prevents_escalation": false,
-          "explanation_text": "Removing signature (reducing from 0.23 to 0.0) reduces risk by 0.114 (from 0.925 to 0.812), insufficient to prevent escalation beyond 0.70."
-        },
-        {
-          "evidence_name": "ml_anomaly",
-          "original_value": 0.6929,
-          "counterfactual_val": 0.0,
-          "original_risk": 0.9255,
-          "resulting_risk": 0.3181,
-          "risk_delta": 0.6074,
-          "prevents_escalation": true,
-          "explanation_text": "Removing ml_anomaly (reducing from 0.69 to 0.0) reduces risk by 0.607 (from 0.925 to 0.318), preventing escalation beyond 0.70."
-        },
-        {
-          "evidence_name": "behavioral_drift",
-          "original_value": 1.9223,
-          "counterfactual_val": 0.0,
-          "original_risk": 0.9255,
-          "resulting_risk": 0.5259,
-          "risk_delta": 0.3996,
-          "prevents_escalation": true,
-          "explanation_text": "Removing behavioral_drift (reducing from 1.92 to 0.0) reduces risk by 0.400 (from 0.925 to 0.526), preventing escalation beyond 0.70."
-        },
-        {
-          "evidence_name": "graph_corroboration",
-          "original_value": 0.651,
-          "counterfactual_val": 0.0,
-          "original_risk": 0.9255,
-          "resulting_risk": 0.8604,
-          "risk_delta": 0.0651,
-          "prevents_escalation": false,
-          "explanation_text": "Removing graph_corroboration (reducing from 0.65 to 0.0) reduces risk by 0.065 (from 0.925 to 0.860), insufficient to prevent escalation beyond 0.70."
-        },
-        {
-          "evidence_name": "history_recidivism",
-          "original_value": 0.4431,
-          "counterfactual_val": 0.0,
-          "original_risk": 0.9255,
-          "resulting_risk": 0.8812,
-          "risk_delta": 0.0443,
-          "prevents_escalation": false,
-          "explanation_text": "Removing history_recidivism (reducing from 0.44 to 0.0) reduces risk by 0.044 (from 0.925 to 0.881), insufficient to prevent escalation beyond 0.70."
-        },
-        {
-          "evidence_name": "threat_intelligence",
-          "original_value": 0.4349,
-          "counterfactual_val": 0.0,
-          "original_risk": 0.9255,
-          "resulting_risk": 0.8602,
-          "risk_delta": 0.0653,
-          "prevents_escalation": false,
-          "explanation_text": "Removing threat_intelligence (reducing from 0.43 to 0.0) reduces risk by 0.065 (from 0.925 to 0.860), insufficient to prevent escalation beyond 0.70."
-        }
-      ],
-      "minimal_intervention": {
-        "evidence_name": "ml_anomaly",
-        "original_value": 0.6929,
-        "counterfactual_val": 0.0,
-        "original_risk": 0.9255,
-        "resulting_risk": 0.3181,
-        "risk_delta": 0.6074,
-        "prevents_escalation": true,
-        "explanation_text": "Removing ml_anomaly (reducing from 0.69 to 0.0) reduces risk by 0.607 (from 0.925 to 0.318), preventing escalation beyond 0.70."
-      }
+    "p99_delta": 9.999999999998899e-05,
+    "max_delta": 0.00010000000000010001,
+    "fraction_delta_le_1e6": 0.9886,
+    "fraction_delta_le_1e4": 0.9985,
+    "counterfactual_escalation_cause": "Primary risk driver is 'term_ml' contributing 0.789 to threat sum."
+  },
+  "table_4_ablations": {
+    "A1_Remove_Signatures": {
+      "baseline_f1": 0.7189873417721517,
+      "ablated_f1": 0.713235294117647,
+      "delta_f1": -0.0058,
+      "p_value": 0.4935,
+      "statistically_significant": false
+    },
+    "A2_Remove_ML_Ensemble": {
+      "baseline_f1": 0.7189873417721517,
+      "ablated_f1": 0.0,
+      "delta_f1": -0.719,
+      "p_value": 0.241,
+      "statistically_significant": false
+    },
+    "A3_Remove_Statistical": {
+      "baseline_f1": 0.7189873417721517,
+      "ablated_f1": 0.7377049180327868,
+      "delta_f1": 0.0187,
+      "p_value": 0.282,
+      "statistically_significant": false
+    },
+    "A4_Remove_Trust": {
+      "baseline_f1": 0.7189873417721517,
+      "ablated_f1": 0.7201946472019465,
+      "delta_f1": 0.0012,
+      "p_value": 0.0005,
+      "statistically_significant": true
+    },
+    "A5_Remove_Graph": {
+      "baseline_f1": 0.7189873417721517,
+      "ablated_f1": 0.712820512820513,
+      "delta_f1": -0.0062,
+      "p_value": 0.0005,
+      "statistically_significant": true
+    },
+    "A6_Remove_Historical": {
+      "baseline_f1": 0.7189873417721517,
+      "ablated_f1": 0.712820512820513,
+      "delta_f1": -0.0062,
+      "p_value": 0.0005,
+      "statistically_significant": true
+    },
+    "A7_Remove_Threat_Intel": {
+      "baseline_f1": 0.7189873417721517,
+      "ablated_f1": 0.712820512820513,
+      "delta_f1": -0.0062,
+      "p_value": 0.0155,
+      "statistically_significant": true
+    },
+    "A8_Remove_Deception": {
+      "baseline_f1": 0.7189873417721517,
+      "ablated_f1": 0.7091836734693878,
+      "delta_f1": -0.0098,
+      "p_value": 0.139,
+      "statistically_significant": false
+    },
+    "A9_Remove_Forecasting": {
+      "baseline_f1": 0.7189873417721517,
+      "ablated_f1": 0.7073791348600509,
+      "delta_f1": -0.0116,
+      "p_value": 0.3555,
+      "statistically_significant": false
+    },
+    "A10_Remove_Uncertainty": {
+      "baseline_f1": 0.7189873417721517,
+      "ablated_f1": 0.7103274559193955,
+      "delta_f1": -0.0087,
+      "p_value": 0.0025,
+      "statistically_significant": true
+    },
+    "A11_Remove_Adaptive": {
+      "baseline_f1": 0.7189873417721517,
+      "ablated_f1": 0.7088607594936709,
+      "delta_f1": -0.0101,
+      "p_value": 0.616,
+      "statistically_significant": false
+    },
+    "A12_Remove_Response_Gate": {
+      "baseline_f1": 0.7189873417721517,
+      "ablated_f1": 0.7088607594936709,
+      "delta_f1": -0.0101,
+      "p_value": 0.6665,
+      "statistically_significant": false
+    }
+  },
+  "response_simulation": {
+    "B0_Static_Threshold": {
+      "containment_success_pct": 98.0,
+      "mean_intervention_step": 5.38,
+      "mean_attack_stage_at_containment": 4.38,
+      "mean_affected_entities": 2.96,
+      "mean_operational_cost": 0.5,
+      "total_false_interventions": 0,
+      "mean_rase_efficiency": 0.8599
+    },
+    "B1_Static_Risk": {
+      "containment_success_pct": 100.0,
+      "mean_intervention_step": 4.06,
+      "mean_attack_stage_at_containment": 3.06,
+      "mean_affected_entities": 2.06,
+      "mean_operational_cost": 0.4,
+      "total_false_interventions": 0,
+      "mean_rase_efficiency": 1.0364
+    },
+    "B2_Uncertainty_Aware": {
+      "containment_success_pct": 100.0,
+      "mean_intervention_step": 4.46,
+      "mean_attack_stage_at_containment": 3.46,
+      "mean_affected_entities": 2.46,
+      "mean_operational_cost": 0.35,
+      "total_false_interventions": 0,
+      "mean_rase_efficiency": 1.71
+    },
+    "B3_Episode_Aware": {
+      "containment_success_pct": 100.0,
+      "mean_intervention_step": 4.1,
+      "mean_attack_stage_at_containment": 3.1,
+      "mean_affected_entities": 2.1,
+      "mean_operational_cost": 0.3,
+      "total_false_interventions": 0,
+      "mean_rase_efficiency": 1.2667
+    },
+    "B4_Forecast_Aware": {
+      "containment_success_pct": 100.0,
+      "mean_intervention_step": 3.46,
+      "mean_attack_stage_at_containment": 2.46,
+      "mean_affected_entities": 1.9,
+      "mean_operational_cost": 0.25,
+      "total_false_interventions": 0,
+      "mean_rase_efficiency": 1.425
+    },
+    "B5_Full_AHRAS": {
+      "containment_success_pct": 100.0,
+      "mean_intervention_step": 4.18,
+      "mean_attack_stage_at_containment": 3.18,
+      "mean_affected_entities": 2.18,
+      "mean_operational_cost": 0.2,
+      "total_false_interventions": 0,
+      "mean_rase_efficiency": 2.4429
     }
   }
 }

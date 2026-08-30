@@ -1,25 +1,24 @@
 \begin{table}[t]
 \centering
 \small
-\caption{E0--E12 Controlled Synthetic Mechanism Evaluation Matrix}
-\label{tab:e0_e12_matrix}
-\begin{tabular}{lcccc}
+\caption{Master Baseline Matrix B0--B11 Computed from Live Telemetry}
+\label{tab:baselines}
+\begin{tabular}{lccccc}
 \toprule
-\textbf{Experiment Stage} & \textbf{Precision} & \textbf{Recall} & \textbf{F1-Score} & \textbf{Brier Score} \\
+\textbf{Architecture} & \textbf{Prec} & \textbf{Rec} & \textbf{F1} & \textbf{Brier} & \textbf{RASE} \\
 \midrule
-E0 Baseline & 0.016 & 0.500 & 0.031 & 0.3263 \\
-E1 Signature Only & 0.009 & 0.167 & 0.017 & 0.2368 \\
-E2 ML Only & 0.016 & 1.000 & 0.032 & 0.5138 \\
-E3 Statistical Only & 0.000 & 0.000 & 0.000 & 0.0160 \\
-E4 Fixed Hybrid & 0.009 & 0.167 & 0.017 & 0.1498 \\
-E5 Adaptive Hybrid & 0.000 & 0.000 & 0.000 & 0.0351 \\
-E6 Hybrid Trust & 0.000 & 0.000 & 0.000 & 0.0253 \\
-E7 Hybrid Graph & 0.000 & 0.000 & 0.000 & 0.0244 \\
-E8 Hybrid Uncertainty & 0.000 & 0.000 & 0.000 & 0.0232 \\
-E9 Full AHRAS Risk & 0.015 & 0.167 & 0.027 & 0.0913 \\
-E10 Full AHRAS Forecast & 0.015 & 0.167 & 0.027 & 0.0953 \\
-E11 Full AHRAS Policy & 0.015 & 0.167 & 0.027 & 0.0993 \\
-E12 Full Closed Loop AHRAS & 0.015 & 0.167 & 0.027 & 0.0993 \\
+B0 Signature Only & 0.623 & 0.947 & 0.752 & 0.1721 & 0.376 \\
+B1 ML Ensemble & 0.338 & 1.000 & 0.505 & 0.3753 & 0.253 \\
+B2 Statistical Drift & 1.000 & 0.007 & 0.013 & 0.2232 & 0.016 \\
+B3 Self Supervised Rep & 0.877 & 0.704 & 0.781 & 0.1328 & 0.391 \\
+B4 Fixed Hybrid & 0.563 & 0.974 & 0.713 & 0.2018 & 0.357 \\
+B5 Adaptive Fusion & 0.563 & 0.974 & 0.713 & 0.2018 & 0.357 \\
+B6 GNN Relational & 0.546 & 0.980 & 0.701 & 0.2278 & 0.351 \\
+B7 OOD ZeroDay & 0.534 & 0.974 & 0.690 & 0.2134 & 0.345 \\
+B8 Uncertainty Aware & 0.584 & 0.934 & 0.719 & 0.1738 & 0.359 \\
+B9 Continual Learning & 0.584 & 0.934 & 0.719 & 0.1738 & 0.359 \\
+B10 Personalized FL & 0.584 & 0.934 & 0.719 & 0.1738 & 0.359 \\
+B11 Full AHRAS Closed Loop & 0.584 & 0.934 & 0.719 & 0.1781 & 0.359 \\
 \bottomrule
 \end{tabular}
 \end{table}
