@@ -524,9 +524,19 @@ class AdaptiveRiskEngine:
             intermediate_terms=intermediate_terms_dict,
             final_risk=risk_score,
             event_id=event_id,
-            entity_key=entity_key
+            entity_key=entity_key,
+            autonomy_decision=autonomy_dec,
+            remediation_policy=remediation,
+            uncertainty=uncertainty,
+            conformal_tau=conformal_tau,
         )
         causal_chains = [c.to_dict() for c in causal_report.causal_chains]
+        audit_answers = {
+            "why_risk_increased": causal_report.why_risk_increased,
+            "why_policy_chosen": causal_report.why_policy_chosen,
+            "why_autonomy_gate_state": causal_report.why_autonomy_gate_state,
+            "decisive_evidence": causal_report.decisive_evidence,
+        }
 
         # Construct DecisionTrace
         trace = DecisionTrace(

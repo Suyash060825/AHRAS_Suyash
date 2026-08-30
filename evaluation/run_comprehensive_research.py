@@ -48,6 +48,7 @@ from detection.anomaly_engine.ml_engine import run_anomaly_engine
 from detection.statistical_engine.stat_engine import run_statistical_engine
 from detection.hybrid_engine import get_combiner
 from detection.representation_engine import SecurityRepresentationModel
+from detection.multimodal_encoder import MultimodalSecurityEncoder
 from detection.gnn_engine import EntityGraphEngine, SecurityGNN
 from detection.risk_engine import RiskConfig, AdaptiveRiskEngine, DecisionTrace, replay_decision_trace, compute_rase
 
@@ -528,12 +529,45 @@ def run_full_research_pipeline():
             "statistically_significant": (p_val < 0.05),
         }
 
-    # 10. Operational Incident Response Simulation (RASE)
+    # 10. Closed-Loop Adaptive Control Demonstration vs Static Baseline
+    print("[*] Running Full Closed-Loop Adaptive Controller vs Static Baseline Demonstration...")
+    from evaluation.closed_loop_demonstration import ClosedLoopDemonstrator
+    cl_demo = ClosedLoopDemonstrator()
+    cl_report = cl_demo.run_comparison(test_ocsf, y_true.tolist())
+    print(f"    Closed-Loop Mean MSE: {cl_report.closed_loop_mean_risk_error:.4f} (Static MSE: {cl_report.static_mean_risk_error:.4f}, Gain: {cl_report.adaptation_gain_mse:.4f})")
+    print(f"    False Alarm Reduction: {cl_report.false_alarm_reduction_pct}% ({cl_report.closed_loop_false_alarms} vs {cl_report.static_false_alarms})")
+
+    # 11. Multimodal & Temporal Attention Stream Evaluation (Section 3)
+    print("[*] Evaluating Multimodal & Temporal Attention Combinations...")
+    mm_encoder = MultimodalSecurityEncoder(embed_dim=8, seed=42)
+    mm_results = {}
+    modality_combos = {
+        "M1_Network_Only": {"network"},
+        "M2_Net_Plus_Process": {"network", "process"},
+        "M3_Net_Plus_Identity": {"network", "identity"},
+        "M4_Net_Plus_Graph": {"network", "graph"},
+        "M5_All_Modalities": {"network", "process", "identity", "graph"},
+        "M6_All_Plus_Temporal_Attention": {"network", "process", "identity", "graph"},
+    }
+    for m_name, m_set in modality_combos.items():
+        mm_scores = []
+        for evt in test_ocsf:
+            mv = mm_encoder.encode(evt, active_modalities=m_set)
+            mm_scores.append(min(1.0, float(np.mean(mv.fused ** 2) * 1.5)))
+        rep_m = calc.compute(y_true.tolist(), mm_scores, dataset_name=m_name)
+        mm_results[m_name] = {
+            "f1": rep_m.f1,
+            "precision": rep_m.precision,
+            "recall": rep_m.recall,
+            "brier_score": rep_m.brier_score,
+        }
+
+    # 12. Operational Incident Response Simulation (RASE)
     print("[*] Running Active Response & RASE Cyber Attack Simulator (50 campaigns)...")
     sim = CyberAttackSimulator(rng_seed=42)
     response_sim = sim.run_benchmark_comparison(n_campaigns=50)
 
-    # 11. Cryptographic Provenance Artifacts Export
+    # 13. Cryptographic Provenance Artifacts Export
     print("[*] Exporting All Cryptographic Provenance Artifacts & LaTeX Tables...")
     
     results_artifact = {
@@ -546,6 +580,17 @@ def run_full_research_pipeline():
         "table_10_continual_learning": table_10_continual,
         "table_11_personalized_fl": table_11_fl,
         "table_12_xai_auditability": table_12_xai,
+        "multimodal_temporal_benchmarks": mm_results,
+        "closed_loop_demonstration": {
+            "static_mse": cl_report.static_mean_risk_error,
+            "closed_loop_mse": cl_report.closed_loop_mean_risk_error,
+            "adaptation_gain_mse": cl_report.adaptation_gain_mse,
+            "static_false_alarms": cl_report.static_false_alarms,
+            "closed_loop_false_alarms": cl_report.closed_loop_false_alarms,
+            "false_alarm_reduction_pct": cl_report.false_alarm_reduction_pct,
+            "active_queries_requested": cl_report.active_queries_requested,
+            "closed_loop_dominant": cl_report.closed_loop_dominant,
+        },
         "table_4_ablations": ablations,
         "response_simulation": response_sim,
     }

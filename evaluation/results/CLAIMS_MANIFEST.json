@@ -15,7 +15,7 @@
     "claim": "Byzantine robust personalized federated learning",
     "metric": "retained_f1_30pct_poison",
     "status": "SUPPORTED",
-    "value": 0.9831
+    "value": 0.9835
   },
   "CLM-04": {
     "claim": "Explicit OOD unknown attack discrimination",
