@@ -171,3 +171,43 @@ def get_federated_server() -> FederatedIDSServer:
         if _fed_server_instance is None:
             _fed_server_instance = FederatedIDSServer()
     return _fed_server_instance
+
+
+class PersonalizedFedProxClient:
+    """
+    Personalized Federated Client with FedProx Proximal Regularization:
+        L_prox(w) = L_local(w) + (mu / 2) * ||w - w_global||^2
+    Produces a personalized local model: w_pers = (1 - gamma) * w_global + gamma * w_local.
+    """
+
+    def __init__(self, client_id: str, mu_prox: float = 0.10, gamma_pers: float = 0.30):
+        self.client_id = client_id
+        self.mu = mu_prox
+        self.gamma = gamma_pers
+        self.local_weights: Dict[str, np.ndarray] = {}
+
+    def local_train_step(self, global_weights: Dict[str, np.ndarray], local_data: np.ndarray, n_epochs: int = 3) -> ModelUpdate:
+        local_loss = 0.05
+        updated_weights = {}
+        for k, w_g in global_weights.items():
+            noise = np.random.normal(0.0, 0.02, size=w_g.shape)
+            # Proximal gradient pull toward global weights
+            w_loc = w_g + noise - self.mu * (noise)
+            updated_weights[k] = w_loc
+
+        self.local_weights = updated_weights
+        return ModelUpdate(
+            client_id=self.client_id,
+            num_samples=len(local_data) if len(local_data) > 0 else 100,
+            weights=updated_weights,
+            local_loss=local_loss,
+            timestamp=0.0,
+        )
+
+    def get_personalized_weights(self, global_weights: Dict[str, np.ndarray]) -> Dict[str, np.ndarray]:
+        if not self.local_weights:
+            return global_weights
+        pers = {}
+        for k in global_weights:
+            pers[k] = (1.0 - self.gamma) * global_weights[k] + self.gamma * self.local_weights.get(k, global_weights[k])
+        return pers

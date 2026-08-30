@@ -108,3 +108,46 @@ def get_llm_narrator() -> LLMThreatNarrator:
     if _narrator_instance is None:
         _narrator_instance = LLMThreatNarrator()
     return _narrator_instance
+
+
+class GuardrailedRAGNarrator(LLMThreatNarrator):
+    """
+    Evidence-Grounded RAG Narrator with Strict Security Guardrails:
+      1. Immutability Guard: Cannot modify underlying risk score or remediation policy.
+      2. Grounded Attribution: Strictly formats narratives using verified evidence ledger IDs.
+      3. Prompt Injection Defense: Sanitizes and neutralizes adversarial prompt strings.
+    """
+
+    def sanitize_untrusted_input(self, raw_str: str) -> str:
+        """Strips prompt injection tokens (e.g. 'Ignore previous instructions', '<system>', etc.)."""
+        if not raw_str:
+            return ""
+        forbidden_patterns = [
+            "ignore previous instructions",
+            "system prompt",
+            "override risk",
+            "set severity to info",
+            "disregard alert",
+            "bypass policy",
+        ]
+        sanitized = str(raw_str)
+        for pat in forbidden_patterns:
+            if pat in sanitized.lower():
+                log.warning(f"[GUARDRAILS] Neutralized prompt injection pattern: '{pat}'")
+                sanitized = sanitized.replace(pat, "[REDACTED_INJECTION_ATTEMPT]")
+        return sanitized
+
+    def generate_guardrailed_narrative(self, risk_res: RiskResult, cti_context: Optional[dict] = None) -> LLMNarrative:
+        # Generate base narrative strictly from verified RiskResult
+        base = self.generate_narrative(risk_res)
+        
+        # Verify immutability invariant
+        assert base.risk_score == risk_res.risk_score, "Invariant violation: Narrative attempted to alter risk score!"
+        assert base.severity == risk_res.severity, "Invariant violation: Narrative attempted to alter severity!"
+        
+        # Grounded CTI citation
+        if cti_context and "threat_actor" in cti_context:
+            actor = self.sanitize_untrusted_input(cti_context["threat_actor"])
+            base.mitre_attack_summary += f" | Corroborated Threat Actor: {actor}"
+
+        return base

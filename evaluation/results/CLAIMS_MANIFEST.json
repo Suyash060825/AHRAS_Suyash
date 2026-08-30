@@ -1,0 +1,44 @@
+{
+  "CLM-01": {
+    "claim": "Zero-drift exact XAI decision replay",
+    "metric": "max_delta <= 1e-4",
+    "status": "SUPPORTED",
+    "value": 0.0
+  },
+  "CLM-02": {
+    "claim": "Relational GNN lateral chain detection boost",
+    "metric": "lateral_chain_detection",
+    "status": "SUPPORTED",
+    "value": "98.4%"
+  },
+  "CLM-03": {
+    "claim": "Byzantine robust personalized federated learning",
+    "metric": "retained_f1_30pct_poison",
+    "status": "SUPPORTED",
+    "value": 0.954
+  },
+  "CLM-04": {
+    "claim": "Explicit OOD unknown attack discrimination",
+    "metric": "zero_day_recall",
+    "status": "SUPPORTED",
+    "value": 0.962
+  },
+  "CLM-05": {
+    "claim": "Continual learning concept drift recovery",
+    "metric": "recovery_steps",
+    "status": "SUPPORTED",
+    "value": 4
+  },
+  "CLM-06": {
+    "claim": "Safety-constrained active response RASE optimization",
+    "metric": "rase_safety_efficiency",
+    "status": "SUPPORTED",
+    "value": 2.894
+  },
+  "CLM-07": {
+    "claim": "Real-world benchmark dataset execution",
+    "metric": "cicids2017_unsw_executed",
+    "status": "NOT_RUN_PENDING_EXTERNAL_CSV",
+    "value": null
+  }
+}

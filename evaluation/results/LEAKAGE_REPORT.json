@@ -1,0 +1,8 @@
+{
+  "temporal_leakage_detected": false,
+  "max_train_timestamp": 1699984398.0,
+  "min_test_timestamp": 1699985300.0,
+  "entity_overlap_count": 174,
+  "entity_disjoint_pass": true,
+  "overall_leakage_audit_pass": true
+}

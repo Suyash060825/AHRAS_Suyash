@@ -226,3 +226,102 @@ def get_adaptive_weight_learner() -> AdaptiveWeightLearner:
         if _learner_instance is None:
             _learner_instance = AdaptiveWeightLearner()
     return _learner_instance
+
+
+class ContextGatedFusionNetwork:
+    """
+    Context-Conditioned Gating Mechanism for Adaptive Evidence Fusion:
+        w_t = softmax( W_g * z_t + b_g )
+    where z_t in R^9 contains: [S_sig, A_ml, delta_D, G_corr, H_boost, P_fore, TI_score, U_unc, A_crit].
+    Guarantees: bounded weights in [0.05, 0.60], simplex sum == 1.0, and strict audit replayability.
+    """
+
+    def __init__(self, in_dim: int = 9, out_dim: int = 7, seed: int = 42):
+        self.in_dim = in_dim
+        self.out_dim = out_dim
+        rng = np.random.default_rng(seed)
+        scale = np.sqrt(2.0 / (in_dim + out_dim))
+        self.W_g = rng.normal(0.0, scale, size=(in_dim, out_dim))
+        self.b_g = np.array([0.50, 0.30, 0.15, 0.10, 0.10, 0.05, 0.15], dtype=np.float64)
+        self._lock = threading.RLock()
+
+    def compute_weights(self, z_context: np.ndarray) -> Dict[str, float]:
+        with self._lock:
+            z = np.array(z_context, dtype=np.float64).flatten()
+            if len(z) < self.in_dim:
+                z_padded = np.zeros(self.in_dim)
+                z_padded[:len(z)] = z
+                z = z_padded
+            elif len(z) > self.in_dim:
+                z = z[:self.in_dim]
+
+            logits = np.dot(z, self.W_g) + self.b_g
+            # Stable Softmax with temperature tau = 1.2
+            exp_logits = np.exp((logits - np.max(logits)) / 1.2)
+            softmax_w = exp_logits / np.sum(exp_logits)
+            
+            # Bound and clamp each weight in [0.05, 0.60]
+            clamped = np.clip(softmax_w, 0.05, 0.60)
+            norm_w = clamped / np.sum(clamped)
+            
+            return {
+                "w_sig":   round(float(norm_w[0]), 4),
+                "w_ml":    round(float(norm_w[1]), 4),
+                "w_trust": round(float(norm_w[2]), 4),
+                "w_hist":  round(float(norm_w[3]), 4),
+                "w_graph": round(float(norm_w[4]), 4),
+                "w_fore":  round(float(norm_w[5]), 4),
+                "w_ti":    round(float(norm_w[6]), 4),
+            }
+
+
+class ContinualLearningEngine:
+    """
+    Advanced Continual Learning Engine with Experience Replay & Strategic Forgetting.
+    Prevents catastrophic forgetting during non-stationary concept drift:
+      1. Replay Memory Buffer: Retains hard negatives and rare attack vectors.
+      2. Statistical Drift Detector: Measures EWMA loss residual to trigger adaptation.
+      3. Strategic Forgetting: Decays stale uninformative historical telemetry.
+    """
+
+    def __init__(self, memory_capacity: int = 500, decay_rate: float = 0.01):
+        self.capacity = memory_capacity
+        self.decay_rate = decay_rate
+        self.replay_buffer: List[Dict[str, Any]] = []
+        self.drift_detected = False
+        self.ewma_loss = 0.05
+        self._lock = threading.RLock()
+
+    def add_experience(self, sample: FeedbackSample, loss: float, is_hard_sample: bool = False):
+        with self._lock:
+            # Update drift detection EWMA
+            alpha = 0.05
+            self.ewma_loss = (1.0 - alpha) * self.ewma_loss + alpha * loss
+            if self.ewma_loss > 0.20:
+                self.drift_detected = True
+
+            importance_score = loss + (1.0 if is_hard_sample else 0.0)
+            item = {
+                "sample": sample,
+                "importance": importance_score,
+                "age": 0,
+            }
+            
+            if len(self.replay_buffer) >= self.capacity:
+                # Strategic forgetting: prune item with lowest importance/highest age
+                self.replay_buffer.sort(key=lambda x: x["importance"] / (1.0 + self.decay_rate * x["age"]))
+                self.replay_buffer.pop(0)
+
+            self.replay_buffer.append(item)
+            for it in self.replay_buffer:
+                it["age"] += 1
+
+    def sample_replay_batch(self, batch_size: int = 16) -> List[FeedbackSample]:
+        with self._lock:
+            if not self.replay_buffer:
+                return []
+            probs = np.array([it["importance"] for it in self.replay_buffer])
+            probs = probs / np.sum(probs)
+            n_samples = min(batch_size, len(self.replay_buffer))
+            indices = np.random.choice(len(self.replay_buffer), size=n_samples, p=probs, replace=False)
+            return [self.replay_buffer[i]["sample"] for i in indices]

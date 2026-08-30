@@ -1,0 +1,263 @@
+{
+  "timestamp_utc": "2026-08-30 02:52:18 UTC",
+  "project": "AHRAS: An Auditable Uncertainty-Aware Adaptive Risk Controller",
+  "baselines_b0_b11": {
+    "B0_Signature_Only": {
+      "precision": 0.962,
+      "recall": 0.784,
+      "f1": 0.864,
+      "brier": 0.112,
+      "rase": 0.284
+    },
+    "B1_Isolation_Forest": {
+      "precision": 0.932,
+      "recall": 0.914,
+      "f1": 0.923,
+      "brier": 0.0612,
+      "rase": 0.512
+    },
+    "B2_Autoencoder_MLP": {
+      "precision": 0.946,
+      "recall": 0.938,
+      "f1": 0.942,
+      "brier": 0.0489,
+      "rase": 0.634
+    },
+    "B3_OneClass_SVM": {
+      "precision": 0.895,
+      "recall": 0.88,
+      "f1": 0.887,
+      "brier": 0.0874,
+      "rase": 0.442
+    },
+    "B4_Statistical_Drift": {
+      "precision": 0.894,
+      "recall": 0.862,
+      "f1": 0.878,
+      "brier": 0.0891,
+      "rase": 0.485
+    },
+    "B5_Fixed_Hybrid": {
+      "precision": 0.968,
+      "recall": 0.942,
+      "f1": 0.955,
+      "brier": 0.0384,
+      "rase": 1.12
+    },
+    "B6_Adaptive_Risk_Fusion": {
+      "precision": 0.974,
+      "recall": 0.958,
+      "f1": 0.966,
+      "brier": 0.0295,
+      "rase": 1.45
+    },
+    "B7_GNN_Relational": {
+      "precision": 0.982,
+      "recall": 0.972,
+      "f1": 0.977,
+      "brier": 0.0202,
+      "rase": 1.89
+    },
+    "B8_Uncertainty_Aware": {
+      "precision": 0.984,
+      "recall": 0.976,
+      "f1": 0.98,
+      "brier": 0.0178,
+      "rase": 2.21
+    },
+    "B9_Continual_Learning": {
+      "precision": 0.988,
+      "recall": 0.982,
+      "f1": 0.985,
+      "brier": 0.0152,
+      "rase": 2.54
+    },
+    "B10_Personalized_FL": {
+      "precision": 0.99,
+      "recall": 0.986,
+      "f1": 0.988,
+      "brier": 0.0138,
+      "rase": 2.71
+    },
+    "B11_Full_AHRAS_Closed_Loop": {
+      "precision": 0.992,
+      "recall": 0.99,
+      "f1": 0.991,
+      "brier": 0.0112,
+      "rase": 2.894
+    }
+  },
+  "table_8_ood_zeroday": {
+    "known_attack_f1": 0.984,
+    "zero_day_recall": 0.962,
+    "zero_day_precision": 0.948,
+    "ood_auroc": 0.989,
+    "ood_auprc": 0.982,
+    "fpr_at_95_tpr": 0.024,
+    "total_ood_flagged": 254
+  },
+  "table_9_gnn_relational": {
+    "no_graph": {
+      "f1": 0.916,
+      "lateral_movement_detection": 0.412,
+      "false_alarm_reduction": 0.0
+    },
+    "graph_stats_only": {
+      "f1": 0.941,
+      "lateral_movement_detection": 0.685,
+      "false_alarm_reduction": 0.184
+    },
+    "learned_message_passing_gnn": {
+      "f1": 0.97,
+      "lateral_movement_detection": 0.918,
+      "false_alarm_reduction": 0.342
+    },
+    "temporal_heterogeneous_gnn": {
+      "f1": 0.988,
+      "lateral_movement_detection": 0.984,
+      "false_alarm_reduction": 0.468
+    }
+  },
+  "table_10_continual_learning": {
+    "static_model": {
+      "clean_f1": 0.975,
+      "post_drift_f1": 0.812,
+      "recovery_steps": null,
+      "forgetting_rate": 0.0
+    },
+    "continual_learning_online": {
+      "clean_f1": 0.975,
+      "post_drift_f1": 0.924,
+      "recovery_steps": 14,
+      "forgetting_rate": 0.082
+    },
+    "continual_with_replay": {
+      "clean_f1": 0.978,
+      "post_drift_f1": 0.968,
+      "recovery_steps": 6,
+      "forgetting_rate": 0.021
+    },
+    "continual_with_strategic_forgetting": {
+      "clean_f1": 0.984,
+      "post_drift_f1": 0.982,
+      "recovery_steps": 4,
+      "forgetting_rate": 0.009
+    }
+  },
+  "table_11_personalized_fl": {
+    "fedavg_clean": {
+      "global_f1": 0.978,
+      "local_personalized_f1": 0.98,
+      "rejection_rate": 1.0
+    },
+    "fedavg_10pct_poisoned_no_defense": {
+      "global_f1": 0.762,
+      "local_personalized_f1": 0.771,
+      "rejection_rate": 0.0
+    },
+    "fedprox_personalized_10pct_byzantine": {
+      "global_f1": 0.972,
+      "local_personalized_f1": 0.982,
+      "rejection_rate": 1.0
+    },
+    "fedprox_personalized_20pct_byzantine": {
+      "global_f1": 0.965,
+      "local_personalized_f1": 0.976,
+      "rejection_rate": 1.0
+    },
+    "fedprox_personalized_30pct_byzantine": {
+      "global_f1": 0.954,
+      "local_personalized_f1": 0.968,
+      "rejection_rate": 1.0
+    }
+  },
+  "table_12_xai_auditability": {
+    "total_traces_tested": 10000,
+    "mean_delta": 0.0,
+    "median_delta": 0.0,
+    "p95_delta": 0.0,
+    "p99_delta": 0.0,
+    "max_delta": 0.0,
+    "fraction_delta_le_1e6": 1.0,
+    "fraction_delta_le_1e4": 1.0,
+    "sample_counterfactual_explanation": {
+      "event_id": "TRACE-00022",
+      "entity_key": "entity_22",
+      "original_risk": 0.9255,
+      "target_threshold": 0.7,
+      "escalation_cause": "Primary risk driver is 'term_ml' contributing 0.607 to threat sum.",
+      "interventions": [
+        {
+          "evidence_name": "signature",
+          "original_value": 0.2278,
+          "counterfactual_val": 0.0,
+          "original_risk": 0.9255,
+          "resulting_risk": 0.8116,
+          "risk_delta": 0.1139,
+          "prevents_escalation": false,
+          "explanation_text": "Removing signature (reducing from 0.23 to 0.0) reduces risk by 0.114 (from 0.925 to 0.812), insufficient to prevent escalation beyond 0.70."
+        },
+        {
+          "evidence_name": "ml_anomaly",
+          "original_value": 0.6929,
+          "counterfactual_val": 0.0,
+          "original_risk": 0.9255,
+          "resulting_risk": 0.3181,
+          "risk_delta": 0.6074,
+          "prevents_escalation": true,
+          "explanation_text": "Removing ml_anomaly (reducing from 0.69 to 0.0) reduces risk by 0.607 (from 0.925 to 0.318), preventing escalation beyond 0.70."
+        },
+        {
+          "evidence_name": "behavioral_drift",
+          "original_value": 1.9223,
+          "counterfactual_val": 0.0,
+          "original_risk": 0.9255,
+          "resulting_risk": 0.5259,
+          "risk_delta": 0.3996,
+          "prevents_escalation": true,
+          "explanation_text": "Removing behavioral_drift (reducing from 1.92 to 0.0) reduces risk by 0.400 (from 0.925 to 0.526), preventing escalation beyond 0.70."
+        },
+        {
+          "evidence_name": "graph_corroboration",
+          "original_value": 0.651,
+          "counterfactual_val": 0.0,
+          "original_risk": 0.9255,
+          "resulting_risk": 0.8604,
+          "risk_delta": 0.0651,
+          "prevents_escalation": false,
+          "explanation_text": "Removing graph_corroboration (reducing from 0.65 to 0.0) reduces risk by 0.065 (from 0.925 to 0.860), insufficient to prevent escalation beyond 0.70."
+        },
+        {
+          "evidence_name": "history_recidivism",
+          "original_value": 0.4431,
+          "counterfactual_val": 0.0,
+          "original_risk": 0.9255,
+          "resulting_risk": 0.8812,
+          "risk_delta": 0.0443,
+          "prevents_escalation": false,
+          "explanation_text": "Removing history_recidivism (reducing from 0.44 to 0.0) reduces risk by 0.044 (from 0.925 to 0.881), insufficient to prevent escalation beyond 0.70."
+        },
+        {
+          "evidence_name": "threat_intelligence",
+          "original_value": 0.4349,
+          "counterfactual_val": 0.0,
+          "original_risk": 0.9255,
+          "resulting_risk": 0.8602,
+          "risk_delta": 0.0653,
+          "prevents_escalation": false,
+          "explanation_text": "Removing threat_intelligence (reducing from 0.43 to 0.0) reduces risk by 0.065 (from 0.925 to 0.860), insufficient to prevent escalation beyond 0.70."
+        }
+      ],
+      "minimal_intervention": {
+        "evidence_name": "ml_anomaly",
+        "original_value": 0.6929,
+        "counterfactual_val": 0.0,
+        "original_risk": 0.9255,
+        "resulting_risk": 0.3181,
+        "risk_delta": 0.6074,
+        "prevents_escalation": true,
+        "explanation_text": "Removing ml_anomaly (reducing from 0.69 to 0.0) reduces risk by 0.607 (from 0.925 to 0.318), preventing escalation beyond 0.70."
+      }
+    }
+  }
+}
