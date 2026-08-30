@@ -1,0 +1,119 @@
+{
+  "project": "AHRAS: An Auditable Uncertainty-Aware Adaptive Risk Controller for Closed-Loop Intrusion Detection and Response",
+  "freeze_status": "FROZEN_FOR_FINAL_SCIENTIFIC_VALIDATION",
+  "version": "2.0.0-NextGen",
+  "canonical_runtime_path": [
+    "Telemetry (OCSF Ingestion)",
+    "Multimodal Representation (Hierarchical Cross-Modal & Temporal Attention)",
+    "Detection Evidence (Signature, ML Anomaly Ensemble, Welford Statistical Drift)",
+    "OOD / Zero-Day Detector (Mahalanobis Distance in Latent Representation Space)",
+    "Temporal Heterogeneous GNN (Relation-Specific Message Passing)",
+    "Episode/Campaign Context (Noisy-OR Multi-Hop Aggregation)",
+    "Evidence Quality & Provenance (Age/Entropy Scoring)",
+    "Independence Correction (Empirical Covariance De-correlation)",
+    "Adaptive Fusion (Context-Gated Dynamic Weighting)",
+    "Current Risk Formulation (Dynamic Threat Surface Calculation)",
+    "Future Risk Trajectory (Holt Causal Momentum Forecaster)",
+    "Uncertainty Estimation (Epistemic & Aleatoric Decomposition)",
+    "Split Conformal Selective Gate (Calibrated 7-Action Autonomy Decision)",
+    "DecisionTrace Audit Serialization (Cryptographic Provenance)",
+    "Causal & Counterfactual XAI (Deterministic Graph Replay & Sensitivity)",
+    "Safety-Constrained Policy (Pre-Action Guardrails & SOAR Deception)",
+    "Active Learning Query (Uncertainty-Novelty Analyst Triaging)",
+    "Multi-Bank Continual Learning (5-Compartment Experience Replay Buffer)",
+    "Personalized Federated Learning (FedProx, FedKD & Byzantine Defense)",
+    "Future Operational Decisions"
+  ],
+  "modules": [
+    {
+      "name": "detection/signature_engine",
+      "research_role": "Deterministic IOC matching, CVE signatures, and MITRE ATT&CK technique mapping.",
+      "inputs": "Raw/Normalized OCSF events",
+      "outputs": "List[SignatureMatch] (severity, confidence, mitre_technique)"
+    },
+    {
+      "name": "detection/anomaly_engine",
+      "research_role": "Behavioral point anomaly detection using tri-model ensemble (Isolation Forest, Autoencoder, One-Class SVM).",
+      "inputs": "Standardized 14-dimensional OCSF feature vectors",
+      "outputs": "AnomalyResult (ensemble_score, reconstruction_error, component_scores)"
+    },
+    {
+      "name": "detection/statistical_engine",
+      "research_role": "Non-stationary metric baseline tracking with Welford online variance and EWMA deviation.",
+      "inputs": "Streaming continuous telemetry per entity",
+      "outputs": "StatResult (drift_score, zscore, ewma_deviation)"
+    },
+    {
+      "name": "detection/multimodal_encoder",
+      "research_role": "Cross-modal and temporal multi-head attention over Network, Process, Identity, and Graph channels.",
+      "inputs": "4 typed modality feature vectors",
+      "outputs": "ModalityVectors (z_net, z_proc, z_id, z_graph, z_fused, temporal_alphas)"
+    },
+    {
+      "name": "detection/feature_selector",
+      "research_role": "Context-conditioned dynamic feature selection for dimensionality reduction and noise suppression.",
+      "inputs": "Feature vector x, Context vector z",
+      "outputs": "Continuous feature mask m_t in [0, 1]^D, Masked features x_masked"
+    },
+    {
+      "name": "detection/gnn_engine",
+      "research_role": "Temporal heterogeneous graph neural network for multi-hop lateral movement and entity correlation.",
+      "inputs": "Entity graph adjacency matrix, Node feature embeddings",
+      "outputs": "GNN Node Suspiciousness score in [0, 1], Graph embeddings H"
+    },
+    {
+      "name": "detection/attack_path",
+      "research_role": "Probabilistic Noisy-OR attack episode aggregation and coordinated campaign tracking.",
+      "inputs": "Multi-hop graph paths, Episode entity embeddings",
+      "outputs": "AttackPath (path_risk), AttackCampaign (campaign_risk, coordination_score)"
+    },
+    {
+      "name": "adaptive_learning/weight_learner",
+      "research_role": "Context-gated adaptive fusion, evidence quality scoring, covariance de-correlation, and 5-bank continual learning.",
+      "inputs": "Evidence scores, observation age, covariance matrix, analyst feedback",
+      "outputs": "Dynamic weights w_i', EvidenceQuality Q_i, Balanced replay batches"
+    },
+    {
+      "name": "detection/selective_gate",
+      "research_role": "Split conformal selective autonomy controller enforcing statistical error bounds across 7 actions.",
+      "inputs": "Risk score R_t, Uncertainty U_t, OOD score, Calibrated quantile tau*",
+      "outputs": "SelectionDecision (action, conformal_tau, expected_loss, is_autonomous)"
+    },
+    {
+      "name": "forecast/predictor",
+      "research_role": "Holt causal double-exponential smoothing for early warning momentum and horizon risk projection.",
+      "inputs": "Historical entity risk time series",
+      "outputs": "ForecastResult (P_fore, h1/h3/h5 predictions, threshold crossing probability)"
+    },
+    {
+      "name": "xai/causal_explainer",
+      "research_role": "Deterministic causal decision DAG generation, sensitivity gradients, and counterfactual minimality calculation.",
+      "inputs": "DecisionTrace inputs and intermediate risk terms",
+      "outputs": "CausalDecisionGraph DAG, Counterfactual minimal changes, Delta R values"
+    },
+    {
+      "name": "xai/llm_narrator",
+      "research_role": "Guardrailed evidence-grounded incident summarization and executive report generation.",
+      "inputs": "Verified DecisionTrace, CTI feeds, Untrusted analyst prompt strings",
+      "outputs": "Sanitized incident summary narrative, Executive remediation playbook"
+    },
+    {
+      "name": "adaptive_learning/active_learner",
+      "research_role": "Information-theoretic acquisition scoring combining epistemic uncertainty, OOD novelty, and conformal abstention.",
+      "inputs": "Uncertainty U_t, OOD score, Abstention flag",
+      "outputs": "Acquisition score, Ground-truth analyst feedback injection"
+    },
+    {
+      "name": "federated/fed_learning",
+      "research_role": "Personalized FedProx, Federated Knowledge Distillation, temporal client reputation tracking, and Byzantine coordinate median defense.",
+      "inputs": "Local client model updates, Gradient norms, Historical client honesty",
+      "outputs": "Reputation-weighted global model weights, Distilled consensus logits"
+    },
+    {
+      "name": "response/orchestrator",
+      "research_role": "RASE safety-constrained response execution with blast radius limits, reversible actions, and honeypot deception.",
+      "inputs": "Risk score R_t, Selected action, Asset criticality",
+      "outputs": "Executed containment plan, Deception redirection, Operational audit"
+    }
+  ]
+}
