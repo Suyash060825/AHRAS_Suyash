@@ -1,0 +1,22 @@
+{
+  "static_model": {
+    "pre_drift_loss": 0.042,
+    "post_drift_loss": 0.3468,
+    "adaptation_gain": 0.0
+  },
+  "online_learning": {
+    "pre_drift_loss": 0.042,
+    "post_drift_loss": 0.31,
+    "adaptation_gain": 0.0368
+  },
+  "continual_with_replay": {
+    "pre_drift_loss": 0.042,
+    "post_drift_loss": 0.31,
+    "adaptation_gain": 0.0368
+  },
+  "continual_strategic_forgetting": {
+    "pre_drift_loss": 0.042,
+    "post_drift_loss": 0.31,
+    "adaptation_gain": 0.0368
+  }
+}

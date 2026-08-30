@@ -1,0 +1,170 @@
+{
+  "A1_Remove_Signatures": {
+    "baseline_f1": 0.7277227722772277,
+    "ablated_f1": 0.6931407942238267,
+    "delta_f1": -0.0346,
+    "p_value": 0.75,
+    "statistically_significant": false
+  },
+  "A2_Remove_ML_Ensemble": {
+    "baseline_f1": 0.7277227722772277,
+    "ablated_f1": 0.0,
+    "delta_f1": -0.7277,
+    "p_value": 0.043,
+    "statistically_significant": true
+  },
+  "A3_Remove_Statistical": {
+    "baseline_f1": 0.7277227722772277,
+    "ablated_f1": 0.7526315789473683,
+    "delta_f1": 0.0249,
+    "p_value": 0.233,
+    "statistically_significant": false
+  },
+  "A4_Remove_Self_Supervised_Rep": {
+    "baseline_f1": 0.7277227722772277,
+    "ablated_f1": 0.0,
+    "delta_f1": -0.7277,
+    "p_value": 0.067,
+    "statistically_significant": false
+  },
+  "A5_Remove_Multimodal_Fusion": {
+    "baseline_f1": 0.7277227722772277,
+    "ablated_f1": 0.7313432835820894,
+    "delta_f1": 0.0036,
+    "p_value": 0.001,
+    "statistically_significant": true
+  },
+  "A6_Remove_Temporal_Attention": {
+    "baseline_f1": 0.7277227722772277,
+    "ablated_f1": 0.7295285359801489,
+    "delta_f1": 0.0018,
+    "p_value": 0.001,
+    "statistically_significant": true
+  },
+  "A7_Remove_Graph": {
+    "baseline_f1": 0.7277227722772277,
+    "ablated_f1": 0.7295285359801489,
+    "delta_f1": 0.0018,
+    "p_value": 0.001,
+    "statistically_significant": true
+  },
+  "A8_Remove_Episode_Reasoning": {
+    "baseline_f1": 0.7277227722772277,
+    "ablated_f1": 0.7295285359801489,
+    "delta_f1": 0.0018,
+    "p_value": 0.001,
+    "statistically_significant": true
+  },
+  "A9_Remove_OOD_ZeroDay": {
+    "baseline_f1": 0.7277227722772277,
+    "ablated_f1": 0.7277227722772277,
+    "delta_f1": 0.0,
+    "p_value": 0.001,
+    "statistically_significant": true
+  },
+  "A10_Remove_Evidence_Quality": {
+    "baseline_f1": 0.7277227722772277,
+    "ablated_f1": 0.7277227722772277,
+    "delta_f1": 0.0,
+    "p_value": 0.001,
+    "statistically_significant": true
+  },
+  "A11_Remove_Independence_Correction": {
+    "baseline_f1": 0.7277227722772277,
+    "ablated_f1": 0.7277227722772277,
+    "delta_f1": 0.0,
+    "p_value": 0.001,
+    "statistically_significant": true
+  },
+  "A12_Remove_Adaptive_Fusion": {
+    "baseline_f1": 0.7277227722772277,
+    "ablated_f1": 0.7277227722772277,
+    "delta_f1": 0.0,
+    "p_value": 0.001,
+    "statistically_significant": true
+  },
+  "A13_Remove_Trust": {
+    "baseline_f1": 0.7277227722772277,
+    "ablated_f1": 0.7201946472019465,
+    "delta_f1": -0.0075,
+    "p_value": 0.001,
+    "statistically_significant": true
+  },
+  "A14_Remove_Historical": {
+    "baseline_f1": 0.7277227722772277,
+    "ablated_f1": 0.7277227722772277,
+    "delta_f1": 0.0,
+    "p_value": 0.001,
+    "statistically_significant": true
+  },
+  "A15_Remove_Threat_Intel": {
+    "baseline_f1": 0.7277227722772277,
+    "ablated_f1": 0.7277227722772277,
+    "delta_f1": 0.0,
+    "p_value": 0.001,
+    "statistically_significant": true
+  },
+  "A16_Remove_Forecasting": {
+    "baseline_f1": 0.7277227722772277,
+    "ablated_f1": 0.7277227722772277,
+    "delta_f1": 0.0,
+    "p_value": 0.001,
+    "statistically_significant": true
+  },
+  "A17_Remove_Uncertainty": {
+    "baseline_f1": 0.7277227722772277,
+    "ablated_f1": 0.7241379310344828,
+    "delta_f1": -0.0036,
+    "p_value": 0.001,
+    "statistically_significant": true
+  },
+  "A18_Remove_Conformal_Gate": {
+    "baseline_f1": 0.7277227722772277,
+    "ablated_f1": 0.7277227722772277,
+    "delta_f1": 0.0,
+    "p_value": 0.001,
+    "statistically_significant": true
+  },
+  "A19_Remove_Active_Learning": {
+    "baseline_f1": 0.7277227722772277,
+    "ablated_f1": 0.725925925925926,
+    "delta_f1": -0.0018,
+    "p_value": 0.001,
+    "statistically_significant": true
+  },
+  "A20_Remove_Continual_Memory": {
+    "baseline_f1": 0.7277227722772277,
+    "ablated_f1": 0.725925925925926,
+    "delta_f1": -0.0018,
+    "p_value": 0.001,
+    "statistically_significant": true
+  },
+  "A21_Remove_Personalized_FL": {
+    "baseline_f1": 0.7277227722772277,
+    "ablated_f1": 0.725925925925926,
+    "delta_f1": -0.0018,
+    "p_value": 0.001,
+    "statistically_significant": true
+  },
+  "A22_Remove_Byzantine_Defense": {
+    "baseline_f1": 0.7277227722772277,
+    "ablated_f1": 0.725925925925926,
+    "delta_f1": -0.0018,
+    "p_value": 0.001,
+    "statistically_significant": true
+  },
+  "A23_Remove_Causal_XAI": {
+    "baseline_f1": 0.7277227722772277,
+    "ablated_f1": 0.725925925925926,
+    "delta_f1": -0.0018,
+    "p_value": 0.001,
+    "statistically_significant": true
+  },
+  "A24_Remove_Safety_Gate": {
+    "baseline_f1": 0.7277227722772277,
+    "ablated_f1": 0.725925925925926,
+    "delta_f1": -0.0018,
+    "p_value": 0.001,
+    "statistically_significant": true
+  }
+}

@@ -1,0 +1,20 @@
+{
+  "risk_weights": {
+    "w_sig": 0.5,
+    "w_ml": 0.3,
+    "w_trust": 0.15,
+    "w_hist": 0.1,
+    "w_graph": 0.1,
+    "w_fore": 0.05,
+    "w_ti": 0.15
+  },
+  "thresholds": {
+    "critical": 0.9,
+    "high": 0.7,
+    "medium": 0.5,
+    "low": 0.3
+  },
+  "ood_threshold": 0.55,
+  "byzantine_clip_norm": 6.0,
+  "replay_tolerance": 0.0001
+}

@@ -1,23 +1,23 @@
 {
-  "timestamp": "2026-08-30 00:12:03 UTC",
+  "timestamp": "2026-08-30 06:11:23 UTC",
   "evaluation_type": "CONTROLLED_SYNTHETIC",
   "table_1_dataset_manifest": {
     "dataset_name": "synthetic_eval_dataset.csv",
     "dataset_type": "cicids2017",
     "version": "1.0",
     "file_path": "/home/suyashpradhan/Downloads/AHRAS_Suyash-master/evaluation/data/synthetic_eval_dataset.csv",
-    "sha256_checksum": "5c33998b9586b60543ab6a82b4aef1055f8a814f82ad896a86bd64ac502cebcd",
+    "sha256_checksum": "a4e9caa8ca718bfcb6df9daa2996c19cb55de4ce9da751872e78cb5a4dc0bc9f",
     "total_rows": 5000,
     "feature_count": 15,
-    "benign_count": 3479,
-    "attack_count": 1521,
+    "benign_count": 3481,
+    "attack_count": 1519,
     "class_distribution": {
-      "Benign": 3479,
-      "PortScan": 320,
-      "Bot": 262,
-      "DoS Hulk": 307,
-      "DDoS": 321,
-      "SSH-Patator": 311
+      "Benign": 3481,
+      "PortScan": 376,
+      "Bot": 278,
+      "DDoS": 277,
+      "DoS Hulk": 302,
+      "SSH-Patator": 286
     },
     "split_policy": "Temporal (70/15/15) + Entity-Disjoint",
     "preprocessing_version": "v2.1-OCSF"
@@ -26,7 +26,7 @@
     "temporal_leakage_detected": false,
     "max_train_timestamp": 1699983698.0,
     "min_test_timestamp": 1699984450.0,
-    "entity_overlap_count": 165,
+    "entity_overlap_count": 186,
     "entity_disjoint_pass": true,
     "overall_leakage_audit_pass": true
   },
@@ -35,53 +35,53 @@
       "dataset": "E0_Baseline",
       "samples": {
         "total": 375,
-        "benign": 369,
-        "attack": 6
+        "benign": 257,
+        "attack": 118
       },
       "classification": {
-        "accuracy": 0.5067,
-        "balanced_accuracy": 0.5034,
-        "precision": 0.0162,
-        "recall": 0.5,
-        "f1": 0.0314,
-        "macro_f1": 0.0314,
-        "auc": 0.4246,
-        "pr_auc": 0.0126,
-        "false_positive_rate": 0.4932,
-        "false_negative_rate": 0.5,
-        "detection_rate": 0.5,
-        "brier_score": 0.3263,
-        "ece": 0.4766
+        "accuracy": 0.4747,
+        "balanced_accuracy": 0.4678,
+        "precision": 0.2865,
+        "recall": 0.4492,
+        "f1": 0.3498,
+        "macro_f1": 0.3498,
+        "auc": 0.4831,
+        "pr_auc": 0.2965,
+        "false_positive_rate": 0.5136,
+        "false_negative_rate": 0.5508,
+        "detection_rate": 0.4492,
+        "brier_score": 0.3363,
+        "ece": 0.3038
       },
       "confidence_intervals_95": {
         "f1": [
-          0.0,
-          0.069
+          0.2922,
+          0.4118
         ],
         "precision": [
-          0.0,
-          0.0363
+          0.2352,
+          0.3485
         ],
         "recall": [
-          0.0,
-          1.0
+          0.3665,
+          0.5261
         ],
         "brier_score": [
-          0.298,
-          0.3539
+          0.3068,
+          0.3671
         ]
       },
       "confusion_matrix": {
-        "TP": 3,
-        "FP": 182,
-        "TN": 187,
-        "FN": 3
+        "TP": 53,
+        "FP": 132,
+        "TN": 125,
+        "FN": 65
       },
       "performance": {
-        "mean_latency_ms": 15.738,
-        "p95_latency_ms": 19.604,
-        "p99_latency_ms": 22.241,
-        "throughput_eps": 63.5,
+        "mean_latency_ms": 16.073,
+        "p95_latency_ms": 19.92,
+        "p99_latency_ms": 24.534,
+        "throughput_eps": 62.2,
         "peak_memory_mb": 0.0,
         "mean_cpu_pct": 0.0
       },
@@ -92,53 +92,53 @@
       "dataset": "E1_Signature_Only",
       "samples": {
         "total": 375,
-        "benign": 369,
-        "attack": 6
+        "benign": 257,
+        "attack": 118
       },
       "classification": {
-        "accuracy": 0.6987,
-        "balanced_accuracy": 0.437,
-        "precision": 0.0092,
-        "recall": 0.1667,
-        "f1": 0.0174,
-        "macro_f1": 0.0174,
-        "auc": 0.4361,
-        "pr_auc": 0.0113,
-        "false_positive_rate": 0.2927,
-        "false_negative_rate": 0.8333,
-        "detection_rate": 0.1667,
-        "brier_score": 0.2368,
-        "ece": 0.2667
+        "accuracy": 0.8,
+        "balanced_accuracy": 0.8449,
+        "precision": 0.6162,
+        "recall": 0.9661,
+        "f1": 0.7525,
+        "macro_f1": 0.7525,
+        "auc": 0.8746,
+        "pr_auc": 0.8231,
+        "false_positive_rate": 0.2763,
+        "false_negative_rate": 0.0339,
+        "detection_rate": 0.9661,
+        "brier_score": 0.1614,
+        "ece": 0.1519
       },
       "confidence_intervals_95": {
         "f1": [
-          0.0,
-          0.0474
+          0.7021,
+          0.8117
         ],
         "precision": [
-          0.0,
-          0.0255
+          0.5502,
+          0.7054
         ],
         "recall": [
-          0.0,
-          0.5
+          0.9386,
+          0.9919
         ],
         "brier_score": [
-          0.2005,
-          0.2726
+          0.1305,
+          0.1928
         ]
       },
       "confusion_matrix": {
-        "TP": 1,
-        "FP": 108,
-        "TN": 261,
-        "FN": 5
+        "TP": 114,
+        "FP": 71,
+        "TN": 186,
+        "FN": 4
       },
       "performance": {
-        "mean_latency_ms": 15.738,
-        "p95_latency_ms": 19.604,
-        "p99_latency_ms": 22.241,
-        "throughput_eps": 63.5,
+        "mean_latency_ms": 16.073,
+        "p95_latency_ms": 19.92,
+        "p99_latency_ms": 24.534,
+        "throughput_eps": 62.2,
         "peak_memory_mb": 0.0,
         "mean_cpu_pct": 0.0
       },
@@ -149,53 +149,53 @@
       "dataset": "E2_ML_Only",
       "samples": {
         "total": 375,
-        "benign": 369,
-        "attack": 6
+        "benign": 257,
+        "attack": 118
       },
       "classification": {
-        "accuracy": 0.016,
+        "accuracy": 0.3147,
         "balanced_accuracy": 0.5,
-        "precision": 0.016,
+        "precision": 0.3147,
         "recall": 1.0,
-        "f1": 0.0315,
-        "macro_f1": 0.0315,
-        "auc": 0.5445,
-        "pr_auc": 0.0182,
+        "f1": 0.4787,
+        "macro_f1": 0.4787,
+        "auc": 0.8035,
+        "pr_auc": 0.67,
         "false_positive_rate": 1.0,
         "false_negative_rate": 0.0,
         "detection_rate": 1.0,
-        "brier_score": 0.5138,
-        "ece": 0.7056
+        "brier_score": 0.3851,
+        "ece": 0.4467
       },
       "confidence_intervals_95": {
         "f1": [
-          0.0106,
-          0.057
+          0.4275,
+          0.5355
         ],
         "precision": [
-          0.0053,
-          0.0293
+          0.2719,
+          0.3657
         ],
         "recall": [
           1.0,
           1.0
         ],
         "brier_score": [
-          0.5072,
-          0.5196
+          0.361,
+          0.4056
         ]
       },
       "confusion_matrix": {
-        "TP": 6,
-        "FP": 369,
+        "TP": 118,
+        "FP": 257,
         "TN": 0,
         "FN": 0
       },
       "performance": {
-        "mean_latency_ms": 15.738,
-        "p95_latency_ms": 19.604,
-        "p99_latency_ms": 22.241,
-        "throughput_eps": 63.5,
+        "mean_latency_ms": 16.073,
+        "p95_latency_ms": 19.92,
+        "p99_latency_ms": 24.534,
+        "throughput_eps": 62.2,
         "peak_memory_mb": 0.0,
         "mean_cpu_pct": 0.0
       },
@@ -206,23 +206,23 @@
       "dataset": "E3_Statistical_Only",
       "samples": {
         "total": 375,
-        "benign": 369,
-        "attack": 6
+        "benign": 257,
+        "attack": 118
       },
       "classification": {
-        "accuracy": 0.984,
+        "accuracy": 0.6853,
         "balanced_accuracy": 0.5,
         "precision": 0.0,
         "recall": 0.0,
         "f1": 0.0,
         "macro_f1": 0.0,
-        "auc": 0.4241,
-        "pr_auc": 0.0121,
+        "auc": 0.6199,
+        "pr_auc": 0.5032,
         "false_positive_rate": 0.0,
         "false_negative_rate": 1.0,
         "detection_rate": 0.0,
-        "brier_score": 0.016,
-        "ece": 0.0146
+        "brier_score": 0.3136,
+        "ece": 0.3133
       },
       "confidence_intervals_95": {
         "f1": [
@@ -238,21 +238,21 @@
           0.0
         ],
         "brier_score": [
-          0.0053,
-          0.0293
+          0.2709,
+          0.3645
         ]
       },
       "confusion_matrix": {
         "TP": 0,
         "FP": 0,
-        "TN": 369,
-        "FN": 6
+        "TN": 257,
+        "FN": 118
       },
       "performance": {
-        "mean_latency_ms": 15.738,
-        "p95_latency_ms": 19.604,
-        "p99_latency_ms": 22.241,
-        "throughput_eps": 63.5,
+        "mean_latency_ms": 16.073,
+        "p95_latency_ms": 19.92,
+        "p99_latency_ms": 24.534,
+        "throughput_eps": 62.2,
         "peak_memory_mb": 0.0,
         "mean_cpu_pct": 0.0
       },
@@ -263,53 +263,53 @@
       "dataset": "E4_Fixed_Hybrid",
       "samples": {
         "total": 375,
-        "benign": 369,
-        "attack": 6
+        "benign": 257,
+        "attack": 118
       },
       "classification": {
-        "accuracy": 0.6987,
-        "balanced_accuracy": 0.437,
-        "precision": 0.0092,
-        "recall": 0.1667,
-        "f1": 0.0174,
-        "macro_f1": 0.0174,
-        "auc": 0.4496,
-        "pr_auc": 0.0148,
-        "false_positive_rate": 0.2927,
-        "false_negative_rate": 0.8333,
-        "detection_rate": 0.1667,
-        "brier_score": 0.1498,
-        "ece": 0.3159
+        "accuracy": 0.8,
+        "balanced_accuracy": 0.8449,
+        "precision": 0.6162,
+        "recall": 0.9661,
+        "f1": 0.7525,
+        "macro_f1": 0.7525,
+        "auc": 0.886,
+        "pr_auc": 0.7283,
+        "false_positive_rate": 0.2763,
+        "false_negative_rate": 0.0339,
+        "detection_rate": 0.9661,
+        "brier_score": 0.1499,
+        "ece": 0.1542
       },
       "confidence_intervals_95": {
         "f1": [
-          0.0,
-          0.0474
+          0.7021,
+          0.8117
         ],
         "precision": [
-          0.0,
-          0.0255
+          0.5502,
+          0.7054
         ],
         "recall": [
-          0.0,
-          0.5
+          0.9386,
+          0.9919
         ],
         "brier_score": [
-          0.1342,
-          0.1656
+          0.1355,
+          0.1624
         ]
       },
       "confusion_matrix": {
-        "TP": 1,
-        "FP": 108,
-        "TN": 261,
-        "FN": 5
+        "TP": 114,
+        "FP": 71,
+        "TN": 186,
+        "FN": 4
       },
       "performance": {
-        "mean_latency_ms": 15.738,
-        "p95_latency_ms": 19.604,
-        "p99_latency_ms": 22.241,
-        "throughput_eps": 63.5,
+        "mean_latency_ms": 16.073,
+        "p95_latency_ms": 19.92,
+        "p99_latency_ms": 24.534,
+        "throughput_eps": 62.2,
         "peak_memory_mb": 0.0,
         "mean_cpu_pct": 0.0
       },
@@ -320,53 +320,53 @@
       "dataset": "E5_Adaptive_Hybrid",
       "samples": {
         "total": 375,
-        "benign": 369,
-        "attack": 6
+        "benign": 257,
+        "attack": 118
       },
       "classification": {
-        "accuracy": 0.984,
-        "balanced_accuracy": 0.5,
-        "precision": 0.0,
-        "recall": 0.0,
-        "f1": 0.0,
-        "macro_f1": 0.0,
-        "auc": 0.4713,
-        "pr_auc": 0.0151,
-        "false_positive_rate": 0.0,
-        "false_negative_rate": 1.0,
-        "detection_rate": 0.0,
-        "brier_score": 0.0351,
-        "ece": 0.0871
+        "accuracy": 0.7387,
+        "balanced_accuracy": 0.7475,
+        "precision": 0.5617,
+        "recall": 0.7712,
+        "f1": 0.65,
+        "macro_f1": 0.65,
+        "auc": 0.8865,
+        "pr_auc": 0.7295,
+        "false_positive_rate": 0.2763,
+        "false_negative_rate": 0.2288,
+        "detection_rate": 0.7712,
+        "brier_score": 0.1421,
+        "ece": 0.1035
       },
       "confidence_intervals_95": {
         "f1": [
-          0.0,
-          0.0
+          0.5932,
+          0.7115
         ],
         "precision": [
-          0.0,
-          0.0
+          0.4912,
+          0.6583
         ],
         "recall": [
-          0.0,
-          0.0
+          0.6986,
+          0.8321
         ],
         "brier_score": [
-          0.0252,
-          0.0486
+          0.1281,
+          0.1533
         ]
       },
       "confusion_matrix": {
-        "TP": 0,
-        "FP": 0,
-        "TN": 369,
-        "FN": 6
+        "TP": 91,
+        "FP": 71,
+        "TN": 186,
+        "FN": 27
       },
       "performance": {
-        "mean_latency_ms": 15.738,
-        "p95_latency_ms": 19.604,
-        "p99_latency_ms": 22.241,
-        "throughput_eps": 63.5,
+        "mean_latency_ms": 16.073,
+        "p95_latency_ms": 19.92,
+        "p99_latency_ms": 24.534,
+        "throughput_eps": 62.2,
         "peak_memory_mb": 0.0,
         "mean_cpu_pct": 0.0
       },
@@ -377,23 +377,23 @@
       "dataset": "E6_Hybrid_Trust",
       "samples": {
         "total": 375,
-        "benign": 369,
-        "attack": 6
+        "benign": 257,
+        "attack": 118
       },
       "classification": {
-        "accuracy": 0.984,
+        "accuracy": 0.6853,
         "balanced_accuracy": 0.5,
         "precision": 0.0,
         "recall": 0.0,
         "f1": 0.0,
         "macro_f1": 0.0,
-        "auc": 0.4241,
-        "pr_auc": 0.0115,
+        "auc": 0.853,
+        "pr_auc": 0.6751,
         "false_positive_rate": 0.0,
         "false_negative_rate": 1.0,
         "detection_rate": 0.0,
-        "brier_score": 0.0253,
-        "ece": 0.0653
+        "brier_score": 0.1438,
+        "ece": 0.1027
       },
       "confidence_intervals_95": {
         "f1": [
@@ -409,21 +409,21 @@
           0.0
         ],
         "brier_score": [
-          0.0143,
-          0.0394
+          0.128,
+          0.158
         ]
       },
       "confusion_matrix": {
         "TP": 0,
         "FP": 0,
-        "TN": 369,
-        "FN": 6
+        "TN": 257,
+        "FN": 118
       },
       "performance": {
-        "mean_latency_ms": 15.738,
-        "p95_latency_ms": 19.604,
-        "p99_latency_ms": 22.241,
-        "throughput_eps": 63.5,
+        "mean_latency_ms": 16.073,
+        "p95_latency_ms": 19.92,
+        "p99_latency_ms": 24.534,
+        "throughput_eps": 62.2,
         "peak_memory_mb": 0.0,
         "mean_cpu_pct": 0.0
       },
@@ -434,53 +434,53 @@
       "dataset": "E7_Hybrid_Graph",
       "samples": {
         "total": 375,
-        "benign": 369,
-        "attack": 6
+        "benign": 257,
+        "attack": 118
       },
       "classification": {
-        "accuracy": 0.984,
-        "balanced_accuracy": 0.5,
-        "precision": 0.0,
-        "recall": 0.0,
-        "f1": 0.0,
-        "macro_f1": 0.0,
-        "auc": 0.4286,
-        "pr_auc": 0.0116,
-        "false_positive_rate": 0.0,
-        "false_negative_rate": 1.0,
-        "detection_rate": 0.0,
-        "brier_score": 0.0244,
-        "ece": 0.0628
+        "accuracy": 0.712,
+        "balanced_accuracy": 0.5447,
+        "precision": 0.9167,
+        "recall": 0.0932,
+        "f1": 0.1692,
+        "macro_f1": 0.1692,
+        "auc": 0.8671,
+        "pr_auc": 0.7064,
+        "false_positive_rate": 0.0039,
+        "false_negative_rate": 0.9068,
+        "detection_rate": 0.0932,
+        "brier_score": 0.1416,
+        "ece": 0.1038
       },
       "confidence_intervals_95": {
         "f1": [
-          0.0,
-          0.0
+          0.0883,
+          0.2495
         ],
         "precision": [
-          0.0,
-          0.0
+          0.7,
+          1.0
         ],
         "recall": [
-          0.0,
-          0.0
+          0.0464,
+          0.1436
         ],
         "brier_score": [
-          0.0134,
-          0.0385
+          0.1266,
+          0.155
         ]
       },
       "confusion_matrix": {
-        "TP": 0,
-        "FP": 0,
-        "TN": 369,
-        "FN": 6
+        "TP": 11,
+        "FP": 1,
+        "TN": 256,
+        "FN": 107
       },
       "performance": {
-        "mean_latency_ms": 15.738,
-        "p95_latency_ms": 19.604,
-        "p99_latency_ms": 22.241,
-        "throughput_eps": 63.5,
+        "mean_latency_ms": 16.073,
+        "p95_latency_ms": 19.92,
+        "p99_latency_ms": 24.534,
+        "throughput_eps": 62.2,
         "peak_memory_mb": 0.0,
         "mean_cpu_pct": 0.0
       },
@@ -491,53 +491,53 @@
       "dataset": "E8_Hybrid_Uncertainty",
       "samples": {
         "total": 375,
-        "benign": 369,
-        "attack": 6
+        "benign": 257,
+        "attack": 118
       },
       "classification": {
-        "accuracy": 0.984,
-        "balanced_accuracy": 0.5,
-        "precision": 0.0,
-        "recall": 0.0,
-        "f1": 0.0,
-        "macro_f1": 0.0,
-        "auc": 0.4313,
-        "pr_auc": 0.0117,
-        "false_positive_rate": 0.0,
-        "false_negative_rate": 1.0,
-        "detection_rate": 0.0,
-        "brier_score": 0.0232,
-        "ece": 0.0586
+        "accuracy": 0.696,
+        "balanced_accuracy": 0.5192,
+        "precision": 0.8333,
+        "recall": 0.0424,
+        "f1": 0.0806,
+        "macro_f1": 0.0806,
+        "auc": 0.8467,
+        "pr_auc": 0.6955,
+        "false_positive_rate": 0.0039,
+        "false_negative_rate": 0.9576,
+        "detection_rate": 0.0424,
+        "brier_score": 0.1435,
+        "ece": 0.0981
       },
       "confidence_intervals_95": {
         "f1": [
-          0.0,
-          0.0
+          0.032,
+          0.157
         ],
         "precision": [
-          0.0,
-          0.0
+          0.5,
+          1.0
         ],
         "recall": [
-          0.0,
-          0.0
+          0.0165,
+          0.0861
         ],
         "brier_score": [
-          0.0122,
-          0.0373
+          0.1272,
+          0.1584
         ]
       },
       "confusion_matrix": {
-        "TP": 0,
-        "FP": 0,
-        "TN": 369,
-        "FN": 6
+        "TP": 5,
+        "FP": 1,
+        "TN": 256,
+        "FN": 113
       },
       "performance": {
-        "mean_latency_ms": 15.738,
-        "p95_latency_ms": 19.604,
-        "p99_latency_ms": 22.241,
-        "throughput_eps": 63.5,
+        "mean_latency_ms": 16.073,
+        "p95_latency_ms": 19.92,
+        "p99_latency_ms": 24.534,
+        "throughput_eps": 62.2,
         "peak_memory_mb": 0.0,
         "mean_cpu_pct": 0.0
       },
@@ -548,53 +548,53 @@
       "dataset": "E9_Full_AHRAS_Risk",
       "samples": {
         "total": 375,
-        "benign": 369,
-        "attack": 6
+        "benign": 257,
+        "attack": 118
       },
       "classification": {
-        "accuracy": 0.8107,
-        "balanced_accuracy": 0.4939,
-        "precision": 0.0149,
-        "recall": 0.1667,
-        "f1": 0.0274,
-        "macro_f1": 0.0274,
-        "auc": 0.5133,
-        "pr_auc": 0.0151,
-        "false_positive_rate": 0.1789,
-        "false_negative_rate": 0.8333,
-        "detection_rate": 0.1667,
-        "brier_score": 0.0913,
-        "ece": 0.1996
+        "accuracy": 0.7627,
+        "balanced_accuracy": 0.7856,
+        "precision": 0.5848,
+        "recall": 0.8475,
+        "f1": 0.692,
+        "macro_f1": 0.692,
+        "auc": 0.8924,
+        "pr_auc": 0.8007,
+        "false_positive_rate": 0.2763,
+        "false_negative_rate": 0.1525,
+        "detection_rate": 0.8475,
+        "brier_score": 0.1333,
+        "ece": 0.1163
       },
       "confidence_intervals_95": {
         "f1": [
-          0.0,
-          0.0765
+          0.6389,
+          0.756
         ],
         "precision": [
-          0.0,
-          0.0433
+          0.5171,
+          0.6786
         ],
         "recall": [
-          0.0,
-          0.5
+          0.8083,
+          0.9061
         ],
         "brier_score": [
-          0.0774,
-          0.1044
+          0.1205,
+          0.1434
         ]
       },
       "confusion_matrix": {
-        "TP": 1,
-        "FP": 66,
-        "TN": 303,
-        "FN": 5
+        "TP": 100,
+        "FP": 71,
+        "TN": 186,
+        "FN": 18
       },
       "performance": {
-        "mean_latency_ms": 15.738,
-        "p95_latency_ms": 19.604,
-        "p99_latency_ms": 22.241,
-        "throughput_eps": 63.5,
+        "mean_latency_ms": 16.073,
+        "p95_latency_ms": 19.92,
+        "p99_latency_ms": 24.534,
+        "throughput_eps": 62.2,
         "peak_memory_mb": 0.0,
         "mean_cpu_pct": 0.0
       },
@@ -605,53 +605,53 @@
       "dataset": "E10_Full_AHRAS_Forecast",
       "samples": {
         "total": 375,
-        "benign": 369,
-        "attack": 6
+        "benign": 257,
+        "attack": 118
       },
       "classification": {
-        "accuracy": 0.8107,
-        "balanced_accuracy": 0.4939,
-        "precision": 0.0149,
-        "recall": 0.1667,
-        "f1": 0.0274,
-        "macro_f1": 0.0274,
-        "auc": 0.4919,
-        "pr_auc": 0.0145,
-        "false_positive_rate": 0.1789,
-        "false_negative_rate": 0.8333,
-        "detection_rate": 0.1667,
-        "brier_score": 0.0953,
-        "ece": 0.2015
+        "accuracy": 0.7733,
+        "balanced_accuracy": 0.8025,
+        "precision": 0.5943,
+        "recall": 0.8814,
+        "f1": 0.7099,
+        "macro_f1": 0.7099,
+        "auc": 0.8893,
+        "pr_auc": 0.8098,
+        "false_positive_rate": 0.2763,
+        "false_negative_rate": 0.1186,
+        "detection_rate": 0.8814,
+        "brier_score": 0.1306,
+        "ece": 0.1487
       },
       "confidence_intervals_95": {
         "f1": [
-          0.0,
-          0.0765
+          0.6466,
+          0.7719
         ],
         "precision": [
-          0.0,
-          0.0433
+          0.52,
+          0.6877
         ],
         "recall": [
-          0.0,
-          0.5
+          0.8332,
+          0.9292
         ],
         "brier_score": [
-          0.0807,
-          0.1084
+          0.1165,
+          0.142
         ]
       },
       "confusion_matrix": {
-        "TP": 1,
-        "FP": 66,
-        "TN": 303,
-        "FN": 5
+        "TP": 104,
+        "FP": 71,
+        "TN": 186,
+        "FN": 14
       },
       "performance": {
-        "mean_latency_ms": 15.738,
-        "p95_latency_ms": 19.604,
-        "p99_latency_ms": 22.241,
-        "throughput_eps": 63.5,
+        "mean_latency_ms": 16.073,
+        "p95_latency_ms": 19.92,
+        "p99_latency_ms": 24.534,
+        "throughput_eps": 62.2,
         "peak_memory_mb": 0.0,
         "mean_cpu_pct": 0.0
       },
@@ -662,53 +662,53 @@
       "dataset": "E11_Full_AHRAS_Policy",
       "samples": {
         "total": 375,
-        "benign": 369,
-        "attack": 6
+        "benign": 257,
+        "attack": 118
       },
       "classification": {
-        "accuracy": 0.8107,
-        "balanced_accuracy": 0.4939,
-        "precision": 0.0149,
-        "recall": 0.1667,
-        "f1": 0.0274,
-        "macro_f1": 0.0274,
-        "auc": 0.4819,
-        "pr_auc": 0.0142,
-        "false_positive_rate": 0.1789,
-        "false_negative_rate": 0.8333,
-        "detection_rate": 0.1667,
-        "brier_score": 0.0993,
-        "ece": 0.2026
+        "accuracy": 0.784,
+        "balanced_accuracy": 0.8195,
+        "precision": 0.6034,
+        "recall": 0.9153,
+        "f1": 0.7273,
+        "macro_f1": 0.7273,
+        "auc": 0.891,
+        "pr_auc": 0.7975,
+        "false_positive_rate": 0.2763,
+        "false_negative_rate": 0.0847,
+        "detection_rate": 0.9153,
+        "brier_score": 0.1334,
+        "ece": 0.1273
       },
       "confidence_intervals_95": {
         "f1": [
-          0.0,
-          0.0765
+          0.6697,
+          0.7933
         ],
         "precision": [
-          0.0,
-          0.0433
+          0.5323,
+          0.6981
         ],
         "recall": [
-          0.0,
-          0.5
+          0.8645,
+          0.9555
         ],
         "brier_score": [
-          0.084,
-          0.1126
+          0.1179,
+          0.1456
         ]
       },
       "confusion_matrix": {
-        "TP": 1,
-        "FP": 66,
-        "TN": 303,
-        "FN": 5
+        "TP": 108,
+        "FP": 71,
+        "TN": 186,
+        "FN": 10
       },
       "performance": {
-        "mean_latency_ms": 15.738,
-        "p95_latency_ms": 19.604,
-        "p99_latency_ms": 22.241,
-        "throughput_eps": 63.5,
+        "mean_latency_ms": 16.073,
+        "p95_latency_ms": 19.92,
+        "p99_latency_ms": 24.534,
+        "throughput_eps": 62.2,
         "peak_memory_mb": 0.0,
         "mean_cpu_pct": 0.0
       },
@@ -719,53 +719,53 @@
       "dataset": "E12_Full_Closed_Loop_AHRAS",
       "samples": {
         "total": 375,
-        "benign": 369,
-        "attack": 6
+        "benign": 257,
+        "attack": 118
       },
       "classification": {
-        "accuracy": 0.8107,
-        "balanced_accuracy": 0.4939,
-        "precision": 0.0149,
-        "recall": 0.1667,
-        "f1": 0.0274,
-        "macro_f1": 0.0274,
-        "auc": 0.4819,
-        "pr_auc": 0.0142,
-        "false_positive_rate": 0.1789,
-        "false_negative_rate": 0.8333,
-        "detection_rate": 0.1667,
-        "brier_score": 0.0993,
-        "ece": 0.2026
+        "accuracy": 0.784,
+        "balanced_accuracy": 0.8195,
+        "precision": 0.6034,
+        "recall": 0.9153,
+        "f1": 0.7273,
+        "macro_f1": 0.7273,
+        "auc": 0.891,
+        "pr_auc": 0.7975,
+        "false_positive_rate": 0.2763,
+        "false_negative_rate": 0.0847,
+        "detection_rate": 0.9153,
+        "brier_score": 0.1334,
+        "ece": 0.1273
       },
       "confidence_intervals_95": {
         "f1": [
-          0.0,
-          0.0765
+          0.6697,
+          0.7933
         ],
         "precision": [
-          0.0,
-          0.0433
+          0.5323,
+          0.6981
         ],
         "recall": [
-          0.0,
-          0.5
+          0.8645,
+          0.9555
         ],
         "brier_score": [
-          0.084,
-          0.1126
+          0.1179,
+          0.1456
         ]
       },
       "confusion_matrix": {
-        "TP": 1,
-        "FP": 66,
-        "TN": 303,
-        "FN": 5
+        "TP": 108,
+        "FP": 71,
+        "TN": 186,
+        "FN": 10
       },
       "performance": {
-        "mean_latency_ms": 15.738,
-        "p95_latency_ms": 19.604,
-        "p99_latency_ms": 22.241,
-        "throughput_eps": 63.5,
+        "mean_latency_ms": 16.073,
+        "p95_latency_ms": 19.92,
+        "p99_latency_ms": 24.534,
+        "throughput_eps": 62.2,
         "peak_memory_mb": 0.0,
         "mean_cpu_pct": 0.0
       },
@@ -775,30 +775,30 @@
   },
   "table_4_ablation_studies": {
     "A1_Remove_Signatures": {
-      "baseline_f1": 0.0179,
+      "baseline_f1": 0.692,
       "ablated_f1": 0.0,
-      "absolute_f1_delta": -0.0179,
+      "absolute_f1_delta": -0.692,
       "relative_f1_delta_pct": -100.0,
       "ablated_precision": 0.0,
       "ablated_recall": 0.0,
-      "ablated_brier_score": 0.0302,
+      "ablated_brier_score": 0.2217,
       "ci_95_f1": [
         0.0,
         0.0
       ],
-      "paired_p_value": 0.0005,
+      "paired_p_value": 0.009,
       "statistically_significant": true,
-      "holm_adjusted_p_value": 0.006,
-      "statistically_significant_holm": true
+      "holm_adjusted_p_value": 0.081,
+      "statistically_significant_holm": false
     },
     "A2_Remove_ML_Ensemble": {
-      "baseline_f1": 0.0179,
+      "baseline_f1": 0.692,
       "ablated_f1": 0.0,
-      "absolute_f1_delta": -0.0179,
+      "absolute_f1_delta": -0.692,
       "relative_f1_delta_pct": -100.0,
       "ablated_precision": 0.0,
       "ablated_recall": 0.0,
-      "ablated_brier_score": 0.0439,
+      "ablated_brier_score": 0.1673,
       "ci_95_f1": [
         0.0,
         0.0
@@ -809,16 +809,16 @@
       "statistically_significant_holm": true
     },
     "A3_Remove_Statistical": {
-      "baseline_f1": 0.0179,
-      "ablated_f1": 0.0179,
-      "absolute_f1_delta": 0.0,
-      "relative_f1_delta_pct": 0.0,
-      "ablated_precision": 0.0094,
-      "ablated_recall": 0.1667,
-      "ablated_brier_score": 0.1075,
+      "baseline_f1": 0.692,
+      "ablated_f1": 0.7099,
+      "absolute_f1_delta": 0.0179,
+      "relative_f1_delta_pct": 2.58,
+      "ablated_precision": 0.5943,
+      "ablated_recall": 0.8814,
+      "ablated_brier_score": 0.1319,
       "ci_95_f1": [
-        0.0,
-        0.04904785643070784
+        0.6466477436044841,
+        0.7719084170743854
       ],
       "paired_p_value": 0.0005,
       "statistically_significant": true,
@@ -826,16 +826,16 @@
       "statistically_significant_holm": true
     },
     "A4_Remove_Trust": {
-      "baseline_f1": 0.0179,
-      "ablated_f1": 0.0174,
-      "absolute_f1_delta": -0.0005,
-      "relative_f1_delta_pct": -2.61,
-      "ablated_precision": 0.0092,
-      "ablated_recall": 0.1667,
-      "ablated_brier_score": 0.1428,
+      "baseline_f1": 0.692,
+      "ablated_f1": 0.7525,
+      "absolute_f1_delta": 0.0604,
+      "relative_f1_delta_pct": 8.73,
+      "ablated_precision": 0.6162,
+      "ablated_recall": 0.9661,
+      "ablated_brier_score": 0.1469,
       "ci_95_f1": [
-        0.0,
-        0.04736111111111106
+        0.7021312827889659,
+        0.8116814690787318
       ],
       "paired_p_value": 0.0005,
       "statistically_significant": true,
@@ -843,140 +843,140 @@
       "statistically_significant_holm": true
     },
     "A5_Remove_Graph": {
-      "baseline_f1": 0.0179,
-      "ablated_f1": 0.0179,
-      "absolute_f1_delta": 0.0,
-      "relative_f1_delta_pct": 0.0,
-      "ablated_precision": 0.0094,
-      "ablated_recall": 0.1667,
-      "ablated_brier_score": 0.1162,
+      "baseline_f1": 0.692,
+      "ablated_f1": 0.723,
+      "absolute_f1_delta": 0.0309,
+      "relative_f1_delta_pct": 4.47,
+      "ablated_precision": 0.6011,
+      "ablated_recall": 0.9068,
+      "ablated_brier_score": 0.1342,
       "ci_95_f1": [
-        0.0,
-        0.04904785643070784
+        0.6672571767001115,
+        0.7858544321829475
       ],
-      "paired_p_value": 0.003,
+      "paired_p_value": 0.013,
       "statistically_significant": true,
-      "holm_adjusted_p_value": 0.006,
-      "statistically_significant_holm": true
+      "holm_adjusted_p_value": 0.104,
+      "statistically_significant_holm": false
     },
     "A6_Remove_Historical": {
-      "baseline_f1": 0.0179,
-      "ablated_f1": 0.0177,
-      "absolute_f1_delta": -0.0002,
-      "relative_f1_delta_pct": -0.88,
-      "ablated_precision": 0.0093,
-      "ablated_recall": 0.1667,
-      "ablated_brier_score": 0.1213,
+      "baseline_f1": 0.692,
+      "ablated_f1": 0.74,
+      "absolute_f1_delta": 0.048,
+      "relative_f1_delta_pct": 6.93,
+      "ablated_precision": 0.6099,
+      "ablated_recall": 0.9407,
+      "ablated_brier_score": 0.1364,
       "ci_95_f1": [
-        0.0,
-        0.04904785643070784
+        0.6834448312224326,
+        0.8061122538936233
       ],
-      "paired_p_value": 0.0005,
-      "statistically_significant": true,
-      "holm_adjusted_p_value": 0.006,
-      "statistically_significant_holm": true
+      "paired_p_value": 0.223,
+      "statistically_significant": false,
+      "holm_adjusted_p_value": 0.754,
+      "statistically_significant_holm": false
     },
     "A7_Remove_Threat_Intel": {
-      "baseline_f1": 0.0179,
-      "ablated_f1": 0.0177,
-      "absolute_f1_delta": -0.0002,
-      "relative_f1_delta_pct": -0.88,
-      "ablated_precision": 0.0093,
-      "ablated_recall": 0.1667,
-      "ablated_brier_score": 0.1253,
+      "baseline_f1": 0.692,
+      "ablated_f1": 0.74,
+      "absolute_f1_delta": 0.048,
+      "relative_f1_delta_pct": 6.93,
+      "ablated_precision": 0.6099,
+      "ablated_recall": 0.9407,
+      "ablated_brier_score": 0.1384,
       "ci_95_f1": [
-        0.0,
-        0.04904785643070784
+        0.6834448312224326,
+        0.8061122538936233
       ],
-      "paired_p_value": 0.0005,
-      "statistically_significant": true,
-      "holm_adjusted_p_value": 0.006,
-      "statistically_significant_holm": true
+      "paired_p_value": 0.5375,
+      "statistically_significant": false,
+      "holm_adjusted_p_value": 0.803,
+      "statistically_significant_holm": false
     },
     "A8_Remove_Deception": {
-      "baseline_f1": 0.0179,
-      "ablated_f1": 0.0177,
-      "absolute_f1_delta": -0.0002,
-      "relative_f1_delta_pct": -0.88,
-      "ablated_precision": 0.0093,
-      "ablated_recall": 0.1667,
-      "ablated_brier_score": 0.1275,
+      "baseline_f1": 0.692,
+      "ablated_f1": 0.74,
+      "absolute_f1_delta": 0.048,
+      "relative_f1_delta_pct": 6.93,
+      "ablated_precision": 0.6099,
+      "ablated_recall": 0.9407,
+      "ablated_brier_score": 0.1385,
       "ci_95_f1": [
-        0.0,
-        0.04904785643070784
+        0.6834448312224326,
+        0.8061122538936233
       ],
-      "paired_p_value": 0.0005,
-      "statistically_significant": true,
-      "holm_adjusted_p_value": 0.006,
-      "statistically_significant_holm": true
+      "paired_p_value": 0.4015,
+      "statistically_significant": false,
+      "holm_adjusted_p_value": 0.803,
+      "statistically_significant_holm": false
     },
     "A9_Remove_Forecasting": {
-      "baseline_f1": 0.0179,
-      "ablated_f1": 0.0177,
-      "absolute_f1_delta": -0.0002,
-      "relative_f1_delta_pct": -0.88,
-      "ablated_precision": 0.0093,
-      "ablated_recall": 0.1667,
-      "ablated_brier_score": 0.1276,
+      "baseline_f1": 0.692,
+      "ablated_f1": 0.74,
+      "absolute_f1_delta": 0.048,
+      "relative_f1_delta_pct": 6.93,
+      "ablated_precision": 0.6099,
+      "ablated_recall": 0.9407,
+      "ablated_brier_score": 0.1382,
       "ci_95_f1": [
-        0.0,
-        0.04904785643070784
+        0.6834448312224326,
+        0.8061122538936233
       ],
-      "paired_p_value": 0.0005,
-      "statistically_significant": true,
-      "holm_adjusted_p_value": 0.006,
-      "statistically_significant_holm": true
+      "paired_p_value": 0.123,
+      "statistically_significant": false,
+      "holm_adjusted_p_value": 0.615,
+      "statistically_significant_holm": false
     },
     "A10_Remove_Uncertainty": {
-      "baseline_f1": 0.0179,
-      "ablated_f1": 0.0175,
-      "absolute_f1_delta": -0.0003,
-      "relative_f1_delta_pct": -1.75,
-      "ablated_precision": 0.0093,
-      "ablated_recall": 0.1667,
-      "ablated_brier_score": 0.1358,
+      "baseline_f1": 0.692,
+      "ablated_f1": 0.74,
+      "absolute_f1_delta": 0.048,
+      "relative_f1_delta_pct": 6.93,
+      "ablated_precision": 0.6099,
+      "ablated_recall": 0.9407,
+      "ablated_brier_score": 0.1402,
       "ci_95_f1": [
-        0.0,
-        0.048309668695064194
+        0.6834448312224326,
+        0.8061122538936233
       ],
-      "paired_p_value": 0.0005,
-      "statistically_significant": true,
-      "holm_adjusted_p_value": 0.006,
-      "statistically_significant_holm": true
+      "paired_p_value": 0.1885,
+      "statistically_significant": false,
+      "holm_adjusted_p_value": 0.754,
+      "statistically_significant_holm": false
     },
     "A11_Remove_Adaptive": {
-      "baseline_f1": 0.0179,
-      "ablated_f1": 0.0175,
-      "absolute_f1_delta": -0.0003,
-      "relative_f1_delta_pct": -1.75,
-      "ablated_precision": 0.0093,
-      "ablated_recall": 0.1667,
-      "ablated_brier_score": 0.1297,
+      "baseline_f1": 0.692,
+      "ablated_f1": 0.74,
+      "absolute_f1_delta": 0.048,
+      "relative_f1_delta_pct": 6.93,
+      "ablated_precision": 0.6099,
+      "ablated_recall": 0.9407,
+      "ablated_brier_score": 0.1382,
       "ci_95_f1": [
-        0.0,
-        0.048309668695064194
+        0.6834448312224326,
+        0.8061122538936233
       ],
-      "paired_p_value": 0.0005,
-      "statistically_significant": true,
-      "holm_adjusted_p_value": 0.006,
-      "statistically_significant_holm": true
+      "paired_p_value": 0.053,
+      "statistically_significant": false,
+      "holm_adjusted_p_value": 0.318,
+      "statistically_significant_holm": false
     },
     "A12_Remove_Response_Gate": {
-      "baseline_f1": 0.0179,
-      "ablated_f1": 0.0175,
-      "absolute_f1_delta": -0.0003,
-      "relative_f1_delta_pct": -1.75,
-      "ablated_precision": 0.0093,
-      "ablated_recall": 0.1667,
-      "ablated_brier_score": 0.1298,
+      "baseline_f1": 0.692,
+      "ablated_f1": 0.74,
+      "absolute_f1_delta": 0.048,
+      "relative_f1_delta_pct": 6.93,
+      "ablated_precision": 0.6099,
+      "ablated_recall": 0.9407,
+      "ablated_brier_score": 0.1381,
       "ci_95_f1": [
-        0.0,
-        0.048309668695064194
+        0.6834448312224326,
+        0.8061122538936233
       ],
-      "paired_p_value": 0.0005,
+      "paired_p_value": 0.026,
       "statistically_significant": true,
-      "holm_adjusted_p_value": 0.006,
-      "statistically_significant_holm": true
+      "holm_adjusted_p_value": 0.182,
+      "statistically_significant_holm": false
     }
   },
   "table_6_forecasting_impact": {
@@ -1010,9 +1010,9 @@
     },
     "B2_Uncertainty_Aware": {
       "containment_success_pct": 100.0,
-      "mean_intervention_step": 4.46,
-      "mean_attack_stage_at_containment": 3.46,
-      "mean_affected_entities": 2.46,
+      "mean_intervention_step": 4.44,
+      "mean_attack_stage_at_containment": 3.44,
+      "mean_affected_entities": 2.44,
       "mean_operational_cost": 0.35,
       "total_false_interventions": 0,
       "mean_rase_efficiency": 1.71

@@ -1,0 +1,7 @@
+{
+  "os": "Linux",
+  "os_release": "7.1.8-100.fc43.x86_64",
+  "python_version": "3.14.6",
+  "numpy_version": "2.5.2",
+  "total_cpu_cores": 12
+}

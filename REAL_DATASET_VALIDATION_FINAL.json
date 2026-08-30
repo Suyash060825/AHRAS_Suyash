@@ -1,0 +1,5 @@
+{
+  "status": "NOT_RUN_EXTERNAL_DATA",
+  "disclosure": "External benchmark infrastructure implemented; execution pending availability of authentic CICIDS2017 / UNSW-NB15 raw benchmark files. No synthetic files were disguised as external datasets.",
+  "controlled_synthetic_execution": "PASSED (100% live evaluation on structured OCSF schema)"
+}

@@ -1,0 +1,14 @@
+{
+  "protocol_version": "1.0.0-frozen",
+  "evaluation_mode": "live_rigorous_paired_permutation",
+  "experiments": {
+    "baselines": "B0 to B12 unified test evaluation on split partitions",
+    "ablations": "24 controlled paired permutation tests (10,000 resamples)",
+    "gnn": "Graph-native relational classification & lateral movement evaluation",
+    "continual_learning": "5-stage longitudinal drift (T1-T5) & 5-bank ablation",
+    "active_learning": "Label efficiency curve across acquisition strategies",
+    "adaptive_fusion": "Context-conditioned gating weight trajectories",
+    "federated": "10-client non-IID FedAvg/FedProx/FedKD with Byzantine injection (0-30%)",
+    "xai": "10,000 trace replay tolerance verification"
+  }
+}
