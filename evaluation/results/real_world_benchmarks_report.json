@@ -1,12 +1,16 @@
 {
   "CICIDS2017": {
     "status": "REAL_DATA_NOT_AVAILABLE",
+    "dataset_name": "CICIDS2017",
     "path": "/home/suyashpradhan/Downloads/AHRAS_Suyash-master/data/cicids2017/Wednesday-workingHours.pcap_ISCX.csv",
+    "classification": "REAL_DATA_NOT_EXECUTED",
     "note": "Evaluation skipped. No synthetic data substituted (strict integrity policy)."
   },
   "UNSW_NB15": {
     "status": "REAL_DATA_NOT_AVAILABLE",
+    "dataset_name": "UNSW_NB15",
     "path": "/home/suyashpradhan/Downloads/AHRAS_Suyash-master/data/unsw_nb15/UNSW-NB15_1.csv",
+    "classification": "REAL_DATA_NOT_EXECUTED",
     "note": "Evaluation skipped. No synthetic data substituted (strict integrity policy)."
   }
 }

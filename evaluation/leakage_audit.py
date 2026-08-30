@@ -65,6 +65,46 @@ def entity_disjoint_train_test_split(
     return train_recs, test_recs
 
 
+def temporal_entity_disjoint_split(
+    records: List[Any],
+    train_ratio: float = 0.70,
+    val_ratio: float = 0.15,
+    seed: int = 42,
+) -> Tuple[List[Any], List[Any], List[Any]]:
+    """
+    Combined Chronological + Entity-Disjoint partition.
+    Guarantees:
+      1. Train entities are disjoint from Test entities.
+      2. Records within each entity are chronologically ordered.
+    """
+    rng = np.random.default_rng(seed)
+    entity_map: Dict[str, List[Any]] = {}
+    for r in records:
+        key = getattr(r, "src_ip", None) or getattr(r, "entity_key", None) or "default"
+        entity_map.setdefault(key, []).append(r)
+
+    # Sort each entity's records chronologically
+    for k in entity_map:
+        entity_map[k].sort(key=lambda rec: getattr(rec, "timestamp", 0.0) or 0.0)
+
+    unique_entities = sorted(list(entity_map.keys()))
+    rng.shuffle(unique_entities)
+
+    n_train = max(1, int(len(unique_entities) * train_ratio))
+    n_val = max(1, int(len(unique_entities) * val_ratio))
+
+    train_ents = set(unique_entities[:n_train])
+    val_ents = set(unique_entities[n_train:n_train + n_val])
+    test_ents = set(unique_entities[n_train + n_val:])
+    if not test_ents:
+        test_ents = val_ents
+
+    train = [r for e in train_ents for r in entity_map[e]]
+    val = [r for e in val_ents for r in entity_map[e]]
+    test = [r for e in test_ents for r in entity_map[e]]
+    return train, val, test
+
+
 class LeakageAuditor:
     """
     Audits an experiment pipeline for 4 critical data leakage failure modes.

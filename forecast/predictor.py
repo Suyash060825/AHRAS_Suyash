@@ -336,3 +336,29 @@ def evaluate_forecast_vs_reactive_response(
         "blast_radius_reduction_pct": blast_radius_reduction_pct,
         "operational_verdict": f"Forecast-aware response containment achieved {mean_lt:.1f} events earlier warning, yielding ~{blast_radius_reduction_pct}% lower estimated blast radius.",
     }
+
+
+def compute_quantitative_forecast_boost(f_res: ForecastResult, current_risk: float = 0.0) -> float:
+    """
+    Principled quantitative calculation of P_fore risk momentum contribution.
+    Replaces crude binary constants with a continuous, bounded function of:
+      1. Positive trend velocity: max(0.0, trend)
+      2. Calibrated threshold-crossing probability
+      3. Projected 1-step risk delta (h1 - current_level)
+    Enforces strict invariant: 0.0 <= P_fore <= 0.25.
+    """
+    if f_res.trend_label in ("INSUFFICIENT_DATA", "DE-ESCALATING") or not f_res.forecast_next:
+        return 0.0
+
+    # 1. Trend velocity component (trend in [0, 0.10] contributes up to 0.12)
+    trend_comp = max(0.0, float(f_res.trend)) * 1.2
+
+    # 2. Threshold crossing probability contribution (up to 0.08)
+    prob_comp = float(f_res.probability_of_threshold_crossing) * 0.08
+
+    # 3. Horizon 1 step delta (up to 0.05)
+    step_delta = max(0.0, float(f_res.predicted_risk_h1) - float(f_res.current_level)) * 0.50
+
+    raw_boost = trend_comp + prob_comp + step_delta
+    return round(float(np.clip(raw_boost, 0.0, 0.25)), 4)
+

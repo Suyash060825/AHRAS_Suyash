@@ -42,7 +42,10 @@ from evaluation.leakage_audit import temporal_train_test_split, LeakageAuditor
 from evaluation.response_simulation import CyberAttackSimulator
 from detection.hybrid_engine import get_combiner
 from detection.risk_engine import RiskConfig, AdaptiveRiskEngine, RiskResult, get_risk_engine, replay_decision_trace, compute_rase
-from forecast.predictor import AttackPredictor, forecast_accuracy, threshold_crossing_lead_time, evaluate_forecast_vs_reactive_response
+from forecast.predictor import (
+    AttackPredictor, forecast_accuracy, threshold_crossing_lead_time,
+    evaluate_forecast_vs_reactive_response, compute_quantitative_forecast_boost
+)
 from historical_risk.engine import HistoricalRiskEngine
 from adaptive_learning.weight_learner import AdaptiveWeightLearner, FeedbackSample
 from threat_intel.intel import ThreatIntelManager
@@ -190,7 +193,7 @@ def run_e0_e12_matrix(train_recs: List[DatasetRecord], test_recs: List[DatasetRe
         past_scores = entity_history[r.src_ip]
         if len(past_scores) >= 2:
             f_res = predictor.predict(r.src_ip, past_scores)
-            p_fore = 0.10 if f_res.trend_label == "ESCALATING" else 0.0
+            p_fore = compute_quantitative_forecast_boost(f_res, current_risk=base_s)
         else:
             p_fore = 0.0
         entity_history[r.src_ip].append(base_s)
