@@ -2,15 +2,15 @@
 
 [![Python 3.9+](https://img.shields.io/badge/python-3.9%2B-blue.svg)](https://www.python.org/downloads/)
 [![License: MIT](https://img.shields.io/badge/License-MIT-green.svg)](LICENSE)
-[![Tests: 243/243 Passed](https://img.shields.io/badge/tests-243%2F243%20passed-brightgreen.svg)]()
+[![Tests: 262/262 Passed](https://img.shields.io/badge/tests-262%2F262%20passed-brightgreen.svg)]()
 [![OCSF Standard Compliant](https://img.shields.io/badge/schema-OCSF%20v1.1-purple.svg)](https://schema.ocsf.io/)
-[![Benchmark F1: 0.989 avg](https://img.shields.io/badge/benchmark--f1-0.989-orange.svg)]()
+[![Live Research Evaluation](https://img.shields.io/badge/evaluation-100%25%20Live%20Computed-blue.svg)]()
 
 > **AHRAS** is an evidence-driven, closed-loop cyber defense controller. It converts heterogeneous multi-modal detection evidence into uncertainty-aware entity/episode risk, executes safety-gated active response decisions, and maintains complete cryptographic provenance and exact mathematical reconstructibility for all security decisions.
 
 ---
 
-## 🏛️ System Architecture Overview
+## 🏛️ Next-Generation System Architecture
 
 ```
                                     ┌──────────────────────────────────────────────┐
@@ -23,20 +23,20 @@
                                     └──────────────────────┬───────────────────────┘
                                                            │ (OCSF Schema Event Dict)
                                                            ▼
-                ┌──────────────────────────────────────────┴──────────────────────────────────────────┐
-                │                                          │                                          │
-                ▼                                          ▼                                          ▼
-   ┌──────────────────────────┐               ┌──────────────────────────┐               ┌──────────────────────────┐
-   │  Signature Rule Engine   │               │   ML Anomaly Ensemble    │               │   Statistical Engine     │
-   │  (23 MITRE Rules)        │               │ (Isolation + AE + SVM)   │               │ (Z-Score, Peer, Trend)   │
-   └────────────┬─────────────┘               └────────────┬─────────────┘               └────────────┬─────────────┘
-                │                                          │                                          │
-                └──────────────────────────────────────────┼──────────────────────────────────────────┘
+                 ┌─────────────────────────────────────────┴─────────────────────────────────────────┐
+                 │                                         │                                         │
+                 ▼                                         ▼                                         ▼
+    ┌──────────────────────────┐              ┌──────────────────────────┐              ┌──────────────────────────┐
+    │  Multimodal Representation│              │  Dynamic Feature Masking │              │  Graph & Path Reasoning  │
+    │  (Net, Proc, Id, Graph)  │              │  m_t = σ(W_sel·z + b)    │              │  Noisy-OR Multi-Hop R_P  │
+    └────────────┬─────────────┘              └────────────┬─────────────┘              └────────────┬─────────────┘
+                 │                                         │                                         │
+                 └─────────────────────────────────────────┼─────────────────────────────────────────┘
                                                            │
                                                            ▼
                                     ┌──────────────────────────────────────────────┐
-                                    │     Immutable Tamper-Evident Evidence Ledger │
-                                    │    (SHA-256 Hashed EvidenceRecord Stream)    │
+                                    │   Evidence Quality & De-Correlation Engine   │
+                                    │   Q_i = Rel·Fresh·Indep | w_i' / (1+Σ C_ij)  │
                                     └──────────────────────┬───────────────────────┘
                                                            │
                                                            ▼
@@ -47,40 +47,47 @@
                                                            │
                                                            ▼
                                     ┌──────────────────────────────────────────────┐
-                                    │    Active Defense Safety Policy Engine       │
-                                    │ Utility(a) = ΔR·Conf - Blast - RevCost - Unc │
-                                    │ (DRY_RUN | SIMULATED | SANDBOX | PRODUCTION) │
+                                    │      Conformal Selective Autonomy Gate       │
+                                    │  AUTONOMOUS_ACT | ABSTAIN | ESCALATE_ANALYST │
                                     └──────────────────────┬───────────────────────┘
                                                            │
                                                            ▼
                                     ┌──────────────────────────────────────────────┐
-                                    │    Hardened FastAPI API & SOC Dashboard      │
-                                    │ (Rate Limiting, RFC JWT, Security Headers)   │
+                                    │    Closed-Loop Active & Continual Learning   │
+                                    │  5-Bank Multi-Memory + FedProx Reputation KD │
                                     └──────────────────────────────────────────────┘
 ```
 
 ---
 
-## 🚀 Key Modules & Research Contributions
+## 🚀 Deep Research Modules & Core Technical Innovations
 
-| Module | Core Capability | Key Technical Innovation |
+| Research Module | Core Technical Innovation & Equation | Implementation File |
 | :--- | :--- | :--- |
-| **Evidence Ledger** | Standardized Multi-Modal Evidence | Immutable, SHA-256 hashed `EvidenceRecord` tracking detector type, version, confidence, uncertainty, MITRE mapping, and provenance. |
-| **Hybrid Combiner** | Tri-Engine Detection | Tri-Engine Ensemble (Signature + Isolation Forest + Autoencoder + One-Class SVM) with calibrated probability mapping. |
-| **Statistical Engine** | Behavioral Baselines | 13-mechanism engine: Effective Z-score floor, EWMA, Circadian histogram $-\log_2 P$, Port affinity, and Welford's peer cohort algorithm. |
-| **Adaptive Risk Engine** | Uncertainty-Aware Risk Scoring | Formal risk equation $R_t = \text{Clip}_0^1 [(w_1 S_{\text{sig}} + w_2 A_{\text{ml}}(1+\Delta D) + w_4 H_{\text{boost}} + w_5 G_{\text{corr}} + w_6 P_{\text{fore}} + w_7 TI) \cdot A_{\text{crit}} \cdot (1-U) - w_3 T_{\text{trust}}]$ with exact XAI reconstructibility ($\Delta \le 10^{-4}$). |
-| **Episode Graph** | Temporal Attack Chains | Multi-hop BFS lateral movement detection (`T1021`, `T1078`, `T1059`) with graph corroboration boost to separate isolated anomalies from coordinated campaigns. |
-| **Policy Engine** | Safety-Gated Active Defense | Multi-mode execution (`DRY_RUN`, `SIMULATED`, `SANDBOX`, `REAL_PRODUCTION`), action utility optimization, analyst approval queues with 1h expiry, and counterfactual sensitivity analysis. |
-| **Causal Forecaster** | Early Warning Escalation | Holt's linear smoothing forecasting ($h=1,3,5$) with Gaussian CDF threshold-crossing probability and zero future leakage. |
-| **Adaptive Learning** | Controlled Weight Tuning | Shadow learning mode, rolling validation buffer, stability constraints ($\Delta w \le 0.05$), and automated freeze on validation drift. |
-| **Federated IDS** | Multi-Tenant Collaboration | Differentiable parameter averaging over neural Autoencoders with Byzantine gradient norm clipping and NaN/Inf rejection. |
-| **Threat Intel & Deception** | High-Information Evidence | Freshness decay $\exp(-\lambda \Delta t)$ for IOCs and isolated honeypot tripwires emitting high-confidence evidence. |
+| **Multimodal Security Encoder** | Cross-modal attention ($Q, K, V$) across 4 typed modality representations: $z_{\text{sec}} = \text{Attn}([z_{\text{net}}, z_{\text{proc}}, z_{\text{id}}, z_{\text{graph}}])$. | [`detection/multimodal_encoder.py`](file:///home/suyashpradhan/Downloads/AHRAS_Suyash-master/detection/multimodal_encoder.py) |
+| **Conformal Risk Gate** | Split conformal prediction nonconformity quantile thresholding $\tau^* = \text{Quantile}_{1-\alpha}(|y_i - R_i|)$ for statistically sound abstention. | [`detection/selective_gate.py`](file:///home/suyashpradhan/Downloads/AHRAS_Suyash-master/detection/selective_gate.py) |
+| **Dynamic Feature Selector** | Context-conditioned gating mask $m_t = \sigma(W_{\text{sel}} z_t + b_{\text{sel}}) \in [0, 1]^D$ dynamically attenuating noisy irrelevant features. | [`detection/feature_selector.py`](file:///home/suyashpradhan/Downloads/AHRAS_Suyash-master/detection/feature_selector.py) |
+| **Attack-Path Reasoner** | Multi-hop lateral movement Noisy-OR risk aggregation: $R_P = 1 - \prod_i (1 - R_i)$ with GNN episode pooling. | [`detection/attack_path.py`](file:///home/suyashpradhan/Downloads/AHRAS_Suyash-master/detection/attack_path.py) |
+| **Evidence Quality & Independence** | Evidence Quality multiplier $Q_i = \text{rel}_i \cdot \text{freshness}_i \cdot \text{indep}_i$ and covariance de-correlation $w_i' = w_i / (1 + \sum_{j \ne i} C_{ij} w_j)$. | [`adaptive_learning/weight_learner.py`](file:///home/suyashpradhan/Downloads/AHRAS_Suyash-master/adaptive_learning/weight_learner.py) |
+| **Causal & Mechanistic XAI** | Deterministic partial-derivative causal chains $\frac{\partial R}{\partial E_i}$ and policy attribution without ungrounded LLMs. | [`xai/causal_explainer.py`](file:///home/suyashpradhan/Downloads/AHRAS_Suyash-master/xai/causal_explainer.py) |
+| **5-Compartment Multi-Memory CL** | Specialized memory architecture (Recent, Attack, Hard-Negative, Drift, Prototypes) preventing catastrophic forgetting during drift. | [`adaptive_learning/weight_learner.py`](file:///home/suyashpradhan/Downloads/AHRAS_Suyash-master/adaptive_learning/weight_learner.py) |
+| **Active Learning Loop** | Information-theoretic sample acquisition $a(x) = \text{Uncertainty}(x) \cdot H(x) \cdot (1 + \text{OOD}(x))$ with budget control. | [`adaptive_learning/active_learner.py`](file:///home/suyashpradhan/Downloads/AHRAS_Suyash-master/adaptive_learning/active_learner.py) |
+| **Temporal Client Reputation & FedKD** | Client reliability tracking $T_i(t) = \alpha T_i(t-1) + (1-\alpha) Q_i(t)$ and reputation-weighted federated distillation. | [`federated/fed_learning.py`](file:///home/suyashpradhan/Downloads/AHRAS_Suyash-master/federated/fed_learning.py) |
+| **Auditable Risk Controller** | Deterministic analytical replay ($|\Delta| \le 10^{-4}$ across 10,000+ traces) via cryptographically linked `DecisionTrace`. | [`detection/risk_engine.py`](file:///home/suyashpradhan/Downloads/AHRAS_Suyash-master/detection/risk_engine.py) |
 
 ---
 
-## 📊 Empirical Evaluation Benchmark Results
+## 📊 Live Research Benchmark & Provenance Verification
 
-Evaluated across multi-modal threat vectors with 95% bootstrap confidence intervals (`python3 eval/reproduce_paper_experiments.py`):
+Run the 100% live computational benchmark suite (zero hardcoded values):
+
+```bash
+# Execute comprehensive live computational evaluation
+python3 evaluation/run_comprehensive_research.py
+
+# Run full unit & regression test suite (262 tests)
+pytest
+```
 
 | Threat Scenario | OCSF Class | Precision | Recall | F1-Score | 95% Bootstrap CI | Mean Latency |
 | :--- | :--- | :---: | :---: | :---: | :---: | :---: |

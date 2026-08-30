@@ -15,9 +15,10 @@ import math
 import logging
 import threading
 from dataclasses import dataclass, field
-from typing import Dict, List, Optional, Any, Set, Tuple
+from typing import Dict, List, Optional, Any, Set, Tuple, TYPE_CHECKING
 
-from detection.risk_engine import DecisionTrace, replay_decision_trace
+if TYPE_CHECKING:
+    from detection.risk_engine import DecisionTrace
 
 log = logging.getLogger(__name__)
 
@@ -78,6 +79,7 @@ class XAIFidelityLedger:
         """
         Executes strict analytical replay against a recorded DecisionTrace.
         """
+        from detection.risk_engine import replay_decision_trace
         replayed = replay_decision_trace(trace)
         engine_score = trace.final_clamped_score
         

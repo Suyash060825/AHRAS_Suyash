@@ -190,6 +190,7 @@ class EntityGraphEngine:
         self._node_types: Dict[str, str] = {}
         self._max_hops = max_hops
         self._episode_window = episode_window_sec
+        self._gnn = SecurityGNN(in_dim=8, hidden_dim=16, out_dim=8, seed=42)
         self._lock = threading.RLock()
 
     def add_event_edge(
@@ -451,11 +452,55 @@ class EntityGraphEngine:
             deg[deg == 0] = 1.0
             A_norm = A_tilde / deg[:, np.newaxis]
 
-            # Execute GNN forward pass
-            gnn = SecurityGNN(in_dim=8, hidden_dim=16, out_dim=8, seed=42)
-            _, scores = gnn.forward(X, A_norm)
+            # Execute GNN forward pass using trained persistent model
+            _, scores = self._gnn.forward(X, A_norm)
             target_score = float(scores[0]) if len(scores) > 0 else 0.0
             return round(min(1.0, max(0.0, target_score)), 4)
+
+    def train_gnn(self, node_ids: List[str], labels: List[int], epochs: int = 25, lr: float = 0.02) -> float:
+        """
+        Extracts subgraph for given node_ids and trains internal SecurityGNN on ground-truth node labels.
+        """
+        with self._lock:
+            if not node_ids or not labels:
+                return 0.0
+                
+            unique_nodes = list(dict.fromkeys(node_ids))
+            node_to_idx = {nid: idx for idx, nid in enumerate(unique_nodes)}
+            n_nodes = len(unique_nodes)
+            
+            X = np.zeros((n_nodes, 8), dtype=np.float64)
+            for idx, nid in enumerate(unique_nodes):
+                out_deg = len(self._adj.get(nid, {}))
+                in_deg = sum(1 for s in self._adj if nid in self._adj[s])
+                freq = self._node_freq.get(nid, 1)
+                ntype = self._node_types.get(nid, "host")
+                
+                X[idx, 0] = min(1.0, out_deg / 10.0)
+                X[idx, 1] = min(1.0, in_deg / 10.0)
+                X[idx, 2] = min(1.0, math.log1p(freq) / 5.0)
+                X[idx, 3] = 1.0 if ntype in ("host", "workstation", "server") else 0.0
+                X[idx, 4] = 1.0 if ntype in ("ip", "external_ip") else 0.0
+                X[idx, 5] = 1.0 if ntype in ("ioc", "malicious_ip", "c2") else 0.0
+                X[idx, 6] = 1.0 if (out_deg + in_deg) >= 3 else 0.0
+                X[idx, 7] = min(1.0, (out_deg * in_deg) / 5.0)
+
+            A = np.zeros((n_nodes, n_nodes), dtype=np.float64)
+            for src in unique_nodes:
+                s_idx = node_to_idx[src]
+                for dst, edge in self._adj.get(src, {}).items():
+                    if dst in node_to_idx:
+                        d_idx = node_to_idx[dst]
+                        A[s_idx, d_idx] = edge.confidence
+
+            A_tilde = A + np.eye(n_nodes)
+            deg = np.sum(A_tilde, axis=1)
+            deg[deg == 0] = 1.0
+            A_norm = A_tilde / deg[:, np.newaxis]
+            
+            # Map node labels
+            y_arr = np.array([labels[node_ids.index(nid)] if nid in node_ids else 0 for nid in unique_nodes], dtype=np.float64)
+            return self._gnn.train(X, A_norm, y_arr, epochs=epochs, lr=lr)
 
     def clear(self) -> None:
         with self._lock:

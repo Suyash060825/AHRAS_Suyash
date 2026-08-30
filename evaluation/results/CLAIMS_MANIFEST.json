@@ -15,7 +15,7 @@
     "claim": "Byzantine robust personalized federated learning",
     "metric": "retained_f1_30pct_poison",
     "status": "SUPPORTED",
-    "value": 0.9833
+    "value": 0.9831
   },
   "CLM-04": {
     "claim": "Explicit OOD unknown attack discrimination",
@@ -33,7 +33,7 @@
     "claim": "Safety-constrained active response RASE optimization",
     "metric": "rase_safety_score",
     "status": "SUPPORTED",
-    "value": 0.3595
+    "value": 0.3639
   },
   "CLM-07": {
     "claim": "Real-world benchmark dataset execution",

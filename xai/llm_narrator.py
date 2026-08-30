@@ -14,9 +14,10 @@ Primary Capabilities:
 import time
 import logging
 from dataclasses import dataclass, field
-from typing import Any, Dict, List, Optional
+from typing import Any, Dict, List, Optional, TYPE_CHECKING
 
-from detection.risk_engine import RiskResult
+if TYPE_CHECKING:
+    from detection.risk_engine import RiskResult
 
 log = logging.getLogger(__name__)
 

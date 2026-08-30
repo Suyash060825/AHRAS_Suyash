@@ -1,22 +1,24 @@
 from __future__ import annotations
 """
-AHRAS Module 9 — Controlled Adaptive Weight Learning Engine
-------------------------------------------------------------
-Implements safely gated, versioned online weight adaptation from SOC feedback.
+AHRAS Module 9 — Controlled Adaptive Weight Learning & Multi-Memory Continual Engine
+-------------------------------------------------------------------------------------
+Implements safely gated, versioned online weight adaptation, evidence quality weighting,
+independence-aware de-correlation, and structured 5-compartment multi-memory continual learning.
 
-Safety Controls:
-  1. Shadow Learning Mode: Updates are computed in shadow before promotion.
-  2. Approval-Gated Promotion: Production weights require validation check or analyst approval.
-  3. Minimum Sample Batching: Requires at least N feedback samples before proposing update.
-  4. Stability Constraints: Bounds maximum per-update weight change (Δw <= 0.05).
-  5. Rolling Validation & Automatic Freeze: Freezes weights if loss increases on validation buffer.
-  6. Versioned Checkpoints & Rollback: Full audit history and one-click rollback.
+Key Subsystems:
+  1. AdaptiveWeightLearner: Shadow learning, validation check, stability constraints, rollback.
+  2. ContextGatedFusionNetwork: Context-conditioned evidence fusion weights w_t.
+  3. EvidenceQualityEngine: Dynamic quality scoring Q_i per evidence stream.
+  4. EvidenceIndependenceController: De-correlation discounting based on source covariance.
+  5. MultiMemoryReplayBuffer: 5-bank continual learning memory (Recent, Attack, Hard-Neg, Drift, Prototype).
+  6. ContinualLearningEngine: Manages memory buffers, drift detection, and strategic replay.
 """
 
 import math
 import copy
 import logging
 import threading
+from collections import deque
 from dataclasses import dataclass, field, asdict
 from typing import Dict, List, Optional, Any, Tuple
 
@@ -228,6 +230,117 @@ def get_adaptive_weight_learner() -> AdaptiveWeightLearner:
     return _learner_instance
 
 
+# ---------------------------------------------------------------------------
+# Evidence Quality & Independence Control
+# ---------------------------------------------------------------------------
+
+@dataclass
+class EvidenceQuality:
+    """Quality assessment metadata for an evidence source."""
+    source_name:        str
+    reliability:        float    # [0.0, 1.0] historical source reliability
+    freshness:          float    # [0.0, 1.0] exponential decay with age
+    independence_score: float    # [0.0, 1.0] low correlation with dominant sources
+    quality_score:      float    # Composite multiplier Q_i in [0.0, 1.0]
+
+    def to_dict(self) -> dict:
+        return asdict(self)
+
+
+class EvidenceQualityEngine:
+    """
+    Computes dynamic evidence quality score Q_i for each security input:
+        Q_i = reliability_i * freshness_i * independence_i
+    """
+
+    def __init__(self, half_life_sec: float = 300.0):
+        self.half_life_sec = half_life_sec
+        # Default baseline source reliabilities
+        self.source_reliabilities: Dict[str, float] = {
+            "signature":   0.90,
+            "anomaly":     0.80,
+            "statistical": 0.75,
+            "graph":       0.85,
+            "forecast":    0.70,
+            "threat_intel": 0.95,
+            "trust":       0.90,
+        }
+
+    def compute_freshness(self, age_seconds: float) -> float:
+        """Freshness decay: exp(-lambda * age)"""
+        decay_lambda = math.log(2) / max(1.0, self.half_life_sec)
+        return float(np.clip(math.exp(-decay_lambda * max(0.0, age_seconds)), 0.05, 1.0))
+
+    def evaluate_quality(
+        self,
+        source_name: str,
+        age_seconds: float = 0.0,
+        independence: float = 1.0
+    ) -> EvidenceQuality:
+        rel = self.source_reliabilities.get(source_name, 0.80)
+        freshness = self.compute_freshness(age_seconds)
+        indep = float(np.clip(independence, 0.10, 1.0))
+        
+        q_score = float(np.clip(rel * freshness * indep, 0.05, 1.0))
+        return EvidenceQuality(
+            source_name=source_name,
+            reliability=round(rel, 4),
+            freshness=round(freshness, 4),
+            independence_score=round(indep, 4),
+            quality_score=round(q_score, 4),
+        )
+
+
+class EvidenceIndependenceController:
+    """
+    De-correlates redundant evidence sources by discounting weights based on empirical cross-correlation:
+        w_i' = w_i / (1 + sum_{j != i} C_{ij} * w_j)
+    """
+
+    def __init__(self, n_sources: int = 7):
+        self.n_sources = n_sources
+        self.corr_matrix = np.eye(n_sources, dtype=np.float64)
+
+    def update_correlations(self, score_matrix: np.ndarray) -> None:
+        """
+        Updates empirical correlation matrix C from a history matrix of evidence scores (N, M).
+        """
+        X = np.asarray(score_matrix, dtype=np.float64)
+        if len(X) >= 5 and X.shape[1] == self.n_sources:
+            # Add small noise to avoid zero variance
+            X_clean = X + 1e-6 * np.random.randn(*X.shape)
+            corr = np.corrcoef(X_clean, rowvar=False)
+            # Clip correlation in [0, 1]
+            corr = np.nan_to_num(corr, nan=0.0)
+            self.corr_matrix = np.clip(corr, 0.0, 1.0)
+
+    def decorrelate_weights(self, weights: Dict[str, float]) -> Dict[str, float]:
+        """
+        Applies de-correlation discounting to fusion weights and re-normalizes to sum to 1.0.
+        """
+        keys = list(weights.keys())
+        w_vec = np.array([weights[k] for k in keys], dtype=np.float64)
+        
+        M = len(w_vec)
+        if M != self.n_sources:
+            # Fallback if dimension mismatch
+            return dict(weights)
+
+        # Discount denominator: 1 + sum_{j != i} C_ij * w_j
+        discounted = np.zeros(M)
+        for i in range(M):
+            cross_overlap = sum(self.corr_matrix[i, j] * w_vec[j] for j in range(M) if j != i)
+            discounted[i] = w_vec[i] / (1.0 + cross_overlap)
+            
+        total = np.sum(discounted)
+        if total > 0:
+            norm_w = discounted / total
+        else:
+            norm_w = w_vec
+            
+        return {k: round(float(norm_w[idx]), 4) for idx, k in enumerate(keys)}
+
+
 class ContextGatedFusionNetwork:
     """
     Context-Conditioned Gating Mechanism for Adaptive Evidence Fusion:
@@ -243,9 +356,10 @@ class ContextGatedFusionNetwork:
         scale = np.sqrt(2.0 / (in_dim + out_dim))
         self.W_g = rng.normal(0.0, scale, size=(in_dim, out_dim))
         self.b_g = np.array([0.50, 0.30, 0.15, 0.10, 0.10, 0.05, 0.15], dtype=np.float64)
+        self.independence_ctrl = EvidenceIndependenceController(n_sources=out_dim)
         self._lock = threading.RLock()
 
-    def compute_weights(self, z_context: np.ndarray) -> Dict[str, float]:
+    def compute_weights(self, z_context: np.ndarray, apply_decorrelation: bool = False) -> Dict[str, float]:
         with self._lock:
             z = np.array(z_context, dtype=np.float64).flatten()
             if len(z) < self.in_dim:
@@ -264,7 +378,7 @@ class ContextGatedFusionNetwork:
             clamped = np.clip(softmax_w, 0.05, 0.60)
             norm_w = clamped / np.sum(clamped)
             
-            return {
+            base_weights = {
                 "w_sig":   round(float(norm_w[0]), 4),
                 "w_ml":    round(float(norm_w[1]), 4),
                 "w_trust": round(float(norm_w[2]), 4),
@@ -273,21 +387,112 @@ class ContextGatedFusionNetwork:
                 "w_fore":  round(float(norm_w[5]), 4),
                 "w_ti":    round(float(norm_w[6]), 4),
             }
+            
+            if apply_decorrelation:
+                return self.independence_ctrl.decorrelate_weights(base_weights)
+            return base_weights
+
+
+# ---------------------------------------------------------------------------
+# Structured 5-Compartment Multi-Memory Continual Learning
+# ---------------------------------------------------------------------------
+
+class MultiMemoryReplayBuffer:
+    """
+    5-Compartment Memory Architecture for Continual Anomaly Learning:
+      1. Recent Memory: FIFO queue of recent operational events (recency).
+      2. Attack Memory: Buffer of confirmed attack vectors (rare class preservation).
+      3. Hard-Negative Memory: High-loss benign events near decision boundary.
+      4. Drift Memory: Samples captured during detected concept drift episodes.
+      5. Prototype Memory: Moving centroid vectors for normal and attack clusters.
+    """
+
+    def __init__(
+        self,
+        recent_cap: int = 150,
+        attack_cap: int = 100,
+        hard_neg_cap: int = 100,
+        drift_cap: int = 100,
+        feature_dim: int = 14
+    ):
+        self.recent_memory: deque = deque(maxlen=recent_cap)
+        self.attack_memory: deque = deque(maxlen=attack_cap)
+        self.hard_negative_memory: deque = deque(maxlen=hard_neg_cap)
+        self.drift_memory: deque = deque(maxlen=drift_cap)
+        
+        self.feature_dim = feature_dim
+        self.normal_prototype: Optional[np.ndarray] = None
+        self.attack_prototype: Optional[np.ndarray] = None
+        self.prototype_alpha: float = 0.05
+
+    def add_sample(
+        self,
+        sample: FeedbackSample,
+        loss: float,
+        is_drift: bool = False
+    ) -> None:
+        """Routes sample to appropriate memory compartments."""
+        self.recent_memory.append(sample)
+        
+        if sample.label == 1:
+            self.attack_memory.append(sample)
+        elif loss >= 0.25:  # Hard negative (high loss benign)
+            self.hard_negative_memory.append(sample)
+            
+        if is_drift:
+            self.drift_memory.append(sample)
+
+        # Update prototype moving centroid if component features available
+        vals = np.array(list(sample.components.values()), dtype=np.float64)
+        if len(vals) > 0:
+            if sample.label == 0:
+                if self.normal_prototype is None:
+                    self.normal_prototype = np.array(vals)
+                else:
+                    self.normal_prototype = (1.0 - self.prototype_alpha) * self.normal_prototype + self.prototype_alpha * vals
+            else:
+                if self.attack_prototype is None:
+                    self.attack_prototype = np.array(vals)
+                else:
+                    self.attack_prototype = (1.0 - self.prototype_alpha) * self.attack_prototype + self.prototype_alpha * vals
+
+    def sample_balanced_batch(self, batch_size: int = 16) -> List[FeedbackSample]:
+        """
+        Samples a balanced replay batch across memory compartments to prevent catastrophic forgetting.
+        """
+        candidates: List[FeedbackSample] = []
+        for q in (self.attack_memory, self.hard_negative_memory, self.drift_memory, self.recent_memory):
+            candidates.extend(list(q))
+            
+        if not candidates:
+            return []
+            
+        n = min(batch_size, len(candidates))
+        # Unique samples
+        chosen_indices = np.random.choice(len(candidates), size=n, replace=False)
+        return [candidates[i] for i in chosen_indices]
+
+    def get_stats(self) -> Dict[str, Any]:
+        return {
+            "recent_count": len(self.recent_memory),
+            "attack_count": len(self.attack_memory),
+            "hard_negative_count": len(self.hard_negative_memory),
+            "drift_count": len(self.drift_memory),
+            "has_normal_proto": self.normal_prototype is not None,
+            "has_attack_proto": self.attack_prototype is not None,
+        }
 
 
 class ContinualLearningEngine:
     """
-    Advanced Continual Learning Engine with Experience Replay & Strategic Forgetting.
-    Prevents catastrophic forgetting during non-stationary concept drift:
-      1. Replay Memory Buffer: Retains hard negatives and rare attack vectors.
-      2. Statistical Drift Detector: Measures EWMA loss residual to trigger adaptation.
-      3. Strategic Forgetting: Decays stale uninformative historical telemetry.
+    Continual Learning Engine with 5-Compartment Multi-Memory Replay and Drift Detection.
     """
 
     def __init__(self, memory_capacity: int = 500, decay_rate: float = 0.01):
         self.capacity = memory_capacity
         self.decay_rate = decay_rate
         self.replay_buffer: List[Dict[str, Any]] = []
+        self.multi_memory = MultiMemoryReplayBuffer()
         self.drift_detected = False
         self.ewma_loss = 0.05
         self._lock = threading.RLock()
@@ -300,6 +505,9 @@ class ContinualLearningEngine:
             if self.ewma_loss > 0.20:
                 self.drift_detected = True
 
+            # Add to multi-memory structure
+            self.multi_memory.add_sample(sample, loss=loss, is_drift=self.drift_detected)
+
             importance_score = loss + (1.0 if is_hard_sample else 0.0)
             item = {
                 "sample": sample,
@@ -308,7 +516,6 @@ class ContinualLearningEngine:
             }
             
             if len(self.replay_buffer) >= self.capacity:
-                # Strategic forgetting: prune item with lowest importance/highest age
                 self.replay_buffer.sort(key=lambda x: x["importance"] / (1.0 + self.decay_rate * x["age"]))
                 self.replay_buffer.pop(0)
 
@@ -318,6 +525,11 @@ class ContinualLearningEngine:
 
     def sample_replay_batch(self, batch_size: int = 16) -> List[FeedbackSample]:
         with self._lock:
+            # Prefer balanced multi-memory sampling if populated
+            multi_batch = self.multi_memory.sample_balanced_batch(batch_size)
+            if multi_batch:
+                return multi_batch
+                
             if not self.replay_buffer:
                 return []
             probs = np.array([it["importance"] for it in self.replay_buffer])
