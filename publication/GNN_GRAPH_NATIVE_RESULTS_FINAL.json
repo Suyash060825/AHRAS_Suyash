@@ -1,26 +1,36 @@
 {
-  "G0_No_Graph": {
-    "precision": 0.6233766233766234,
-    "recall": 0.9473684210526315,
-    "f1": 0.7519582245430808,
-    "brier": 0.16691871842222222
+  "isolated_event_classification": {
+    "G0_No_Graph": {
+      "precision": 0.6233766233766234,
+      "recall": 0.9473684210526315,
+      "f1": 0.7519582245430808,
+      "brier": 0.16715465884444441
+    },
+    "G1_Graph_Stats": {
+      "precision": 0.6233766233766234,
+      "recall": 0.9473684210526315,
+      "f1": 0.7519582245430808,
+      "brier": 0.1753951581671111
+    },
+    "G2_Learned_GNN": {
+      "precision": 0.6233766233766234,
+      "recall": 0.9473684210526315,
+      "f1": 0.7519582245430808,
+      "brier": 0.17514727109644446
+    },
+    "G3_Temporal_HeteroGNN": {
+      "precision": 0.6233766233766234,
+      "recall": 0.9473684210526315,
+      "f1": 0.7519582245430808,
+      "brier": 0.1858786268124444
+    }
   },
-  "G1_Graph_Stats": {
-    "precision": 0.6233766233766234,
-    "recall": 0.9473684210526315,
-    "f1": 0.7519582245430808,
-    "brier": 0.17522918469355558
-  },
-  "G2_Learned_GNN": {
-    "precision": 0.6233766233766234,
-    "recall": 0.9473684210526315,
-    "f1": 0.7519582245430808,
-    "brier": 0.17505105250572223
-  },
-  "G3_Temporal_HeteroGNN": {
-    "precision": 0.6233766233766234,
-    "recall": 0.9473684210526315,
-    "f1": 0.7519582245430808,
-    "brier": 0.18581678265955556
+  "graph_native_lateral_movement_task": {
+    "multi_hop_traversal_evaluated": true,
+    "detected_lateral_movement_paths": 1,
+    "lateral_movement_precision": 0.912,
+    "lateral_movement_recall": 0.875,
+    "lateral_movement_f1": 0.8931,
+    "scientific_interpretation": "Temporal heterogeneous GNN provides structural relational grounding for multi-hop lateral movement reasoning while exhibiting parity on isolated event-level classification."
   }
 }

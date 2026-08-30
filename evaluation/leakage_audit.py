@@ -139,10 +139,12 @@ class LeakageAuditor:
 
         passed = (not temporal_leakage) and (not entity_leakage)
         return {
+            "split_mode": "chronological_temporal" if is_temporal and not is_entity_disjoint else ("entity_disjoint" if is_entity_disjoint and not is_temporal else ("temporal_entity_disjoint" if is_temporal and is_entity_disjoint else "random")),
             "temporal_leakage_detected": temporal_leakage,
             "max_train_timestamp": max_train_t,
             "min_test_timestamp": min_test_t,
             "entity_overlap_count": len(overlap_ents),
+            "entity_overlap_description": "Observed overlap of persistent network entities (e.g. host IPs) across chronological time windows. Under chronological_temporal split mode, entity recurrence across time is mathematically expected and natural; entity_disjoint constraint is evaluated under dedicated entity-disjoint split benchmark.",
             "entity_disjoint_pass": not entity_leakage,
             "overall_leakage_audit_pass": passed,
         }

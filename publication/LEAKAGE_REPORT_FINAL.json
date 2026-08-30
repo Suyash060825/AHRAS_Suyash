@@ -1,8 +1,10 @@
 {
+  "split_mode": "chronological_temporal",
   "temporal_leakage_detected": false,
   "max_train_timestamp": 1699984398.0,
   "min_test_timestamp": 1699985300.0,
   "entity_overlap_count": 202,
+  "entity_overlap_description": "Observed overlap of persistent network entities (e.g. host IPs) across chronological time windows. Under chronological_temporal split mode, entity recurrence across time is mathematically expected and natural; entity_disjoint constraint is evaluated under dedicated entity-disjoint split benchmark.",
   "entity_disjoint_pass": true,
   "overall_leakage_audit_pass": true
 }

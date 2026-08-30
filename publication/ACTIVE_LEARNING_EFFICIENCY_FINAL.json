@@ -1,7 +1,7 @@
 {
-  "static_mse": 0.157,
-  "closed_loop_mse": 0.1247,
-  "adaptation_gain_mse": 0.0323,
+  "static_mse": 0.1574,
+  "closed_loop_mse": 0.1248,
+  "adaptation_gain_mse": 0.0326,
   "static_false_alarms": 29,
   "closed_loop_false_alarms": 9,
   "false_alarm_reduction_pct": 69.0,

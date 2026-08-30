@@ -1,1 +1,27 @@
-{}
+{
+  "Without_Recent_Telemetry": {
+    "retained_adaptation_gain_mse": 0.0267,
+    "recovery_epochs": 5,
+    "sample_diversity_entropy": 1.82
+  },
+  "Without_Confirmed_Attacks": {
+    "retained_adaptation_gain_mse": 0.0191,
+    "recovery_epochs": 8,
+    "sample_diversity_entropy": 1.82
+  },
+  "Without_Hard_Negatives": {
+    "retained_adaptation_gain_mse": 0.0191,
+    "recovery_epochs": 8,
+    "sample_diversity_entropy": 1.82
+  },
+  "Without_Drift_Samples": {
+    "retained_adaptation_gain_mse": 0.0243,
+    "recovery_epochs": 5,
+    "sample_diversity_entropy": 1.82
+  },
+  "Without_Class_Prototypes": {
+    "retained_adaptation_gain_mse": 0.0267,
+    "recovery_epochs": 5,
+    "sample_diversity_entropy": 1.35
+  }
+}

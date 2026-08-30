@@ -1,1 +1,26 @@
-{}
+{
+  "Mode_A_Naive_Additive": {
+    "f1": 0.725925925925926,
+    "brier_score": 0.17321092182222225,
+    "risk_inflation_rate": 0.3557,
+    "mean_benign_risk": 0.4077
+  },
+  "Mode_B_Correlation_Aware": {
+    "f1": 0.725925925925926,
+    "brier_score": 0.17317545126666667,
+    "risk_inflation_rate": 0.3557,
+    "mean_benign_risk": 0.4074
+  },
+  "Mode_C_Adaptive_Fusion": {
+    "f1": 0.725925925925926,
+    "brier_score": 0.17313949853333332,
+    "risk_inflation_rate": 0.3557,
+    "mean_benign_risk": 0.407
+  },
+  "Mode_D_Full_Quality_Independence_Adaptive": {
+    "f1": 0.725925925925926,
+    "brier_score": 0.17311037002222224,
+    "risk_inflation_rate": 0.3557,
+    "mean_benign_risk": 0.4067
+  }
+}

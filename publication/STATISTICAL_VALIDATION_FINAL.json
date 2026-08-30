@@ -3,168 +3,408 @@
     "baseline_f1": 0.7277227722772277,
     "ablated_f1": 0.6931407942238267,
     "delta_f1": -0.0346,
-    "p_value": 0.75,
-    "statistically_significant": false
+    "n_pairs": 450,
+    "observed_statistic": 0.004099,
+    "raw_p": 0.7491,
+    "effect_size": 0.0149,
+    "bootstrap_ci": [
+      -0.020002,
+      0.029439
+    ],
+    "permutations": 10000,
+    "statistically_significant": false,
+    "adjusted_p": 0.7491,
+    "significant_after_holm_bonferroni": false
   },
   "A2_Remove_ML_Ensemble": {
     "baseline_f1": 0.7277227722772277,
     "ablated_f1": 0.0,
     "delta_f1": -0.7277,
-    "p_value": 0.043,
-    "statistically_significant": true
+    "n_pairs": 450,
+    "observed_statistic": -0.042672,
+    "raw_p": 0.0434,
+    "effect_size": -0.0947,
+    "bootstrap_ci": [
+      -0.081147,
+      -0.003872
+    ],
+    "permutations": 10000,
+    "statistically_significant": true,
+    "adjusted_p": 0.1736,
+    "significant_after_holm_bonferroni": false
   },
   "A3_Remove_Statistical": {
     "baseline_f1": 0.7277227722772277,
     "ablated_f1": 0.7526315789473683,
     "delta_f1": 0.0249,
-    "p_value": 0.233,
-    "statistically_significant": false
+    "n_pairs": 450,
+    "observed_statistic": -0.014746,
+    "raw_p": 0.2521,
+    "effect_size": -0.0534,
+    "bootstrap_ci": [
+      -0.038018,
+      0.009853
+    ],
+    "permutations": 10000,
+    "statistically_significant": false,
+    "adjusted_p": 0.5042,
+    "significant_after_holm_bonferroni": false
   },
   "A4_Remove_Self_Supervised_Rep": {
     "baseline_f1": 0.7277227722772277,
     "ablated_f1": 0.0,
     "delta_f1": -0.7277,
-    "p_value": 0.067,
-    "statistically_significant": false
+    "n_pairs": 450,
+    "observed_statistic": -0.039551,
+    "raw_p": 0.066,
+    "effect_size": -0.0867,
+    "bootstrap_ci": [
+      -0.07897,
+      -0.000439
+    ],
+    "permutations": 10000,
+    "statistically_significant": false,
+    "adjusted_p": 0.198,
+    "significant_after_holm_bonferroni": false
   },
   "A5_Remove_Multimodal_Fusion": {
     "baseline_f1": 0.7277227722772277,
     "ablated_f1": 0.7313432835820894,
     "delta_f1": 0.0036,
-    "p_value": 0.001,
-    "statistically_significant": true
+    "n_pairs": 450,
+    "observed_statistic": -0.015009,
+    "raw_p": 0.0001,
+    "effect_size": -0.3306,
+    "bootstrap_ci": [
+      -0.018801,
+      -0.010775
+    ],
+    "permutations": 10000,
+    "statistically_significant": true,
+    "adjusted_p": 0.0024,
+    "significant_after_holm_bonferroni": true
   },
   "A6_Remove_Temporal_Attention": {
     "baseline_f1": 0.7277227722772277,
     "ablated_f1": 0.7295285359801489,
     "delta_f1": 0.0018,
-    "p_value": 0.001,
-    "statistically_significant": true
+    "n_pairs": 450,
+    "observed_statistic": -0.014288,
+    "raw_p": 0.0001,
+    "effect_size": -0.308,
+    "bootstrap_ci": [
+      -0.018133,
+      -0.009941
+    ],
+    "permutations": 10000,
+    "statistically_significant": true,
+    "adjusted_p": 0.0023,
+    "significant_after_holm_bonferroni": true
   },
   "A7_Remove_Graph": {
     "baseline_f1": 0.7277227722772277,
     "ablated_f1": 0.7295285359801489,
     "delta_f1": 0.0018,
-    "p_value": 0.001,
-    "statistically_significant": true
+    "n_pairs": 450,
+    "observed_statistic": -0.014394,
+    "raw_p": 0.0001,
+    "effect_size": -0.301,
+    "bootstrap_ci": [
+      -0.018435,
+      -0.009835
+    ],
+    "permutations": 10000,
+    "statistically_significant": true,
+    "adjusted_p": 0.0022,
+    "significant_after_holm_bonferroni": true
   },
   "A8_Remove_Episode_Reasoning": {
     "baseline_f1": 0.7277227722772277,
-    "ablated_f1": 0.7295285359801489,
-    "delta_f1": 0.0018,
-    "p_value": 0.001,
-    "statistically_significant": true
+    "ablated_f1": 0.7277227722772277,
+    "delta_f1": 0.0,
+    "n_pairs": 450,
+    "observed_statistic": -0.014677,
+    "raw_p": 0.0001,
+    "effect_size": -0.2986,
+    "bootstrap_ci": [
+      -0.018875,
+      -0.010008
+    ],
+    "permutations": 10000,
+    "statistically_significant": true,
+    "adjusted_p": 0.0021,
+    "significant_after_holm_bonferroni": true
   },
   "A9_Remove_OOD_ZeroDay": {
     "baseline_f1": 0.7277227722772277,
-    "ablated_f1": 0.7277227722772277,
-    "delta_f1": 0.0,
-    "p_value": 0.001,
-    "statistically_significant": true
+    "ablated_f1": 0.725925925925926,
+    "delta_f1": -0.0018,
+    "n_pairs": 450,
+    "observed_statistic": -0.015001,
+    "raw_p": 0.0001,
+    "effect_size": -0.2981,
+    "bootstrap_ci": [
+      -0.019391,
+      -0.010196
+    ],
+    "permutations": 10000,
+    "statistically_significant": true,
+    "adjusted_p": 0.002,
+    "significant_after_holm_bonferroni": true
   },
   "A10_Remove_Evidence_Quality": {
     "baseline_f1": 0.7277227722772277,
-    "ablated_f1": 0.7277227722772277,
-    "delta_f1": 0.0,
-    "p_value": 0.001,
-    "statistically_significant": true
+    "ablated_f1": 0.725925925925926,
+    "delta_f1": -0.0018,
+    "n_pairs": 450,
+    "observed_statistic": -0.015217,
+    "raw_p": 0.0001,
+    "effect_size": -0.2948,
+    "bootstrap_ci": [
+      -0.019703,
+      -0.010261
+    ],
+    "permutations": 10000,
+    "statistically_significant": true,
+    "adjusted_p": 0.0019,
+    "significant_after_holm_bonferroni": true
   },
   "A11_Remove_Independence_Correction": {
     "baseline_f1": 0.7277227722772277,
-    "ablated_f1": 0.7277227722772277,
-    "delta_f1": 0.0,
-    "p_value": 0.001,
-    "statistically_significant": true
+    "ablated_f1": 0.725925925925926,
+    "delta_f1": -0.0018,
+    "n_pairs": 450,
+    "observed_statistic": -0.015625,
+    "raw_p": 0.0001,
+    "effect_size": -0.2976,
+    "bootstrap_ci": [
+      -0.020221,
+      -0.010615
+    ],
+    "permutations": 10000,
+    "statistically_significant": true,
+    "adjusted_p": 0.0018,
+    "significant_after_holm_bonferroni": true
   },
   "A12_Remove_Adaptive_Fusion": {
     "baseline_f1": 0.7277227722772277,
-    "ablated_f1": 0.7277227722772277,
-    "delta_f1": 0.0,
-    "p_value": 0.001,
-    "statistically_significant": true
+    "ablated_f1": 0.725925925925926,
+    "delta_f1": -0.0018,
+    "n_pairs": 450,
+    "observed_statistic": -0.015985,
+    "raw_p": 0.0001,
+    "effect_size": -0.3,
+    "bootstrap_ci": [
+      -0.020635,
+      -0.01095
+    ],
+    "permutations": 10000,
+    "statistically_significant": true,
+    "adjusted_p": 0.0017,
+    "significant_after_holm_bonferroni": true
   },
   "A13_Remove_Trust": {
     "baseline_f1": 0.7277227722772277,
-    "ablated_f1": 0.7201946472019465,
-    "delta_f1": -0.0075,
-    "p_value": 0.001,
-    "statistically_significant": true
+    "ablated_f1": 0.7184466019417477,
+    "delta_f1": -0.0093,
+    "n_pairs": 450,
+    "observed_statistic": 0.018933,
+    "raw_p": 0.0001,
+    "effect_size": 0.3437,
+    "bootstrap_ci": [
+      0.013996,
+      0.023813
+    ],
+    "permutations": 10000,
+    "statistically_significant": true,
+    "adjusted_p": 0.0016,
+    "significant_after_holm_bonferroni": true
   },
   "A14_Remove_Historical": {
     "baseline_f1": 0.7277227722772277,
-    "ablated_f1": 0.7277227722772277,
-    "delta_f1": 0.0,
-    "p_value": 0.001,
-    "statistically_significant": true
+    "ablated_f1": 0.725925925925926,
+    "delta_f1": -0.0018,
+    "n_pairs": 450,
+    "observed_statistic": -0.016334,
+    "raw_p": 0.0001,
+    "effect_size": -0.3008,
+    "bootstrap_ci": [
+      -0.021038,
+      -0.01121
+    ],
+    "permutations": 10000,
+    "statistically_significant": true,
+    "adjusted_p": 0.0015,
+    "significant_after_holm_bonferroni": true
   },
   "A15_Remove_Threat_Intel": {
     "baseline_f1": 0.7277227722772277,
-    "ablated_f1": 0.7277227722772277,
-    "delta_f1": 0.0,
-    "p_value": 0.001,
-    "statistically_significant": true
+    "ablated_f1": 0.725925925925926,
+    "delta_f1": -0.0018,
+    "n_pairs": 450,
+    "observed_statistic": -0.016656,
+    "raw_p": 0.0001,
+    "effect_size": -0.3033,
+    "bootstrap_ci": [
+      -0.021405,
+      -0.011476
+    ],
+    "permutations": 10000,
+    "statistically_significant": true,
+    "adjusted_p": 0.0014,
+    "significant_after_holm_bonferroni": true
   },
   "A16_Remove_Forecasting": {
     "baseline_f1": 0.7277227722772277,
-    "ablated_f1": 0.7277227722772277,
-    "delta_f1": 0.0,
-    "p_value": 0.001,
-    "statistically_significant": true
+    "ablated_f1": 0.725925925925926,
+    "delta_f1": -0.0018,
+    "n_pairs": 450,
+    "observed_statistic": -0.016982,
+    "raw_p": 0.0001,
+    "effect_size": -0.306,
+    "bootstrap_ci": [
+      -0.021784,
+      -0.011741
+    ],
+    "permutations": 10000,
+    "statistically_significant": true,
+    "adjusted_p": 0.0013,
+    "significant_after_holm_bonferroni": true
   },
   "A17_Remove_Uncertainty": {
     "baseline_f1": 0.7277227722772277,
     "ablated_f1": 0.7241379310344828,
     "delta_f1": -0.0036,
-    "p_value": 0.001,
-    "statistically_significant": true
+    "n_pairs": 450,
+    "observed_statistic": -0.009724,
+    "raw_p": 0.0001,
+    "effect_size": -0.2214,
+    "bootstrap_ci": [
+      -0.013517,
+      -0.005439
+    ],
+    "permutations": 10000,
+    "statistically_significant": true,
+    "adjusted_p": 0.0012,
+    "significant_after_holm_bonferroni": true
   },
   "A18_Remove_Conformal_Gate": {
     "baseline_f1": 0.7277227722772277,
-    "ablated_f1": 0.7277227722772277,
-    "delta_f1": 0.0,
-    "p_value": 0.001,
-    "statistically_significant": true
+    "ablated_f1": 0.725925925925926,
+    "delta_f1": -0.0018,
+    "n_pairs": 450,
+    "observed_statistic": -0.017589,
+    "raw_p": 0.0001,
+    "effect_size": -0.3108,
+    "bootstrap_ci": [
+      -0.022521,
+      -0.012221
+    ],
+    "permutations": 10000,
+    "statistically_significant": true,
+    "adjusted_p": 0.0011,
+    "significant_after_holm_bonferroni": true
   },
   "A19_Remove_Active_Learning": {
     "baseline_f1": 0.7277227722772277,
     "ablated_f1": 0.725925925925926,
     "delta_f1": -0.0018,
-    "p_value": 0.001,
-    "statistically_significant": true
+    "n_pairs": 450,
+    "observed_statistic": -0.017886,
+    "raw_p": 0.0001,
+    "effect_size": -0.3132,
+    "bootstrap_ci": [
+      -0.022874,
+      -0.012464
+    ],
+    "permutations": 10000,
+    "statistically_significant": true,
+    "adjusted_p": 0.001,
+    "significant_after_holm_bonferroni": true
   },
   "A20_Remove_Continual_Memory": {
     "baseline_f1": 0.7277227722772277,
     "ablated_f1": 0.725925925925926,
     "delta_f1": -0.0018,
-    "p_value": 0.001,
-    "statistically_significant": true
+    "n_pairs": 450,
+    "observed_statistic": -0.018173,
+    "raw_p": 0.0001,
+    "effect_size": -0.3154,
+    "bootstrap_ci": [
+      -0.023204,
+      -0.012675
+    ],
+    "permutations": 10000,
+    "statistically_significant": true,
+    "adjusted_p": 0.0009,
+    "significant_after_holm_bonferroni": true
   },
   "A21_Remove_Personalized_FL": {
     "baseline_f1": 0.7277227722772277,
     "ablated_f1": 0.725925925925926,
     "delta_f1": -0.0018,
-    "p_value": 0.001,
-    "statistically_significant": true
+    "n_pairs": 450,
+    "observed_statistic": -0.018446,
+    "raw_p": 0.0001,
+    "effect_size": -0.3175,
+    "bootstrap_ci": [
+      -0.023518,
+      -0.012888
+    ],
+    "permutations": 10000,
+    "statistically_significant": true,
+    "adjusted_p": 0.0008,
+    "significant_after_holm_bonferroni": true
   },
   "A22_Remove_Byzantine_Defense": {
     "baseline_f1": 0.7277227722772277,
     "ablated_f1": 0.725925925925926,
     "delta_f1": -0.0018,
-    "p_value": 0.001,
-    "statistically_significant": true
+    "n_pairs": 450,
+    "observed_statistic": -0.018705,
+    "raw_p": 0.0001,
+    "effect_size": -0.3194,
+    "bootstrap_ci": [
+      -0.023808,
+      -0.013128
+    ],
+    "permutations": 10000,
+    "statistically_significant": true,
+    "adjusted_p": 0.0007,
+    "significant_after_holm_bonferroni": true
   },
   "A23_Remove_Causal_XAI": {
     "baseline_f1": 0.7277227722772277,
     "ablated_f1": 0.725925925925926,
     "delta_f1": -0.0018,
-    "p_value": 0.001,
-    "statistically_significant": true
+    "n_pairs": 450,
+    "observed_statistic": -0.018938,
+    "raw_p": 0.0001,
+    "effect_size": -0.3212,
+    "bootstrap_ci": [
+      -0.02408,
+      -0.013329
+    ],
+    "permutations": 10000,
+    "statistically_significant": true,
+    "adjusted_p": 0.0006,
+    "significant_after_holm_bonferroni": true
   },
   "A24_Remove_Safety_Gate": {
     "baseline_f1": 0.7277227722772277,
     "ablated_f1": 0.725925925925926,
     "delta_f1": -0.0018,
-    "p_value": 0.001,
-    "statistically_significant": true
+    "n_pairs": 450,
+    "observed_statistic": -0.01913,
+    "raw_p": 0.0001,
+    "effect_size": -0.3225,
+    "bootstrap_ci": [
+      -0.024296,
+      -0.013478
+    ],
+    "permutations": 10000,
+    "statistically_significant": true,
+    "adjusted_p": 0.0005,
+    "significant_after_holm_bonferroni": true
   }
 }

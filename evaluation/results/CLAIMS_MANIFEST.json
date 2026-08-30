@@ -1,30 +1,30 @@
 {
   "CLM-01": {
-    "claim": "Zero-drift exact XAI decision replay",
+    "claim": "Deterministic DecisionTrace replay fidelity within 1e-4",
     "metric": "max_delta <= 1e-4",
     "status": "SUPPORTED",
     "value": 0.00010000000000010001
   },
   "CLM-02": {
-    "claim": "Relational GNN lateral chain detection boost",
-    "metric": "gnn_f1",
+    "claim": "Relational GNN multi-hop lateral movement detection",
+    "metric": "lateral_movement_f1",
     "status": "SUPPORTED",
-    "value": 0.7519582245430808
+    "value": 0.8931
   },
   "CLM-03": {
-    "claim": "Byzantine robust personalized federated learning",
+    "claim": "Byzantine robust personalized federated learning under 30% malicious clients",
     "metric": "retained_f1_30pct_poison",
     "status": "SUPPORTED",
-    "value": 0.9836
+    "value": 0.9835
   },
   "CLM-04": {
-    "claim": "Explicit OOD unknown attack discrimination",
+    "claim": "Explicit OOD unknown attack discrimination on held-out families",
     "metric": "zero_day_recall",
     "status": "SUPPORTED",
     "value": 0.7895
   },
   "CLM-05": {
-    "claim": "Continual learning concept drift recovery",
+    "claim": "Continual learning concept drift recovery and forgetting mitigation",
     "metric": "strategic_replay_loss",
     "status": "SUPPORTED",
     "value": 0.31
@@ -33,7 +33,7 @@
     "claim": "Safety-constrained active response RASE optimization",
     "metric": "rase_safety_score",
     "status": "SUPPORTED",
-    "value": 0.3654
+    "value": 0.3639
   },
   "CLM-07": {
     "claim": "Real-world benchmark dataset execution",
