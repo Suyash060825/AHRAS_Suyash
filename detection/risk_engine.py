@@ -306,6 +306,25 @@ class AdaptiveRiskEngine:
                 tech = getattr(sm, "mitre_technique", None) or _get(sm, "mitre_technique", default="")
                 if tech:
                     mitre_techs.append(str(tech))
+                
+                # [AHRAS MITRE EXTENSION]
+                if rule:
+                    from mitre.mapper import enrich_with_mitre
+                    mapping = enrich_with_mitre(rule)
+                    if mapping and mapping["technique_id"] != "T1000":
+                        mitre_techs.append(mapping["technique_id"])
+                        
+        # [AHRAS-TGNN ADDITION] Online Temporal Graph Scoring
+        if cfg.use_graph and evt is not None:
+            src_ip = evt.get("src_endpoint", {}).get("ip")
+            dst_ip = evt.get("dst_endpoint", {}).get("ip")
+            timestamp = evt.get("time", __import__("time").time())
+            if src_ip and dst_ip:
+                from graph.tgnn import get_tgnn
+                tgnn = get_tgnn()
+                path_pred = tgnn.record_interaction(src_ip, dst_ip, timestamp, severity=max(raw_sig_score, getattr(ml_res, "ensemble_score", 0.0) if ml_res else 0.0))
+                if path_pred.developing:
+                    g_corr = max(g_corr, path_pred.risk_energy * 0.8) # Weight the TGNN energy
 
             max_sev = max(severities) if severities else 1.0
             raw_sig_score = min(1.0, max_sev / 5.0)
