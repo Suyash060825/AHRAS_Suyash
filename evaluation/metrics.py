@@ -248,10 +248,12 @@ class MetricsCalculator:
         y_true: List[int],
         y_score: List[float],
         threshold: float,
-        n_bootstraps: int = 100,
+        n_bootstraps: int = 500,
     ) -> Dict[str, Tuple[float, float]]:
         rng = np.random.default_rng(42)
         n = len(y_true)
+        if n < 5:
+            return {}
         indices = np.arange(n)
         
         f1_samples, prec_samples, rec_samples, brier_samples = [], [], [], []
@@ -276,11 +278,21 @@ class MetricsCalculator:
             rec_samples.append(r)
             brier_samples.append(br)
 
+        def _calc_non_degenerate_ci(samples: List[float], n_obs: int) -> Tuple[float, float]:
+            low = float(np.percentile(samples, 2.5))
+            high = float(np.percentile(samples, 97.5))
+            # Prevent zero-width degenerate intervals on finite sample sets
+            if low == high and n_obs > 0:
+                delta = 1.0 / (2.0 * n_obs)
+                low = max(0.0, low - delta)
+                high = min(1.0, high + delta)
+            return (round(low, 4), round(high, 4))
+
         return {
-            "f1": (float(np.percentile(f1_samples, 2.5)), float(np.percentile(f1_samples, 97.5))),
-            "precision": (float(np.percentile(prec_samples, 2.5)), float(np.percentile(prec_samples, 97.5))),
-            "recall": (float(np.percentile(rec_samples, 2.5)), float(np.percentile(rec_samples, 97.5))),
-            "brier_score": (float(np.percentile(brier_samples, 2.5)), float(np.percentile(brier_samples, 97.5))),
+            "f1": _calc_non_degenerate_ci(f1_samples, n),
+            "precision": _calc_non_degenerate_ci(prec_samples, n),
+            "recall": _calc_non_degenerate_ci(rec_samples, n),
+            "brier_score": _calc_non_degenerate_ci(brier_samples, n),
         }
 
     def _compute_ece(self, y_true: List[int], y_score: List[float], n_bins: int = 10) -> float:

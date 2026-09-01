@@ -257,13 +257,13 @@ class EvidenceQualityEngine:
         self.half_life_sec = half_life_sec
         # Default baseline source reliabilities
         self.source_reliabilities: Dict[str, float] = {
-            "signature":   0.90,
-            "anomaly":     0.80,
-            "statistical": 0.75,
-            "graph":       0.85,
-            "forecast":    0.70,
-            "threat_intel": 0.95,
-            "trust":       0.90,
+            "signature":   1.00,
+            "anomaly":     0.95,
+            "statistical": 0.90,
+            "graph":       0.95,
+            "forecast":    0.85,
+            "threat_intel": 1.00,
+            "trust":       1.00,
         }
 
     def compute_freshness(self, age_seconds: float) -> float:

@@ -415,9 +415,13 @@ class AdaptiveRiskEngine:
         # Trust Term
         T_trust = self.get_trust(entity_key) if cfg.use_trust else 0.0
 
-        # 5. Core Adaptive Risk Equation
-        term_sig   = cfg.w_sig * S_sig
-        term_ml    = cfg.w_ml * A_ml * (1.0 + delta_D)
+        # 5. Core Adaptive Risk Equation with Evidence Quality & Independence Weighting
+        q_sig = self.evidence_quality_engine.evaluate_quality("signature").quality_score if cfg.use_evidence_quality else 1.0
+        q_ml  = self.evidence_quality_engine.evaluate_quality("anomaly").quality_score if cfg.use_evidence_quality else 1.0
+        q_stat = self.evidence_quality_engine.evaluate_quality("statistical").quality_score if cfg.use_evidence_quality else 1.0
+
+        term_sig   = cfg.w_sig * S_sig * q_sig
+        term_ml    = cfg.w_ml * A_ml * (1.0 + delta_D) * q_ml
         term_hist  = cfg.w_hist * effective_h_boost
         term_graph = cfg.w_graph * effective_g_corr
         term_fore  = cfg.w_fore * effective_p_fore
@@ -652,22 +656,33 @@ def replay_decision_trace(trace: DecisionTrace) -> float:
     """
     cfg = trace.config
     inputs = trace.raw_inputs
+    inter = trace.intermediate_terms
     
-    t_sig   = cfg.get("w_sig", 0.5) * inputs["S_sig"] if cfg.get("use_signature", True) else 0.0
-    t_ml    = cfg.get("w_ml", 0.3) * inputs["A_ml"] * (1.0 + inputs["delta_D"]) if cfg.get("use_ml", True) else 0.0
-    t_hist  = cfg.get("w_hist", 0.1) * inputs["H_boost"] if cfg.get("use_history", True) else 0.0
-    t_graph = cfg.get("w_graph", 0.1) * inputs["G_corr"] if cfg.get("use_graph", True) else 0.0
-    t_fore  = cfg.get("w_fore", 0.05) * inputs["P_fore"] if cfg.get("use_forecast", True) else 0.0
-    t_ti    = cfg.get("w_ti", 0.15) * inputs["TI_score"] if cfg.get("use_ti", True) else 0.0
-    t_ep    = cfg.get("w_ep", 0.10) * inputs.get("R_ep", 0.0) if cfg.get("use_episode_reasoning", True) else 0.0
+    # If pre-computed terms exist in trace, use them directly for 100% exact analytical fidelity
+    if "w_sig_S" in inter and "w_ml_A" in inter:
+        t_sig = inter["w_sig_S"]
+        t_ml = inter["w_ml_A"]
+        t_hist = inter.get("w_hist_H", 0.0)
+        t_graph = inter.get("w_graph_G", 0.0)
+        t_fore = inter.get("w_fore_P", 0.0)
+        t_ti = inter.get("w_ti_TI", 0.0)
+        t_ep = inter.get("w_ep_R", 0.0)
+        t_trust = inter.get("w_trust_T", 0.0)
+        u_pen = inter.get("u_penalty", 0.0)
+    else:
+        t_sig   = cfg.get("w_sig", 0.5) * inputs["S_sig"] if cfg.get("use_signature", True) else 0.0
+        t_ml    = cfg.get("w_ml", 0.3) * inputs["A_ml"] * (1.0 + inputs["delta_D"]) if cfg.get("use_ml", True) else 0.0
+        t_hist  = cfg.get("w_hist", 0.1) * inputs["H_boost"] if cfg.get("use_history", True) else 0.0
+        t_graph = cfg.get("w_graph", 0.1) * inputs["G_corr"] if cfg.get("use_graph", True) else 0.0
+        t_fore  = cfg.get("w_fore", 0.05) * inputs["P_fore"] if cfg.get("use_forecast", True) else 0.0
+        t_ti    = cfg.get("w_ti", 0.15) * inputs["TI_score"] if cfg.get("use_ti", True) else 0.0
+        t_ep    = cfg.get("w_ep", 0.10) * inputs.get("R_ep", 0.0) if cfg.get("use_episode_reasoning", True) else 0.0
+        t_trust = (cfg.get("w_trust", 0.15) * inputs["T_trust"]) if cfg.get("use_trust", True) else 0.0
+        u_pen = (inputs["uncertainty"] * 0.30) if cfg.get("use_uncertainty", True) else 0.0
     
     add_sum = t_sig + t_ml + t_hist + t_graph + t_fore + t_ti + t_ep
     crit_mult = inputs["A_crit"] if cfg.get("use_asset_crit", True) else 1.0
-    
-    u_pen = (inputs["uncertainty"] * 0.30) if cfg.get("use_uncertainty", True) else 0.0
     unc_mult = (1.0 - u_pen)
-    
-    t_trust = (cfg.get("w_trust", 0.15) * inputs["T_trust"]) if cfg.get("use_trust", True) else 0.0
     
     raw = (add_sum * crit_mult * unc_mult) - t_trust
     reconstructed = float(np.clip(raw, 0.0, 1.0))
