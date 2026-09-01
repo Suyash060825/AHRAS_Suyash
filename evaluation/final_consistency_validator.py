@@ -104,7 +104,7 @@ def run_consistency_audit() -> Dict[str, Any]:
     report["rule_results"]["Rule_08_Continual_Longitudinal_Evidence"] = {"passed": r8, "status": "PASSED" if r8 else "FAILED"}
 
     # Rule 9: Every external-validation claim reflects actual external execution or explicit NOT_RUN disclosure
-    r9 = real_data.get("status") == "NOT_RUN_EXTERNAL_DATA" and claims["CLM-07"]["status"] == "NOT_RUN_PENDING_EXTERNAL_CSV"
+    r9 = (real_data.get("status") == "EVALUATED_AUTHENTIC_REAL_DATA" and claims["CLM-07"]["status"] == "SUPPORTED" and claims["CLM-07"]["value"] is not None) or (real_data.get("status") == "NOT_RUN_EXTERNAL_DATA" and claims["CLM-07"]["status"] == "NOT_RUN_PENDING_EXTERNAL_CSV")
     report["rule_results"]["Rule_09_External_Validation_Honest_Disclosure"] = {"passed": r9, "status": "PASSED" if r9 else "FAILED"}
 
     # Rule 10: Every XAI claim matches measured tolerance

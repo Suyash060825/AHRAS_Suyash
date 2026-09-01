@@ -116,7 +116,7 @@ class AdaptiveWeightLearner:
             self._feedback_count += 1
             
             if self._is_frozen:
-                log.warning("[ADAPTIVE LEARNER] Learner is FROZEN due to validation drift. Feedback recorded without weight update.")
+                log.debug("[ADAPTIVE LEARNER] Learner is FROZEN due to validation drift. Feedback recorded without weight update.")
                 return dict(self._active_weights)
 
             y_true = float(sample.label)

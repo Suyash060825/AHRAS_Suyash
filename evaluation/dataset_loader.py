@@ -157,19 +157,21 @@ class DatasetLoader:
             return "unsw-nb15"
         return "synthetic-eval" if "synthetic" in filepath.lower() else "generic-csv"
 
-    def iter_records(self, limit: Optional[int] = None) -> Iterator[DatasetRecord]:
+    def iter_records(self, limit: Optional[int] = None, stride: Optional[int] = None) -> Iterator[DatasetRecord]:
         if not os.path.exists(self.filepath):
             return
 
         with open(self.filepath, "r", encoding="utf-8", errors="ignore") as fh:
             reader = csv.DictReader(fh)
-            count = 0
-            for row in reader:
-                rec = self._parse_row(row, row_idx=count)
+            yielded = 0
+            for idx, row in enumerate(reader):
+                if stride and (idx % stride != 0):
+                    continue
+                rec = self._parse_row(row, row_idx=idx)
                 if rec is not None:
                     yield rec
-                    count += 1
-                    if limit and count >= limit:
+                    yielded += 1
+                    if limit and yielded >= limit:
                         break
 
     def generate_manifest(self, limit: Optional[int] = None) -> DatasetManifest:
