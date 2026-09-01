@@ -4,6 +4,9 @@ import json
 import logging
 from typing import Dict, Any
 
+from dotenv import load_dotenv
+load_dotenv()  # Load environment variables from .env file
+
 # Configure logging to console
 logging.basicConfig(level=logging.INFO, format='%(asctime)s - %(name)s - %(levelname)s - %(message)s')
 log = logging.getLogger("AHRAS-Main")
@@ -42,14 +45,20 @@ class AHRASPipeline:
         
         # 4. SOAR Orchestrator
         self.soar = ResponseOrchestrator()
-        # If a URL is provided, enable real webhooks, otherwise simulate
-        if soar_webhook_url:
+        
+        # Read from environment variables (.env)
+        exec_mode = os.getenv("EXECUTION_MODE", "SIMULATED")
+        webhook_url = os.getenv("SOAR_WEBHOOK_URL", soar_webhook_url)
+        
+        if exec_mode == "REAL_PRODUCTION" and webhook_url:
             self.soar.execution_mode = "REAL_PRODUCTION"
             self.soar._dry_run = False
-            os.environ["SOAR_WEBHOOK_URL"] = soar_webhook_url
+            os.environ["SOAR_WEBHOOK_URL"] = webhook_url
+            log.info(f"SOAR Orchestrator running in REAL_PRODUCTION mode against {webhook_url}")
         else:
             self.soar.execution_mode = "SIMULATED"
             self.soar._dry_run = True
+            log.info("SOAR Orchestrator running in SIMULATED mode.")
 
         log.info("AHRAS Pipeline Ready.")
 
