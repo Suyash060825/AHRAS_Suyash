@@ -10,5 +10,5 @@ services:
       # Mount the local directory to allow rapid development without rebuilding
       - .:/app
     # If the app exposes a REST API in the future, map the ports:
-    # ports:
-    #   - "8000:8000"
+    ports:
+      - "8000:8000"

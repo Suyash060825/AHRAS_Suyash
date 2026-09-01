@@ -107,37 +107,35 @@ class AHRASPipeline:
 
 
 if __name__ == "__main__":
-    # Example Usage of the Single Working Copy
+    import uvicorn
+    from fastapi import FastAPI, Request
+    
+    app = FastAPI(title="AHRAS Telemetry API")
     pipeline = AHRASPipeline()
     
-    # Simulate a realistic OCSF Network Activity Event (e.g. Lateral Movement / Bruteforce)
-    sample_event = {
-        "class_name": "Network Activity",
-        "time": time.time(),
-        "src_endpoint": {"ip": "10.0.1.99"},
-        "dst_endpoint": {"ip": "192.168.1.10", "port": 22}, # SSH
-        "network_traffic": {
-            "packets": 5000, 
-            "bytes": 250000
-        },
-        "rule_name": "SSH Bruteforce" # Triggers MITRE T1110.001
-    }
-    
-    # Process the event
-    pipeline.process_telemetry(entity_key="10.0.1.99", event=sample_event)
-    
-    # Simulate a follow-up event to trigger TGNN & ZTRE restriction
-    time.sleep(1)
-    follow_up_event = {
-        "class_name": "Network Activity",
-        "time": time.time(),
-        "src_endpoint": {"ip": "192.168.1.10"}, # Lateral Movement hop
-        "dst_endpoint": {"ip": "10.0.1.50", "port": 445}, # SMB
-        "network_traffic": {
-            "packets": 200, 
-            "bytes": 50000
-        },
-        "rule_name": "Lateral Movement" # Triggers MITRE T1021
-    }
-    
-    pipeline.process_telemetry(entity_key="10.0.1.99", event=follow_up_event)
+    @app.post("/api/v1/telemetry")
+    async def ingest_telemetry(request: Request):
+        try:
+            event = await request.json()
+            # Extract entity key (e.g. source IP)
+            entity_key = event.get("src_endpoint", {}).get("ip", "unknown_entity")
+            
+            # Process through the unified pipeline
+            result = pipeline.process_telemetry(entity_key=entity_key, event=event)
+            
+            return {
+                "status": "processed",
+                "entity": entity_key,
+                "risk_score": result.risk_score,
+                "action_taken": result.autonomy_decision
+            }
+        except Exception as e:
+            log.error(f"Error processing telemetry: {e}")
+            return {"status": "error", "message": str(e)}
+
+    @app.get("/health")
+    def health_check():
+        return {"status": "AHRAS Engine Online"}
+
+    log.info("Starting AHRAS FastAPI Server on port 8000...")
+    uvicorn.run(app, host="0.0.0.0", port=8000)
