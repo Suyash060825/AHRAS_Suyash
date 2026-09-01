@@ -38,6 +38,9 @@ from adaptive_learning.weight_learner import (
     EvidenceIndependenceController
 )
 from xai.causal_explainer import CausalExplainer, CausalReport
+from mitre.mapper import enrich_with_mitre, get_mitre_techniques
+from adaptive_learning.ztre import get_ztre
+from graph.tgnn import get_tgnn
 
 log = logging.getLogger(__name__)
 
@@ -614,6 +617,12 @@ class AdaptiveRiskEngine:
             f"Dominant mechanism: {causal_report.dominant_causal_factor}. "
             f"Autonomous Action: {autonomy_dec}."
         )
+
+        # [AHRAS-ZTRE ADDITION] Continuous Access Scope Evaluation
+        ztre = get_ztre()
+        ztre_state = ztre.evaluate_session(entity_key, risk_score)
+        
+        decision_reason += f" ZTRE Scope: {ztre_state.current_scope.name} (TTL={ztre_state.ttl_seconds}s)."
 
         return RiskResult(
             entity_key=entity_key,

@@ -23,15 +23,32 @@ log = logging.getLogger(__name__)
 def record_to_ocsf(rec: DatasetRecord) -> dict:
     """Converts a DatasetRecord into an OCSF network_activity event dict."""
     feats = rec.features
+    
+    # Use standardized keys populated by DatasetLoader, fallback to dataset-specific names
+    dst_port = int(feats.get("dst_port", feats.get("Destination Port", 80)))
+    packet_count = int(feats.get("packet_count", feats.get("Total Fwd Packets", 1) + feats.get("Total Backward Packets", 0)))
+    duration_sec = feats.get("duration_sec", max(0.001, feats.get("Flow Duration", 1000.0) / 1_000_000.0))
+    bytes_count = int(feats.get("byte_count", feats.get("Total Length of Fwd Packets", 100)))
+    pps = float(feats.get("Flow Packets/s", 10.0))
+    if pps <= 0 and duration_sec > 0:
+        pps = packet_count / duration_sec
+        
+    syn_count = feats.get("SYN Flag Count", feats.get("syn_count", 0))
+    tcp_flags = ["SYN"] if syn_count > 0 else ["ACK"]
+    
+    unique_dst_ports = feats.get("unique_dst_ports", 1)
+    if unique_dst_ports == 1 and dst_port > 1024 and feats.get("Total Fwd Packets", 0) <= 3:
+        unique_dst_ports = 150  # Heuristic for port scanning if raw features indicate
+
     return _norm_network({
         "src_ip":           rec.src_ip,
-        "dst_port":         int(feats.get("Destination Port", 80)),
-        "packet_count":     int(feats.get("Total Fwd Packets", 1) + feats.get("Total Backward Packets", 0)),
-        "duration_sec":     max(0.001, feats.get("Flow Duration", 1000.0) / 1_000_000.0),
-        "bytes":            int(feats.get("Flow Bytes/s", 100.0) * max(0.001, feats.get("Flow Duration", 1000.0) / 1_000_000.0)),
-        "pps":              float(feats.get("Flow Packets/s", 10.0)),
-        "tcp_flags":        ["SYN"] if feats.get("SYN Flag Count", 0) > 0 else ["ACK"],
-        "unique_dst_ports": 150 if feats.get("Destination Port", 0) > 1024 and feats.get("Total Fwd Packets", 0) <= 3 else 1,
+        "dst_port":         dst_port,
+        "packet_count":     packet_count,
+        "duration_sec":     duration_sec,
+        "bytes":            bytes_count,
+        "pps":              pps,
+        "tcp_flags":        tcp_flags,
+        "unique_dst_ports": int(unique_dst_ports),
     })
 
 

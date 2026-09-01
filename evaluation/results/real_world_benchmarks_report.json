@@ -17,35 +17,41 @@
     "leakage_audit_passed": true,
     "locked_parameters": {
       "tau_star": 0.1,
-      "val_f1": 0.0413,
+      "val_f1": 0.0,
       "learned_weights": {
-        "signature": 0.7139,
-        "anomaly": 0.051,
-        "density": 0.1841,
-        "drift_rate": 0.051
+        "signature": 0.7053,
+        "anomaly": 0.0518,
+        "density": 0.1925,
+        "drift_rate": 0.0504
       },
       "calibration": {
         "calib_slope": 1.0,
-        "calib_intercept": -0.0909
+        "calib_intercept": -0.022
       }
     },
     "test_metrics": {
-      "precision": 0.038306451612903226,
-      "recall": 0.2714285714285714,
-      "f1": 0.06713780918727914,
+      "precision": 0.0,
+      "recall": 0.0,
+      "f1": 0.0,
       "f1_ci_95": [
-        0.0391,
-        0.0995
+        0.0,
+        0.0003
       ],
-      "pr_auc": 0.0445,
-      "roc_auc": 0.5308,
-      "fpr": 0.33356643356643356,
-      "fnr": 0.7285714285714285,
-      "balanced_accuracy": 0.46893106893106895,
-      "brier_score": 0.05121089289333334,
-      "ece": 0.043834933333333326,
-      "mean_latency_ms": 18.311,
-      "p95_latency_ms": 22.192
+      "pr_auc": 0.0344,
+      "roc_auc": 0.4352,
+      "fpr": 0.033566433566433566,
+      "fnr": 1.0,
+      "balanced_accuracy": 0.48321678321678324,
+      "brier_score": 0.04976597877333334,
+      "ece": 0.03821853333333333,
+      "mean_latency_ms": 22.314,
+      "p95_latency_ms": 23.826,
+      "baseline_comparison": {
+        "RandomForest_F1": 0.4902,
+        "GradientBoosting_F1": 0.5657,
+        "IsolationForest_F1": 0
+      },
+      "conformal_tau": 0.1029
     }
   },
   "UNSW_NB15": {

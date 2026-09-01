@@ -1,0 +1,38 @@
+\begin{table*}[t]
+\centering
+\caption{Comprehensive Component Ablation and Statistical Validation (10,000 Permutations)}
+\label{tab:ablation}
+\resizebox{\textwidth}{!}{
+\begin{tabular}{@{}llccrrr@{}}
+\toprule
+\textbf{ID} & \textbf{Ablated Component} & \textbf{Evaluation Metric} & \textbf{Baseline} & \textbf{Ablated} & \textbf{Effect Size ($d$)} & \textbf{$p$-value} \\ \midrule
+A1 & Remove Signatures & Classification F1 & 0.827 & 0.823 & 0.171 & 0.003 \\
+A2 & Remove ML Ensemble & Classification F1 & 0.827 & 0.803 & -0.110 & 0.131 \\
+A3 & Remove Statistical & Classification F1 & 0.827 & 0.809 & -0.116 & 0.112 \\
+A4 & Remove Self Supervised Rep & Classification F1 & 0.827 & 0.803 & -0.099 & 0.178 \\
+A5 & Remove Multimodal Fusion & Classification F1 & 0.827 & 0.594 & 0.955 & $< 0.001$* \\
+A6 & Remove Temporal Attention & Classification F1 & 0.827 & 0.814 & 0.012 & 1.000 \\
+A7 & Remove Graph & Lateral Movement F1 & 0.893 & 0.000 & -0.628 & $< 0.001$* \\
+A8 & Remove Episode Reasoning & Classification F1 & 0.827 & 0.814 & -0.129 & 0.078 \\
+A9 & Remove OOD ZeroDay & Classification F1 & 0.827 & 0.812 & -0.123 & 0.096 \\
+A10 & Remove Evidence Quality & Classification F1 & 0.827 & 0.803 & 0.117 & 0.116 \\
+A11 & Remove Independence Correction & Classification F1 & 0.827 & 0.803 & 0.103 & 0.177 \\
+A12 & Remove Adaptive Fusion & Classification F1 & 0.827 & 0.787 & 0.411 & $< 0.001$* \\
+A13 & Remove Trust & Classification F1 & 0.827 & 0.794 & 0.758 & $< 0.001$* \\
+A14 & Remove Historical & Classification F1 & 0.827 & 0.812 & -0.062 & 0.750 \\
+A15 & Remove Threat Intel & Classification F1 & 0.827 & 0.812 & 0.048 & 0.944 \\
+A16 & Remove Forecasting & Classification F1 & 0.827 & 0.812 & -0.168 & 0.003 \\
+A17 & Remove Uncertainty & Brier Score (Calibration) & 0.170 & 0.134 & -0.001 & 0.976 \\
+A18 & Remove Conformal Gate & Brier Score (Calibration) & 0.170 & 0.128 & -0.187 & 0.001 \\
+A19 & Remove Active Learning & Classification F1 & 0.827 & 0.847 & \textbf{-0.520} & $< 0.001$* \\
+A20 & Remove Continual Memory & Classification F1 & 0.827 & 0.848 & \textbf{-0.438} & $< 0.001$* \\
+A21 & Remove Personalized FL & Classification F1 & 0.827 & 0.812 & -0.151 & 0.016 \\
+A22 & Remove Byzantine Defense & Classification F1 & 0.827 & 0.862 & \textbf{-0.380} & $< 0.001$* \\
+A23 & Remove Causal XAI & Classification F1 & 0.827 & 0.812 & -0.209 & $< 0.001$* \\
+A24 & Remove Safety Gate & Brier Score (Calibration) & 0.170 & 0.160 & 0.752 & $< 0.001$* \\
+\bottomrule
+\end{tabular}
+}
+\vspace{1ex}
+{\raggedright \footnotesize * Indicates statistical significance after Holm-Bonferroni correction ($\alpha=0.05$). Bold effect sizes denote regulatory modules where ablation artificially inflates static classification F1 at the cost of operational safety (see Section VI). \par}
+\end{table*}

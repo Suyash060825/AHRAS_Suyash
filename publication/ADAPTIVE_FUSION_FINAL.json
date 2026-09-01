@@ -1,26 +1,26 @@
 {
   "Mode_A_Naive_Additive": {
-    "f1": 0.7519582245430808,
-    "brier_score": 0.20296160844966668,
-    "risk_inflation_rate": 0.2919,
-    "mean_benign_risk": 0.4978
+    "f1": 0.80625,
+    "brier_score": 0.16560295488211113,
+    "risk_inflation_rate": 0.1309,
+    "mean_benign_risk": 0.4374
   },
   "Mode_B_Correlation_Aware": {
-    "f1": 0.7519582245430808,
-    "brier_score": 0.15406447446505556,
-    "risk_inflation_rate": 0.2919,
-    "mean_benign_risk": 0.3304
+    "f1": 0.80625,
+    "brier_score": 0.14039202283405555,
+    "risk_inflation_rate": 0.1309,
+    "mean_benign_risk": 0.2825
   },
   "Mode_C_Adaptive_Fusion": {
-    "f1": 0.736318407960199,
-    "brier_score": 0.1690478303777778,
-    "risk_inflation_rate": 0.3423,
-    "mean_benign_risk": 0.3972
+    "f1": 0.8109589041095892,
+    "brier_score": 0.12821264015555556,
+    "risk_inflation_rate": 0.2181,
+    "mean_benign_risk": 0.3277
   },
   "Mode_D_Full_Quality_Independence_Adaptive": {
-    "f1": 0.7358024691358025,
-    "brier_score": 0.1760703048888889,
-    "risk_inflation_rate": 0.349,
-    "mean_benign_risk": 0.4215
+    "f1": 0.8119891008174387,
+    "brier_score": 0.12969762468888887,
+    "risk_inflation_rate": 0.2215,
+    "mean_benign_risk": 0.3474
   }
 }
