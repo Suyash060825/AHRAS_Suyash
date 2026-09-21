@@ -121,18 +121,31 @@ def run_fuzz_sweep(n: int = 200, seed: int = 1337) -> Dict[str, Any]:
     }
 
 
+def run_10_path_fidelity_suite(n_per_path: int = 100, tolerance: float = 1e-4) -> Dict[str, Any]:
+    from xai.computational_fidelity import ComputationalFidelityEvaluator
+    evaluator = ComputationalFidelityEvaluator(tolerance=tolerance, seed=42)
+    report = evaluator.run_all_paths(n_per_path=n_per_path)
+    return report.to_dict()
+
+
 def main():
     targeted = run_targeted_scenarios()
     fuzz = run_fuzz_sweep(200)
+    ten_paths = run_10_path_fidelity_suite(n_per_path=100, tolerance=1e-4)
     
     report = {
         "targeted_scenarios": targeted,
         "fuzz_sweep": fuzz,
+        "ten_paths_fidelity": ten_paths,
     }
     
     out_path = os.path.join(RESULTS_DIR, "xai_fidelity_report.json")
     with open(out_path, "w", encoding="utf-8") as f:
         json.dump(report, f, indent=2)
+
+    detailed_path = os.path.join(RESULTS_DIR, "COMPUTATIONAL_FIDELITY_REPORT.json")
+    with open(detailed_path, "w", encoding="utf-8") as f:
+        json.dump(ten_paths, f, indent=2)
         
     print("=======================================================================")
     print("      AHRAS XAI Fidelity & Analytical Exactness Report")
@@ -141,7 +154,13 @@ def main():
     for t in targeted:
         print(f"  • {t['scenario']:<38} | R={t['risk_score']:.3f} | Δ={t['reconstruction_error']:.6f} | Faithful={t['is_faithful']}")
     print(f"\n200-Case Fuzz Sweep Mean Error Δ: {fuzz['mean_error']:.8f} (Max Δ: {fuzz['max_error']:.8f})")
-    print(f"Saved report to: {out_path}")
+    print("\n-----------------------------------------------------------------------")
+    print("     10-Path Subsystem Computational Fidelity Evaluation (Phase 2)")
+    print("-----------------------------------------------------------------------")
+    for path_name, metrics in ten_paths["path_results"].items():
+        print(f"  [{'PASS' if metrics['is_exact'] else 'FAIL'}] {path_name:<25} | N={metrics['n_samples']} | MAE={metrics['mae']:.8f} | Max={metrics['max_error']:.8f} | PassRate={metrics['pass_rate']*100:.1f}%")
+    print(f"\nAll 10 Paths Passed: {ten_paths['all_paths_passed']}")
+    print(f"Saved reports to:\n  - {out_path}\n  - {detailed_path}")
 
 
 if __name__ == "__main__":
