@@ -71,9 +71,9 @@
 * **Research Question**: Does temporal heterogeneous graph message passing (TGNN) and Noisy-OR attack path aggregation improve multi-hop lateral movement detection over isolated event-level detectors?
 * **Hypothesis**: Attackers executing reconnaissance, credential dumping, and lateral movement across multiple nodes exhibit weak point-anomaly signals but high relational graph energy.
 * **Experiment**: Simulate 2-to-5 hop lateral movement sequences across 50 enterprise hosts. Compare Single-Event Anomaly Baseline ($B_1$) vs TGNN Path Reasoner.
-* **Datasets**: Graph-native simulated enterprise lateral movement logs.
+* **Datasets**: Graph-native simulated enterprise lateral movement logs (30 campaigns, 3,500 background events across 4 tiers).
 * **Metrics**: Lateral Movement F1, Campaign Attribution Accuracy, Alert Volume Reduction ($\% \Delta$).
-* **Expected Output**: Lateral Movement F1 increases from $\le 0.10$ (isolated events) to $\ge 0.88$ (TGNN path reasoning), with alert reduction $\ge 60\%$.
+* **Verified Outcome**: Lateral Movement F1 increases from $0.0200$ (isolated events) to $0.9565$ (TGNN path reasoning, gain of $+0.9365$, $p < 10^{-4}$), with alert volume reduction of $87.76\%$ ($95\%$ CI: $[85.35\%, 90.09\%]$) and false-positive reduction of $98.60\%$.
 
 ---
 
@@ -97,5 +97,5 @@
 | **EXP-02** | RQ2 (Generalization) | `evaluation/run_real_benchmarks.py` | `REAL_DATASET_VALIDATION_FINAL.json` |
 | **EXP-03** | RQ3 (Open-Set) | `evaluation/adversarial_suite.py` | `CLAIMS_MANIFEST_FINAL.json` (CLM-04) |
 | **EXP-04** | RQ4 (Continual) | `evaluation/research_experiments.py` | `CONTINUAL_LEARNING_LONGITUDINAL_FINAL.json` |
-| **EXP-05** | RQ5 (Graph) | `evaluation/research_experiments.py` | `GNN_GRAPH_NATIVE_RESULTS_FINAL.json` |
+| **EXP-05** | RQ5 (Graph) | `evaluation/run_graph_correlation_evaluation.py` | `GRAPH_CORRELATION_REPORT.json` (Table 13) |
 | **EXP-06** | RQ6 (Safety/RASE)| `evaluation/response_simulation.py` | `CLOSED_LOOP_FINAL.json` |

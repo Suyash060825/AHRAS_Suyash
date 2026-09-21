@@ -23,8 +23,8 @@
 | :--- | :--- | :--- | :--- | :--- | :--- | :--- |
 | **Multimodal Security Encoder** | Cross-modal multi-head attention | 4 typed modalities ($z_{\text{net}}, z_{\text{proc}}, z_{\text{id}}, z_{\text{graph}}$) | Fused representation vector $z_{\text{sec}} \in \mathbb{R}^{64}$ | `1.0.0` | Synthetic multimodal pairings | Verified (Unit & property tested) |
 | **Dynamic Feature Selector** | Context-conditioned feature masking | Feature vector $x \in \mathbb{R}^D$, Context $z \in \mathbb{R}^C$ | Feature mask $m_t \in [0, 1]^D$, $x_{\text{masked}}$ | `1.0.0` | Gated MLP weights | Verified (Ablation $A_7$) |
-| **Temporal Heterogeneous GNN** | Multi-hop lateral movement & relation scoring | Entity graph adjacency matrix + node embeddings | Node Suspiciousness $\in [0, 1]$, graph energy | `1.5.0` | Enterprise interaction topologies | Verified ($F1 = 0.893$ on lateral movement) |
-| **Noisy-OR Attack Path Reasoner** | Probabilistic aggregation of multi-hop paths | Ordered sequence of path node risks | `path_risk` $\in [0, 1]$, `AttackCampaign` | `2.0.0` | Sound Bayesian probability theory | Verified (Tested across 2-5 hop paths) |
+| **Temporal Heterogeneous GNN** | Multi-hop lateral movement & relation scoring | Entity graph adjacency matrix + node embeddings | Node Suspiciousness $\in [0, 1]$, graph energy | `1.5.0` | Enterprise interaction topologies | Verified (Phase 5 EXP-05: $F1 = 0.9565$, $87.76\%$ alert volume reduction, $98.60\%$ FP reduction) |
+| **Noisy-OR Attack Path Reasoner** | Probabilistic aggregation of multi-hop paths | Ordered sequence of path node risks | `path_risk` $\in [0, 1]$, `AttackCampaign` | `2.0.0` | Sound Bayesian probability theory | Verified (Phase 5 EXP-05: Sound Bayesian path aggregation, $99.44\%$ campaign completeness, 1.17 hop lead time) |
 
 ---
 

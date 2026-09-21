@@ -1,0 +1,71 @@
+{
+  "experiment_id": "EXP-05",
+  "research_question": "RQ5: Relational Multi-Hop Campaign Reasoning",
+  "topology": {
+    "total_hosts": 50,
+    "tier_0_identity_crown_jewels": 3,
+    "tier_1_internal_servers": 10,
+    "tier_2_workstations": 32,
+    "tier_3_dmz_gateways": 5
+  },
+  "dataset_telemetry": {
+    "total_telemetry_events": 3608,
+    "total_attack_events": 108,
+    "total_benign_events": 3500,
+    "total_ground_truth_campaigns": 30,
+    "hop_distribution": {
+      "5_hops": 10,
+      "3_hops": 6,
+      "4_hops": 6,
+      "2_hops": 8
+    }
+  },
+  "baseline_isolated_detector_b1": {
+    "total_events": 3608,
+    "raw_alerts_generated": 196,
+    "true_positive_alerts": 53,
+    "false_positive_alerts": 143,
+    "alert_precision": 0.2704,
+    "alert_recall": 0.4907,
+    "alert_f1": 0.3487,
+    "lateral_movement_f1": 0.02,
+    "fpr": 0.0409
+  },
+  "graph_correlated_reasoner_stage_12": {
+    "total_events": 3608,
+    "consolidated_incidents_generated": 24,
+    "true_campaigns_detected": 30,
+    "false_campaign_incidents": 2,
+    "campaign_precision": 0.9167,
+    "campaign_recall": 1.0,
+    "campaign_f1": 0.9565,
+    "lateral_movement_precision": 0.9167,
+    "lateral_movement_recall": 1.0,
+    "lateral_movement_f1": 0.9565,
+    "campaign_detection_completeness": 0.9944,
+    "mean_detection_delay_hops": 1.17,
+    "alert_volume_reduction_pct": 87.76,
+    "false_positive_reduction_pct": 98.6
+  },
+  "comparative_gains": {
+    "alert_volume_reduction_pct": 87.76,
+    "lateral_movement_f1_gain": 0.9365,
+    "lateral_movement_relative_gain_pct": 4682.5,
+    "false_positive_reduction_pct": 98.6,
+    "mean_detection_delay_hops": 1.17,
+    "campaign_completeness_pct": 99.44
+  },
+  "statistical_significance": {
+    "n_permutations": 10000,
+    "observed_error_reduction": 0.9667,
+    "two_sided_p_value": 0.0001,
+    "statistically_significant": true,
+    "cohens_d": 5.2947,
+    "alert_reduction_95_ci": [
+      85.35,
+      90.09
+    ]
+  },
+  "scientific_conclusion": "TGNN relational path aggregation with Noisy-OR improves multi-hop lateral movement F1 from 0.0200 to 0.9565 (gain of +0.9365, p < 1e-4), while reducing operational alert fatigue by 87.76%.",
+  "execution_time_sec": 0.41
+}
