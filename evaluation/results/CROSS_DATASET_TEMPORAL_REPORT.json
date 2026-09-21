@@ -1,0 +1,270 @@
+{
+  "experiment_id": "EXP-02",
+  "research_question": "RQ2: Temporal & Cross-Dataset Generalization",
+  "provenance": {
+    "cicids2017_path": "/home/suyashpradhan/Downloads/AHRAS_Suyash-master/data/cicids2017/Wednesday-workingHours.pcap_ISCX.csv",
+    "cicids2017_sha256": "893c27dc968bf7a8adef1689f90be55ca4a4dc3088fb63d6ff247ac56856df2a",
+    "unsw_path": "/home/suyashpradhan/Downloads/AHRAS_Suyash-master/data/unsw_nb15/UNSW-NB15_1.csv",
+    "unsw_sha256": "a71a9dc641b2878d63133d46a2a5bc8488e82010208cf237c89f3fa710b8c628",
+    "partition_sizes": {
+      "train": 2800,
+      "val": 600,
+      "in_domain_test": 600,
+      "temporal_shift_test": 4000,
+      "cross_dataset_test": 4000
+    }
+  },
+  "models_evaluated": [
+    {
+      "model_name": "Random_Forest",
+      "in_domain": {
+        "partition_name": "In_Domain_Test",
+        "total_records": 600,
+        "attack_count": 123,
+        "benign_count": 477,
+        "precision": 0.9836,
+        "recall": 0.9756,
+        "f1": 0.9796,
+        "fpr": 0.0042,
+        "pr_auc": 0.9939,
+        "roc_auc": 0.997,
+        "brier_score": 0.0126
+      },
+      "temporal_shift": {
+        "partition_name": "Temporal_Shift",
+        "total_records": 4000,
+        "attack_count": 190,
+        "benign_count": 3810,
+        "precision": 0.8182,
+        "recall": 0.1421,
+        "f1": 0.2422,
+        "fpr": 0.0016,
+        "pr_auc": 0.5528,
+        "roc_auc": 0.9735,
+        "brier_score": 0.0326
+      },
+      "cross_dataset": {
+        "partition_name": "Cross_Dataset",
+        "total_records": 4000,
+        "attack_count": 1114,
+        "benign_count": 2886,
+        "precision": 0.0,
+        "recall": 0.0,
+        "f1": 0.0,
+        "fpr": 0.009,
+        "pr_auc": 0.2279,
+        "roc_auc": 0.3835,
+        "brier_score": 0.2669
+      },
+      "temporal_degradation_ratio": 0.7528,
+      "temporal_relative_f1_drop_pct": 75.28,
+      "cross_dataset_degradation_ratio": 1.0,
+      "cross_dataset_relative_f1_drop_pct": 100.0
+    },
+    {
+      "model_name": "Gradient_Boosting",
+      "in_domain": {
+        "partition_name": "In_Domain_Test",
+        "total_records": 600,
+        "attack_count": 123,
+        "benign_count": 477,
+        "precision": 0.9752,
+        "recall": 0.9593,
+        "f1": 0.9672,
+        "fpr": 0.0063,
+        "pr_auc": 0.9954,
+        "roc_auc": 0.9985,
+        "brier_score": 0.0119
+      },
+      "temporal_shift": {
+        "partition_name": "Temporal_Shift",
+        "total_records": 4000,
+        "attack_count": 190,
+        "benign_count": 3810,
+        "precision": 0.5872,
+        "recall": 0.3368,
+        "f1": 0.4281,
+        "fpr": 0.0118,
+        "pr_auc": 0.7609,
+        "roc_auc": 0.9873,
+        "brier_score": 0.0286
+      },
+      "cross_dataset": {
+        "partition_name": "Cross_Dataset",
+        "total_records": 4000,
+        "attack_count": 1114,
+        "benign_count": 2886,
+        "precision": 0.0222,
+        "recall": 0.0009,
+        "f1": 0.0017,
+        "fpr": 0.0152,
+        "pr_auc": 0.2604,
+        "roc_auc": 0.46,
+        "brier_score": 0.2687
+      },
+      "temporal_degradation_ratio": 0.5574,
+      "temporal_relative_f1_drop_pct": 55.74,
+      "cross_dataset_degradation_ratio": 0.9982,
+      "cross_dataset_relative_f1_drop_pct": 99.82
+    },
+    {
+      "model_name": "Isolation_Forest",
+      "in_domain": {
+        "partition_name": "In_Domain_Test",
+        "total_records": 600,
+        "attack_count": 123,
+        "benign_count": 477,
+        "precision": 0.2196,
+        "recall": 0.8211,
+        "f1": 0.3465,
+        "fpr": 0.7526,
+        "pr_auc": 0.2293,
+        "roc_auc": 0.5616,
+        "brier_score": 0.2339
+      },
+      "temporal_shift": {
+        "partition_name": "Temporal_Shift",
+        "total_records": 4000,
+        "attack_count": 190,
+        "benign_count": 3810,
+        "precision": 0.0654,
+        "recall": 0.9737,
+        "f1": 0.1226,
+        "fpr": 0.6934,
+        "pr_auc": 0.0364,
+        "roc_auc": 0.3732,
+        "brier_score": 0.2223
+      },
+      "cross_dataset": {
+        "partition_name": "Cross_Dataset",
+        "total_records": 4000,
+        "attack_count": 1114,
+        "benign_count": 2886,
+        "precision": 0.2785,
+        "recall": 1.0,
+        "f1": 0.4357,
+        "fpr": 1.0,
+        "pr_auc": 0.9576,
+        "roc_auc": 0.9671,
+        "brier_score": 0.2886
+      },
+      "temporal_degradation_ratio": 0.6462,
+      "temporal_relative_f1_drop_pct": 64.62,
+      "cross_dataset_degradation_ratio": 0.0,
+      "cross_dataset_relative_f1_drop_pct": 0.0
+    },
+    {
+      "model_name": "AHRAS_Static_Baseline",
+      "in_domain": {
+        "partition_name": "In_Domain_Test",
+        "total_records": 600,
+        "attack_count": 123,
+        "benign_count": 477,
+        "precision": 0.9835,
+        "recall": 0.9675,
+        "f1": 0.9754,
+        "fpr": 0.0042,
+        "pr_auc": 0.9939,
+        "roc_auc": 0.997,
+        "brier_score": 0.062
+      },
+      "temporal_shift": {
+        "partition_name": "Temporal_Shift",
+        "total_records": 4000,
+        "attack_count": 190,
+        "benign_count": 3810,
+        "precision": 0.8182,
+        "recall": 0.1421,
+        "f1": 0.2422,
+        "fpr": 0.0016,
+        "pr_auc": 0.5529,
+        "roc_auc": 0.9735,
+        "brier_score": 0.0378
+      },
+      "cross_dataset": {
+        "partition_name": "Cross_Dataset",
+        "total_records": 4000,
+        "attack_count": 1114,
+        "benign_count": 2886,
+        "precision": 0.0,
+        "recall": 0.0,
+        "f1": 0.0,
+        "fpr": 0.0087,
+        "pr_auc": 0.2289,
+        "roc_auc": 0.3835,
+        "brier_score": 0.2675
+      },
+      "temporal_degradation_ratio": 0.7517,
+      "temporal_relative_f1_drop_pct": 75.17,
+      "cross_dataset_degradation_ratio": 1.0,
+      "cross_dataset_relative_f1_drop_pct": 100.0
+    },
+    {
+      "model_name": "AHRAS_Adaptive_Controller",
+      "in_domain": {
+        "partition_name": "In_Domain_Test",
+        "total_records": 600,
+        "attack_count": 123,
+        "benign_count": 477,
+        "precision": 0.6889,
+        "recall": 0.7561,
+        "f1": 0.7209,
+        "fpr": 0.0881,
+        "pr_auc": 0.5421,
+        "roc_auc": 0.8691,
+        "brier_score": 0.2289
+      },
+      "temporal_shift": {
+        "partition_name": "Temporal_Shift",
+        "total_records": 4000,
+        "attack_count": 190,
+        "benign_count": 3810,
+        "precision": 0.6757,
+        "recall": 0.6579,
+        "f1": 0.6667,
+        "fpr": 0.0157,
+        "pr_auc": 0.6811,
+        "roc_auc": 0.9739,
+        "brier_score": 0.3413
+      },
+      "cross_dataset": {
+        "partition_name": "Cross_Dataset",
+        "total_records": 4000,
+        "attack_count": 1114,
+        "benign_count": 2886,
+        "precision": 0.9967,
+        "recall": 0.8151,
+        "f1": 0.8968,
+        "fpr": 0.001,
+        "pr_auc": 0.9152,
+        "roc_auc": 0.921,
+        "brier_score": 0.1058
+      },
+      "temporal_degradation_ratio": 0.0752,
+      "temporal_relative_f1_drop_pct": 7.52,
+      "cross_dataset_degradation_ratio": 0.0,
+      "cross_dataset_relative_f1_drop_pct": 0.0
+    }
+  ],
+  "statistical_significance": {
+    "temporal_shift_vs_rf": {
+      "mean_error_reduction": -0.3819,
+      "p_value": 0.0001,
+      "statistically_significant": true,
+      "cohens_d": -0.8538
+    },
+    "cross_dataset_vs_rf": {
+      "mean_error_reduction": 0.1737,
+      "p_value": 0.0001,
+      "statistically_significant": true,
+      "cohens_d": 0.3534
+    }
+  },
+  "hypothesis_verification": {
+    "baseline_temporal_degradation_exceeds_30_pct": true,
+    "ahras_temporal_degradation_bounded_within_15_pct": true,
+    "ahras_cross_dataset_degradation_bounded_within_15_pct": true,
+    "all_success_criteria_satisfied": true
+  },
+  "execution_time_sec": 10.7
+}

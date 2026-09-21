@@ -212,10 +212,21 @@ class DatasetLoader:
     def _parse_row(self, row: Dict[str, str], row_idx: int = 0) -> Optional[DatasetRecord]:
         clean_row = {k.strip().strip('"'): v.strip().strip('"') for k, v in row.items() if k}
         
-        # Label extraction
-        label_str = clean_row.get("Label") or clean_row.get("label") or clean_row.get("attack_cat") or "BENIGN"
-        is_attack = 0 if label_str.lower() in _BENIGN_TOKENS else 1
-        attack_cat = "Benign" if is_attack == 0 else label_str
+        # Label & Attack Category extraction
+        cat_str = clean_row.get("attack_cat") or clean_row.get("Attack_Cat") or ""
+        label_val = clean_row.get("Label") or clean_row.get("label") or ""
+        
+        if label_val:
+            is_attack = 0 if label_val.lower() in _BENIGN_TOKENS else 1
+        elif cat_str:
+            is_attack = 0 if cat_str.lower() in _BENIGN_TOKENS else 1
+        else:
+            is_attack = 0
+
+        if is_attack == 0:
+            attack_cat = "Benign"
+        else:
+            attack_cat = cat_str if (cat_str and cat_str.lower() not in _BENIGN_TOKENS) else (label_val or "Attack")
 
         # Entity IP extraction
         src_ip = clean_row.get("Source IP") or clean_row.get("src_ip") or clean_row.get("srcip")
@@ -239,11 +250,12 @@ class DatasetLoader:
                 features[k] = safe_float(v)
 
         # Standardized OCSF feature keys
-        features.setdefault("packet_count", safe_float(clean_row.get("Total Fwd Packets", clean_row.get("packets", 10))))
-        features.setdefault("byte_count", safe_float(clean_row.get("Total Length of Fwd Packets", clean_row.get("bytes", 500))))
-        features.setdefault("duration_sec", max(0.001, safe_float(clean_row.get("Flow Duration", clean_row.get("dur", 1.0))) / 1e6 if safe_float(clean_row.get("Flow Duration")) > 1000 else safe_float(clean_row.get("dur", 1.0))))
+        features.setdefault("packet_count", safe_float(clean_row.get("Total Fwd Packets", clean_row.get("Spkts", clean_row.get("spkts", clean_row.get("packets", 10))))))
+        features.setdefault("byte_count", safe_float(clean_row.get("Total Length of Fwd Packets", clean_row.get("sbytes", clean_row.get("bytes", 500)))))
+        dur_val = safe_float(clean_row.get("Flow Duration", clean_row.get("dur", 1.0)))
+        features.setdefault("duration_sec", max(0.0001, dur_val / 1e6 if dur_val > 1000 else dur_val))
         features.setdefault("unique_dst_ports", safe_float(clean_row.get("unique_dst_ports", 1)))
-        features.setdefault("dst_port", safe_float(clean_row.get("Destination Port", clean_row.get("dst_port", 80))))
+        features.setdefault("dst_port", safe_float(clean_row.get("Destination Port", clean_row.get("dsport", clean_row.get("dst_port", 80)))))
 
         return DatasetRecord(
             src_ip=src_ip,
