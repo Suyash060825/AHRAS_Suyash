@@ -277,10 +277,10 @@ class AdaptiveRiskEngine:
 
     def score_risk(
         self,
-        entity_key: str,
-        sig_matches: list,
-        ml_res: Any,
-        stat_res: Any,
+        entity_key: str = None,
+        sig_matches: list = None,
+        ml_res: Any = None,
+        stat_res: Any = None,
         evt: dict = None,
         h_boost: float = 0.0,
         g_corr: float = 0.0,
@@ -289,11 +289,24 @@ class AdaptiveRiskEngine:
         a_crit: float = 1.0,
         r_ep: float = 0.0,
         override_config: Optional[RiskConfig] = None,
+        **kwargs,
     ) -> RiskResult:
         """
         Computes composite cyber risk R_t from all available evidence.
         Strictly deterministic, zero-drift reconstructible.
         """
+        if entity_key is None and "indicator" in kwargs:
+            entity_key = kwargs.pop("indicator")
+        if sig_matches is None and "signature_matches" in kwargs:
+            sig_matches = kwargs.pop("signature_matches")
+        if ml_res is None and "anomaly_result" in kwargs:
+            ml_res = kwargs.pop("anomaly_result")
+        if stat_res is None and "stat_result" in kwargs:
+            stat_res = kwargs.pop("stat_result")
+        if sig_matches is None:
+            sig_matches = []
+        entity_key = entity_key or "UNKNOWN_ENTITY"
+
         cfg = override_config or self.config
         evidence_ledger = get_evidence_ledger()
         created_evidence_ids = []

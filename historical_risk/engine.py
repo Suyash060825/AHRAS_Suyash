@@ -58,12 +58,13 @@ class HistoricalRiskEngine:
         self._lock = threading.RLock()
 
     def record_event(self, indicator: str, risk_score: float, is_alert: bool = False,
-                     is_incident: bool = False, event_dict: Optional[dict] = None) -> None:
+                     is_incident: bool = False, event_dict: Optional[dict] = None,
+                     timestamp: Optional[float] = None) -> None:
         if not indicator:
             return
 
         with self._lock:
-            now = time.time()
+            now = float(timestamp) if timestamp is not None else time.time()
             if indicator not in self._history:
                 self._history[indicator] = IndicatorHistory(
                     indicator=indicator,
@@ -71,7 +72,7 @@ class HistoricalRiskEngine:
                     last_seen=now,
                 )
             hist = self._history[indicator]
-            hist.last_seen = now
+            hist.last_seen = max(hist.last_seen, now)
             hist.risk_scores.append(float(risk_score))
             if len(hist.risk_scores) > self._max_history:
                 hist.risk_scores = hist.risk_scores[-self._max_history:]
@@ -91,10 +92,12 @@ class HistoricalRiskEngine:
                 if len(hist.recent_events) > self._max_history:
                     hist.recent_events = hist.recent_events[-self._max_history:]
 
-    def compute_history_boost(self, indicator: str, normalized_unit_scale: bool = True) -> float:
+    def compute_history_boost(self, indicator: str, normalized_unit_scale: bool = True,
+                              now: Optional[float] = None) -> float:
         """
         Computes history boost from recidivism formula.
         If normalized_unit_scale is True, returns boost in [0.0, 0.45], else [0.0, 45.0].
+        Accepts optional `now` timestamp for causal, leakage-free historical evaluation.
         """
         if not indicator:
             return 0.0
@@ -107,7 +110,8 @@ class HistoricalRiskEngine:
             incident_boost = min(30.0, float(hist.incident_count) * 2.0)
             alert_boost = min(15.0, float(hist.alert_count))
             
-            elapsed_days = (time.time() - hist.last_seen) / 86400.0
+            curr_t = float(now) if now is not None else time.time()
+            elapsed_days = max(0.0, (curr_t - hist.last_seen) / 86400.0)
             if elapsed_days < 7.0:
                 recency = 1.0
             elif elapsed_days < 30.0:

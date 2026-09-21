@@ -1,0 +1,124 @@
+{
+  "experiment_id": "EXP-06-HIST",
+  "research_question": "RQ4b: Historical Security Context & Recidivism Reasoning",
+  "timeline_summary": {
+    "total_events": 3673,
+    "duration_days": 60.0,
+    "total_attack_events": 734,
+    "total_benign_events": 2939,
+    "cohort_breakdown": {
+      "BENIGN_REC": 2639,
+      "BENIGN_TRANS": 300,
+      "DORMANT": 75,
+      "PERSISTENT": 599,
+      "TRANSIENT_ATK": 60
+    }
+  },
+  "temporal_leakage_audit": {
+    "chronological_ordering_verified": true,
+    "min_inter_event_time_sec": 0.308,
+    "zero_lookahead_leakage": true,
+    "audit_status": "PASSED"
+  },
+  "stateless_baseline_h0": {
+    "total_events": 3673,
+    "persistent_events": 599,
+    "dormant_events": 75,
+    "benign_events": 2939,
+    "precision": 0.9956,
+    "recall": 0.3065,
+    "f1": 0.4688,
+    "fpr": 0.0003,
+    "recidivist_recall": 0.2838,
+    "recidivist_f1": 0.4416,
+    "mean_sessions_to_critical": 7.6,
+    "dormant_reactivation_boost": 0.0,
+    "active_recidivist_boost": 0.0
+  },
+  "historical_context_stage_11_h1": {
+    "total_events": 3673,
+    "persistent_events": 599,
+    "dormant_events": 75,
+    "benign_events": 2939,
+    "precision": 0.9983,
+    "recall": 0.8025,
+    "f1": 0.8897,
+    "fpr": 0.0003,
+    "recidivist_recall": 0.8598,
+    "recidivist_f1": 0.9238,
+    "mean_sessions_to_critical": 3.44,
+    "dormant_reactivation_boost": 0.0613,
+    "active_recidivist_boost": 0.3486
+  },
+  "comparative_gains": {
+    "recidivist_f1_gain": 0.4822,
+    "recidivist_relative_f1_gain_pct": 109.19,
+    "overall_recall_gain": 0.496,
+    "escalation_speedup_sessions": 4.16,
+    "fpr_delta": 0.0
+  },
+  "cohort_performance_breakdown": {
+    "PERSISTENT": {
+      "total_events": 599,
+      "mean_score_h0": 0.4687,
+      "mean_score_h1": 0.7482,
+      "recall_h0": 0.2838,
+      "recall_h1": 0.8598,
+      "recall_gain": 0.576
+    },
+    "DORMANT": {
+      "total_events": 75,
+      "mean_score_h0": 0.4377,
+      "mean_score_h1": 0.4802,
+      "recall_h0": 0.1067,
+      "recall_h1": 0.3467,
+      "recall_gain": 0.24
+    },
+    "TRANSIENT_ATK": {
+      "total_events": 60,
+      "mean_score_h0": 0.5771,
+      "mean_score_h1": 0.5841,
+      "recall_h0": 0.7833,
+      "recall_h1": 0.8,
+      "recall_gain": 0.0167
+    },
+    "BENIGN_REC": {
+      "total_events": 2639,
+      "mean_score_h0": 0.1028,
+      "mean_score_h1": 0.1028,
+      "false_positive_rate_h0": 0.0004,
+      "false_positive_rate_h1": 0.0004,
+      "fpr_stable": true
+    },
+    "BENIGN_TRANS": {
+      "total_events": 300,
+      "mean_score_h0": 0.0746,
+      "mean_score_h1": 0.0746,
+      "false_positive_rate_h0": 0.0,
+      "false_positive_rate_h1": 0.0,
+      "fpr_stable": true
+    }
+  },
+  "recency_decay_validation": {
+    "boost_under_7_days": 0.11,
+    "boost_7_to_30_days": 0.055,
+    "boost_over_30_days": 0.0275,
+    "decay_is_strictly_monotonic": true,
+    "ratio_7_to_30d_vs_recent": 0.5,
+    "ratio_over_30d_vs_recent": 0.25,
+    "mathematical_decay_conformance": true
+  },
+  "statistical_significance": {
+    "n_permutations": 10000,
+    "mean_absolute_error_reduction": 0.0465,
+    "two_sided_p_value": 0.0001,
+    "statistically_significant": true,
+    "cohens_d": 0.3853,
+    "error_reduction_95_ci": [
+      0.0427,
+      0.0505
+    ]
+  },
+  "scientific_conclusion": "Historical recidivism tracking elevates persistent adversary recall from 0.2838 to 0.8598 (F1 gain of +0.4822, p < 1e-4), while accelerating critical detection by 4.16 sessions and preserving benign FPR stability at 0.0003.",
+  "execution_time_sec": 2.48
+}

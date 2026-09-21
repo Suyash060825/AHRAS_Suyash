@@ -67,6 +67,16 @@
 
 ---
 
+### RQ4b: Historical Security Context & Recidivism Reasoning (Phase 6)
+* **Research Question**: Does temporal historical security context and indicator recidivism tracking improve detection of stealthy multi-session persistent threats and repeat offenders over stateless single-event detectors, while controlling false positives through time-decayed memory?
+* **Hypothesis**: Maintaining causal, time-decayed threat memory (recidivism boost modulated by 7-day, 30-day, and >30-day decay half-lives) elevates risk for chronic offenders while safely decaying dormant threats and suppressing false positives on benign recurring entities.
+* **Experiment**: Simulate 60-day longitudinal enterprise security telemetry across 5 cohorts (Persistent, Dormant, Transient Attack, Benign Recurring, Benign Transient). Compare Stateless Baseline $H_0$ (`use_history=False`) vs Recidivism Engine $H_1$ (`use_history=True`) with 10,000 paired sample permutations.
+* **Datasets**: 60-day longitudinal enterprise security telemetry stream (3,673 events).
+* **Metrics**: Recidivist Threat Recall, Recidivist F1 Gain ($\% \Delta$), Detection Escalation Lead Time (sessions to Critical $R \ge 0.70$), Recency Decay Conformance ($1.0 \to 0.50 \to 0.25$), FPR Stability, Paired Permutation $p$-value, Cohen's $d$.
+* **Verified Outcome**: Documented in `HISTORICAL_CONTEXT_REPORT.json`. Persistent recidivist threat recall elevates from $0.2838$ to $0.8598$ ($+109.19\%$ relative F1 gain, $p = 0.0001$, Cohen's $d = 0.3853$). Critical escalation lead time accelerates by $4.16$ sessions ($7.60 \to 3.44$ sessions). Recency decay exactly conforms to $1.0 \to 0.50 \to 0.25$, and benign FPR remains strictly stable at $0.0003$.
+
+---
+
 ### RQ5: Relational Multi-Hop Campaign Reasoning
 * **Research Question**: Does temporal heterogeneous graph message passing (TGNN) and Noisy-OR attack path aggregation improve multi-hop lateral movement detection over isolated event-level detectors?
 * **Hypothesis**: Attackers executing reconnaissance, credential dumping, and lateral movement across multiple nodes exhibit weak point-anomaly signals but high relational graph energy.
@@ -98,4 +108,5 @@
 | **EXP-03** | RQ3 (Open-Set) | `evaluation/adversarial_suite.py` | `CLAIMS_MANIFEST_FINAL.json` (CLM-04) |
 | **EXP-04** | RQ4 (Continual) | `evaluation/research_experiments.py` | `CONTINUAL_LEARNING_LONGITUDINAL_FINAL.json` |
 | **EXP-05** | RQ5 (Graph) | `evaluation/run_graph_correlation_evaluation.py` | `GRAPH_CORRELATION_REPORT.json` (Table 13) |
+| **EXP-06-HIST** | RQ4b (History) | `evaluation/run_historical_context_evaluation.py` | `HISTORICAL_CONTEXT_REPORT.json` |
 | **EXP-06** | RQ6 (Safety/RASE)| `evaluation/response_simulation.py` | `CLOSED_LOOP_FINAL.json` |
