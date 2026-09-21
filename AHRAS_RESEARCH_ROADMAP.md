@@ -27,6 +27,16 @@
 
 ---
 
+### RQ1c: Controlled Adaptive Weight Learning (Phase 4)
+* **Research Question**: Does online gradient adaptation with shadow validation improve risk calibration (Brier score and ECE) on held-out test data compared to static fixed weights, while preventing catastrophic drift?
+* **Hypothesis**: Updating fusion weights on training feedback streams while locking the validation buffer reduces Brier score error by $\ge 10\%$ and Expected Calibration Error (ECE) by $\ge 50\%$, while shadow validation triggers freeze protection when drift exceeds 15%.
+* **Experiment**: Train `AdaptiveWeightLearner` on train/feedback partitions only, validate on shadow holdout, and evaluate against fixed baseline weights on 100% untouched test data with 10,000 paired sample permutations.
+* **Datasets**: Temporal benchmark stream, CIC-IDS2017 held-out slices.
+* **Metrics**: Initial/Final weights, LR, update counts, Precision, Recall, F1, FPR, Brier score, ECE, Cohen's $d$, Permutation $p$-value.
+* **Expected Output**: Verified in `ADAPTIVE_WEIGHT_EVALUATION_REPORT.json`; Brier reduction $> 10\%$, ECE reduction $> 50\%$, validation drift freeze verified.
+
+---
+
 ### RQ2: Temporal & Cross-Dataset Generalization
 * **Research Question**: How severe is the performance degradation when an ensemble IDS trained on earlier network flows or an enterprise environment is deployed on later flows or a different network topology?
 * **Hypothesis**: Standard deep/ensemble classifiers degrade significantly ($> 30\%$ F1 drop) under cross-dataset shifts, whereas modular evidence normalization (OCSF standard) coupled with Welford-based statistical drift mitigation bounds degradation within $12\%$.
@@ -83,6 +93,7 @@
 | :--- | :--- | :--- | :--- |
 | **EXP-00** | RQ1b (Ablation) | `evaluation/run_proper_ablation.py` | `PROPER_ABLATION_REPORT.json` (Table 4) |
 | **EXP-01** | RQ1 (Fidelity) | `evaluation/xai_fidelity_experiment.py` | `RESULTS_FINAL.json` (Table 12) |
+| **EXP-04b**| RQ1c (Adaptive W) | `evaluation/run_adaptive_weight_evaluation.py` | `ADAPTIVE_WEIGHT_EVALUATION_REPORT.json` |
 | **EXP-02** | RQ2 (Generalization) | `evaluation/run_real_benchmarks.py` | `REAL_DATASET_VALIDATION_FINAL.json` |
 | **EXP-03** | RQ3 (Open-Set) | `evaluation/adversarial_suite.py` | `CLAIMS_MANIFEST_FINAL.json` (CLM-04) |
 | **EXP-04** | RQ4 (Continual) | `evaluation/research_experiments.py` | `CONTINUAL_LEARNING_LONGITUDINAL_FINAL.json` |

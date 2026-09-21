@@ -81,6 +81,8 @@ class AdaptiveWeightLearner:
         self._history: List[FeedbackSample] = []
         self._validation_buffer: List[FeedbackSample] = []
         
+        self._validation_locked = False
+        
         self._version_counter = 1
         self._versions: List[WeightVersion] = [
             WeightVersion(
@@ -93,6 +95,12 @@ class AdaptiveWeightLearner:
             )
         ]
         self._lock = threading.RLock()
+
+    def set_validation_buffer(self, samples: List[FeedbackSample], lock_validation: bool = True) -> None:
+        """Sets a dedicated trusted validation buffer for shadow promotion and drift detection."""
+        with self._lock:
+            self._validation_buffer = list(samples)
+            self._validation_locked = lock_validation
 
     def get_weights(self) -> Dict[str, float]:
         with self._lock:
@@ -109,9 +117,10 @@ class AdaptiveWeightLearner:
         """
         with self._lock:
             self._history.append(sample)
-            self._validation_buffer.append(sample)
-            if len(self._validation_buffer) > 100:
-                self._validation_buffer.pop(0)
+            if not getattr(self, "_validation_locked", False):
+                self._validation_buffer.append(sample)
+                if len(self._validation_buffer) > 100:
+                    self._validation_buffer.pop(0)
                 
             self._feedback_count += 1
             
@@ -154,9 +163,14 @@ class AdaptiveWeightLearner:
         current_loss = self._compute_mse(self._active_weights, self._validation_buffer)
         shadow_loss = self._compute_mse(self._shadow_weights, self._validation_buffer)
 
+        # Reference baseline: best recorded validation loss to prevent gradual drift creep
+        valid_losses = [v.validation_loss for v in self._versions if v.validation_loss > 0.0]
+        ref_loss = min(valid_losses) if valid_losses else current_loss
+        threshold_loss = ref_loss * 1.15 if ref_loss > 0 else current_loss * 1.15
+
         # If shadow model degrades validation loss by more than 15%, freeze adaptation
-        if shadow_loss > current_loss * 1.15 and len(self._validation_buffer) >= 10:
-            log.warning(f"[ADAPTIVE LEARNER] Validation drift detected! (Shadow Loss={shadow_loss:.4f} > Active Loss={current_loss:.4f}). Freezing learner.")
+        if (shadow_loss > threshold_loss or shadow_loss > current_loss * 1.15) and len(self._validation_buffer) >= 10:
+            log.warning(f"[ADAPTIVE LEARNER] Validation drift detected! (Shadow Loss={shadow_loss:.4f} > Reference Loss={ref_loss:.4f}). Freezing learner.")
             self._is_frozen = True
             return False
 
