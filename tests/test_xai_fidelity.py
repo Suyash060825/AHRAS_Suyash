@@ -68,6 +68,52 @@ class TestXAIFidelityReplay(unittest.TestCase):
         rec = self.ledger.verify_trace_replay(res.trace)
         self.assertTrue(rec.is_faithful)
 
+    def test_explicit_computational_trace_structure(self):
+        """
+        Phase 1 Verification:
+        Verifies that DecisionTrace exposes the required structured decomposition:
+        - raw_detector_outputs
+        - base_weights & adaptive_weights
+        - additive_boosts & multiplicative_factors
+        - contextual, historical, and graph contributions
+        - computational_steps sequence (base_score through final_score)
+        """
+        sig = [type("Sig", (), {"severity": 3, "confidence": 0.95, "rule_name": "r_scan", "mitre_technique": "T1046"})()]
+        ml = type("ML", (), {"ensemble_score": 0.7, "confidence": 0.85})()
+        stat = type("Stat", (), {"behavioral_drift": 0.5, "confidence": 0.80, "flags": [], "mitre_techniques": []})()
+
+        res = self.engine.score_risk("host_trace_test", sig, ml, stat, h_boost=0.1, g_corr=0.15, ti_score=0.2, a_crit=1.2)
+        trace = res.trace
+        self.assertIsNotNone(trace)
+
+        # 1. Structural Dictionary Validations
+        self.assertIn("raw_sig_score", trace.raw_detector_outputs)
+        self.assertIn("raw_ml_score", trace.raw_detector_outputs)
+        self.assertIn("raw_drift", trace.raw_detector_outputs)
+        self.assertIn("w_sig", trace.base_weights)
+        self.assertIn("w_ml", trace.base_weights)
+        self.assertIn("term_hist", trace.additive_boosts)
+        self.assertIn("term_graph", trace.additive_boosts)
+        self.assertIn("signal_multiplier", trace.multiplicative_factors)
+        self.assertIn("asset_criticality_mult", trace.multiplicative_factors)
+        self.assertIn("effective_h_boost", trace.historical_contributions)
+        self.assertIn("effective_g_corr", trace.graph_contributions)
+
+        # 2. Computational Step Sequence Validations
+        steps = trace.computational_steps
+        expected_keys = [
+            "base_score", "adaptive_weighted_score", "signal_multiplier",
+            "score_after_multiplier", "rule_adjustments", "score_after_rules",
+            "history_adjustment", "graph_adjustment", "additive_threat_total",
+            "asset_adjustment", "score_after_asset", "uncertainty_multiplier",
+            "score_after_uncertainty", "trust_adjustment", "pre_clip_score", "final_score"
+        ]
+        for k in expected_keys:
+            self.assertIn(k, steps, msg=f"Missing computational step: {k}")
+
+        self.assertEqual(steps["final_score"], res.risk_score)
+        self.assertAlmostEqual(replay_decision_trace(trace), res.risk_score, places=4)
+
     def test_property_based_randomized_fuzzing_and_tamper_detection(self):
         """
         Property 1: 50 randomly parameterized traces all replay faithfully (<= 1e-4 error).

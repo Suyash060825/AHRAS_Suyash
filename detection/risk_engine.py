@@ -125,6 +125,15 @@ class DecisionTrace:
     conformal_tau:        float = 0.25
     feature_mask:         Dict[str, float] = field(default_factory=dict)
     causal_chains:        List[dict] = field(default_factory=list)
+    raw_detector_outputs:     Dict[str, float] = field(default_factory=dict)
+    base_weights:             Dict[str, float] = field(default_factory=dict)
+    adaptive_weights:         Dict[str, float] = field(default_factory=dict)
+    additive_boosts:          Dict[str, float] = field(default_factory=dict)
+    multiplicative_factors:   Dict[str, float] = field(default_factory=dict)
+    contextual_contributions: Dict[str, float] = field(default_factory=dict)
+    historical_contributions: Dict[str, float] = field(default_factory=dict)
+    graph_contributions:      Dict[str, float] = field(default_factory=dict)
+    computational_steps:      Dict[str, float] = field(default_factory=dict)
 
     def to_dict(self) -> dict:
         return asdict(self)
@@ -313,7 +322,11 @@ class AdaptiveRiskEngine:
                     mapping = enrich_with_mitre(rule)
                     if mapping and mapping["technique_id"] != "T1000":
                         mitre_techs.append(mapping["technique_id"])
-                        
+
+            max_sev = max(severities) if severities else 1.0
+            raw_sig_score = min(1.0, max_sev / 5.0)
+            sig_conf = 0.95
+
         # [AHRAS-TGNN ADDITION] Online Temporal Graph Scoring
         if cfg.use_graph and evt is not None:
             src_ip = evt.get("src_endpoint", {}).get("ip")
@@ -325,10 +338,6 @@ class AdaptiveRiskEngine:
                 path_pred = tgnn.record_interaction(src_ip, dst_ip, timestamp, severity=max(raw_sig_score, getattr(ml_res, "ensemble_score", 0.0) if ml_res else 0.0))
                 if path_pred.developing:
                     g_corr = max(g_corr, path_pred.risk_energy * 0.8) # Weight the TGNN energy
-
-            max_sev = max(severities) if severities else 1.0
-            raw_sig_score = min(1.0, max_sev / 5.0)
-            sig_conf = 0.95
         
         S_sig = raw_sig_score if cfg.use_signature else 0.0
         if S_sig > 0:
@@ -458,6 +467,84 @@ class AdaptiveRiskEngine:
         raw_risk = (additive_threat * mult_crit * mult_unc) - trust_sub
         risk_score = float(np.clip(raw_risk, 0.0, 1.0))
         risk_score = round(risk_score, 4)
+
+        # Explicit Computational Trace Breakdown (preserving exact operational order & values)
+        raw_detector_outputs = {
+            "raw_sig_score": round(float(raw_sig_score), 4),
+            "raw_ml_score": round(float(raw_ml_score), 4),
+            "raw_drift": round(float(raw_drift), 4),
+            "S_sig": round(float(S_sig), 4),
+            "A_ml": round(float(A_ml), 4),
+            "delta_D": round(float(delta_D), 4),
+        }
+        base_weights = {
+            "w_sig": round(float(cfg.w_sig), 4),
+            "w_ml": round(float(cfg.w_ml), 4),
+            "w_trust": round(float(cfg.w_trust), 4),
+            "w_hist": round(float(cfg.w_hist), 4),
+            "w_graph": round(float(cfg.w_graph), 4),
+            "w_fore": round(float(cfg.w_fore), 4),
+            "w_ti": round(float(cfg.w_ti), 4),
+            "w_ep": round(float(getattr(cfg, "w_ep", 0.10)), 4),
+        }
+        adaptive_weights = {
+            "w_sig_effective": round(float(cfg.w_sig * q_sig), 4),
+            "w_ml_effective": round(float(cfg.w_ml * q_ml), 4),
+            "q_sig": round(float(q_sig), 4),
+            "q_ml": round(float(q_ml), 4),
+            "q_stat": round(float(q_stat), 4),
+        }
+        additive_boosts = {
+            "term_sig": round(float(term_sig), 4),
+            "term_ml": round(float(term_ml), 4),
+            "term_hist": round(float(term_hist), 4),
+            "term_graph": round(float(term_graph), 4),
+            "term_fore": round(float(term_fore), 4),
+            "term_ti": round(float(term_ti), 4),
+            "term_ep": round(float(term_ep), 4),
+            "additive_threat_total": round(float(additive_threat), 4),
+        }
+        multiplicative_factors = {
+            "signal_multiplier": round(float(1.0 + delta_D), 4),
+            "asset_criticality_mult": round(float(mult_crit), 4),
+            "uncertainty_attenuation_mult": round(float(mult_unc), 4),
+            "uncertainty_penalty": round(float(u_penalty), 4),
+        }
+        contextual_contributions = {
+            "effective_ti": round(float(effective_ti), 4),
+            "effective_r_ep": round(float(effective_r_ep), 4),
+            "effective_p_fore": round(float(effective_p_fore), 4),
+        }
+        historical_contributions = {
+            "effective_h_boost": round(float(effective_h_boost), 4),
+            "T_trust": round(float(T_trust), 4),
+            "trust_subtraction": round(float(trust_sub), 4),
+        }
+        graph_contributions = {
+            "effective_g_corr": round(float(effective_g_corr), 4),
+            "term_graph": round(float(term_graph), 4),
+        }
+        
+        # Step-by-Step Computational Trace
+        base_score = (cfg.w_sig * S_sig) + (cfg.w_ml * A_ml)
+        computational_steps = {
+            "base_score": round(float(base_score), 4),
+            "adaptive_weighted_score": round(float(term_sig + term_ml), 4),
+            "signal_multiplier": round(float(1.0 + delta_D), 4),
+            "score_after_multiplier": round(float(term_sig + term_ml), 4),
+            "rule_adjustments": round(float(term_sig), 4),
+            "score_after_rules": round(float(term_sig + term_ml), 4),
+            "history_adjustment": round(float(term_hist), 4),
+            "graph_adjustment": round(float(term_graph), 4),
+            "additive_threat_total": round(float(additive_threat), 4),
+            "asset_adjustment": round(float(mult_crit), 4),
+            "score_after_asset": round(float(additive_threat * mult_crit), 4),
+            "uncertainty_multiplier": round(float(mult_unc), 4),
+            "score_after_uncertainty": round(float(additive_threat * mult_crit * mult_unc), 4),
+            "trust_adjustment": round(float(trust_sub), 4),
+            "pre_clip_score": round(float(raw_risk), 4),
+            "final_score": risk_score,
+        }
 
         # 5b. Exact Causal Marginal Contributions: Delta R_i = R(full) - R(without E_i)
         def _calc_marginal(zero_term: float) -> float:
@@ -625,6 +712,15 @@ class AdaptiveRiskEngine:
             autonomy_decision=autonomy_dec,
             conformal_tau=conformal_tau,
             causal_chains=causal_chains,
+            raw_detector_outputs=raw_detector_outputs,
+            base_weights=base_weights,
+            adaptive_weights=adaptive_weights,
+            additive_boosts=additive_boosts,
+            multiplicative_factors=multiplicative_factors,
+            contextual_contributions=contextual_contributions,
+            historical_contributions=historical_contributions,
+            graph_contributions=graph_contributions,
+            computational_steps=computational_steps,
         )
 
         decision_reason = (
