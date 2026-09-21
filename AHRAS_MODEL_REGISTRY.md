@@ -32,7 +32,7 @@
 
 | Model Name | Purpose | Input Dimensions / Types | Output Schema / Range | Version | Training Data / Priors | Evaluation Status |
 | :--- | :--- | :--- | :--- | :--- | :--- | :--- |
-| **Adaptive Risk Engine** | Multi-signal uncertainty-aware risk controller | Multi-source detector outputs + context | `RiskResult` ($R_t \in [0, 1]$, `DecisionTrace`) | `2.0.0-NextGen` | Configurable parameter weights ($w_1-w_8$) | Verified ($|\Delta| \le 10^{-4}$ across 10,000 traces) |
+| **Adaptive Risk Engine** | Multi-signal uncertainty-aware risk controller | Multi-source detector outputs + context | `RiskResult` ($R_t \in [0, 1]$, `DecisionTrace`) | `2.0.0-NextGen` | Configurable parameter weights ($w_1-w_8$) | Verified (Phase 1-3: Trace Replay, Multi-Path Fidelity Sum-Check, and 18-Ablation FWER Suite) |
 | **Split Conformal Selective Gate** | Statistical guarantee for autonomous actions | Risk $R_t$, Uncertainty $U_t$, OOD score | `SelectionDecision` (7 action tiers, $\tau^*$) | `1.3.0` | Calibration holdout nonconformity scores | Verified (Statistical error bound $\le \alpha$) |
 | **Holt Causal Risk Forecaster** | Linear exponential smoothing horizon projection | Historical risk series strictly prior to $t$ | $h1, h3, h5$ risk forecasts, $P(\text{breach})$ | `1.1.0` | $\alpha=0.50, \beta=0.30$ smoothing factors | Verified (Zero lookahead leakage) |
 | **5-Bank Continual Weight Learner** | Drift adaptation & anti-forgetting replay | Streaming analyst feedback & loss gradients | Tuned weights $w_t \in [0.05, 0.70]$ | `2.0.0` | Recent, Attack, Hard-Neg, Drift, Prototype | Verified (Longitudinal MSE $\le 0.0178$) |

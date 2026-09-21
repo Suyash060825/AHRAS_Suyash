@@ -17,6 +17,16 @@
 
 ---
 
+### RQ1b: Multi-Signal Marginal Utility & Proper Ablation (Phase 3)
+* **Research Question**: What is the empirical marginal contribution of each detection mechanism, context modifier, and safety gate under leak-free temporal evaluation, and do contributions maintain statistical significance under Family-Wise Error Rate (FWER) control?
+* **Hypothesis**: Disabling signature rules drops detection F1 by $> 50\%$, while removing conformal safety gating reduces operational safety efficiency (RASE) by $> 30\%$. All 18 controlled leave-one-out ablations maintain quantifiable effect sizes under 10,000 paired sample permutations and Holm-Bonferroni correction ($\alpha = 0.05$).
+* **Experiment**: Evaluate 9 Canonical Progression Baselines (B1–B11) and 18 Controlled Leave-One-Out Ablations (A1–A18) across strict 3-way temporal splits (Train/Val/Test) with zero label leakage and validation-only threshold tuning.
+* **Datasets**: Temporal benchmark stream, CIC-IDS2017 held-out slices.
+* **Metrics**: Macro F1, Precision, Recall, Brier Score, Cohen's $d$, Empirical Permutation $p$-value, Holm-Bonferroni Adjusted $p$, RASE score.
+* **Expected Output**: Verified in `PROPER_ABLATION_REPORT.json`; zero data leakage; canonical progression F1 progression from unimodal $B_1$ to closed-loop $B_{11}$.
+
+---
+
 ### RQ2: Temporal & Cross-Dataset Generalization
 * **Research Question**: How severe is the performance degradation when an ensemble IDS trained on earlier network flows or an enterprise environment is deployed on later flows or a different network topology?
 * **Hypothesis**: Standard deep/ensemble classifiers degrade significantly ($> 30\%$ F1 drop) under cross-dataset shifts, whereas modular evidence normalization (OCSF standard) coupled with Welford-based statistical drift mitigation bounds degradation within $12\%$.
@@ -71,6 +81,7 @@
 
 | Experiment ID | Primary RQ | Script File | Target Artifact |
 | :--- | :--- | :--- | :--- |
+| **EXP-00** | RQ1b (Ablation) | `evaluation/run_proper_ablation.py` | `PROPER_ABLATION_REPORT.json` (Table 4) |
 | **EXP-01** | RQ1 (Fidelity) | `evaluation/xai_fidelity_experiment.py` | `RESULTS_FINAL.json` (Table 12) |
 | **EXP-02** | RQ2 (Generalization) | `evaluation/run_real_benchmarks.py` | `REAL_DATASET_VALIDATION_FINAL.json` |
 | **EXP-03** | RQ3 (Open-Set) | `evaluation/adversarial_suite.py` | `CLAIMS_MANIFEST_FINAL.json` (CLM-04) |
