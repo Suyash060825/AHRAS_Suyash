@@ -25,29 +25,56 @@ wheels/
 *.egg
 
 # Virtual environments
+.venv/
 venv/
 env/
 ENV/
 env.bak/
 venv.bak/
 
-# Logs & Databases
-logs/*.db
-logs/*.db-journal
-logs/*.db-shm
-logs/*.db-wal
+# Large Datasets & Raw Network Captures
+data/
+*.pcap
+*.pcapng
+*.pcap.gz
+*.pcap_ISCX.csv
+*.csv.gz
+
+# Databases & Runtime Logs
+*.db
+*.db-journal
+*.db-shm
+*.db-wal
+*.sqlite
+*.sqlite3
+logs/
 *.log
+ahras/logs/*.db*
+
+# Test & Coverage artifacts
+.pytest_cache/
+.coverage
+htmlcov/
+.mypy_cache/
+.ruff_cache/
 
 # IDE & Editor settings
 .vscode/
 .idea/
 *.swp
 *.swo
+*~
 
 # OS generated files
 .DS_Store
 Thumbs.db
 
-# Output zips
+# Output zips & archives
 *.zip
-data/
+*.tar.gz
+*.tgz
+*.rar
+*.7z
+
+# Git LFS / Attributes
+.gitattributes
