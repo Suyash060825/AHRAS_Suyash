@@ -1,0 +1,169 @@
+{
+  "experiment_id": "EXP-03",
+  "research_question": "RQ3: Open-Set Unknown Attack Detection",
+  "provenance": {
+    "cicids2017_path": "/home/suyashpradhan/Downloads/AHRAS_Suyash-master/data/cicids2017/Wednesday-workingHours.pcap_ISCX.csv",
+    "cicids2017_sha256": "893c27dc968bf7a8adef1689f90be55ca4a4dc3088fb63d6ff247ac56856df2a",
+    "unsw_path": "/home/suyashpradhan/Downloads/AHRAS_Suyash-master/data/unsw_nb15/UNSW-NB15_1.csv",
+    "unsw_sha256": "a71a9dc641b2878d63133d46a2a5bc8488e82010208cf237c89f3fa710b8c628",
+    "partition_sizes": {
+      "train_known": 2621,
+      "val_known": 562,
+      "test_known": 562,
+      "unseen_zero_days": 693
+    },
+    "known_families": [
+      "Benign",
+      "DoS slowloris",
+      "DoS Slowhttptest"
+    ],
+    "zero_day_families": [
+      "Generic",
+      "Analysis",
+      "Exploits",
+      "Backdoors",
+      "Fuzzers",
+      "DoS",
+      "Reconnaissance"
+    ]
+  },
+  "models_evaluated": [
+    {
+      "model_name": "Closed_Set_Random_Forest_MSP",
+      "known_macro_f1": 0.9748,
+      "known_attack_f1": 0.9762,
+      "zero_day_recall": 0.0,
+      "false_unknown_rate": 0.0419,
+      "open_set_auroc": 0.5032,
+      "open_set_auprc": 0.5471,
+      "brier_score": 0.5437,
+      "per_family_recall": {
+        "Reconnaissance": 0.0,
+        "Generic": 0.0,
+        "Backdoors": 0.0,
+        "Fuzzers": 0.0,
+        "DoS": 0.0,
+        "Analysis": 0.0,
+        "Exploits": 0.0
+      }
+    },
+    {
+      "model_name": "Closed_Set_Gradient_Boosting_MSP",
+      "known_macro_f1": 0.9702,
+      "known_attack_f1": 0.9701,
+      "zero_day_recall": 0.0043,
+      "false_unknown_rate": 0.0231,
+      "open_set_auroc": 0.3442,
+      "open_set_auprc": 0.4575,
+      "brier_score": 0.549,
+      "per_family_recall": {
+        "Reconnaissance": 0.0095,
+        "Generic": 0.0,
+        "Backdoors": 0.0091,
+        "Fuzzers": 0.0,
+        "DoS": 0.0,
+        "Analysis": 0.011,
+        "Exploits": 0.0
+      }
+    },
+    {
+      "model_name": "Isolation_Forest_Point_Anomaly",
+      "known_macro_f1": 0.5,
+      "known_attack_f1": 0.5,
+      "zero_day_recall": 0.9841,
+      "false_unknown_rate": 0.0377,
+      "open_set_auroc": 0.9975,
+      "open_set_auprc": 0.9982,
+      "brier_score": 0.0592,
+      "per_family_recall": {
+        "Reconnaissance": 1.0,
+        "Generic": 1.0,
+        "Backdoors": 0.9818,
+        "Fuzzers": 0.9915,
+        "DoS": 0.9785,
+        "Analysis": 0.956,
+        "Exploits": 0.9789
+      }
+    },
+    {
+      "model_name": "Deep_Autoencoder_Reconstruction",
+      "known_macro_f1": 0.5,
+      "known_attack_f1": 0.5,
+      "zero_day_recall": 0.987,
+      "false_unknown_rate": 0.0398,
+      "open_set_auroc": 0.9964,
+      "open_set_auprc": 0.9963,
+      "brier_score": 0.2203,
+      "per_family_recall": {
+        "Reconnaissance": 1.0,
+        "Generic": 1.0,
+        "Backdoors": 0.9818,
+        "Fuzzers": 0.9831,
+        "DoS": 0.9892,
+        "Analysis": 0.967,
+        "Exploits": 0.9895
+      }
+    },
+    {
+      "model_name": "Raw_Feature_Euclidean_Baseline",
+      "known_macro_f1": 0.5,
+      "known_attack_f1": 0.5,
+      "zero_day_recall": 0.9841,
+      "false_unknown_rate": 0.0419,
+      "open_set_auroc": 0.9952,
+      "open_set_auprc": 0.9954,
+      "brier_score": 0.1314,
+      "per_family_recall": {
+        "Reconnaissance": 1.0,
+        "Generic": 1.0,
+        "Backdoors": 0.9727,
+        "Fuzzers": 0.9831,
+        "DoS": 0.9892,
+        "Analysis": 0.967,
+        "Exploits": 0.9789
+      }
+    },
+    {
+      "model_name": "AHRAS_Latent_Metric_Reasoner",
+      "known_macro_f1": 0.9748,
+      "known_attack_f1": 0.9762,
+      "zero_day_recall": 0.9654,
+      "false_unknown_rate": 0.0461,
+      "open_set_auroc": 0.9915,
+      "open_set_auprc": 0.9928,
+      "brier_score": 0.1317,
+      "per_family_recall": {
+        "Reconnaissance": 1.0,
+        "Generic": 0.9877,
+        "Backdoors": 0.9364,
+        "Fuzzers": 0.9746,
+        "DoS": 0.9677,
+        "Analysis": 0.956,
+        "Exploits": 0.9368
+      }
+    }
+  ],
+  "statistical_significance_vs_rf": {
+    "mean_recall_gain": 0.9654,
+    "p_value": 0.0001,
+    "statistically_significant": true,
+    "cohens_d": 5.2759
+  },
+  "hypothesis_verification": {
+    "zero_day_recall_reaches_75_pct": true,
+    "false_unknown_rate_bounded_within_5_pct": true,
+    "known_class_f1_reaches_85_pct": true,
+    "open_set_auroc_reaches_85_pct": true,
+    "ahras_significantly_outperforms_rf": true,
+    "all_success_criteria_satisfied": true
+  },
+  "claims_manifest_entry": {
+    "claim_id": "CLM-04",
+    "claim": "Explicit OOD unknown attack discrimination on held-out families",
+    "metric": "zero_day_recall",
+    "status": "SUPPORTED",
+    "value": 0.9654,
+    "false_unknown_rate": 0.0461
+  },
+  "execution_time_sec": 1.51
+}

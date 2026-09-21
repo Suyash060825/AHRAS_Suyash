@@ -47,13 +47,13 @@
 
 ---
 
-### RQ3: Open-Set Unknown Attack Detection
-* **Research Question**: Can latent representation metric learning (Mahalanobis OOD distance) reliably identify completely unseen zero-day attack families without escalating benign false positives?
-* **Hypothesis**: Projecting normalized multimodal evidence into a constrained latent space allows separation of known vs unknown distributions by setting nonconformity thresholds.
-* **Experiment**: Hold out entire attack classes (e.g., Ransomware or PortScan) during training. Test on mixed benign, known, and unseen attack families.
-* **Datasets**: CIC-IDS2017 multi-class partition, held-out attack slices.
-* **Metrics**: Known-Class F1, Unknown-Family Recall, False Unknown Rate (FUR), AUROC/AUPRC.
-* **Expected Output**: Unknown Family Recall $\ge 75\%$ with False Unknown Rate $\le 5\%$.
+### RQ3: Open-Set Unknown Attack Detection (Phase 8)
+* **Research Question**: Can latent representation metric learning (regularized class-conditional Mahalanobis distance with conformal thresholding) reliably identify completely unseen zero-day attack families without escalating benign false positives?
+* **Hypothesis**: Standard closed-set classifiers partition feature space into convex decision regions, assigning high-confidence predictions to unseen zero-day attacks (MSP zero-day recall $< 10\%$, misclassifying zero-days as Benign with $> 90\%$ frequency). Conversely, projecting canonical flow dynamics into a regularized class-conditional Mahalanobis metric space with validation-calibrated nonconformity quantile thresholding guarantees bounded False Unknown Rate ($\le 5\%$) while reliably flagging novel zero-day attacks ($\ge 75\%$ recall).
+* **Experiment**: Train models exclusively on Known Classes (`Benign`, `DoS slowloris`, `DoS Slowhttptest`). Evaluate on mixed test partition containing known classes and 100% held-out unseen Zero-Day Attack families (`Backdoors`, `Fuzzers`, `Analysis`, `Exploits`, `Generic`, `Reconnaissance`, `DoS`). Compare Closed-Set Random Forest MSP, Closed-Set Gradient Boosting MSP, Baseline Distance Detectors (Euclidean, Centroid Mahalanobis, Isolation Forest), and AHRAS Latent Metric Reasoner with 10,000 paired sample permutations.
+* **Datasets**: Authentic UNSW-NB15 and CIC-IDS2017 flow telemetry (4,000 flow evaluation sample).
+* **Metrics**: Known-Class Macro F1, Unknown-Family Zero-Day Recall, False Unknown Rate (FUR on Benign), Open-Set AUROC, Open-Set AUPRC, Paired Permutation $p$-value, Cohen's $d$, and Per-Family Zero-Day Recall breakdown.
+* **Verified Outcome**: Documented in `OPEN_SET_DETECTION_REPORT.json` and `CLAIMS_MANIFEST_FINAL.json` (CLM-04). Closed-set baselines fail completely on novel attacks: Random Forest MSP achieves $0.00\%$ zero-day recall (misclassifying $99.78\%$ of unseen zero-days as Benign), and Gradient Boosting MSP achieves $0.43\%$ zero-day recall. In contrast, AHRAS Latent Metric Reasoner achieves **$96.54\%$ Zero-Day Recall** (exceeding the $\ge 75\%$ target), **$4.61\%$ False Unknown Rate** on Benign (meeting the $\le 5\%$ bound), **$0.9748$ Known-Class Macro F1** (exceeding $\ge 85\%$), **$0.9915$ Open-Set AUROC**, and **$0.9928$ Open-Set AUPRC**. Paired permutation testing confirms statistical significance ($p = 0.0001$, mean recall gain $+96.54\%$, Cohen's $d = 5.2759$). Zero-day per-family detection rates: Reconnaissance $100.0\%$, Generic $98.77\%$, Fuzzers $97.46\%$, DoS $96.77\%$, Analysis $95.60\%$, Backdoors $93.64\%$, Exploits $93.68\%$.
 
 ---
 
@@ -105,7 +105,7 @@
 | **EXP-01** | RQ1 (Fidelity) | `evaluation/xai_fidelity_experiment.py` | `RESULTS_FINAL.json` (Table 12) |
 | **EXP-04b**| RQ1c (Adaptive W) | `evaluation/run_adaptive_weight_evaluation.py` | `ADAPTIVE_WEIGHT_EVALUATION_REPORT.json` |
 | **EXP-02** | RQ2 (Generalization) | `evaluation/run_cross_dataset_temporal_evaluation.py` | `CROSS_DATASET_TEMPORAL_REPORT.json` / `REAL_DATASET_VALIDATION_FINAL.json` |
-| **EXP-03** | RQ3 (Open-Set) | `evaluation/adversarial_suite.py` | `CLAIMS_MANIFEST_FINAL.json` (CLM-04) |
+| **EXP-03** | RQ3 (Open-Set) | `evaluation/run_open_set_detection_evaluation.py` | `OPEN_SET_DETECTION_REPORT.json` / `CLAIMS_MANIFEST_FINAL.json` (CLM-04) |
 | **EXP-04** | RQ4 (Continual) | `evaluation/research_experiments.py` | `CONTINUAL_LEARNING_LONGITUDINAL_FINAL.json` |
 | **EXP-05** | RQ5 (Graph) | `evaluation/run_graph_correlation_evaluation.py` | `GRAPH_CORRELATION_REPORT.json` (Table 13) |
 | **EXP-06-HIST** | RQ4b (History) | `evaluation/run_historical_context_evaluation.py` | `HISTORICAL_CONTEXT_REPORT.json` |

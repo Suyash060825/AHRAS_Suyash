@@ -21,7 +21,9 @@
     "claim": "Explicit OOD unknown attack discrimination on held-out families",
     "metric": "zero_day_recall",
     "status": "SUPPORTED",
-    "value": 0.7895
+    "value": 0.9654,
+    "false_unknown_rate": 0.0461,
+    "open_set_auroc": 0.9915
   },
   "CLM-05": {
     "claim": "Continual learning concept drift recovery and forgetting mitigation",

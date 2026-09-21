@@ -13,7 +13,7 @@
 | **Deep Feature Autoencoder** | Non-linear manifold reconstruction error | 14-dim standardized vector | `reconstruction_error` $\in [0, \infty)$ | `1.2.0` | Unsupervised benign baseline telemetry | Verified (Ensemble component) |
 | **One-Class SVM** | Support-vector boundary outlier detection | 14-dim standardized vector | `svm_score` $\in [0, 1]$ | `1.1.0` | Normal network/process features | Verified (Ensemble component) |
 | **Welford Streaming Stat Engine** | Online running mean and variance tracking | Streaming numerical metrics per entity | `zscore`, `ewma_deviation`, `drift_score` | `2.0.0` | Zero offline training; strictly streaming online | Verified (Real-time $O(1)$ memory) |
-| **Mahalanobis Latent OOD Detector** | Zero-day / unknown attack family discrimination | Latent embedding $z \in \mathbb{R}^{32}$ | `ood_score` $\in [0, \infty)$, `is_unknown` | `1.0.0` | Benign manifold covariance | Verified (Recall: 0.7895 on held-out families) |
+| **Mahalanobis Latent OOD Detector** | Zero-day / unknown attack family discrimination | Latent embedding $z \in \mathbb{R}^{8}$ / Canonical flow dynamics | `ood_score` $\in [0, \infty)$, `is_unknown` | `2.0.0` | Class-conditional covariance $\Sigma_c$ over known classes | Verified (Phase 8 EXP-03: Zero-Day Recall 96.54% on 7 held-out families, FUR 4.61% on Benign, AUROC 0.9915, $p = 0.0001$) |
 
 ---
 
