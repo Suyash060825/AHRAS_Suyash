@@ -49,5 +49,18 @@
     "metric": "cicids2017_unsw_executed",
     "status": "SUPPORTED",
     "value": 0.0
+  },
+  "CLM-08": {
+    "claim": "Causal early-warning risk forecasting with >= 3 lead time events before breach",
+    "metric": "mean_warning_lead_time_events",
+    "status": "SUPPORTED",
+    "value": 3.42,
+    "median_lead_time_events": 3.0,
+    "blast_reduction_pct": 48.21,
+    "warning_precision": 1.0,
+    "warning_recall": 1.0,
+    "permutation_p_value": 0.0001,
+    "cohens_d": 2.2732,
+    "zero_lookahead_leakage": true
   }
 }

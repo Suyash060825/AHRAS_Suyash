@@ -107,6 +107,16 @@
 
 ---
 
+### RQ8: Causal Early-Warning Risk Prediction & Proactive Forecasting (Phase 12)
+* **Research Question**: Can causal, leak-free linear exponential smoothing (Holt $\alpha=0.50, \beta=0.30$) combined with Gaussian hazard threshold crossing probabilities reliably predict security risk escalation $\ge 3$ events before a critical breach occurs ($R \ge 0.85$), reducing containment blast radius and outperforming reactive heuristics, naive persistence, and moving average baselines without future lookahead leakage?
+* **Hypothesis**: Strictly causal walk-forward forecasting on past-only risk trajectories achieves early warning lead time $\ge 3$ events, bounds multi-step prediction error below naive baselines ($MAE_{h=3} \le 0.10$), eliminates false alarms on non-escalating benign activity ($\le 5\%$), and reduces operational blast radius exposure by $\ge 40\%$ compared to reactive-only SOAR.
+* **Experiment**: 600 longitudinal security incident risk trajectories (250 Rapid Escalation, 150 Stealthy Slow Escalation, 100 Stable Benign, 100 De-escalating). Compare Reactive SOAR, Naive Persistence, 5-Step Moving Average (MA-5), Linear Momentum, and AHRAS Holt Causal Forecaster with 10,000 paired sample permutations.
+* **Datasets**: Longitudinal multi-trajectory risk progression streams (600 incident sequences, lengths 12–28 steps).
+* **Metrics**: Mean & Median Warning Lead Time (events before breach), Walk-Forward MAE & RMSE ($h=1, 3, 5$), Warning Precision & Recall, False Warning Rate on Benign, Blast Radius Exposure Reduction ($\% \Delta$), Paired Permutation $p$-value, Cohen's $d$, 95% Bootstrap CI.
+* **Verified Outcome**: Documented in `PROACTIVE_FORECASTING_REPORT.json` and `CLAIMS_MANIFEST_FINAL.json` (CLM-08). Reactive SOAR provides zero early warning ($0.0$ events), reacting only after the breach has occurred. In contrast, AHRAS Holt Causal Forecaster achieves **$3.42$ events mean warning lead time** (median $3.0$ events, exceeding the $\ge 3.0$ events target), **$100.0\%$ warning precision**, **$100.0\%$ warning recall**, **$0.0\%$ false warning rate on benign**, **$48.21\%$ containment blast radius reduction** (exceeding the $\ge 40\%$ target), and superior horizon accuracy ($MAE_{h=1} = 0.0314, MAE_{h=3} = 0.0657, MAE_{h=5} = 0.1072$ vs Naive Persistence $0.0476, 0.1397, 0.2352$). Zero lookahead leakage is mathematically verified, with paired permutation significance ($p = 0.000100$, Cohen's $d = 2.2732$, 95% bootstrap CI $[3.2825, 3.5651]$).
+
+---
+
 ## 2. Experimental Execution Matrix
 
 | Experiment ID | Primary RQ | Script File | Target Artifact |
@@ -121,3 +131,4 @@
 | **EXP-06-HIST** | RQ4b (History) | `evaluation/run_historical_context_evaluation.py` | `HISTORICAL_CONTEXT_REPORT.json` |
 | **EXP-06** | RQ6 (Safety/RASE)| `evaluation/run_conformal_autonomy_evaluation.py` | `CONFORMAL_AUTONOMY_REPORT.json` / `CLOSED_LOOP_FINAL.json` (CLM-06) |
 | **EXP-07** | RQ7 (Fed Byzantine)| `evaluation/run_federated_evaluation.py` | `FEDERATED_LEARNING_REPORT.json` / `CLAIMS_MANIFEST_FINAL.json` (CLM-03) |
+| **EXP-08** | RQ8 (Proactive Forecast)| `evaluation/run_proactive_forecasting_evaluation.py` | `PROACTIVE_FORECASTING_REPORT.json` / `CLAIMS_MANIFEST_FINAL.json` (CLM-08) |
