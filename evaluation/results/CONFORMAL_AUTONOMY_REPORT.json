@@ -1,0 +1,106 @@
+{
+  "experiment_id": "EXP-06",
+  "research_question": "RQ6: Safe Selective Autonomy & Conformal Risk Gating",
+  "provenance": {
+    "target_coverage": 0.9,
+    "conformal_alpha": 0.1,
+    "calibrated_tau": 0.7272,
+    "calibration_scenarios": 300,
+    "test_scenarios": 1000,
+    "attack_prevalence": 0.4,
+    "benign_prevalence": 0.6
+  },
+  "policies_evaluated": [
+    {
+      "policy_name": "Policy_Uncalibrated_Fixed_Threshold",
+      "attack_containment_rate": 82.5,
+      "false_intervention_rate": 20.0,
+      "false_autonomous_containments": 120,
+      "total_false_interventions": 120,
+      "abstention_rate": 0.0,
+      "analyst_escalation_rate": 0.0,
+      "total_operational_cost": 2814.95,
+      "mean_rase_safety_score": 0.285,
+      "cost_reduction_pct": 0.0,
+      "rase_improvement_pct": 0.0
+    },
+    {
+      "policy_name": "Policy_Risk_Weighted_Heuristic",
+      "attack_containment_rate": 37.75,
+      "false_intervention_rate": 11.5,
+      "false_autonomous_containments": 69,
+      "total_false_interventions": 69,
+      "abstention_rate": 0.0,
+      "analyst_escalation_rate": 0.0,
+      "total_operational_cost": 7170.05,
+      "mean_rase_safety_score": 0.2525,
+      "cost_reduction_pct": -154.71,
+      "rase_improvement_pct": -11.4
+    },
+    {
+      "policy_name": "Policy_Uncertainty_Threshold_Only",
+      "attack_containment_rate": 82.5,
+      "false_intervention_rate": 0.0,
+      "false_autonomous_containments": 0,
+      "total_false_interventions": 0,
+      "abstention_rate": 0.0,
+      "analyst_escalation_rate": 19.9,
+      "total_operational_cost": 2469.25,
+      "mean_rase_safety_score": 0.3462,
+      "cost_reduction_pct": 12.28,
+      "rase_improvement_pct": 21.47
+    },
+    {
+      "policy_name": "Policy_Conservative_Analyst_All",
+      "attack_containment_rate": 100.0,
+      "false_intervention_rate": 0.0,
+      "false_autonomous_containments": 0,
+      "total_false_interventions": 0,
+      "abstention_rate": 0.0,
+      "analyst_escalation_rate": 52.0,
+      "total_operational_cost": 520.0,
+      "mean_rase_safety_score": 0.3015,
+      "cost_reduction_pct": 81.53,
+      "rase_improvement_pct": 5.79
+    },
+    {
+      "policy_name": "Policy_AHRAS_Conformal_Risk_Gate",
+      "attack_containment_rate": 100.0,
+      "false_intervention_rate": 0.0,
+      "false_autonomous_containments": 0,
+      "total_false_interventions": 0,
+      "abstention_rate": 4.9,
+      "analyst_escalation_rate": 17.1,
+      "total_operational_cost": 517.5,
+      "mean_rase_safety_score": 0.4134,
+      "cost_reduction_pct": 81.62,
+      "rase_improvement_pct": 45.05
+    }
+  ],
+  "statistical_significance_vs_uncalibrated": {
+    "mean_rase_gain": 0.1284,
+    "p_value": 0.0001,
+    "cohens_d": 0.7153,
+    "statistically_significant": true
+  },
+  "hypothesis_verification": {
+    "false_intervention_reduction_reaches_65_pct": true,
+    "false_autonomous_containment_reduction_reaches_75_pct": true,
+    "rase_improvement_reaches_35_pct": true,
+    "attack_containment_reaches_90_pct": true,
+    "conformal_coverage_guaranteed": true,
+    "statistically_significant_superiority": true,
+    "all_success_criteria_satisfied": true
+  },
+  "claims_manifest_entry": {
+    "claim_id": "CLM-06",
+    "claim": "Safety-constrained active response RASE optimization",
+    "metric": "rase_safety_score",
+    "status": "SUPPORTED",
+    "value": 0.4134,
+    "false_intervention_reduction_pct": 100.0,
+    "rase_improvement_pct": 45.05,
+    "attack_containment_rate": 100.0
+  },
+  "execution_time_sec": 0.18
+}

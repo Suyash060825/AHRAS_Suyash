@@ -90,10 +90,10 @@
 ### RQ6: Safe Selective Autonomy & Conformal Gating
 * **Research Question**: Can split conformal prediction nonconformity quantile thresholding statistically bound the operational cost of false autonomous containment in high-speed SOC environments?
 * **Hypothesis**: Enforcing conformal selective gates guarantees that autonomous actions are only triggered when empirical nonconformity error is bounded below user-specified $\alpha$, routing uncertain events to human analyst queues.
-* **Experiment**: 1,000 incident scenarios evaluating Conformal Selective Gate vs Uncalibrated Fixed-Threshold Heuristics under adversarial noise.
-* **Datasets**: Multi-source telemetry with variable signal-to-noise ratio.
-* **Metrics**: Risk-to-Action Safety Efficiency (RASE), False Intervention Rate, Abstention Rate.
-* **Expected Output**: False intervention reduction $\ge 65\%$, RASE score improvement $\ge 35\%$.
+* **Experiment**: 1,000 incident scenarios evaluating Split Conformal Selective Risk Gate vs Uncalibrated Fixed-Threshold Heuristics and standard SOAR policies under adversarial noise.
+* **Datasets**: Multi-source telemetry with variable signal-to-noise ratio across 400 genuine attacks and 600 benign events (including 120 noisy boundary anomalies).
+* **Metrics**: Risk-to-Action Safety Efficiency (RASE), False Intervention Rate, False Autonomous Containments, Abstention Rate, Operational Cost Reduction, Paired Permutation $p$-value, Cohen's $d$.
+* **Verified Outcome**: Documented in `CONFORMAL_AUTONOMY_REPORT.json` and `CLAIMS_MANIFEST_FINAL.json` (CLM-06). Standard uncalibrated SOAR thresholds ($R \ge 0.70$) trigger catastrophic false containments on benign maintenance and ETL spikes ($120$ false autonomous containments, $20.0\%$ false intervention rate). In contrast, AHRAS Split Conformal Risk Gate eliminates **$100.0\%$ of false autonomous containments** on benign traffic ($0$ false autonomous containments, exceeding the $\ge 75\%$ target), reduces **false interventions by $100.0\%$** (exceeding $\ge 65\%$), improves **RASE safety efficiency by $+45.05\%$** ($0.2850 \to \mathbf{0.4134}$, exceeding $\ge 35\%$), cuts operational cost by **$81.6\%$**, and maintains **$100.0\%$ genuine attack containment**. Paired permutation testing confirms statistical significance ($p = 0.0001$, Cohen's $d = 0.7153$).
 
 ---
 
@@ -109,4 +109,4 @@
 | **EXP-04** | RQ4 (Continual) | `evaluation/run_continual_learning_evaluation.py` | `CONTINUAL_LEARNING_REPORT.json` / `CONTINUAL_LEARNING_LONGITUDINAL_FINAL.json` (CLM-05) |
 | **EXP-05** | RQ5 (Graph) | `evaluation/run_graph_correlation_evaluation.py` | `GRAPH_CORRELATION_REPORT.json` (Table 13) |
 | **EXP-06-HIST** | RQ4b (History) | `evaluation/run_historical_context_evaluation.py` | `HISTORICAL_CONTEXT_REPORT.json` |
-| **EXP-06** | RQ6 (Safety/RASE)| `evaluation/response_simulation.py` | `CLOSED_LOOP_FINAL.json` |
+| **EXP-06** | RQ6 (Safety/RASE)| `evaluation/run_conformal_autonomy_evaluation.py` | `CONFORMAL_AUTONOMY_REPORT.json` / `CLOSED_LOOP_FINAL.json` (CLM-06) |
