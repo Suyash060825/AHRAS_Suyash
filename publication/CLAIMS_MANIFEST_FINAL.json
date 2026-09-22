@@ -62,5 +62,20 @@
     "permutation_p_value": 0.0001,
     "cohens_d": 2.2732,
     "zero_lookahead_leakage": true
+  },
+  "CLM-09": {
+    "claim": "Two-tier host telemetry adapter achieves <= 3.0% CPU overhead with >= 98% ransomware recall",
+    "metric": "telemetry_ingestion_cpu_overhead_pct",
+    "status": "SUPPORTED",
+    "value": 2.26,
+    "target": "<= 3.0% CPU",
+    "ransomware_recall": 1.0,
+    "ransomware_f1": 1.0,
+    "lolbin_lineage_recall": 1.0,
+    "lolbin_lineage_f1": 1.0,
+    "latency_p99_ms": 0.1837,
+    "throughput_events_sec": 21470.5,
+    "permutation_p_value": 0.0001,
+    "cohens_d": 0.3016
   }
 }

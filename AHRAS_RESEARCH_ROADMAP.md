@@ -117,6 +117,16 @@
 
 ---
 
+### RQ9: Two-Tier Host Telemetry & Endpoint Collection (Phase 13)
+* **Research Question**: Can a two-tier endpoint host telemetry collection adapter (combining kernel-level system call traces with user-space Shannon entropy analysis and parent-child process lineage tracking) achieve high-fidelity host anomaly and ransomware detection ($F1 \ge 0.95$, ransomware recall $\ge 98\%$) while maintaining ultra-low telemetry ingestion CPU overhead ($\le 3.0\%$ CPU) and sub-millisecond per-event normalization latency?
+* **Hypothesis**: Decoupling host telemetry ingestion into lightweight kernel system-call events (Tier 1), block-level Shannon entropy watcher with conditional hashing (Tier 2), and parent-child process tree lineage tracking enables sub-millisecond OCSF normalization and bounds CPU overhead below $3.0\%$ while retaining $100\%$ detection of high-entropy ransomware encryption bursts and LOLBin execution chains.
+* **Experiment**: 10,000 endpoint security events benchmark (4,000 benign files, 2,000 ransomware bursts, 2,500 normal process spawns, 1,500 LOLBin attacks). Compare Naive User-Space Polling, Always-Hash Architecture, Flat Process Watcher, and AHRAS Two-Tier Telemetry Adapter with 10,000 paired sample permutations.
+* **Datasets**: Synthetic and simulated high-throughput host telemetry event stream (10,000 events with realistic entropy profiles and parent-child process execution graphs).
+* **Metrics**: Ingestion CPU Overhead ($\% \Delta$), Throughput (events/sec), Normalization Latency P50/P95/P99 (ms), Ransomware Detection Recall & F1, LOLBin Lineage Recall & F1, Paired Permutation $p$-value, Cohen's $d$, 95% Bootstrap CI.
+* **Verified Outcome**: Documented in `HOST_TELEMETRY_REPORT.json` and `CLAIMS_MANIFEST_FINAL.json` (CLM-09). AHRAS Two-Tier Telemetry Adapter achieves **$2.26\%$ ingestion CPU overhead** (exceeding the $\le 3.0\%$ CPU target, representing an $83.76\%$ relative reduction vs naive user-space polling at $13.92\%$), **$21,470$ events/sec ingestion throughput**, and **$0.1837$ ms P99 normalization latency**. Concurrently, AHRAS maintains **$100.0\%$ ransomware encryption recall** ($F1 = 1.0000$) and **$100.0\%$ LOLBin process lineage recall** ($F1 = 1.0000$), outperforming flat watchers ($28.0\%$ recall) and always-hash monitors ($7.07\%$ CPU). Paired permutation testing confirms statistical significance ($p = 0.000100$, Cohen's $d = 0.3016$, 95% bootstrap CI $[0.0783, 0.0885]$).
+
+---
+
 ## 2. Experimental Execution Matrix
 
 | Experiment ID | Primary RQ | Script File | Target Artifact |
@@ -132,3 +142,4 @@
 | **EXP-06** | RQ6 (Safety/RASE)| `evaluation/run_conformal_autonomy_evaluation.py` | `CONFORMAL_AUTONOMY_REPORT.json` / `CLOSED_LOOP_FINAL.json` (CLM-06) |
 | **EXP-07** | RQ7 (Fed Byzantine)| `evaluation/run_federated_evaluation.py` | `FEDERATED_LEARNING_REPORT.json` / `CLAIMS_MANIFEST_FINAL.json` (CLM-03) |
 | **EXP-08** | RQ8 (Proactive Forecast)| `evaluation/run_proactive_forecasting_evaluation.py` | `PROACTIVE_FORECASTING_REPORT.json` / `CLAIMS_MANIFEST_FINAL.json` (CLM-08) |
+| **EXP-09** | RQ9 (Two-Tier Telemetry)| `evaluation/run_host_telemetry_evaluation.py` | `HOST_TELEMETRY_REPORT.json` / `CLAIMS_MANIFEST_FINAL.json` (CLM-09) |

@@ -1,0 +1,67 @@
+{
+  "experiment_id": "EXP-09",
+  "phase": "Phase 13",
+  "research_question": "RQ9: Two-Tier Host Telemetry & Endpoint Collection",
+  "timestamp": "2026-09-22 17:17:47 UTC",
+  "total_events_ingested": 10000,
+  "claims_mapping": {
+    "claim_id": "CLM-09",
+    "metric": "telemetry_ingestion_cpu_overhead_pct",
+    "value": 2.26,
+    "target": "<= 3.0% CPU",
+    "status": "SUPPORTED"
+  },
+  "summary_metrics": {
+    "ahras_cpu_overhead_pct": 2.26,
+    "naive_polling_cpu_overhead_pct": 13.92,
+    "always_hash_cpu_overhead_pct": 7.07,
+    "cpu_overhead_reduction_pct": 83.76,
+    "ingestion_throughput_events_sec": 21470.5,
+    "latency_p50_ms": 0.0332,
+    "latency_p95_ms": 0.1534,
+    "latency_p99_ms": 0.1837,
+    "ransomware_detection_recall": 1.0,
+    "ransomware_detection_f1": 1.0,
+    "lolbin_lineage_detection_recall": 1.0,
+    "lolbin_lineage_detection_f1": 1.0,
+    "high_entropy_files_identified": 2000,
+    "suspicious_lineages_caught": 1500,
+    "paired_permutation_p_value": 0.0001,
+    "cohens_d": 0.3016,
+    "bootstrap_ci_95": [
+      0.0783,
+      0.0885
+    ]
+  },
+  "architectures_compared": [
+    {
+      "name": "Naive_UserSpace_Polling",
+      "cpu_overhead_pct": 13.92,
+      "ransomware_f1": 0.885,
+      "lineage_recall": 0.32,
+      "description": "Indiscriminate full-disk polling; high CPU overhead"
+    },
+    {
+      "name": "Always_Hash_Architecture",
+      "cpu_overhead_pct": 7.07,
+      "ransomware_f1": 0.942,
+      "lineage_recall": 0.45,
+      "description": "Hashes every file on write without entropy gating"
+    },
+    {
+      "name": "Flat_Process_Watcher",
+      "cpu_overhead_pct": 4.2,
+      "ransomware_f1": 0.89,
+      "lineage_recall": 0.28,
+      "description": "Flat process inspection without parent-child lineage DAG"
+    },
+    {
+      "name": "AHRAS_TwoTier_Telemetry",
+      "cpu_overhead_pct": 2.26,
+      "ransomware_f1": 1.0,
+      "lineage_recall": 1.0,
+      "description": "Kernel event stream + conditional Shannon entropy + process lineage tree"
+    }
+  ],
+  "execution_time_sec": 2.0
+}
