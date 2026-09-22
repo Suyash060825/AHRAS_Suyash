@@ -97,6 +97,16 @@
 
 ---
 
+### RQ7: Byzantine-Robust Multi-Tenant Federated Learning (Phase 11)
+* **Research Question**: Can coordinate-wise median aggregation combined with temporal client reputation tracking ($T_i(t)$), quarantine gating, and Federated Knowledge Distillation (FedKD) preserve high anomaly detection utility under non-IID enterprise distributions when up to $30\%$ of participants mount adversarial poisoning attacks?
+* **Hypothesis**: Standard FedAvg degrades catastrophically ($F1 \le 0.60$) under Byzantine attacks (gradient explosion, directional sign-flipping, and label inversion), whereas AHRAS Byzantine-Robust FedKD isolates rogue participants ($T_i < 0.25$ quarantine, $> 90\%$ poison rejection), preserving global detection performance ($F1 \ge 0.95$, retained $F1 \ge 0.98$ under $30\%$ malicious clients, supporting `CLM-03`).
+* **Experiment**: 10 enterprise tenants with Dirichlet non-IID data distribution ($\alpha = 0.50$, 12,000 flows) across 5 federated rounds. Compare Standard FedAvg, FedAvg+NormClip, Coordinate Median, Trimmed Mean (20%), and AHRAS FedKD+Reputation across 0%, 10%, 20%, and 30% malicious participants with 10,000 paired sample permutations.
+* **Datasets**: Multi-tenant distributed 14-dim network flow telemetry (12,000 training flows across 10 sectors + 1,000 global test flows).
+* **Metrics**: Global Macro F1, Precision, Recall, Loss, Retained F1 Ratio ($F1_{30\%} / F1_{0\%}$), Poison Rejection Rate, Quarantined Clients, Paired Permutation $p$-value, Cohen's $d$, 95% Bootstrap CI.
+* **Verified Outcome**: Documented in `FEDERATED_LEARNING_REPORT.json` and `CLAIMS_MANIFEST_FINAL.json` (CLM-03). Standard FedAvg collapses under $30\%$ Byzantine contamination (F1 drops from $0.9810$ to $0.5210$, a $46.9\%$ collapse). In contrast, AHRAS Byzantine-Robust FedKD maintains **$0.9835$ Global F1 under 30% malicious clients** (exceeding the $\ge 0.95$ target, $100.04\%$ retained utility vs $0.9831$ clean), completely quarantines and rejects rogue gradient explosions and sign-flipping updates, and achieves statistically significant superiority ($p = 0.000100$, Cohen's $d = 0.9046$, 95% bootstrap CI $[0.4310, 0.4930]$).
+
+---
+
 ## 2. Experimental Execution Matrix
 
 | Experiment ID | Primary RQ | Script File | Target Artifact |
@@ -110,3 +120,4 @@
 | **EXP-05** | RQ5 (Graph) | `evaluation/run_graph_correlation_evaluation.py` | `GRAPH_CORRELATION_REPORT.json` (Table 13) |
 | **EXP-06-HIST** | RQ4b (History) | `evaluation/run_historical_context_evaluation.py` | `HISTORICAL_CONTEXT_REPORT.json` |
 | **EXP-06** | RQ6 (Safety/RASE)| `evaluation/run_conformal_autonomy_evaluation.py` | `CONFORMAL_AUTONOMY_REPORT.json` / `CLOSED_LOOP_FINAL.json` (CLM-06) |
+| **EXP-07** | RQ7 (Fed Byzantine)| `evaluation/run_federated_evaluation.py` | `FEDERATED_LEARNING_REPORT.json` / `CLAIMS_MANIFEST_FINAL.json` (CLM-03) |

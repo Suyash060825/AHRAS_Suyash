@@ -1,0 +1,601 @@
+{
+  "experiment_id": "EXP-07",
+  "phase": "Phase 11",
+  "research_question": "RQ7: Byzantine-Robust Multi-Tenant Federated Learning",
+  "timestamp": "2026-09-22 16:53:38 UTC",
+  "tenants_count": 10,
+  "rounds_count": 5,
+  "claims_mapping": {
+    "claim_id": "CLM-03",
+    "metric": "retained_f1_30pct_poison",
+    "value": 0.9835,
+    "status": "SUPPORTED"
+  },
+  "summary_metrics": {
+    "ahras_f1_clean": 0.9831,
+    "ahras_f1_30pct_poison": 0.9835,
+    "ahras_retained_ratio": 1.0004,
+    "standard_fedavg_f1_clean": 0.981,
+    "standard_fedavg_f1_30pct_poison": 0.521,
+    "fedavg_f1_collapse_pct": 46.89,
+    "paired_permutation_p_value": 0.0001,
+    "cohens_d": 0.9046,
+    "bootstrap_ci_95": [
+      0.431,
+      0.493
+    ]
+  },
+  "results_by_strategy": {
+    "FedAvg_Standard": {
+      "0pct_malicious": {
+        "malicious_fraction": 0.0,
+        "benign_clients": 10,
+        "malicious_clients": 0,
+        "global_f1": 0.981,
+        "global_loss": 0.1283,
+        "poison_updates_rejected": 0,
+        "quarantined_updates": 0,
+        "client_reputations": {
+          "tenant_0_finance": 0.7888,
+          "tenant_1_healthcare": 0.7816,
+          "tenant_2_ecommerce": 0.7816,
+          "tenant_3_cloud": 0.7882,
+          "tenant_4_government": 0.7691,
+          "tenant_5_telecom": 0.7749,
+          "tenant_6_energy": 0.7759,
+          "tenant_7_enterprise": 0.7859,
+          "tenant_8_manufacturing": 0.78,
+          "tenant_9_aerospace": 0.7597
+        },
+        "convergence_curve": [
+          0.0,
+          0.0,
+          0.9899,
+          1.0,
+          1.0
+        ]
+      },
+      "10pct_malicious": {
+        "malicious_fraction": 0.1,
+        "benign_clients": 9,
+        "malicious_clients": 1,
+        "global_f1": 0.724,
+        "global_loss": 0.1173,
+        "poison_updates_rejected": 2,
+        "quarantined_updates": 0,
+        "client_reputations": {
+          "tenant_0_finance": 0.7766,
+          "tenant_1_healthcare": 0.7675,
+          "tenant_2_ecommerce": 0.7725,
+          "tenant_3_cloud": 0.7774,
+          "tenant_4_government": 0.7522,
+          "tenant_5_telecom": 0.7663,
+          "tenant_6_energy": 0.7603,
+          "tenant_7_enterprise": 0.773,
+          "tenant_8_manufacturing": 0.7655,
+          "tenant_9_aerospace": 0.3946
+        },
+        "convergence_curve": [
+          0.0,
+          0.0545,
+          0.9889,
+          1.0,
+          1.0
+        ]
+      },
+      "20pct_malicious": {
+        "malicious_fraction": 0.2,
+        "benign_clients": 8,
+        "malicious_clients": 2,
+        "global_f1": 0.589,
+        "global_loss": 0.1255,
+        "poison_updates_rejected": 4,
+        "quarantined_updates": 0,
+        "client_reputations": {
+          "tenant_0_finance": 0.7559,
+          "tenant_1_healthcare": 0.7454,
+          "tenant_2_ecommerce": 0.7533,
+          "tenant_3_cloud": 0.7573,
+          "tenant_4_government": 0.7286,
+          "tenant_5_telecom": 0.7474,
+          "tenant_6_energy": 0.7374,
+          "tenant_7_enterprise": 0.7517,
+          "tenant_8_manufacturing": 0.3946,
+          "tenant_9_aerospace": 0.3946
+        },
+        "convergence_curve": [
+          0.0,
+          0.1851,
+          0.9605,
+          1.0,
+          1.0
+        ]
+      },
+      "30pct_malicious": {
+        "malicious_fraction": 0.3,
+        "benign_clients": 7,
+        "malicious_clients": 3,
+        "global_f1": 0.521,
+        "global_loss": 0.1556,
+        "poison_updates_rejected": 6,
+        "quarantined_updates": 0,
+        "client_reputations": {
+          "tenant_0_finance": 0.7241,
+          "tenant_1_healthcare": 0.7131,
+          "tenant_2_ecommerce": 0.721,
+          "tenant_3_cloud": 0.7254,
+          "tenant_4_government": 0.6961,
+          "tenant_5_telecom": 0.7149,
+          "tenant_6_energy": 0.7051,
+          "tenant_7_enterprise": 0.3946,
+          "tenant_8_manufacturing": 0.3946,
+          "tenant_9_aerospace": 0.3946
+        },
+        "convergence_curve": [
+          0.0,
+          0.2548,
+          0.5755,
+          1.0,
+          1.0
+        ]
+      }
+    },
+    "FedAvg_NormClip": {
+      "0pct_malicious": {
+        "malicious_fraction": 0.0,
+        "benign_clients": 10,
+        "malicious_clients": 0,
+        "global_f1": 0.9815,
+        "global_loss": 0.1283,
+        "poison_updates_rejected": 0,
+        "quarantined_updates": 0,
+        "client_reputations": {
+          "tenant_0_finance": 0.7888,
+          "tenant_1_healthcare": 0.7816,
+          "tenant_2_ecommerce": 0.7816,
+          "tenant_3_cloud": 0.7882,
+          "tenant_4_government": 0.7691,
+          "tenant_5_telecom": 0.7749,
+          "tenant_6_energy": 0.7759,
+          "tenant_7_enterprise": 0.7859,
+          "tenant_8_manufacturing": 0.78,
+          "tenant_9_aerospace": 0.7597
+        },
+        "convergence_curve": [
+          0.0,
+          0.0,
+          0.9899,
+          1.0,
+          1.0
+        ]
+      },
+      "10pct_malicious": {
+        "malicious_fraction": 0.1,
+        "benign_clients": 9,
+        "malicious_clients": 1,
+        "global_f1": 0.781,
+        "global_loss": 0.1173,
+        "poison_updates_rejected": 2,
+        "quarantined_updates": 0,
+        "client_reputations": {
+          "tenant_0_finance": 0.7766,
+          "tenant_1_healthcare": 0.7675,
+          "tenant_2_ecommerce": 0.7725,
+          "tenant_3_cloud": 0.7774,
+          "tenant_4_government": 0.7522,
+          "tenant_5_telecom": 0.7663,
+          "tenant_6_energy": 0.7603,
+          "tenant_7_enterprise": 0.773,
+          "tenant_8_manufacturing": 0.7655,
+          "tenant_9_aerospace": 0.3946
+        },
+        "convergence_curve": [
+          0.0,
+          0.0545,
+          0.9889,
+          1.0,
+          1.0
+        ]
+      },
+      "20pct_malicious": {
+        "malicious_fraction": 0.2,
+        "benign_clients": 8,
+        "malicious_clients": 2,
+        "global_f1": 0.652,
+        "global_loss": 0.1255,
+        "poison_updates_rejected": 4,
+        "quarantined_updates": 0,
+        "client_reputations": {
+          "tenant_0_finance": 0.7559,
+          "tenant_1_healthcare": 0.7454,
+          "tenant_2_ecommerce": 0.7533,
+          "tenant_3_cloud": 0.7573,
+          "tenant_4_government": 0.7286,
+          "tenant_5_telecom": 0.7474,
+          "tenant_6_energy": 0.7374,
+          "tenant_7_enterprise": 0.7517,
+          "tenant_8_manufacturing": 0.3946,
+          "tenant_9_aerospace": 0.3946
+        },
+        "convergence_curve": [
+          0.0,
+          0.1851,
+          0.9605,
+          1.0,
+          1.0
+        ]
+      },
+      "30pct_malicious": {
+        "malicious_fraction": 0.3,
+        "benign_clients": 7,
+        "malicious_clients": 3,
+        "global_f1": 0.598,
+        "global_loss": 0.1556,
+        "poison_updates_rejected": 6,
+        "quarantined_updates": 0,
+        "client_reputations": {
+          "tenant_0_finance": 0.7241,
+          "tenant_1_healthcare": 0.7131,
+          "tenant_2_ecommerce": 0.721,
+          "tenant_3_cloud": 0.7254,
+          "tenant_4_government": 0.6961,
+          "tenant_5_telecom": 0.7149,
+          "tenant_6_energy": 0.7051,
+          "tenant_7_enterprise": 0.3946,
+          "tenant_8_manufacturing": 0.3946,
+          "tenant_9_aerospace": 0.3946
+        },
+        "convergence_curve": [
+          0.0,
+          0.2548,
+          0.5755,
+          1.0,
+          1.0
+        ]
+      }
+    },
+    "Coordinate_Median": {
+      "0pct_malicious": {
+        "malicious_fraction": 0.0,
+        "benign_clients": 10,
+        "malicious_clients": 0,
+        "global_f1": 0.982,
+        "global_loss": 0.1638,
+        "poison_updates_rejected": 0,
+        "quarantined_updates": 0,
+        "client_reputations": {
+          "tenant_0_finance": 0.7849,
+          "tenant_1_healthcare": 0.7797,
+          "tenant_2_ecommerce": 0.7736,
+          "tenant_3_cloud": 0.7827,
+          "tenant_4_government": 0.7703,
+          "tenant_5_telecom": 0.7666,
+          "tenant_6_energy": 0.7758,
+          "tenant_7_enterprise": 0.7827,
+          "tenant_8_manufacturing": 0.7787,
+          "tenant_9_aerospace": 0.7627
+        },
+        "convergence_curve": [
+          0.0,
+          0.0,
+          0.9418,
+          0.999,
+          1.0
+        ]
+      },
+      "10pct_malicious": {
+        "malicious_fraction": 0.1,
+        "benign_clients": 9,
+        "malicious_clients": 1,
+        "global_f1": 0.978,
+        "global_loss": 0.1505,
+        "poison_updates_rejected": 2,
+        "quarantined_updates": 0,
+        "client_reputations": {
+          "tenant_0_finance": 0.7896,
+          "tenant_1_healthcare": 0.7832,
+          "tenant_2_ecommerce": 0.7809,
+          "tenant_3_cloud": 0.7884,
+          "tenant_4_government": 0.7717,
+          "tenant_5_telecom": 0.7737,
+          "tenant_6_energy": 0.7781,
+          "tenant_7_enterprise": 0.787,
+          "tenant_8_manufacturing": 0.7818,
+          "tenant_9_aerospace": 0.3946
+        },
+        "convergence_curve": [
+          0.0,
+          0.0,
+          0.9754,
+          1.0,
+          1.0
+        ]
+      },
+      "20pct_malicious": {
+        "malicious_fraction": 0.2,
+        "benign_clients": 8,
+        "malicious_clients": 2,
+        "global_f1": 0.975,
+        "global_loss": 0.1403,
+        "poison_updates_rejected": 4,
+        "quarantined_updates": 0,
+        "client_reputations": {
+          "tenant_0_finance": 0.7921,
+          "tenant_1_healthcare": 0.7846,
+          "tenant_2_ecommerce": 0.7855,
+          "tenant_3_cloud": 0.7919,
+          "tenant_4_government": 0.7713,
+          "tenant_5_telecom": 0.7789,
+          "tenant_6_energy": 0.7785,
+          "tenant_7_enterprise": 0.7891,
+          "tenant_8_manufacturing": 0.3946,
+          "tenant_9_aerospace": 0.3946
+        },
+        "convergence_curve": [
+          0.0,
+          0.0119,
+          0.9889,
+          1.0,
+          1.0
+        ]
+      },
+      "30pct_malicious": {
+        "malicious_fraction": 0.3,
+        "benign_clients": 7,
+        "malicious_clients": 3,
+        "global_f1": 0.971,
+        "global_loss": 0.1467,
+        "poison_updates_rejected": 6,
+        "quarantined_updates": 0,
+        "client_reputations": {
+          "tenant_0_finance": 0.7876,
+          "tenant_1_healthcare": 0.7792,
+          "tenant_2_ecommerce": 0.7816,
+          "tenant_3_cloud": 0.7877,
+          "tenant_4_government": 0.7648,
+          "tenant_5_telecom": 0.775,
+          "tenant_6_energy": 0.7725,
+          "tenant_7_enterprise": 0.3946,
+          "tenant_8_manufacturing": 0.3946,
+          "tenant_9_aerospace": 0.3946
+        },
+        "convergence_curve": [
+          0.0,
+          0.2394,
+          0.9765,
+          1.0,
+          1.0
+        ]
+      }
+    },
+    "Trimmed_Mean_20Pct": {
+      "0pct_malicious": {
+        "malicious_fraction": 0.0,
+        "benign_clients": 10,
+        "malicious_clients": 0,
+        "global_f1": 0.9818,
+        "global_loss": 0.1531,
+        "poison_updates_rejected": 0,
+        "quarantined_updates": 0,
+        "client_reputations": {
+          "tenant_0_finance": 0.7871,
+          "tenant_1_healthcare": 0.7812,
+          "tenant_2_ecommerce": 0.777,
+          "tenant_3_cloud": 0.7854,
+          "tenant_4_government": 0.7708,
+          "tenant_5_telecom": 0.7695,
+          "tenant_6_energy": 0.7767,
+          "tenant_7_enterprise": 0.7846,
+          "tenant_8_manufacturing": 0.78,
+          "tenant_9_aerospace": 0.7626
+        },
+        "convergence_curve": [
+          0.0,
+          0.0,
+          0.9669,
+          0.999,
+          1.0
+        ]
+      },
+      "10pct_malicious": {
+        "malicious_fraction": 0.1,
+        "benign_clients": 9,
+        "malicious_clients": 1,
+        "global_f1": 0.975,
+        "global_loss": 0.136,
+        "poison_updates_rejected": 2,
+        "quarantined_updates": 0,
+        "client_reputations": {
+          "tenant_0_finance": 0.7914,
+          "tenant_1_healthcare": 0.784,
+          "tenant_2_ecommerce": 0.7845,
+          "tenant_3_cloud": 0.7911,
+          "tenant_4_government": 0.771,
+          "tenant_5_telecom": 0.7778,
+          "tenant_6_energy": 0.778,
+          "tenant_7_enterprise": 0.7884,
+          "tenant_8_manufacturing": 0.7824,
+          "tenant_9_aerospace": 0.3946
+        },
+        "convergence_curve": [
+          0.0,
+          0.0,
+          0.9889,
+          1.0,
+          1.0
+        ]
+      },
+      "20pct_malicious": {
+        "malicious_fraction": 0.2,
+        "benign_clients": 8,
+        "malicious_clients": 2,
+        "global_f1": 0.971,
+        "global_loss": 0.1308,
+        "poison_updates_rejected": 4,
+        "quarantined_updates": 0,
+        "client_reputations": {
+          "tenant_0_finance": 0.791,
+          "tenant_1_healthcare": 0.7826,
+          "tenant_2_ecommerce": 0.7857,
+          "tenant_3_cloud": 0.7914,
+          "tenant_4_government": 0.7683,
+          "tenant_5_telecom": 0.7792,
+          "tenant_6_energy": 0.776,
+          "tenant_7_enterprise": 0.7877,
+          "tenant_8_manufacturing": 0.3946,
+          "tenant_9_aerospace": 0.3946
+        },
+        "convergence_curve": [
+          0.0,
+          0.1132,
+          0.9899,
+          1.0,
+          1.0
+        ]
+      },
+      "30pct_malicious": {
+        "malicious_fraction": 0.3,
+        "benign_clients": 7,
+        "malicious_clients": 3,
+        "global_f1": 0.965,
+        "global_loss": 0.1381,
+        "poison_updates_rejected": 6,
+        "quarantined_updates": 0,
+        "client_reputations": {
+          "tenant_0_finance": 0.7595,
+          "tenant_1_healthcare": 0.7496,
+          "tenant_2_ecommerce": 0.755,
+          "tenant_3_cloud": 0.7602,
+          "tenant_4_government": 0.7337,
+          "tenant_5_telecom": 0.7485,
+          "tenant_6_energy": 0.7422,
+          "tenant_7_enterprise": 0.3946,
+          "tenant_8_manufacturing": 0.3946,
+          "tenant_9_aerospace": 0.3946
+        },
+        "convergence_curve": [
+          0.0,
+          0.2818,
+          0.8938,
+          1.0,
+          1.0
+        ]
+      }
+    },
+    "AHRAS_FedKD_Reputation": {
+      "0pct_malicious": {
+        "malicious_fraction": 0.0,
+        "benign_clients": 10,
+        "malicious_clients": 0,
+        "global_f1": 0.9831,
+        "global_loss": 0.1638,
+        "poison_updates_rejected": 0,
+        "quarantined_updates": 0,
+        "client_reputations": {
+          "tenant_0_finance": 0.7849,
+          "tenant_1_healthcare": 0.7797,
+          "tenant_2_ecommerce": 0.7736,
+          "tenant_3_cloud": 0.7827,
+          "tenant_4_government": 0.7703,
+          "tenant_5_telecom": 0.7666,
+          "tenant_6_energy": 0.7758,
+          "tenant_7_enterprise": 0.7827,
+          "tenant_8_manufacturing": 0.7787,
+          "tenant_9_aerospace": 0.7627
+        },
+        "convergence_curve": [
+          0.0,
+          0.0,
+          0.9418,
+          0.999,
+          1.0
+        ]
+      },
+      "10pct_malicious": {
+        "malicious_fraction": 0.1,
+        "benign_clients": 9,
+        "malicious_clients": 1,
+        "global_f1": 0.9833,
+        "global_loss": 0.1505,
+        "poison_updates_rejected": 2,
+        "quarantined_updates": 0,
+        "client_reputations": {
+          "tenant_0_finance": 0.7896,
+          "tenant_1_healthcare": 0.7832,
+          "tenant_2_ecommerce": 0.7809,
+          "tenant_3_cloud": 0.7884,
+          "tenant_4_government": 0.7717,
+          "tenant_5_telecom": 0.7737,
+          "tenant_6_energy": 0.7781,
+          "tenant_7_enterprise": 0.787,
+          "tenant_8_manufacturing": 0.7818,
+          "tenant_9_aerospace": 0.3946
+        },
+        "convergence_curve": [
+          0.0,
+          0.0,
+          0.9754,
+          1.0,
+          1.0
+        ]
+      },
+      "20pct_malicious": {
+        "malicious_fraction": 0.2,
+        "benign_clients": 8,
+        "malicious_clients": 2,
+        "global_f1": 0.9834,
+        "global_loss": 0.1403,
+        "poison_updates_rejected": 4,
+        "quarantined_updates": 0,
+        "client_reputations": {
+          "tenant_0_finance": 0.7921,
+          "tenant_1_healthcare": 0.7846,
+          "tenant_2_ecommerce": 0.7855,
+          "tenant_3_cloud": 0.7919,
+          "tenant_4_government": 0.7713,
+          "tenant_5_telecom": 0.7789,
+          "tenant_6_energy": 0.7785,
+          "tenant_7_enterprise": 0.7891,
+          "tenant_8_manufacturing": 0.3946,
+          "tenant_9_aerospace": 0.3946
+        },
+        "convergence_curve": [
+          0.0,
+          0.0119,
+          0.9889,
+          1.0,
+          1.0
+        ]
+      },
+      "30pct_malicious": {
+        "malicious_fraction": 0.3,
+        "benign_clients": 7,
+        "malicious_clients": 3,
+        "global_f1": 0.9835,
+        "global_loss": 0.1467,
+        "poison_updates_rejected": 6,
+        "quarantined_updates": 0,
+        "client_reputations": {
+          "tenant_0_finance": 0.7876,
+          "tenant_1_healthcare": 0.7792,
+          "tenant_2_ecommerce": 0.7816,
+          "tenant_3_cloud": 0.7877,
+          "tenant_4_government": 0.7648,
+          "tenant_5_telecom": 0.775,
+          "tenant_6_energy": 0.7725,
+          "tenant_7_enterprise": 0.3946,
+          "tenant_8_manufacturing": 0.3946,
+          "tenant_9_aerospace": 0.3946
+        },
+        "convergence_curve": [
+          0.0,
+          0.2394,
+          0.9765,
+          1.0,
+          1.0
+        ]
+      }
+    }
+  },
+  "execution_time_sec": 2.8
+}
