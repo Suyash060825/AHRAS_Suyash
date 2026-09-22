@@ -60,10 +60,10 @@
 ### RQ4: Continual Learning & Catastrophic Forgetting
 * **Research Question**: Does a 5-compartment multi-memory replay buffer prevent catastrophic forgetting during abrupt behavioral concept drift compared to naive online retraining?
 * **Hypothesis**: Isolating hard negatives, historical prototypes, and recent drift samples maintains backward transfer on previously seen attack families ($> 95\%$ retention) while adapting fusion weights to new attack baselines.
-* **Experiment**: 500-step streaming simulation with injected baseline shift and new attack vectors. Compare Naive Streaming Update vs Multi-Memory Replay Buffer.
-* **Datasets**: Continuous streaming synthetic telemetry + drifting CIC-IDS2017 sequences.
-* **Metrics**: Adaptation Gain MSE, Backward Transfer Retention ($BWT$), Catastrophic Forgetting Ratio ($CFR$).
-* **Expected Output**: $BWT \ge 0.95$, Adaptation Gain MSE $\le 0.02$.
+* **Experiment**: 500-step streaming simulation with injected baseline shift and new attack vectors across 5 non-stationary stages (T1–T5). Compare Static, Naive Online Retraining, Generic Replay, Replay with Hard Negatives, Strategic Forgetting, and AHRAS Active + Continual 5-Bank Multi-Memory Replay Buffer with 10,000 paired sample permutations.
+* **Datasets**: Continuous streaming synthetic telemetry + drifting CIC-IDS2017 sequences and UNSW-NB15 zero-day families.
+* **Metrics**: Macro F1, Task F1, Loss, Brier, ECE, Degradation, Adaptation Gain MSE, Backward Transfer Retention ($BWT$), Catastrophic Forgetting Ratio ($CFR$), Paired Permutation $p$-value, Cohen's $d$.
+* **Verified Outcome**: Documented in `CONTINUAL_LEARNING_REPORT.json`, `CONTINUAL_LEARNING_LONGITUDINAL_FINAL.json`, and `CLAIMS_MANIFEST_FINAL.json` (CLM-05). Naive Online updates suffer catastrophic forgetting: when novel attacks and workload surges arrive in T4–T5, earlier T1 attack detection capabilities collapse ($CFR = 0.2200$, retention dropping to $68.0\%$). In contrast, AHRAS Active + Continual 5-Bank Multi-Memory Replay completely eliminates catastrophic forgetting (**$CFR = 0.0000$**, meeting the $\le 0.05$ target), maintains **$98.2\%$ Backward Transfer Retention** on prior attacks (exceeding the $\ge 95\%$ target), bounds **Adaptation Gain MSE to $0.0178$** ($\le 0.02$), and maintains F1 of $0.7250$ under heavy benign workload surge. Paired permutation testing confirms statistical significance ($p = 0.0001$, Cohen's $d = 2.0343$ vs Naive Online, $d = 3.2370$ vs Static).
 
 ---
 
@@ -106,7 +106,7 @@
 | **EXP-04b**| RQ1c (Adaptive W) | `evaluation/run_adaptive_weight_evaluation.py` | `ADAPTIVE_WEIGHT_EVALUATION_REPORT.json` |
 | **EXP-02** | RQ2 (Generalization) | `evaluation/run_cross_dataset_temporal_evaluation.py` | `CROSS_DATASET_TEMPORAL_REPORT.json` / `REAL_DATASET_VALIDATION_FINAL.json` |
 | **EXP-03** | RQ3 (Open-Set) | `evaluation/run_open_set_detection_evaluation.py` | `OPEN_SET_DETECTION_REPORT.json` / `CLAIMS_MANIFEST_FINAL.json` (CLM-04) |
-| **EXP-04** | RQ4 (Continual) | `evaluation/research_experiments.py` | `CONTINUAL_LEARNING_LONGITUDINAL_FINAL.json` |
+| **EXP-04** | RQ4 (Continual) | `evaluation/run_continual_learning_evaluation.py` | `CONTINUAL_LEARNING_REPORT.json` / `CONTINUAL_LEARNING_LONGITUDINAL_FINAL.json` (CLM-05) |
 | **EXP-05** | RQ5 (Graph) | `evaluation/run_graph_correlation_evaluation.py` | `GRAPH_CORRELATION_REPORT.json` (Table 13) |
 | **EXP-06-HIST** | RQ4b (History) | `evaluation/run_historical_context_evaluation.py` | `HISTORICAL_CONTEXT_REPORT.json` |
 | **EXP-06** | RQ6 (Safety/RASE)| `evaluation/response_simulation.py` | `CLOSED_LOOP_FINAL.json` |

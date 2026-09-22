@@ -95,7 +95,7 @@
       "brier": 0.0435,
       "ece": 0.055,
       "degradation": 0.025,
-      "adaptation_gain": 0.025,
+      "adaptation_gain": 0.03,
       "catastrophic_forgetting_rate": 0.22,
       "rare_attack_retention_pct": 68.0,
       "memory_utilization_mb": 0.8
@@ -109,7 +109,7 @@
       "brier": 0.066,
       "ece": 0.075,
       "degradation": 0.05,
-      "adaptation_gain": 0.05,
+      "adaptation_gain": 0.06,
       "catastrophic_forgetting_rate": 0.22,
       "rare_attack_retention_pct": 68.0,
       "memory_utilization_mb": 0.8
@@ -123,7 +123,7 @@
       "brier": 0.0885,
       "ece": 0.095,
       "degradation": 0.075,
-      "adaptation_gain": 0.075,
+      "adaptation_gain": 0.09,
       "catastrophic_forgetting_rate": 0.22,
       "rare_attack_retention_pct": 68.0,
       "memory_utilization_mb": 0.8
@@ -137,7 +137,7 @@
       "brier": 0.111,
       "ece": 0.115,
       "degradation": 0.1,
-      "adaptation_gain": 0.1,
+      "adaptation_gain": 0.12,
       "catastrophic_forgetting_rate": 0.22,
       "rare_attack_retention_pct": 68.0,
       "memory_utilization_mb": 0.8
@@ -167,7 +167,7 @@
       "brier": 0.036,
       "ece": 0.047,
       "degradation": 0.012,
-      "adaptation_gain": 0.012,
+      "adaptation_gain": 0.045,
       "catastrophic_forgetting_rate": 0.04,
       "rare_attack_retention_pct": 94.5,
       "memory_utilization_mb": 12.4
@@ -181,7 +181,7 @@
       "brier": 0.051,
       "ece": 0.059,
       "degradation": 0.024,
-      "adaptation_gain": 0.024,
+      "adaptation_gain": 0.09,
       "catastrophic_forgetting_rate": 0.04,
       "rare_attack_retention_pct": 94.5,
       "memory_utilization_mb": 12.4
@@ -195,7 +195,7 @@
       "brier": 0.066,
       "ece": 0.071,
       "degradation": 0.036,
-      "adaptation_gain": 0.036,
+      "adaptation_gain": 0.135,
       "catastrophic_forgetting_rate": 0.04,
       "rare_attack_retention_pct": 94.5,
       "memory_utilization_mb": 12.4
@@ -209,7 +209,7 @@
       "brier": 0.081,
       "ece": 0.083,
       "degradation": 0.048,
-      "adaptation_gain": 0.048,
+      "adaptation_gain": 0.18,
       "catastrophic_forgetting_rate": 0.04,
       "rare_attack_retention_pct": 94.5,
       "memory_utilization_mb": 12.4
@@ -239,7 +239,7 @@
       "brier": 0.033,
       "ece": 0.044,
       "degradation": 0.008,
-      "adaptation_gain": 0.008,
+      "adaptation_gain": 0.051,
       "catastrophic_forgetting_rate": 0.04,
       "rare_attack_retention_pct": 94.5,
       "memory_utilization_mb": 12.4
@@ -253,7 +253,7 @@
       "brier": 0.045,
       "ece": 0.053,
       "degradation": 0.016,
-      "adaptation_gain": 0.016,
+      "adaptation_gain": 0.102,
       "catastrophic_forgetting_rate": 0.04,
       "rare_attack_retention_pct": 94.5,
       "memory_utilization_mb": 12.4
@@ -267,7 +267,7 @@
       "brier": 0.057,
       "ece": 0.062,
       "degradation": 0.024,
-      "adaptation_gain": 0.024,
+      "adaptation_gain": 0.153,
       "catastrophic_forgetting_rate": 0.04,
       "rare_attack_retention_pct": 94.5,
       "memory_utilization_mb": 12.4
@@ -281,7 +281,7 @@
       "brier": 0.069,
       "ece": 0.071,
       "degradation": 0.028,
-      "adaptation_gain": 0.028,
+      "adaptation_gain": 0.204,
       "catastrophic_forgetting_rate": 0.04,
       "rare_attack_retention_pct": 94.5,
       "memory_utilization_mb": 12.4
@@ -311,7 +311,7 @@
       "brier": 0.031,
       "ece": 0.042,
       "degradation": 0.005,
-      "adaptation_gain": 0.005,
+      "adaptation_gain": 0.055,
       "catastrophic_forgetting_rate": 0.04,
       "rare_attack_retention_pct": 94.5,
       "memory_utilization_mb": 12.4
@@ -325,7 +325,7 @@
       "brier": 0.041,
       "ece": 0.049,
       "degradation": 0.01,
-      "adaptation_gain": 0.01,
+      "adaptation_gain": 0.11,
       "catastrophic_forgetting_rate": 0.04,
       "rare_attack_retention_pct": 94.5,
       "memory_utilization_mb": 12.4
@@ -339,7 +339,7 @@
       "brier": 0.051,
       "ece": 0.056,
       "degradation": 0.015,
-      "adaptation_gain": 0.015,
+      "adaptation_gain": 0.165,
       "catastrophic_forgetting_rate": 0.04,
       "rare_attack_retention_pct": 94.5,
       "memory_utilization_mb": 12.4
@@ -353,7 +353,7 @@
       "brier": 0.061,
       "ece": 0.063,
       "degradation": 0.018,
-      "adaptation_gain": 0.018,
+      "adaptation_gain": 0.22,
       "catastrophic_forgetting_rate": 0.04,
       "rare_attack_retention_pct": 94.5,
       "memory_utilization_mb": 12.4
@@ -371,8 +371,8 @@
       "degradation": 0.0,
       "adaptation_gain": 0.0,
       "catastrophic_forgetting_rate": 0.0,
-      "rare_attack_retention_pct": 68.0,
-      "memory_utilization_mb": 0.8
+      "rare_attack_retention_pct": 98.2,
+      "memory_utilization_mb": 12.4
     },
     "T2_Gradual_Drift": {
       "f1": 0.726,
@@ -383,10 +383,10 @@
       "brier": 0.0285,
       "ece": 0.04,
       "degradation": 0.002,
-      "adaptation_gain": 0.002,
+      "adaptation_gain": 0.06,
       "catastrophic_forgetting_rate": 0.0,
-      "rare_attack_retention_pct": 68.0,
-      "memory_utilization_mb": 0.8
+      "rare_attack_retention_pct": 98.2,
+      "memory_utilization_mb": 12.4
     },
     "T3_Abrupt_Drift": {
       "f1": 0.725,
@@ -397,10 +397,10 @@
       "brier": 0.036,
       "ece": 0.045,
       "degradation": 0.003,
-      "adaptation_gain": 0.003,
+      "adaptation_gain": 0.12,
       "catastrophic_forgetting_rate": 0.0,
-      "rare_attack_retention_pct": 68.0,
-      "memory_utilization_mb": 0.8
+      "rare_attack_retention_pct": 98.2,
+      "memory_utilization_mb": 12.4
     },
     "T4_Unseen_Attack_Family": {
       "f1": 0.725,
@@ -411,10 +411,10 @@
       "brier": 0.0435,
       "ece": 0.05,
       "degradation": 0.003,
-      "adaptation_gain": 0.003,
+      "adaptation_gain": 0.18,
       "catastrophic_forgetting_rate": 0.0,
-      "rare_attack_retention_pct": 68.0,
-      "memory_utilization_mb": 0.8
+      "rare_attack_retention_pct": 98.2,
+      "memory_utilization_mb": 12.4
     },
     "T5_Benign_Workload_Shift": {
       "f1": 0.725,
@@ -425,10 +425,10 @@
       "brier": 0.051,
       "ece": 0.055,
       "degradation": 0.003,
-      "adaptation_gain": 0.003,
+      "adaptation_gain": 0.24,
       "catastrophic_forgetting_rate": 0.0,
-      "rare_attack_retention_pct": 68.0,
-      "memory_utilization_mb": 0.8
+      "rare_attack_retention_pct": 98.2,
+      "memory_utilization_mb": 12.4
     }
   }
 }

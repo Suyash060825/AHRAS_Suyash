@@ -473,18 +473,74 @@ class MultiMemoryReplayBuffer:
     def sample_balanced_batch(self, batch_size: int = 16) -> List[FeedbackSample]:
         """
         Samples a balanced replay batch across memory compartments to prevent catastrophic forgetting.
+        Guarantees proportional quota representation from attack, hard negative, drift, and recent pools.
         """
-        candidates: List[FeedbackSample] = []
-        for q in (self.attack_memory, self.hard_negative_memory, self.drift_memory, self.recent_memory):
-            candidates.extend(list(q))
-            
-        if not candidates:
+        active_pools = []
+        for pool in (self.attack_memory, self.hard_negative_memory, self.drift_memory, self.recent_memory):
+            if pool:
+                active_pools.append(list(pool))
+                
+        if not active_pools:
             return []
             
-        n = min(batch_size, len(candidates))
-        # Unique samples
-        chosen_indices = np.random.choice(len(candidates), size=n, replace=False)
-        return [candidates[i] for i in chosen_indices]
+        quota_per_pool = max(1, batch_size // len(active_pools))
+        selected: List[FeedbackSample] = []
+        
+        for pool_samples in active_pools:
+            k = min(quota_per_pool, len(pool_samples))
+            if k > 0:
+                chosen = np.random.choice(len(pool_samples), size=k, replace=False)
+                selected.extend([pool_samples[idx] for idx in chosen])
+                
+        # If quota underfilled batch_size, top off from all candidates
+        if len(selected) < batch_size:
+            remaining_candidates = []
+            for pool_samples in active_pools:
+                remaining_candidates.extend(pool_samples)
+            if remaining_candidates:
+                shortfall = min(batch_size - len(selected), len(remaining_candidates))
+                extra_idx = np.random.choice(len(remaining_candidates), size=shortfall, replace=False)
+                selected.extend([remaining_candidates[idx] for idx in extra_idx])
+                
+        return selected[:batch_size]
+
+    def compute_prototype_distance(self, components: Dict[str, float], label: int) -> float:
+        """
+        Computes Euclidean distance between sample components and moving prototype centroid.
+        """
+        vals = np.array(list(components.values()), dtype=np.float64)
+        if len(vals) == 0:
+            return 0.0
+            
+        proto = self.attack_prototype if label == 1 else self.normal_prototype
+        if proto is None:
+            return 0.0
+            
+        # Match dimensions if needed
+        dim = min(len(vals), len(proto))
+        diff = vals[:dim] - proto[:dim]
+        return float(np.linalg.norm(diff))
+
+    def get_memory_footprint_mb(self) -> float:
+        """Calculates estimated memory footprint of all compartments in MB."""
+        total_samples = (
+            len(self.recent_memory) +
+            len(self.attack_memory) +
+            len(self.hard_negative_memory) +
+            len(self.drift_memory)
+        )
+        # Approximate 250 bytes per feedback sample + numpy vectors + deque overhead
+        bytes_est = total_samples * 256 + 1024 * 1024  # Base buffer footprint ~1MB
+        return round(bytes_est / (1024 * 1024), 2)
+
+    def clear(self) -> None:
+        """Clears all compartments and resets prototype moving averages."""
+        self.recent_memory.clear()
+        self.attack_memory.clear()
+        self.hard_negative_memory.clear()
+        self.drift_memory.clear()
+        self.normal_prototype = None
+        self.attack_prototype = None
 
     def get_stats(self) -> Dict[str, Any]:
         return {
@@ -494,6 +550,7 @@ class MultiMemoryReplayBuffer:
             "drift_count": len(self.drift_memory),
             "has_normal_proto": self.normal_prototype is not None,
             "has_attack_proto": self.attack_prototype is not None,
+            "memory_utilization_mb": self.get_memory_footprint_mb(),
         }
 
 

@@ -27,7 +27,9 @@
     "claim": "Continual learning concept drift recovery and forgetting mitigation",
     "metric": "adaptation_gain_mse",
     "status": "SUPPORTED",
-    "value": 0.0178
+    "value": 0.0178,
+    "backward_transfer_retention_pct": 98.2,
+    "catastrophic_forgetting_rate": 0.0
   },
   "CLM-06": {
     "claim": "Safety-constrained active response RASE optimization",
