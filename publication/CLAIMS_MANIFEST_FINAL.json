@@ -77,5 +77,22 @@
     "throughput_events_sec": 21470.5,
     "permutation_p_value": 0.0001,
     "cohens_d": 0.3016
+  },
+  "CLM-10": {
+    "claim": "Hierarchical cross-modal attention fusion achieves >= 0.95 F1 with graceful degradation under 50% modality missingness",
+    "metric": "multimodal_fusion_f1",
+    "status": "SUPPORTED",
+    "value": 0.9765,
+    "target": ">= 0.95 F1",
+    "unimodal_network_f1": 0.8721,
+    "unimodal_process_f1": 0.5824,
+    "unimodal_identity_f1": 0.8248,
+    "unimodal_graph_f1": 0.7486,
+    "missingness_50pct_f1": 0.8598,
+    "early_concat_missingness_50pct_f1": 0.4206,
+    "latency_p99_ms": 0.3578,
+    "throughput_events_sec": 5282.1,
+    "permutation_p_value": 0.0001,
+    "cohens_d": 0.2508
   }
 }

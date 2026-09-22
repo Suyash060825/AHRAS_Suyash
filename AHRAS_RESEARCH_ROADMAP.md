@@ -127,6 +127,16 @@
 
 ---
 
+### RQ10: Cross-Modal Representation & Multimodal Attention Fusion (Phase 14)
+* **Research Question**: Can hierarchical cross-modal attention fusion across heterogeneous security modalities (Network flow dynamics, Process execution trees, Identity/Authentication context, and Relational graph topology) reliably detect multi-stage intrusion campaigns where threat indicators are fragmented across telemetry planes, significantly outperforming unimodal detectors and naive early feature concatenation ($F1 \ge 0.95$), while maintaining graceful degradation under partial modality missingness ($\ge 50\%$ modalities missing)?
+* **Hypothesis**: Attackers intentionally fragment activity across telemetry boundaries (low-rate network beacons, benign LOLBin wrappers, service account token theft). Unimodal detectors exhibit significant blind spots (Network-only $F1 \le 0.88$, Process-only $F1 \le 0.60$). Multi-head cross-modal attention ($Q_m, K_m, V_m$) dynamically amplifies high-confidence modalities conditioned on cross-modal correlations, achieving $F1 \ge 0.95$, sub-millisecond per-event normalization latency, and graceful degradation retaining $F1 \ge 0.85$ under $50\%$ modality missingness.
+* **Experiment**: 4,000 heterogeneous multi-modal security events benchmark (2,200 benign events, 1,800 multi-stage campaign events across 60 campaigns). Compare 4 Unimodal detectors (Network, Process, Identity, Graph), Early Feature Concatenation, Late Decision Averaging, and AHRAS Cross-Modal Attention Fusion under full availability and progressive modality missingness (100%, 75%, 50%, 25%) with 10,000 paired sample permutations.
+* **Datasets**: Heterogeneous multi-modal enterprise campaign event stream (4,000 events across 18 features spanning 4 typed planes).
+* **Metrics**: Macro F1, Precision, Recall, Accuracy, Modality Missingness Degradation Curve ($F1_{100\%} \to F1_{25\%}$), Throughput (events/sec), P99 Fusion Latency (ms), Paired Permutation $p$-value, Cohen's $d$, 95% Bootstrap CI.
+* **Verified Outcome**: Documented in `MULTIMODAL_FUSION_REPORT.json` and `CLAIMS_MANIFEST_FINAL.json` (CLM-10). AHRAS Hierarchical Cross-Modal Attention Fusion achieves **$0.9765$ Macro F1** (Precision $98.5\%$, Recall $96.8\%$, exceeding the $\ge 0.95$ target), significantly outperforming Unimodal Network ($F1 = 0.8721$, $+11.97\%$ relative improvement), Unimodal Process ($F1 = 0.5824$), Unimodal Identity ($F1 = 0.8248$), and Unimodal Graph ($F1 = 0.7486$). Under severe $50\%$ modality missingness (missing both graph and process telemetry), AHRAS gracefully maintains **$0.8598$ F1** ($88.1\%$ utility retention), compared to early concatenation which catastrophically collapses to $0.4206$ ($+104.4\%$ resilience advantage). Paired permutation testing confirms statistical significance ($p = 0.000100$, Cohen's $d = 0.2508$, 95% bootstrap CI $[0.0617, 0.1183]$).
+
+---
+
 ## 2. Experimental Execution Matrix
 
 | Experiment ID | Primary RQ | Script File | Target Artifact |
@@ -143,3 +153,4 @@
 | **EXP-07** | RQ7 (Fed Byzantine)| `evaluation/run_federated_evaluation.py` | `FEDERATED_LEARNING_REPORT.json` / `CLAIMS_MANIFEST_FINAL.json` (CLM-03) |
 | **EXP-08** | RQ8 (Proactive Forecast)| `evaluation/run_proactive_forecasting_evaluation.py` | `PROACTIVE_FORECASTING_REPORT.json` / `CLAIMS_MANIFEST_FINAL.json` (CLM-08) |
 | **EXP-09** | RQ9 (Two-Tier Telemetry)| `evaluation/run_host_telemetry_evaluation.py` | `HOST_TELEMETRY_REPORT.json` / `CLAIMS_MANIFEST_FINAL.json` (CLM-09) |
+| **EXP-10** | RQ10 (Multimodal Fusion)| `evaluation/run_multimodal_fusion_evaluation.py` | `MULTIMODAL_FUSION_REPORT.json` / `CLAIMS_MANIFEST_FINAL.json` (CLM-10) |

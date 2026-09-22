@@ -1,0 +1,147 @@
+{
+  "experiment_id": "EXP-10",
+  "phase": "Phase 14",
+  "research_question": "RQ10: Cross-Modal Representation & Multimodal Attention Fusion",
+  "architecture_release": "AHRAS v13 (Continual Multimodal)",
+  "timestamp": "2026-09-22 17:28:36 UTC",
+  "total_events_evaluated": 4000,
+  "test_events": 600,
+  "claims_mapping": {
+    "claim_id": "CLM-10",
+    "metric": "multimodal_fusion_f1",
+    "value": 0.9765,
+    "target": ">= 0.95 F1",
+    "status": "SUPPORTED"
+  },
+  "summary_metrics": {
+    "ahras_multimodal_f1": 0.9765,
+    "ahras_multimodal_precision": 0.9854,
+    "ahras_multimodal_recall": 0.9677,
+    "ahras_multimodal_accuracy": 0.9783,
+    "unimodal_network_f1": 0.8721,
+    "unimodal_process_f1": 0.5824,
+    "unimodal_identity_f1": 0.8248,
+    "unimodal_graph_f1": 0.7486,
+    "early_concat_f1": 1.0,
+    "late_averaging_f1": 0.9163,
+    "f1_gain_over_network_pct": 11.97,
+    "p99_fusion_latency_ms": 0.3578,
+    "p50_fusion_latency_ms": 0.1638,
+    "throughput_events_sec": 5282.1,
+    "permutation_p_vs_net": 0.0001,
+    "cohens_d_vs_net": 0.2508,
+    "bootstrap_ci_95_vs_net": [
+      0.0617,
+      0.1183
+    ],
+    "permutation_p_vs_flat": 0.0003,
+    "cohens_d_vs_flat": -0.1487,
+    "bootstrap_ci_95_vs_flat": [
+      -0.0333,
+      -0.01
+    ]
+  },
+  "architectures_compared": [
+    {
+      "name": "Unimodal_Network_Only",
+      "f1": 0.8721,
+      "precision": 0.9494,
+      "recall": 0.8065,
+      "accuracy": 0.89,
+      "description": "Evaluates network telemetry features only (bytes, packets, port entropy)"
+    },
+    {
+      "name": "Unimodal_Process_Only",
+      "f1": 0.5824,
+      "precision": 0.6255,
+      "recall": 0.5448,
+      "accuracy": 0.6367,
+      "description": "Evaluates host process features only (cmdline length, depth, elevation)"
+    },
+    {
+      "name": "Unimodal_Identity_Only",
+      "f1": 0.8248,
+      "precision": 0.8401,
+      "recall": 0.81,
+      "accuracy": 0.84,
+      "description": "Evaluates identity context features only (privilege tier, failed auths)"
+    },
+    {
+      "name": "Unimodal_Graph_Only",
+      "f1": 0.7486,
+      "precision": 0.7555,
+      "recall": 0.7419,
+      "accuracy": 0.7683,
+      "description": "Evaluates relational graph features only (degrees, neighbor anomaly)"
+    },
+    {
+      "name": "Early_Feature_Concatenation",
+      "f1": 1.0,
+      "precision": 1.0,
+      "recall": 1.0,
+      "accuracy": 1.0,
+      "description": "Flat concatenation of all 18 raw features into single classifier"
+    },
+    {
+      "name": "Late_Decision_Averaging",
+      "f1": 0.9163,
+      "precision": 0.8455,
+      "recall": 1.0,
+      "accuracy": 0.915,
+      "description": "Unweighted arithmetic mean of unimodal classifier probabilities"
+    },
+    {
+      "name": "AHRAS_CrossModal_Attention_Fusion",
+      "f1": 0.9765,
+      "precision": 0.9854,
+      "recall": 0.9677,
+      "accuracy": 0.9783,
+      "description": "Multi-head cross-modal attention dynamically weighting cross-modal interactions"
+    }
+  ],
+  "modality_missingness_degradation": {
+    "100pct_all_modalities": {
+      "active_modalities": [
+        "network",
+        "process",
+        "identity",
+        "graph"
+      ],
+      "missing_pct": 0.0,
+      "f1": 0.9765,
+      "recall": 0.9677,
+      "precision": 0.9854
+    },
+    "75pct_missing_graph": {
+      "active_modalities": [
+        "network",
+        "process",
+        "identity"
+      ],
+      "missing_pct": 25.0,
+      "f1": 0.8964,
+      "recall": 0.8996,
+      "precision": 0.8932
+    },
+    "50pct_missing_graph_process": {
+      "active_modalities": [
+        "network",
+        "identity"
+      ],
+      "missing_pct": 50.0,
+      "f1": 0.8598,
+      "recall": 0.8136,
+      "precision": 0.9116
+    },
+    "25pct_network_only": {
+      "active_modalities": [
+        "network"
+      ],
+      "missing_pct": 75.0,
+      "f1": 0.6195,
+      "recall": 0.5018,
+      "precision": 0.8092
+    }
+  },
+  "execution_time_sec": 3.86
+}

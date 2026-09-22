@@ -57,6 +57,11 @@ class ModalityMLP:
         h = np.maximum(0.0, x_in @ self.W1 + self.b1)
         out = h @ self.W2 + self.b2
         
+        # Layer normalization for cross-modal scale stability
+        mean = np.mean(out, axis=-1, keepdims=True)
+        std = np.std(out, axis=-1, keepdims=True) + 1e-6
+        out = (out - mean) / std
+
         if single:
             return out[0]
         return out
@@ -89,8 +94,8 @@ class CrossModalAttention:
         """
         M = modality_embeddings.shape[0]
         if M == 1:
-            # Single modality: direct projection
-            fused = modality_embeddings[0] @ self.W_o
+            # Single modality: identical value projection and output projection
+            fused = modality_embeddings[0] @ self.W_v @ self.W_o
             return fused, np.ones((1, 1), dtype=np.float64)
 
         d_k = self.head_dim
@@ -187,34 +192,34 @@ class MultimodalSecurityEncoder:
         """Extracts structured raw numerical vectors from an event dictionary."""
         # 1. Network
         net_raw = np.array([
-            _safe_float(evt.get("bytes_in", evt.get("traffic_volume", 0.0))),
-            _safe_float(evt.get("bytes_out", 0.0)),
-            _safe_float(evt.get("packet_count", evt.get("pkts_in", 0.0))),
-            _safe_float(evt.get("pkts_out", 0.0)),
+            math.log1p(max(0.0, _safe_float(evt.get("bytes_in", evt.get("traffic_volume", 0.0))))),
+            math.log1p(max(0.0, _safe_float(evt.get("bytes_out", 0.0)))),
+            math.log1p(max(0.0, _safe_float(evt.get("packet_count", evt.get("pkts_in", 0.0))))),
+            math.log1p(max(0.0, _safe_float(evt.get("pkts_out", 0.0)))),
             _safe_float(evt.get("port_entropy", 0.0)),
             _safe_float(evt.get("duration", evt.get("connection_duration", 0.0))),
         ], dtype=np.float64)
 
         # 2. Process
         proc_raw = np.array([
-            _safe_float(evt.get("cmd_length", len(str(evt.get("command", ""))))),
+            math.log1p(max(0.0, _safe_float(evt.get("cmd_length", len(str(evt.get("command", ""))))))),
             _safe_float(evt.get("path_depth", 1.0)),
             1.0 if evt.get("is_elevated", False) or evt.get("is_root", False) else 0.0,
-            _safe_float(evt.get("cpu_pct", 0.0)),
+            _safe_float(evt.get("cpu_pct", 0.0)) / 100.0,
         ], dtype=np.float64)
 
         # 3. Identity
         id_raw = np.array([
             _safe_float(evt.get("privilege_level", 1.0)),
             _safe_float(evt.get("failed_auth_count", 0.0)),
-            _safe_float(evt.get("session_age_sec", 60.0)),
+            math.log1p(max(0.0, _safe_float(evt.get("session_age_sec", 60.0)))),
             _safe_float(evt.get("concurrent_logins", 1.0)),
         ], dtype=np.float64)
 
         # 4. Graph
         graph_raw = np.array([
-            _safe_float(evt.get("in_degree", 1.0)),
-            _safe_float(evt.get("out_degree", 1.0)),
+            math.log1p(max(0.0, _safe_float(evt.get("in_degree", 1.0)))),
+            math.log1p(max(0.0, _safe_float(evt.get("out_degree", 1.0)))),
             _safe_float(evt.get("neighbor_anomaly_mean", 0.0)),
             _safe_float(evt.get("local_clustering", 0.0)),
         ], dtype=np.float64)
