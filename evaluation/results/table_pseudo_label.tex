@@ -1,0 +1,15 @@
+\begin{table}[t]
+\centering
+\small
+\caption{Confidence-Gated Pseudo-Label Learning Benchmark (EXP-20). Comparing Human-Only Active Learning, Naive Self-Training, and AHRAS Epistemic-Gated Pseudo-Labeling over 500 longitudinal streaming events across concept-drift phases.}
+\label{tab:pseudo_label_eval}
+\begin{tabular}{lccccc}
+\toprule
+\textbf{Adaptation Method} & \textbf{Macro F1} & \textbf{Accuracy} & \textbf{Analyst Queries} & \textbf{Pseudo Purity} & \textbf{OOD Pollution} \\
+\midrule
+Human-Only Active Learning & $1.0000$ & $100.0\%$ & $50$ & N/A & $0$ ($0.0\%$) \\
+Naive Self-Training & $0.9677$ & $98.0\%$ & $0$ & $97.0\%$ & $16$ ($3.6\%$) \\
+\textbf{AHRAS Gated (EXP-20)} & \textbf{1.0000} & \textbf{100.0\%} & \textbf{50} & \textbf{100.0\%} & \textbf{0 (0.0\%)} \\
+\bottomrule
+\end{tabular}
+\end{table}

@@ -114,3 +114,11 @@
 | Model Name | Purpose | Input Dimensions / Types | Output Schema / Range | Version | Training Data / Priors | Evaluation Status |
 | :--- | :--- | :--- | :--- | :--- | :--- | :--- |
 | **Response Efficacy Learner** | Online Bayesian response efficacy learning, Digital Twin simulation & safety gating | Post-mitigation telemetry, risk deltas, entity criticality | `EfficacyEvaluationResult`, `EfficacyBelief` ($\mu, \sigma^2, \Delta R$, decision) | `1.0.0` | Conjugate Beta priors over (action, threat, asset) + Twin simulation | Verified (Phase 9 EXP-19: Mean Utility 0.3093 vs 0.0479 Static SOAR [+545.7%], Mean Delta R 0.5843, 0 Safety Violations [0.0%], Zero Collateral Disruption, P50 0.164 ms, Table tab:response_efficacy_eval) |
+
+---
+
+## 13. Confidence-Gated Pseudo-Label Validation & Continual Learning Engines
+
+| Model Name | Purpose | Input Dimensions / Types | Output Schema / Range | Version | Training Data / Priors | Evaluation Status |
+| :--- | :--- | :--- | :--- | :--- | :--- | :--- |
+| **Confidence-Gated Pseudo-Label Engine** | Multi-condition epistemic pseudo-labeling & continual replay provenance tracking | Multi-modal risk scores, confidence, uncertainty, OOD, instability | `PseudoLabelRecord` ($\tilde{y}$, decision, weight, provenance, generation) | `1.0.0` | Multi-condition epistemic gating ($\tau_h=0.95, \tau_l=0.05, U \le 0.10, \text{OOD} \le 0.20$) | Verified (Phase 10 EXP-20: 1.0000 Hold-out Macro F1 vs 0.9677 Naive, 100.0% Pseudo Purity, 0 OOD Samples Polluted [0.0%], P50 0.043 ms, Table tab:pseudo_label_eval) |

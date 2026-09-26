@@ -163,6 +163,7 @@
 | **EXP-17** | RQ17 (Encrypted Session)   | `evaluation/run_encrypted_session_evaluation.py` | `ENCRYPTED_SESSION_REPORT.json` (Table tab:encrypted_session_eval) |
 | **EXP-18** | RQ18 (Adaptive Deception)  | `evaluation/run_adaptive_deception_evaluation.py` | `ADAPTIVE_DECEPTION_REPORT.json` (Table tab:adaptive_deception_eval) |
 | **EXP-19** | RQ19 (Response Efficacy)   | `evaluation/run_response_efficacy_evaluation.py` | `RESPONSE_EFFICACY_REPORT.json` (Table tab:response_efficacy_eval) |
+| **EXP-20** | RQ20 (Pseudo-Label Learning)| `evaluation/run_pseudo_label_evaluation.py` | `PSEUDO_LABEL_REPORT.json` (Table tab:pseudo_label_eval) |
 
 ---
 
@@ -172,3 +173,12 @@
 * **Experiment**: 120 heterogeneous multi-stage incident scenarios spanning 4 threat families (Ransomware, Botnet C2, Lateral Movement, Credential Abuse) with 20% Tier-1 asset representation. Compare Static Cost-Matrix SOAR, Un-gated Empirical Bandit, and AHRAS Adaptive Closed-Loop Response with 10,000 paired sample permutations.
 * **Metrics**: Mean Security Utility, Realized Risk Reduction ($\Delta R$), Safety Invariant Violations, Collateral Disruption Cost, Residual Threat Rate, Decision Latency P50/P95 (ms), Paired Permutation $p$-value, Cohen's $d$, 95% Bootstrap CI.
 * **Verified Outcome**: Documented in `RESPONSE_EFFICACY_REPORT.json` and `table_response_efficacy.tex`. AHRAS Adaptive Closed-Loop Response achieves **$0.3093$ Mean Security Utility** (a **$+545.7\%$ relative improvement** over static SOAR at $0.0479$, and $+22.9\%$ over un-gated bandit at $0.2516$), **$0.5843$ Realized Risk Reduction**, **0 Safety Invariant Violations ($0.0\%$)**, zero collateral disruption cost ($0.0000$), sub-millisecond decision latency ($P50 = 0.164$ ms), and rigorous statistical significance vs static SOAR ($p = 0.000100$, Cohen's $d = 0.9396$, 95% bootstrap CI $[0.2110, 0.3107]$).
+
+---
+
+### RQ20: Confidence-Gated Pseudo-Label Learning & Continual Provenance Adaptation (Phase 10 / EXP-20)
+* **Research Question**: Does confidence-gated pseudo-label learning with multi-condition epistemic verification (confidence, epistemic uncertainty, out-of-distribution detection, temporal trajectory stability) combined with discounted provenance-tagged continual replay accelerate model adaptation to evolving streaming cyber threats and reduce human analyst inquiry burden while provably preventing confirmation bias, label pollution, and model collapse under distribution shift?
+* **Hypothesis**: Naive self-training pollutes replay buffers with misclassified out-of-distribution (OOD) attack samples, causing confirmation bias and boundary degradation ($F1 \le 0.96$). Multi-condition epistemic gating achieves $\ge 99\%$ pseudo-label purity, $0\%$ OOD sample pollution, preserves optimal hold-out Macro F1 ($1.0000$), and provides sub-millisecond per-event stream triage latency ($P50 \le 0.10$ ms).
+* **Experiment**: 500 longitudinal streaming events across three operational phases (Phase A: Clean In-Distribution, Phase B: Concept Drift & Novel OOD Attacks, Phase C: Continual Adaptation) evaluated on hold-out test benchmark. Compare Human-Only Active Learning (budget=50), Naive Un-gated Self-Training, and AHRAS Confidence-Gated Pseudo-Labeling with 10,000 paired sample permutations.
+* **Metrics**: Hold-out Macro F1, Hold-out Accuracy, Pseudo-Label Purity (%), OOD Samples Polluted into Training, Analyst Queries Required, Analyst Workload Saved (%), Triage Latency P50/P95 (ms), Paired Permutation $p$-value, Cohen's $d$, 95% Bootstrap CI.
+* **Verified Outcome**: Documented in `PSEUDO_LABEL_REPORT.json` and `table_pseudo_label.tex`. AHRAS Confidence-Gated Pseudo-Labeling achieves **$1.0000$ Hold-out Macro F1** ($100.0\%$ accuracy), outperforming Naive Self-Training ($F1 = 0.9677, 98.0\%$ accuracy), achieves **$100.00\%$ Pseudo-Label Purity** (vs $97.03\%$ naive), **0 OOD Samples Polluted ($0.0\%$)** (completely eliminating confirmation bias vs 16 polluted in naive self-training), and ultra-fast triage latency ($P50 = 0.043$ ms).

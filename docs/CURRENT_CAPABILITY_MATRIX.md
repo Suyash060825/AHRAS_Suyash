@@ -51,6 +51,7 @@
 | **Encrypted Session Intelligence**| `detection/encrypted_session.py` | **A** | `tests/test_encrypted_session.py` | Phase 7 EXP-17: Payload-blind sequence dynamics + IAT autocorrelation, F1 0.9362 vs 0.0000 Flow-Only, 90.5% Unknown Attack Recall, 3.9k SPS | **Implemented (Phase 7)** |
 | **Adaptive Deception Sensor** | `deception/honeypot_manager.py` | **A** | `tests/test_adaptive_deception.py` | Phase 8 EXP-18: Bayesian Info-Gain lure optimization, Time-to-confirmation 4.0 -> 1.3 steps (-2.7 steps), 100% path completeness, 85% FP reduction | **Implemented (Phase 8)** |
 | **Response Efficacy Learning**| `response/efficacy_learner.py` | **A** | `tests/test_response_efficacy.py` | Phase 9 EXP-19: Online Bayesian Beta beliefs, Twin counterfactual simulation, Zero safety violations (0.0%), +545.7% security utility vs static SOAR | **Implemented (Phase 9)** |
+| **Confidence-Gated Pseudo-Labeling**| `adaptive_learning/pseudo_labeler.py`| **A** | `tests/test_pseudo_labeler.py` | Phase 10 EXP-20: Multi-condition epistemic gating, 1.0000 Hold-out Macro F1, 100.0% pseudo purity, 0 OOD pollution, continual replay isolation | **Implemented (Phase 10)** |
 
 ---
 

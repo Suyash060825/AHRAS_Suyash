@@ -47,6 +47,9 @@ class FeedbackSample:
     components:     Dict[str, float]      # component values in [0, 1]
     predicted_risk: float                 # model's risk score
     timestamp:      float = 0.0
+    provenance:     str = "HUMAN_VERIFIED"
+    sample_weight:  float = 1.0
+    generation:     int = 1
 
 
 @dataclass
@@ -427,12 +430,14 @@ class MultiMemoryReplayBuffer:
         attack_cap: int = 100,
         hard_neg_cap: int = 100,
         drift_cap: int = 100,
+        pseudo_cap: int = 150,
         feature_dim: int = 14
     ):
         self.recent_memory: deque = deque(maxlen=recent_cap)
         self.attack_memory: deque = deque(maxlen=attack_cap)
         self.hard_negative_memory: deque = deque(maxlen=hard_neg_cap)
         self.drift_memory: deque = deque(maxlen=drift_cap)
+        self.pseudo_memory: deque = deque(maxlen=pseudo_cap)
         
         self.feature_dim = feature_dim
         self.normal_prototype: Optional[np.ndarray] = None
@@ -446,12 +451,14 @@ class MultiMemoryReplayBuffer:
         is_drift: bool = False
     ) -> None:
         """Routes sample to appropriate memory compartments."""
-        self.recent_memory.append(sample)
-        
-        if sample.label == 1:
-            self.attack_memory.append(sample)
-        elif loss >= 0.25:  # Hard negative (high loss benign)
-            self.hard_negative_memory.append(sample)
+        if getattr(sample, "provenance", "HUMAN_VERIFIED") == "PSEUDO_VALIDATED":
+            self.pseudo_memory.append(sample)
+        else:
+            self.recent_memory.append(sample)
+            if sample.label == 1:
+                self.attack_memory.append(sample)
+            elif loss >= 0.25:  # Hard negative (high loss benign)
+                self.hard_negative_memory.append(sample)
             
         if is_drift:
             self.drift_memory.append(sample)
@@ -470,15 +477,24 @@ class MultiMemoryReplayBuffer:
                 else:
                     self.attack_prototype = (1.0 - self.prototype_alpha) * self.attack_prototype + self.prototype_alpha * vals
 
+    def quarantine_pseudo_generation(self, generation: int) -> int:
+        """Purges pseudo-labeled samples belonging to a specific generation upon detected drift."""
+        surviving = deque([s for s in self.pseudo_memory if getattr(s, "generation", 1) != generation], maxlen=self.pseudo_memory.maxlen)
+        purged = len(self.pseudo_memory) - len(surviving)
+        self.pseudo_memory = surviving
+        return purged
+
     def sample_balanced_batch(self, batch_size: int = 16) -> List[FeedbackSample]:
         """
         Samples a balanced replay batch across memory compartments to prevent catastrophic forgetting.
-        Guarantees proportional quota representation from attack, hard negative, drift, and recent pools.
+        Guarantees proportional quota representation from attack, hard negative, drift, recent, and pseudo pools.
         """
         active_pools = []
         for pool in (self.attack_memory, self.hard_negative_memory, self.drift_memory, self.recent_memory):
             if pool:
                 active_pools.append(list(pool))
+        if self.pseudo_memory:
+            active_pools.append(list(self.pseudo_memory))
                 
         if not active_pools:
             return []

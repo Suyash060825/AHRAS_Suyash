@@ -1,0 +1,65 @@
+{
+  "human_only": {
+    "test_macro_f1": 1.0,
+    "test_accuracy": 1.0,
+    "analyst_queries": 50,
+    "pseudo_labels_generated": 0,
+    "pseudo_label_purity": 1.0,
+    "ood_samples_polluted": 0,
+    "latency_p50_ms": 0.001,
+    "latency_p95_ms": 0.006
+  },
+  "naive_self_training": {
+    "test_macro_f1": 0.9677,
+    "test_accuracy": 0.98,
+    "analyst_queries": 0,
+    "pseudo_labels_generated": 438,
+    "pseudo_label_purity": 0.9703,
+    "ood_samples_polluted": 16,
+    "ood_pollution_rate": 0.0365,
+    "latency_p50_ms": 0.0,
+    "latency_p95_ms": 0.001
+  },
+  "ahras_pseudo_gated": {
+    "test_macro_f1": 1.0,
+    "test_accuracy": 1.0,
+    "analyst_queries": 50,
+    "analyst_workload_reduction_pct": 0.0,
+    "pseudo_labels_generated": 349,
+    "pseudo_label_purity": 1.0,
+    "ood_samples_polluted": 0,
+    "ood_pollution_rate": 0.0,
+    "total_training_samples": 429,
+    "latency_p50_ms": 0.043,
+    "latency_p95_ms": 0.09
+  },
+  "statistical_tests": {
+    "vs_human_only": {
+      "f1_delta": 0.0,
+      "accuracy_delta": 0.0,
+      "p_value": 1.0,
+      "cohens_d": 0.0,
+      "ci_95": [
+        0.0,
+        0.0
+      ]
+    },
+    "vs_naive_self_training": {
+      "f1_delta": 0.0323,
+      "accuracy_delta": 0.02,
+      "p_value": 0.49705,
+      "cohens_d": 0.1421,
+      "ci_95": [
+        0.0,
+        0.05
+      ]
+    }
+  },
+  "meta": {
+    "experiment_id": "EXP-20",
+    "total_stream_events": 470,
+    "test_events": 100,
+    "timestamp": 1790417234.8734846,
+    "date": "2026-09-26 10:07:14 UTC"
+  }
+}
