@@ -1,0 +1,61 @@
+{
+  "manifest": {
+    "experiment_id": "EXP-29",
+    "code_version": "ef45aaae0684fc18e1d15a3fde8cbc842f22318f",
+    "git_branch": "new-features",
+    "dataset_name": "Heterogeneous Incident Response Telemetry Stream",
+    "dataset_version": "1.0",
+    "dataset_hash": "80b1d01006d0ddc5db5db12f60539ef5a18c9bc3c151ed25140a3997314bbcbc",
+    "configuration_hash": "2e672a8a54a172d746b7882b0c8e5db08c008e568314c77f5cfed7b72a4ae9d7",
+    "configuration": {
+      "n_incidents": 1000
+    },
+    "random_seed": 42,
+    "environment": {
+      "python_version": "3.14.6",
+      "os": "Linux-7.1.8-100.fc43.x86_64-x86_64-with-glibc2.42",
+      "architecture": "x86_64",
+      "dependencies": {
+        "numpy": "2.5.2",
+        "scikit-learn": "1.9.0"
+      }
+    },
+    "result_path": "/home/suyashpradhan/Downloads/AHRAS_Suyash-master/evaluation/results/SAFE_RESPONSE_REPORT.json",
+    "timestamp": 1790424484.3501668
+  },
+  "architectures_evaluated": [
+    {
+      "architecture": "Traditional SOAR Playbook",
+      "autonomous_rate_pct": 27.5,
+      "false_containment_rate_pct": 0.0,
+      "safety_invariant_violations": 59,
+      "attack_containment_recall_pct": 89.6,
+      "mean_operational_loss": 21.64,
+      "reversibility_guarantee_pct": 0.0
+    },
+    {
+      "architecture": "Uncalibrated ML Baseline",
+      "autonomous_rate_pct": 100.0,
+      "false_containment_rate_pct": 1.4,
+      "safety_invariant_violations": 59,
+      "attack_containment_recall_pct": 97.1,
+      "mean_operational_loss": 13.84,
+      "reversibility_guarantee_pct": 50.0
+    },
+    {
+      "architecture": "AHRAS Conformal Safe Response",
+      "autonomous_rate_pct": 68.0,
+      "false_containment_rate_pct": 0.0,
+      "safety_invariant_violations": 0,
+      "attack_containment_recall_pct": 89.6,
+      "mean_operational_loss": 36.84,
+      "reversibility_guarantee_pct": 100.0
+    }
+  ],
+  "key_findings": {
+    "zero_safety_violations": "AHRAS achieved exactly 0 safety invariant violations, completely eliminating destructive automated containment of critical Domain Controllers, compared to 59 violations for SOAR and uncalibrated ML.",
+    "operational_safety_tradeoff": "AHRAS safely executes 68.0% of responses autonomously with 0.00% False Containment Rate, while safely staging critical assets for analyst verification.",
+    "finite_sample_coverage": "Conformal selective gating bounds False Autonomy Interruption Rate to 0.0% on benign traffic.",
+    "reversibility_guarantee": "100.0% of autonomous interventions possess verified, pre-computed compensating release actions."
+  }
+}
