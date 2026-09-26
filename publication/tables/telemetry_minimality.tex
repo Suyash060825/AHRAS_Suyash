@@ -1,0 +1,23 @@
+\begin{table*}[t]
+\centering
+\small
+\caption{\textbf{Telemetry Adequacy and Data Minimality (EXP-23): Pareto Frontier Between Ingestion Overhead and Detection Coverage}}
+\label{tab:telemetry_minimality}
+\begin{tabular}{lccccc}
+\toprule
+\textbf{Operating Configuration} & \textbf{Fields Retained} & \textbf{Bytes/Event} & \textbf{Coverage Retained} & \textbf{Storage Savings} & \textbf{Pareto Status} \\
+\midrule
+Extreme Sub-Minimal (Identifier Only) & 15.0\% & 47 B & 18.0\% & 88.5\% & Sub-optimal \\
+Pareto Optimal (Minimalist Engine) & 25.0\% & 86 B & 100.0\% & 78.4\% & \textbf{Optimal} \\
+Corroborated Defended (FP-Hardened) & 42.0\% & 134 B & 100.0\% & 66.5\% & \textbf{Optimal} \\
+Full OCSF Fleet Logging & 100.0\% & 401 B & 100.0\% & 0.0\% & Sub-optimal \\
+\midrule
+\multicolumn{6}{l}{\textbf{Top Indispensable Telemetry Fields Across All 10 Tactics:}} \\
+\quad \texttt{dst\_endpoint.port} & \multicolumn{2}{l}{Command and Control, Credential Access, Discovery} & \multicolumn{2}{l}{Collapse Rate: 25.0\%} & \textit{INDISPENSABLE} \\
+\quad \texttt{actor.process.cmd\_line} & \multicolumn{2}{l}{Credential Access, Defense Evasion, Execution} & \multicolumn{2}{l}{Collapse Rate: 25.0\%} & \textit{INDISPENSABLE} \\
+\quad \texttt{traffic.packets} & \multicolumn{2}{l}{Credential Access, Discovery, Impact} & \multicolumn{2}{l}{Collapse Rate: 25.0\%} & \textit{INDISPENSABLE} \\
+\quad \texttt{actor.process.user.name} & \multicolumn{2}{l}{Credential Access, Defense Evasion, Execution} & \multicolumn{2}{l}{Collapse Rate: 6.2\%} & \textit{INDISPENSABLE} \\
+\quad \texttt{enrichment.is\_private} & \multicolumn{2}{l}{Credential Access, Lateral Movement, Privilege Escalation} & \multicolumn{2}{l}{Collapse Rate: 18.8\%} & \textit{INDISPENSABLE} \\
+\bottomrule
+\end{tabular}
+\end{table*}

@@ -1,0 +1,671 @@
+{
+  "experiment_id": "EXP-23",
+  "benchmark_name": "Telemetry Adequacy and Data Minimality Benchmark",
+  "executive_answers": {
+    "volume_reduction_without_detection_loss_pct": 78.43,
+    "mean_full_schema_bytes": 401.2,
+    "mean_minimal_schema_bytes": 86.6,
+    "top_indispensable_fields": [
+      "dst_endpoint.port",
+      "actor.process.cmd_line",
+      "traffic.packets",
+      "actor.process.user.name",
+      "enrichment.is_private",
+      "file.path",
+      "actor.process.name",
+      "tcp_flags",
+      "actor.user.name",
+      "enrichment.ransomware_indicator"
+    ]
+  },
+  "top_indispensable_fields": [
+    {
+      "field_name": "dst_endpoint.port",
+      "importance_score": 0.775,
+      "tactics_supported": [
+        "Command and Control",
+        "Credential Access",
+        "Discovery",
+        "Impact",
+        "Lateral Movement"
+      ],
+      "techniques_affected": [
+        "T1021.001",
+        "T1021.002",
+        "T1110.001",
+        "T1499",
+        "T1573.002"
+      ],
+      "classification": "INDISPENSABLE",
+      "failure_rate_if_removed": 25.0
+    },
+    {
+      "field_name": "actor.process.cmd_line",
+      "importance_score": 0.745,
+      "tactics_supported": [
+        "Credential Access",
+        "Defense Evasion",
+        "Execution",
+        "Privilege Escalation"
+      ],
+      "techniques_affected": [
+        "T1003.001",
+        "T1059.001",
+        "T1059.004",
+        "T1070.004",
+        "T1548.001"
+      ],
+      "classification": "INDISPENSABLE",
+      "failure_rate_if_removed": 25.0
+    },
+    {
+      "field_name": "traffic.packets",
+      "importance_score": 0.745,
+      "tactics_supported": [
+        "Credential Access",
+        "Discovery",
+        "Impact",
+        "Lateral Movement"
+      ],
+      "techniques_affected": [
+        "T1021.002",
+        "T1046",
+        "T1110.001",
+        "T1499"
+      ],
+      "classification": "INDISPENSABLE",
+      "failure_rate_if_removed": 25.0
+    },
+    {
+      "field_name": "actor.process.user.name",
+      "importance_score": 0.7262,
+      "tactics_supported": [
+        "Credential Access",
+        "Defense Evasion",
+        "Execution",
+        "Privilege Escalation"
+      ],
+      "techniques_affected": [
+        "T1003.001",
+        "T1059.001",
+        "T1059.004",
+        "T1070.004",
+        "T1548.001"
+      ],
+      "classification": "INDISPENSABLE",
+      "failure_rate_if_removed": 6.25
+    },
+    {
+      "field_name": "enrichment.is_private",
+      "importance_score": 0.7087,
+      "tactics_supported": [
+        "Credential Access",
+        "Lateral Movement",
+        "Privilege Escalation"
+      ],
+      "techniques_affected": [
+        "T1021.001",
+        "T1021.002",
+        "T1078.004",
+        "T1110.001"
+      ],
+      "classification": "INDISPENSABLE",
+      "failure_rate_if_removed": 18.75
+    },
+    {
+      "field_name": "file.path",
+      "importance_score": 0.7087,
+      "tactics_supported": [
+        "Collection",
+        "Defense Evasion",
+        "Impact"
+      ],
+      "techniques_affected": [
+        "T1005",
+        "T1027",
+        "T1486"
+      ],
+      "classification": "INDISPENSABLE",
+      "failure_rate_if_removed": 18.75
+    },
+    {
+      "field_name": "actor.process.name",
+      "importance_score": 0.7025,
+      "tactics_supported": [
+        "Credential Access",
+        "Execution",
+        "Privilege Escalation"
+      ],
+      "techniques_affected": [
+        "T1003.001",
+        "T1059.001",
+        "T1548.001"
+      ],
+      "classification": "INDISPENSABLE",
+      "failure_rate_if_removed": 12.5
+    },
+    {
+      "field_name": "tcp_flags",
+      "importance_score": 0.6725,
+      "tactics_supported": [
+        "Discovery",
+        "Impact"
+      ],
+      "techniques_affected": [
+        "T1046",
+        "T1498.001"
+      ],
+      "classification": "INDISPENSABLE",
+      "failure_rate_if_removed": 12.5
+    },
+    {
+      "field_name": "actor.user.name",
+      "importance_score": 0.6662,
+      "tactics_supported": [
+        "Collection",
+        "Privilege Escalation"
+      ],
+      "techniques_affected": [
+        "T1005",
+        "T1078.004"
+      ],
+      "classification": "INDISPENSABLE",
+      "failure_rate_if_removed": 6.25
+    },
+    {
+      "field_name": "enrichment.ransomware_indicator",
+      "importance_score": 0.6662,
+      "tactics_supported": [
+        "Defense Evasion",
+        "Impact"
+      ],
+      "techniques_affected": [
+        "T1027",
+        "T1486"
+      ],
+      "classification": "INDISPENSABLE",
+      "failure_rate_if_removed": 6.25
+    }
+  ],
+  "all_field_importance": [
+    {
+      "field_name": "dst_endpoint.port",
+      "importance_score": 0.775,
+      "classification": "INDISPENSABLE",
+      "failure_rate_if_removed": 25.0
+    },
+    {
+      "field_name": "actor.process.cmd_line",
+      "importance_score": 0.745,
+      "classification": "INDISPENSABLE",
+      "failure_rate_if_removed": 25.0
+    },
+    {
+      "field_name": "traffic.packets",
+      "importance_score": 0.745,
+      "classification": "INDISPENSABLE",
+      "failure_rate_if_removed": 25.0
+    },
+    {
+      "field_name": "actor.process.user.name",
+      "importance_score": 0.7262,
+      "classification": "INDISPENSABLE",
+      "failure_rate_if_removed": 6.25
+    },
+    {
+      "field_name": "enrichment.is_private",
+      "importance_score": 0.7087,
+      "classification": "INDISPENSABLE",
+      "failure_rate_if_removed": 18.75
+    },
+    {
+      "field_name": "file.path",
+      "importance_score": 0.7087,
+      "classification": "INDISPENSABLE",
+      "failure_rate_if_removed": 18.75
+    },
+    {
+      "field_name": "actor.process.name",
+      "importance_score": 0.7025,
+      "classification": "INDISPENSABLE",
+      "failure_rate_if_removed": 12.5
+    },
+    {
+      "field_name": "tcp_flags",
+      "importance_score": 0.6725,
+      "classification": "INDISPENSABLE",
+      "failure_rate_if_removed": 12.5
+    },
+    {
+      "field_name": "actor.user.name",
+      "importance_score": 0.6662,
+      "classification": "INDISPENSABLE",
+      "failure_rate_if_removed": 6.25
+    },
+    {
+      "field_name": "enrichment.ransomware_indicator",
+      "importance_score": 0.6662,
+      "classification": "INDISPENSABLE",
+      "failure_rate_if_removed": 6.25
+    },
+    {
+      "field_name": "traffic.pps",
+      "importance_score": 0.6662,
+      "classification": "INDISPENSABLE",
+      "failure_rate_if_removed": 6.25
+    },
+    {
+      "field_name": "enrichment.entropy",
+      "importance_score": 0.6362,
+      "classification": "INDISPENSABLE",
+      "failure_rate_if_removed": 6.25
+    },
+    {
+      "field_name": "enrichment.ransomware_extension",
+      "importance_score": 0.6362,
+      "classification": "INDISPENSABLE",
+      "failure_rate_if_removed": 6.25
+    },
+    {
+      "field_name": "inter_arrival_times",
+      "importance_score": 0.6362,
+      "classification": "INDISPENSABLE",
+      "failure_rate_if_removed": 6.25
+    },
+    {
+      "field_name": "packet_lengths",
+      "importance_score": 0.6362,
+      "classification": "INDISPENSABLE",
+      "failure_rate_if_removed": 6.25
+    },
+    {
+      "field_name": "traffic.duration_sec",
+      "importance_score": 0.6362,
+      "classification": "INDISPENSABLE",
+      "failure_rate_if_removed": 6.25
+    },
+    {
+      "field_name": "unique_dst_ports",
+      "importance_score": 0.6362,
+      "classification": "INDISPENSABLE",
+      "failure_rate_if_removed": 6.25
+    },
+    {
+      "field_name": "src_endpoint.ip",
+      "importance_score": 0.45,
+      "classification": "FP_REDUCTION",
+      "failure_rate_if_removed": 0.0
+    },
+    {
+      "field_name": "traffic.bytes",
+      "importance_score": 0.43,
+      "classification": "FP_REDUCTION",
+      "failure_rate_if_removed": 0.0
+    },
+    {
+      "field_name": "file.action",
+      "importance_score": 0.41,
+      "classification": "FP_REDUCTION",
+      "failure_rate_if_removed": 0.0
+    },
+    {
+      "field_name": "process.parent_name",
+      "importance_score": 0.39,
+      "classification": "FP_REDUCTION",
+      "failure_rate_if_removed": 0.0
+    },
+    {
+      "field_name": "api.operation",
+      "importance_score": 0.37,
+      "classification": "FP_REDUCTION",
+      "failure_rate_if_removed": 0.0
+    },
+    {
+      "field_name": "file.extension",
+      "importance_score": 0.37,
+      "classification": "FP_REDUCTION",
+      "failure_rate_if_removed": 0.0
+    },
+    {
+      "field_name": "actor.process.exe",
+      "importance_score": 0.05,
+      "classification": "OPTIONAL_REDUNDANT",
+      "failure_rate_if_removed": 0.0
+    },
+    {
+      "field_name": "actor.process.pid",
+      "importance_score": 0.05,
+      "classification": "OPTIONAL_REDUNDANT",
+      "failure_rate_if_removed": 0.0
+    },
+    {
+      "field_name": "alpn",
+      "importance_score": 0.05,
+      "classification": "OPTIONAL_REDUNDANT",
+      "failure_rate_if_removed": 0.0
+    },
+    {
+      "field_name": "device.hostname",
+      "importance_score": 0.05,
+      "classification": "OPTIONAL_REDUNDANT",
+      "failure_rate_if_removed": 0.0
+    },
+    {
+      "field_name": "file.entropy",
+      "importance_score": 0.05,
+      "classification": "OPTIONAL_REDUNDANT",
+      "failure_rate_if_removed": 0.0
+    },
+    {
+      "field_name": "file.sha256",
+      "importance_score": 0.05,
+      "classification": "OPTIONAL_REDUNDANT",
+      "failure_rate_if_removed": 0.0
+    },
+    {
+      "field_name": "flow_id",
+      "importance_score": 0.05,
+      "classification": "OPTIONAL_REDUNDANT",
+      "failure_rate_if_removed": 0.0
+    },
+    {
+      "field_name": "protocol_name",
+      "importance_score": 0.05,
+      "classification": "OPTIONAL_REDUNDANT",
+      "failure_rate_if_removed": 0.0
+    },
+    {
+      "field_name": "raw_source",
+      "importance_score": 0.05,
+      "classification": "OPTIONAL_REDUNDANT",
+      "failure_rate_if_removed": 0.0
+    },
+    {
+      "field_name": "severity_id",
+      "importance_score": 0.05,
+      "classification": "OPTIONAL_REDUNDANT",
+      "failure_rate_if_removed": 0.0
+    },
+    {
+      "field_name": "sni",
+      "importance_score": 0.05,
+      "classification": "OPTIONAL_REDUNDANT",
+      "failure_rate_if_removed": 0.0
+    },
+    {
+      "field_name": "src_endpoint.port",
+      "importance_score": 0.05,
+      "classification": "OPTIONAL_REDUNDANT",
+      "failure_rate_if_removed": 0.0
+    },
+    {
+      "field_name": "time",
+      "importance_score": 0.05,
+      "classification": "OPTIONAL_REDUNDANT",
+      "failure_rate_if_removed": 0.0
+    },
+    {
+      "field_name": "tls_version",
+      "importance_score": 0.05,
+      "classification": "OPTIONAL_REDUNDANT",
+      "failure_rate_if_removed": 0.0
+    }
+  ],
+  "degraded_telemetry_stress_test": [
+    {
+      "stage_name": "Stage 1 (100% Full Schema)",
+      "retained_fields_pct": 100.0,
+      "observable_vectors_pct": 100.0,
+      "detection_recall_pct": 100.0,
+      "mean_uncertainty": 0.12,
+      "f1_score": 0.95
+    },
+    {
+      "stage_name": "Stage 2 (75% Ancillary Stripped)",
+      "retained_fields_pct": 75.0,
+      "observable_vectors_pct": 100.0,
+      "detection_recall_pct": 96.0,
+      "mean_uncertainty": 0.18,
+      "f1_score": 0.92
+    },
+    {
+      "stage_name": "Stage 3 (50% Lineage Stripped)",
+      "retained_fields_pct": 50.0,
+      "observable_vectors_pct": 68.0,
+      "detection_recall_pct": 62.0,
+      "mean_uncertainty": 0.38,
+      "f1_score": 0.65
+    },
+    {
+      "stage_name": "Stage 4 (25% Bare Identifiers Only)",
+      "retained_fields_pct": 25.0,
+      "observable_vectors_pct": 18.0,
+      "detection_recall_pct": 12.0,
+      "mean_uncertainty": 0.65,
+      "f1_score": 0.18
+    }
+  ],
+  "pareto_frontier": [
+    {
+      "operating_point": "Extreme Sub-Minimal (Identifier Only)",
+      "telemetry_retention_pct": 15.0,
+      "mean_bytes_per_event": 47,
+      "detection_coverage_pct": 18.0,
+      "storage_savings_pct": 88.5,
+      "is_pareto_optimal": false
+    },
+    {
+      "operating_point": "Pareto Optimal (Minimalist Engine)",
+      "telemetry_retention_pct": 25.0,
+      "mean_bytes_per_event": 86,
+      "detection_coverage_pct": 100.0,
+      "storage_savings_pct": 78.4,
+      "is_pareto_optimal": true
+    },
+    {
+      "operating_point": "Corroborated Defended (FP-Hardened)",
+      "telemetry_retention_pct": 42.0,
+      "mean_bytes_per_event": 134,
+      "detection_coverage_pct": 100.0,
+      "storage_savings_pct": 66.5,
+      "is_pareto_optimal": true
+    },
+    {
+      "operating_point": "Full OCSF Fleet Logging",
+      "telemetry_retention_pct": 100.0,
+      "mean_bytes_per_event": 401,
+      "detection_coverage_pct": 100.0,
+      "storage_savings_pct": 0.0,
+      "is_pareto_optimal": false
+    }
+  ],
+  "vector_evaluations": [
+    {
+      "technique_id": "T1059.001",
+      "implementation_id": "T1059.001-IMPL-01",
+      "vector_name": "powershell_encoded_command",
+      "tactic": "Execution",
+      "original_event_bytes": 480,
+      "minimal_event_bytes": 110,
+      "volume_reduction_pct": 77.08,
+      "detection_preserved": true
+    },
+    {
+      "technique_id": "T1059.004",
+      "implementation_id": "T1059.004-IMPL-01",
+      "vector_name": "bash_dev_tcp_reverse_shell",
+      "tactic": "Execution",
+      "original_event_bytes": 390,
+      "minimal_event_bytes": 85,
+      "volume_reduction_pct": 78.21,
+      "detection_preserved": true
+    },
+    {
+      "technique_id": "T1548.001",
+      "implementation_id": "T1548.001-IMPL-01",
+      "vector_name": "root_child_spawn_from_suid",
+      "tactic": "Privilege Escalation",
+      "original_event_bytes": 370,
+      "minimal_event_bytes": 75,
+      "volume_reduction_pct": 79.73,
+      "detection_preserved": true
+    },
+    {
+      "technique_id": "T1078.004",
+      "implementation_id": "T1078.004-IMPL-01",
+      "vector_name": "external_unknown_cloud_actor",
+      "tactic": "Privilege Escalation",
+      "original_event_bytes": 540,
+      "minimal_event_bytes": 95,
+      "volume_reduction_pct": 82.41,
+      "detection_preserved": true
+    },
+    {
+      "technique_id": "T1070.004",
+      "implementation_id": "T1070.004-IMPL-01",
+      "vector_name": "vssadmin_shadow_copy_deletion",
+      "tactic": "Defense Evasion",
+      "original_event_bytes": 420,
+      "minimal_event_bytes": 90,
+      "volume_reduction_pct": 78.57,
+      "detection_preserved": true
+    },
+    {
+      "technique_id": "T1027",
+      "implementation_id": "T1027-IMPL-02",
+      "vector_name": "high_shannon_entropy_file_write",
+      "tactic": "Defense Evasion",
+      "original_event_bytes": 410,
+      "minimal_event_bytes": 110,
+      "volume_reduction_pct": 73.17,
+      "detection_preserved": true
+    },
+    {
+      "technique_id": "T1003.001",
+      "implementation_id": "T1003.001-IMPL-01",
+      "vector_name": "mimikatz_cli_execution",
+      "tactic": "Credential Access",
+      "original_event_bytes": 460,
+      "minimal_event_bytes": 80,
+      "volume_reduction_pct": 82.61,
+      "detection_preserved": true
+    },
+    {
+      "technique_id": "T1110.001",
+      "implementation_id": "T1110.001-IMPL-01",
+      "vector_name": "ssh_volumetric_brute_force",
+      "tactic": "Credential Access",
+      "original_event_bytes": 280,
+      "minimal_event_bytes": 65,
+      "volume_reduction_pct": 76.79,
+      "detection_preserved": true
+    },
+    {
+      "technique_id": "T1046",
+      "implementation_id": "T1046-IMPL-01",
+      "vector_name": "syn_port_scan_sweep",
+      "tactic": "Discovery",
+      "original_event_bytes": 290,
+      "minimal_event_bytes": 70,
+      "volume_reduction_pct": 75.86,
+      "detection_preserved": true
+    },
+    {
+      "technique_id": "T1021.002",
+      "implementation_id": "T1021.002-IMPL-01",
+      "vector_name": "smb_port_445_high_volume_transfer",
+      "tactic": "Lateral Movement",
+      "original_event_bytes": 300,
+      "minimal_event_bytes": 75,
+      "volume_reduction_pct": 75.0,
+      "detection_preserved": true
+    },
+    {
+      "technique_id": "T1021.001",
+      "implementation_id": "T1021.001-IMPL-01",
+      "vector_name": "rdp_inbound_external_connection",
+      "tactic": "Lateral Movement",
+      "original_event_bytes": 290,
+      "minimal_event_bytes": 60,
+      "volume_reduction_pct": 79.31,
+      "detection_preserved": true
+    },
+    {
+      "technique_id": "T1005",
+      "implementation_id": "T1005-IMPL-01",
+      "vector_name": "sensitive_credential_file_access",
+      "tactic": "Collection",
+      "original_event_bytes": 390,
+      "minimal_event_bytes": 65,
+      "volume_reduction_pct": 83.33,
+      "detection_preserved": true
+    },
+    {
+      "technique_id": "T1573.002",
+      "implementation_id": "T1573.002-IMPL-01",
+      "vector_name": "encrypted_session_beaconing",
+      "tactic": "Command and Control",
+      "original_event_bytes": 850,
+      "minimal_event_bytes": 210,
+      "volume_reduction_pct": 75.29,
+      "detection_preserved": true
+    },
+    {
+      "technique_id": "T1486",
+      "implementation_id": "T1486-IMPL-01",
+      "vector_name": "ransomware_extension_rename",
+      "tactic": "Impact",
+      "original_event_bytes": 380,
+      "minimal_event_bytes": 70,
+      "volume_reduction_pct": 81.58,
+      "detection_preserved": true
+    },
+    {
+      "technique_id": "T1498.001",
+      "implementation_id": "T1498.001-IMPL-01",
+      "vector_name": "syn_flood_volumetric",
+      "tactic": "Impact",
+      "original_event_bytes": 260,
+      "minimal_event_bytes": 55,
+      "volume_reduction_pct": 78.85,
+      "detection_preserved": true
+    },
+    {
+      "technique_id": "T1499",
+      "implementation_id": "T1499-IMPL-02",
+      "vector_name": "http_volumetric_get_flood",
+      "tactic": "Impact",
+      "original_event_bytes": 310,
+      "minimal_event_bytes": 70,
+      "volume_reduction_pct": 77.42,
+      "detection_preserved": true
+    }
+  ],
+  "manifest": {
+    "experiment_id": "EXP-23",
+    "code_version": "1513a25b94ab2d623b1cfae18e133669d9370d2a",
+    "git_branch": "new-features",
+    "dataset_name": "AHRAS_OCSF_TELEMETRY_SCHEMA_V1",
+    "dataset_version": "1.0",
+    "dataset_hash": "407efa7f831ac96582cf21066f99cc6613e98769753144387e22c7a03182b872",
+    "configuration_hash": "01c2969f93afc3a243a0108efa652e42e77f82e9dcb84aa5307cfed20d578fad",
+    "configuration": {
+      "benchmark": "Telemetry Adequacy & Data Minimality",
+      "pareto_optimization": true,
+      "stress_test_stages": 4,
+      "indispensability_threshold": 0.6
+    },
+    "random_seed": 42,
+    "environment": {
+      "python_version": "3.14.6",
+      "os": "Linux-7.1.8-100.fc43.x86_64-x86_64-with-glibc2.42",
+      "architecture": "x86_64",
+      "dependencies": {
+        "numpy": "2.5.2",
+        "scikit-learn": "1.9.0"
+      }
+    },
+    "result_path": "/home/suyashpradhan/Downloads/AHRAS_Suyash-master/evaluation/results/TELEMETRY_MINIMALITY_REPORT.json",
+    "timestamp": 1790422529.3334858
+  }
+}
