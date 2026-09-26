@@ -58,3 +58,11 @@
 | Model Name | Purpose | Input Dimensions / Types | Output Schema / Range | Version | Training Data / Priors | Evaluation Status |
 | :--- | :--- | :--- | :--- | :--- | :--- | :--- |
 | **Security Twin Simulator & Replay Lab** | Pre-action counterfactual simulation & Monte Carlo uncertainty sampling | Enterprise twin topology, multi-stage attack scenarios, candidate mitigation actions | `SimulationResult`, `MonteCarloResult` (Path breakage, Post-risk, Blast radius, P(Contain)) | `1.0.0` | Multi-stage cyber kill-chain scenarios (Ransomware, Lateral Movement, Credential Abuse) | Verified (Phase 2 EXP-12: Mean Optimal Containment 73.60%, Risk Reduction 85.00%, Path Breakage 100.0%, P99 Residual Risk <= 0.77 vs 0.99 Baseline, 11 Policy Evaluations, 500 MC Iterations, Table tab:security_twin_eval) |
+
+---
+
+## 6. Provenance & Forensic Scenario Reconstruction Engines
+
+| Model Name | Purpose | Input Dimensions / Types | Output Schema / Range | Version | Training Data / Priors | Evaluation Status |
+| :--- | :--- | :--- | :--- | :--- | :--- | :--- |
+| **Attack Scenario Reconstructor & Forensic DAG** | Heterogeneous forensic provenance DAG & causal attack chain reconstruction | Multi-modal OCSF events across 12 node & 12 edge types | `ProvenanceAttackScenario`, `GraphQualityMetrics` | `1.0.0` | Multi-campaign security telemetry & MITRE kill-chain priors | Verified (Phase 3 EXP-13: Clean Graph F1 1.0000, 50% Missingness F1 0.6120, Path Completeness 100%, Automated Missing Step Inference, Table tab:provenance_reconstruction_eval) |

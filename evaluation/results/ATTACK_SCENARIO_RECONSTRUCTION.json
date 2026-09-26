@@ -1,0 +1,452 @@
+{
+  "experiment_id": "EXP-13",
+  "title": "Provenance Attack Scenario Reconstruction & Graph Quality Benchmark",
+  "timestamp_utc": "2026-09-26T06:23:13Z",
+  "status": "COMPLETED",
+  "runtime_seconds": 0.02,
+  "summary_metrics": {
+    "mean_overall_graph_f1_clean": 1.0,
+    "mean_overall_graph_f1_stealth_50pct": 0.612,
+    "campaigns_evaluated": 3,
+    "conditions_per_campaign": 5
+  },
+  "results_by_campaign": {
+    "Enterprise Ransomware": [
+      {
+        "condition": "Clean (0% Missing)",
+        "drop_ratio": 0.0,
+        "noise_injected": false,
+        "reconstructed_stages": [
+          "RECONNAISSANCE",
+          "INITIAL_ACCESS",
+          "EXECUTION",
+          "LATERAL_MOVEMENT",
+          "IMPACT"
+        ],
+        "missing_steps_detected": [
+          "Hypothesized Unobserved Persistence (Scheduled task / cron stealth)",
+          "Hypothesized Unobserved Credential Access (Memory dump / token reuse)",
+          "Hypothesized Unobserved Collection (Local staging before exfiltration)",
+          "Hypothesized Unobserved EXFILTRATION"
+        ],
+        "metrics": {
+          "node_precision": 1.0,
+          "node_recall": 1.0,
+          "node_f1": 1.0,
+          "edge_precision": 1.0,
+          "edge_recall": 1.0,
+          "edge_f1": 1.0,
+          "path_completeness": 1.0,
+          "depth_similarity": 1.0,
+          "structural_distance": 0.0,
+          "overall_graph_f1": 1.0
+        }
+      },
+      {
+        "condition": "10% Missing",
+        "drop_ratio": 0.1,
+        "noise_injected": false,
+        "reconstructed_stages": [
+          "RECONNAISSANCE",
+          "INITIAL_ACCESS",
+          "EXECUTION",
+          "IMPACT"
+        ],
+        "missing_steps_detected": [
+          "Hypothesized Unobserved Persistence (Scheduled task / cron stealth)",
+          "Hypothesized Unobserved Credential Access (Memory dump / token reuse)",
+          "Hypothesized Unobserved LATERAL_MOVEMENT",
+          "Hypothesized Unobserved Collection (Local staging before exfiltration)",
+          "Hypothesized Unobserved EXFILTRATION"
+        ],
+        "metrics": {
+          "node_precision": 1.0,
+          "node_recall": 0.9,
+          "node_f1": 0.9474,
+          "edge_precision": 1.0,
+          "edge_recall": 0.7778,
+          "edge_f1": 0.875,
+          "path_completeness": 0.6667,
+          "depth_similarity": 0.6,
+          "structural_distance": 0.0857,
+          "overall_graph_f1": 0.8112
+        }
+      },
+      {
+        "condition": "25% Missing",
+        "drop_ratio": 0.25,
+        "noise_injected": false,
+        "reconstructed_stages": [
+          "RECONNAISSANCE",
+          "EXECUTION",
+          "IMPACT"
+        ],
+        "missing_steps_detected": [
+          "Hypothesized Unobserved INITIAL_ACCESS",
+          "Hypothesized Unobserved Persistence (Scheduled task / cron stealth)",
+          "Hypothesized Unobserved Credential Access (Memory dump / token reuse)",
+          "Hypothesized Unobserved LATERAL_MOVEMENT",
+          "Hypothesized Unobserved Collection (Local staging before exfiltration)",
+          "Hypothesized Unobserved EXFILTRATION"
+        ],
+        "metrics": {
+          "node_precision": 1.0,
+          "node_recall": 0.8,
+          "node_f1": 0.8889,
+          "edge_precision": 1.0,
+          "edge_recall": 0.6667,
+          "edge_f1": 0.8,
+          "path_completeness": 0.6667,
+          "depth_similarity": 0.6,
+          "structural_distance": 0.1515,
+          "overall_graph_f1": 0.7742
+        }
+      },
+      {
+        "condition": "50% Missing (Stealth)",
+        "drop_ratio": 0.5,
+        "noise_injected": false,
+        "reconstructed_stages": [
+          "RECONNAISSANCE",
+          "IMPACT"
+        ],
+        "missing_steps_detected": [
+          "Hypothesized Unobserved INITIAL_ACCESS",
+          "Hypothesized Unobserved Execution (LOLBin / in-memory injection)",
+          "Hypothesized Unobserved Persistence (Scheduled task / cron stealth)",
+          "Hypothesized Unobserved Credential Access (Memory dump / token reuse)",
+          "Hypothesized Unobserved LATERAL_MOVEMENT",
+          "Hypothesized Unobserved Collection (Local staging before exfiltration)",
+          "Hypothesized Unobserved EXFILTRATION"
+        ],
+        "metrics": {
+          "node_precision": 1.0,
+          "node_recall": 0.5,
+          "node_f1": 0.6667,
+          "edge_precision": 1.0,
+          "edge_recall": 0.3333,
+          "edge_f1": 0.5,
+          "path_completeness": 0.6667,
+          "depth_similarity": 0.4,
+          "structural_distance": 0.4074,
+          "overall_graph_f1": 0.6
+        }
+      },
+      {
+        "condition": "Noise Injected (+50 Ev)",
+        "drop_ratio": 0.0,
+        "noise_injected": true,
+        "reconstructed_stages": [
+          "RECONNAISSANCE",
+          "INITIAL_ACCESS",
+          "EXECUTION",
+          "INITIAL_ACCESS",
+          "LATERAL_MOVEMENT",
+          "INITIAL_ACCESS",
+          "IMPACT",
+          "INITIAL_ACCESS"
+        ],
+        "missing_steps_detected": [
+          "Hypothesized Unobserved Execution (LOLBin / in-memory injection)",
+          "Hypothesized Unobserved Persistence (Scheduled task / cron stealth)",
+          "Hypothesized Unobserved Credential Access (Memory dump / token reuse)",
+          "Hypothesized Unobserved Execution (LOLBin / in-memory injection)",
+          "Hypothesized Unobserved Persistence (Scheduled task / cron stealth)",
+          "Hypothesized Unobserved Credential Access (Memory dump / token reuse)",
+          "Hypothesized Unobserved LATERAL_MOVEMENT",
+          "Hypothesized Unobserved Collection (Local staging before exfiltration)",
+          "Hypothesized Unobserved EXFILTRATION"
+        ],
+        "metrics": {
+          "node_precision": 0.1176,
+          "node_recall": 1.0,
+          "node_f1": 0.2105,
+          "edge_precision": 0.1875,
+          "edge_recall": 1.0,
+          "edge_f1": 0.3158,
+          "path_completeness": 1.0,
+          "depth_similarity": 1.0,
+          "structural_distance": 0.75,
+          "overall_graph_f1": 0.3364
+        }
+      }
+    ],
+    "Bastion DB Infiltration": [
+      {
+        "condition": "Clean (0% Missing)",
+        "drop_ratio": 0.0,
+        "noise_injected": false,
+        "reconstructed_stages": [
+          "INITIAL_ACCESS",
+          "EXECUTION",
+          "LATERAL_MOVEMENT",
+          "EXECUTION",
+          "EXFILTRATION"
+        ],
+        "missing_steps_detected": [
+          "Hypothesized Unobserved Persistence (Scheduled task / cron stealth)",
+          "Hypothesized Unobserved Credential Access (Memory dump / token reuse)",
+          "Hypothesized Unobserved Persistence (Scheduled task / cron stealth)",
+          "Hypothesized Unobserved Credential Access (Memory dump / token reuse)",
+          "Hypothesized Unobserved LATERAL_MOVEMENT",
+          "Hypothesized Unobserved Collection (Local staging before exfiltration)"
+        ],
+        "metrics": {
+          "node_precision": 1.0,
+          "node_recall": 1.0,
+          "node_f1": 1.0,
+          "edge_precision": 1.0,
+          "edge_recall": 1.0,
+          "edge_f1": 1.0,
+          "path_completeness": 1.0,
+          "depth_similarity": 1.0,
+          "structural_distance": 0.0,
+          "overall_graph_f1": 1.0
+        }
+      },
+      {
+        "condition": "10% Missing",
+        "drop_ratio": 0.1,
+        "noise_injected": false,
+        "reconstructed_stages": [
+          "INITIAL_ACCESS",
+          "EXECUTION",
+          "LATERAL_MOVEMENT",
+          "EXFILTRATION"
+        ],
+        "missing_steps_detected": [
+          "Hypothesized Unobserved Persistence (Scheduled task / cron stealth)",
+          "Hypothesized Unobserved Credential Access (Memory dump / token reuse)",
+          "Hypothesized Unobserved Collection (Local staging before exfiltration)"
+        ],
+        "metrics": {
+          "node_precision": 1.0,
+          "node_recall": 0.9,
+          "node_f1": 0.9474,
+          "edge_precision": 1.0,
+          "edge_recall": 0.8182,
+          "edge_f1": 0.9,
+          "path_completeness": 1.0,
+          "depth_similarity": 1.0,
+          "structural_distance": 0.0769,
+          "overall_graph_f1": 0.9474
+        }
+      },
+      {
+        "condition": "25% Missing",
+        "drop_ratio": 0.25,
+        "noise_injected": false,
+        "reconstructed_stages": [
+          "INITIAL_ACCESS",
+          "LATERAL_MOVEMENT",
+          "EXFILTRATION"
+        ],
+        "missing_steps_detected": [
+          "Hypothesized Unobserved Execution (LOLBin / in-memory injection)",
+          "Hypothesized Unobserved Persistence (Scheduled task / cron stealth)",
+          "Hypothesized Unobserved Credential Access (Memory dump / token reuse)",
+          "Hypothesized Unobserved Collection (Local staging before exfiltration)"
+        ],
+        "metrics": {
+          "node_precision": 1.0,
+          "node_recall": 0.6,
+          "node_f1": 0.75,
+          "edge_precision": 1.0,
+          "edge_recall": 0.5455,
+          "edge_f1": 0.7059,
+          "path_completeness": 1.0,
+          "depth_similarity": 0.6667,
+          "structural_distance": 0.2727,
+          "overall_graph_f1": 0.8
+        }
+      },
+      {
+        "condition": "50% Missing (Stealth)",
+        "drop_ratio": 0.5,
+        "noise_injected": false,
+        "reconstructed_stages": [
+          "INITIAL_ACCESS",
+          "EXFILTRATION"
+        ],
+        "missing_steps_detected": [
+          "Hypothesized Unobserved Execution (LOLBin / in-memory injection)",
+          "Hypothesized Unobserved Persistence (Scheduled task / cron stealth)",
+          "Hypothesized Unobserved Credential Access (Memory dump / token reuse)",
+          "Hypothesized Unobserved LATERAL_MOVEMENT",
+          "Hypothesized Unobserved Collection (Local staging before exfiltration)"
+        ],
+        "metrics": {
+          "node_precision": 1.0,
+          "node_recall": 0.5,
+          "node_f1": 0.6667,
+          "edge_precision": 1.0,
+          "edge_recall": 0.3636,
+          "edge_f1": 0.5333,
+          "path_completeness": 0.6667,
+          "depth_similarity": 0.5,
+          "structural_distance": 0.4,
+          "overall_graph_f1": 0.6154
+        }
+      },
+      {
+        "condition": "Noise Injected (+50 Ev)",
+        "drop_ratio": 0.0,
+        "noise_injected": true,
+        "reconstructed_stages": [
+          "INITIAL_ACCESS",
+          "EXECUTION",
+          "INITIAL_ACCESS",
+          "LATERAL_MOVEMENT",
+          "INITIAL_ACCESS",
+          "EXECUTION",
+          "INITIAL_ACCESS",
+          "EXFILTRATION",
+          "INITIAL_ACCESS"
+        ],
+        "missing_steps_detected": [
+          "Hypothesized Unobserved Execution (LOLBin / in-memory injection)",
+          "Hypothesized Unobserved Persistence (Scheduled task / cron stealth)",
+          "Hypothesized Unobserved Credential Access (Memory dump / token reuse)",
+          "Hypothesized Unobserved Execution (LOLBin / in-memory injection)",
+          "Hypothesized Unobserved Persistence (Scheduled task / cron stealth)",
+          "Hypothesized Unobserved Credential Access (Memory dump / token reuse)",
+          "Hypothesized Unobserved LATERAL_MOVEMENT",
+          "Hypothesized Unobserved Collection (Local staging before exfiltration)"
+        ],
+        "metrics": {
+          "node_precision": 0.1176,
+          "node_recall": 1.0,
+          "node_f1": 0.2105,
+          "edge_precision": 0.22,
+          "edge_recall": 1.0,
+          "edge_f1": 0.3607,
+          "path_completeness": 1.0,
+          "depth_similarity": 1.0,
+          "structural_distance": 0.7308,
+          "overall_graph_f1": 0.352
+        }
+      }
+    ],
+    "Cloud Privilege Escalation": [
+      {
+        "condition": "Clean (0% Missing)",
+        "drop_ratio": 0.0,
+        "noise_injected": false,
+        "reconstructed_stages": [
+          "CREDENTIAL_ACCESS"
+        ],
+        "missing_steps_detected": [],
+        "metrics": {
+          "node_precision": 1.0,
+          "node_recall": 1.0,
+          "node_f1": 1.0,
+          "edge_precision": 1.0,
+          "edge_recall": 1.0,
+          "edge_f1": 1.0,
+          "path_completeness": 1.0,
+          "depth_similarity": 1.0,
+          "structural_distance": 0.0,
+          "overall_graph_f1": 1.0
+        }
+      },
+      {
+        "condition": "10% Missing",
+        "drop_ratio": 0.1,
+        "noise_injected": false,
+        "reconstructed_stages": [
+          "CREDENTIAL_ACCESS"
+        ],
+        "missing_steps_detected": [],
+        "metrics": {
+          "node_precision": 1.0,
+          "node_recall": 0.8,
+          "node_f1": 0.8889,
+          "edge_precision": 1.0,
+          "edge_recall": 0.75,
+          "edge_f1": 0.8571,
+          "path_completeness": 0.75,
+          "depth_similarity": 1.0,
+          "structural_distance": 0.125,
+          "overall_graph_f1": 0.8276
+        }
+      },
+      {
+        "condition": "25% Missing",
+        "drop_ratio": 0.25,
+        "noise_injected": false,
+        "reconstructed_stages": [
+          "CREDENTIAL_ACCESS"
+        ],
+        "missing_steps_detected": [],
+        "metrics": {
+          "node_precision": 1.0,
+          "node_recall": 0.8,
+          "node_f1": 0.8889,
+          "edge_precision": 1.0,
+          "edge_recall": 0.75,
+          "edge_f1": 0.8571,
+          "path_completeness": 0.75,
+          "depth_similarity": 1.0,
+          "structural_distance": 0.125,
+          "overall_graph_f1": 0.8276
+        }
+      },
+      {
+        "condition": "50% Missing (Stealth)",
+        "drop_ratio": 0.5,
+        "noise_injected": false,
+        "reconstructed_stages": [
+          "CREDENTIAL_ACCESS"
+        ],
+        "missing_steps_detected": [],
+        "metrics": {
+          "node_precision": 1.0,
+          "node_recall": 0.6,
+          "node_f1": 0.75,
+          "edge_precision": 1.0,
+          "edge_recall": 0.5,
+          "edge_f1": 0.6667,
+          "path_completeness": 0.5,
+          "depth_similarity": 1.0,
+          "structural_distance": 0.2857,
+          "overall_graph_f1": 0.6207
+        }
+      },
+      {
+        "condition": "Noise Injected (+50 Ev)",
+        "drop_ratio": 0.0,
+        "noise_injected": true,
+        "reconstructed_stages": [
+          "CREDENTIAL_ACCESS",
+          "INITIAL_ACCESS",
+          "CREDENTIAL_ACCESS",
+          "INITIAL_ACCESS",
+          "CREDENTIAL_ACCESS",
+          "INITIAL_ACCESS",
+          "CREDENTIAL_ACCESS",
+          "INITIAL_ACCESS"
+        ],
+        "missing_steps_detected": [
+          "Hypothesized Unobserved Execution (LOLBin / in-memory injection)",
+          "Hypothesized Unobserved Persistence (Scheduled task / cron stealth)",
+          "Hypothesized Unobserved Execution (LOLBin / in-memory injection)",
+          "Hypothesized Unobserved Persistence (Scheduled task / cron stealth)",
+          "Hypothesized Unobserved Execution (LOLBin / in-memory injection)",
+          "Hypothesized Unobserved Persistence (Scheduled task / cron stealth)"
+        ],
+        "metrics": {
+          "node_precision": 0.0625,
+          "node_recall": 1.0,
+          "node_f1": 0.1176,
+          "edge_precision": 0.093,
+          "edge_recall": 1.0,
+          "edge_f1": 0.1702,
+          "path_completeness": 1.0,
+          "depth_similarity": 1.0,
+          "structural_distance": 0.8636,
+          "overall_graph_f1": 0.1951
+        }
+      }
+    ]
+  }
+}

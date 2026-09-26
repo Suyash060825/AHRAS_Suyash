@@ -44,7 +44,7 @@
 | **Dashboard & API** | `api/server.py`, `web/index.html` | **B** | `tests/test_module4.py` | FastAPI 6.1.0, WebSockets; needs RBAC dependencies attached to routes | **Extend** (Enforce RBAC dependencies, add new operational views) |
 | **Explanation Reliability 2.0**| *None* | **E** | *None* | *Not Evaluated* | **New Implementation (Phase 1)** |
 | **Security Twin Simulation** | `security_twin/` | **A** | `tests/test_security_twin.py` | Phase 2 EXP-12: Mean Optimal Containment 73.6%, Risk Reduction 85.0%, Path Breakage 100%, Blast-radius evaluated, N=500 MC sampling | **Implemented (Phase 2)** |
-| **Provenance Attack Reconstruction**| *None* | **E** | *None* | *Not Evaluated* | **New Implementation (Phase 3)** |
+| **Provenance Attack Reconstruction**| `provenance/` | **A** | `tests/test_provenance_reconstruction.py` | Phase 3 EXP-13: 12-node/12-edge heterogeneous DAG, Clean Graph F1 1.000, 50% Missingness F1 0.612, Path Completeness 100%, Gap Reasoning | **Implemented (Phase 3)** |
 | **Temporal Epistemic Instability**| *None* | **E** | *None* | *Not Evaluated* | **New Implementation (Phase 4)** |
 | **Early-Exit Model Router** | *None* | **E** | *None* | *Not Evaluated* | **New Implementation (Phase 5)** |
 | **Streaming Sketch Fast Path** | *None* | **E** | *None* | *Not Evaluated* | **New Implementation (Phase 6)** |

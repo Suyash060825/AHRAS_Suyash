@@ -1,0 +1,29 @@
+\begin{table*}[t]
+\centering
+\small
+\caption{AHRAS Heterogeneous Provenance Graph Reconstruction Quality (EXP-13)}
+\label{tab:provenance_reconstruction_eval}
+\begin{tabular}{llcccccc}
+\toprule
+\textbf{Attack Campaign} & \textbf{Telemetry Condition} & \textbf{Node F1} & \textbf{Edge F1} & \textbf{Path Compl.} & \textbf{Depth Sim.} & \textbf{Struct. Dist.} & \textbf{Overall F1} \\
+\midrule
+Enterprise Ransomware & Clean (0% Missing) & 1.000 & 1.000 & 100.0\% & 100.0\% & 0.000 & 1.000 \\
+ & 10% Missing & 0.947 & 0.875 & 66.7\% & 60.0\% & 0.086 & 0.811 \\
+ & 25% Missing & 0.889 & 0.800 & 66.7\% & 60.0\% & 0.151 & 0.774 \\
+ & 50% Missing (Stealth) & 0.667 & 0.500 & 66.7\% & 40.0\% & 0.407 & 0.600 \\
+ & Noise Injected (+50 Ev) & 0.210 & 0.316 & 100.0\% & 100.0\% & 0.750 & 0.336 \\
+\midrule
+Bastion DB Infiltration & Clean (0% Missing) & 1.000 & 1.000 & 100.0\% & 100.0\% & 0.000 & 1.000 \\
+ & 10% Missing & 0.947 & 0.900 & 100.0\% & 100.0\% & 0.077 & 0.947 \\
+ & 25% Missing & 0.750 & 0.706 & 100.0\% & 66.7\% & 0.273 & 0.800 \\
+ & 50% Missing (Stealth) & 0.667 & 0.533 & 66.7\% & 50.0\% & 0.400 & 0.615 \\
+ & Noise Injected (+50 Ev) & 0.210 & 0.361 & 100.0\% & 100.0\% & 0.731 & 0.352 \\
+\midrule
+Cloud Privilege Escalation & Clean (0% Missing) & 1.000 & 1.000 & 100.0\% & 100.0\% & 0.000 & 1.000 \\
+ & 10% Missing & 0.889 & 0.857 & 75.0\% & 100.0\% & 0.125 & 0.828 \\
+ & 25% Missing & 0.889 & 0.857 & 75.0\% & 100.0\% & 0.125 & 0.828 \\
+ & 50% Missing (Stealth) & 0.750 & 0.667 & 50.0\% & 100.0\% & 0.286 & 0.621 \\
+ & Noise Injected (+50 Ev) & 0.118 & 0.170 & 100.0\% & 100.0\% & 0.864 & 0.195 \\
+\bottomrule
+\end{tabular}
+\end{table*}

@@ -156,3 +156,4 @@
 | **EXP-10** | RQ10 (Multimodal Fusion)| `evaluation/run_multimodal_fusion_evaluation.py` | `MULTIMODAL_FUSION_REPORT.json` / `CLAIMS_MANIFEST_FINAL.json` (CLM-10) |
 | **EXP-11** | RQ11 (XAI Reliability 2.0)| `evaluation/xai_reliability_audit.py` | `XAI_RELIABILITY_AUDIT.json` (Table XAI-Rel) |
 | **EXP-12** | RQ12 (Security Twin)      | `evaluation/run_security_twin_evaluation.py` | `SECURITY_TWIN_EVALUATION.json` (Table tab:security_twin_eval) |
+| **EXP-13** | RQ13 (Provenance Attack)  | `evaluation/attack_scenario_reconstruction.py` | `ATTACK_SCENARIO_RECONSTRUCTION.json` (Table tab:provenance_reconstruction_eval) |
