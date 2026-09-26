@@ -1,0 +1,869 @@
+{
+  "experiment_id": "EXP-22",
+  "benchmark_name": "Threat-Informed Detection Coverage Benchmark",
+  "summary": {
+    "total_techniques": 21,
+    "total_implementations": 52,
+    "observable_implementations": 36,
+    "detected_implementations": 22,
+    "micro_implementation_coverage": 0.4231,
+    "macro_implementation_coverage": 0.4206,
+    "micro_telemetry_coverage": 0.6923,
+    "macro_telemetry_coverage": 0.6905,
+    "weakest_tactics": [
+      "Persistence",
+      "Discovery",
+      "Collection"
+    ],
+    "depth_distribution_implementations": {
+      "0": 16,
+      "1": 14,
+      "2": 2,
+      "3": 20,
+      "4": 0
+    },
+    "depth_distribution_techniques": {
+      "0": 0,
+      "1": 4,
+      "2": 1,
+      "3": 12,
+      "4": 4
+    }
+  },
+  "techniques": [
+    {
+      "technique_id": "T1059.001",
+      "technique_name": "Command and Scripting Interpreter: PowerShell",
+      "tactic": "Execution",
+      "total_implementations": 3,
+      "observable_implementations": 2,
+      "detected_implementations": 1,
+      "implementation_coverage": 0.3333,
+      "telemetry_coverage": 0.6667,
+      "depth_level": 3,
+      "depth_label": "Level 3: Validated Implementation (Verified & Tested)",
+      "covered_vectors": [
+        "powershell_download_cradle"
+      ],
+      "uncovered_vectors": [
+        "powershell_encoded_command",
+        "powershell_csharp_runspace"
+      ],
+      "detecting_engines": [
+        "signature"
+      ],
+      "rule_hits": [
+        "PROC-002"
+      ],
+      "telemetry_gaps": [
+        "etw.clr.assembly_load",
+        "process.thread_callstack",
+        "process.virtual_alloc"
+      ],
+      "actionable_recommendations": [
+        "Deploy Microsoft-Windows-DotNETRuntime ETW tracing to detect in-process C# PowerShell runspaces.",
+        "Add memory inspection for System.Management.Automation assemblies loaded without powershell.exe."
+      ]
+    },
+    {
+      "technique_id": "T1059.004",
+      "technique_name": "Command and Scripting Interpreter: Unix Shell",
+      "tactic": "Execution",
+      "total_implementations": 3,
+      "observable_implementations": 2,
+      "detected_implementations": 2,
+      "implementation_coverage": 0.6667,
+      "telemetry_coverage": 0.6667,
+      "depth_level": 4,
+      "depth_label": "Level 4: Resilient Multi-Vector Defense",
+      "covered_vectors": [
+        "bash_dev_tcp_reverse_shell",
+        "base64_pipe_to_shell"
+      ],
+      "uncovered_vectors": [
+        "ephemeral_namespace_subshell"
+      ],
+      "detecting_engines": [
+        "signature"
+      ],
+      "rule_hits": [
+        "PROC-002",
+        "PROC-003"
+      ],
+      "telemetry_gaps": [
+        "cgroup.namespace_id",
+        "kernel.ebpf.sched_process_exec"
+      ],
+      "actionable_recommendations": [
+        "Instrument eBPF sched_process_exec tracepoints to monitor execution inside ephemeral container namespaces."
+      ]
+    },
+    {
+      "technique_id": "T1053.005",
+      "technique_name": "Scheduled Task/Job: Scheduled Task",
+      "tactic": "Persistence",
+      "total_implementations": 3,
+      "observable_implementations": 2,
+      "detected_implementations": 0,
+      "implementation_coverage": 0.0,
+      "telemetry_coverage": 0.6667,
+      "depth_level": 1,
+      "depth_label": "Level 1: Telemetry Observable (No Detector)",
+      "covered_vectors": [],
+      "uncovered_vectors": [
+        "schtasks_cli_creation",
+        "direct_task_xml_drop",
+        "taskcache_registry_persistence"
+      ],
+      "detecting_engines": [],
+      "rule_hits": [],
+      "telemetry_gaps": [
+        "registry.action",
+        "registry.key_path",
+        "registry.value_name"
+      ],
+      "actionable_recommendations": [
+        "Deploy registry auditing on HKLM\\SOFTWARE\\Microsoft\\Windows NT\\CurrentVersion\\Schedule\\TaskCache.",
+        "Enable file integrity monitoring (FIM) on %SystemRoot%\\System32\\Tasks directory."
+      ]
+    },
+    {
+      "technique_id": "T1543.002",
+      "technique_name": "Create or Modify System Process: Systemd Service",
+      "tactic": "Persistence",
+      "total_implementations": 2,
+      "observable_implementations": 2,
+      "detected_implementations": 0,
+      "implementation_coverage": 0.0,
+      "telemetry_coverage": 1.0,
+      "depth_level": 1,
+      "depth_label": "Level 1: Telemetry Observable (No Detector)",
+      "covered_vectors": [],
+      "uncovered_vectors": [
+        "systemctl_enable_service",
+        "direct_unit_file_drop"
+      ],
+      "detecting_engines": [],
+      "rule_hits": [],
+      "telemetry_gaps": [],
+      "actionable_recommendations": [
+        "Add auditd rules for file writes targeting /etc/systemd/system and user-level ~/.config/systemd/user."
+      ]
+    },
+    {
+      "technique_id": "T1548.001",
+      "technique_name": "Abuse Elevation Control Mechanism: Setuid and Setgid",
+      "tactic": "Privilege Escalation",
+      "total_implementations": 2,
+      "observable_implementations": 2,
+      "detected_implementations": 1,
+      "implementation_coverage": 0.5,
+      "telemetry_coverage": 1.0,
+      "depth_level": 3,
+      "depth_label": "Level 3: Validated Implementation (Verified & Tested)",
+      "covered_vectors": [
+        "root_child_spawn_from_suid"
+      ],
+      "uncovered_vectors": [
+        "chmod_suid_bit_injection"
+      ],
+      "detecting_engines": [
+        "signature"
+      ],
+      "rule_hits": [
+        "PROC-003"
+      ],
+      "telemetry_gaps": [],
+      "actionable_recommendations": [
+        "Audit dynamic linker environment variables (LD_PRELOAD, LD_LIBRARY_PATH) on setuid binary execution."
+      ]
+    },
+    {
+      "technique_id": "T1078.004",
+      "technique_name": "Valid Accounts: Cloud Accounts",
+      "tactic": "Privilege Escalation",
+      "total_implementations": 2,
+      "observable_implementations": 2,
+      "detected_implementations": 1,
+      "implementation_coverage": 0.5,
+      "telemetry_coverage": 1.0,
+      "depth_level": 3,
+      "depth_label": "Level 3: Validated Implementation (Verified & Tested)",
+      "covered_vectors": [
+        "external_unknown_cloud_actor"
+      ],
+      "uncovered_vectors": [
+        "cloud_high_privilege_iam_grant"
+      ],
+      "detecting_engines": [
+        "signature"
+      ],
+      "rule_hits": [
+        "CLOUD-004"
+      ],
+      "telemetry_gaps": [],
+      "actionable_recommendations": [
+        "Integrate cloud identity provider (IdP) risk scoring and impossible travel anomaly detection into cloud_api normalizer."
+      ]
+    },
+    {
+      "technique_id": "T1070.004",
+      "technique_name": "Indicator Removal: File Deletion / Shadow Copy",
+      "tactic": "Defense Evasion",
+      "total_implementations": 3,
+      "observable_implementations": 2,
+      "detected_implementations": 1,
+      "implementation_coverage": 0.3333,
+      "telemetry_coverage": 0.6667,
+      "depth_level": 3,
+      "depth_label": "Level 3: Validated Implementation (Verified & Tested)",
+      "covered_vectors": [
+        "vssadmin_shadow_copy_deletion"
+      ],
+      "uncovered_vectors": [
+        "shadow_copy_file_target_removal",
+        "raw_vss_kernel_io_destruction"
+      ],
+      "detecting_engines": [
+        "signature"
+      ],
+      "rule_hits": [
+        "PROC-004"
+      ],
+      "telemetry_gaps": [
+        "disk.raw_write",
+        "kernel.driver.ioctl_code"
+      ],
+      "actionable_recommendations": [
+        "Deploy raw block device driver monitoring to intercept IOCTL_VOLSNAP shadow storage volume destruction."
+      ]
+    },
+    {
+      "technique_id": "T1027",
+      "technique_name": "Obfuscated Files or Information",
+      "tactic": "Defense Evasion",
+      "total_implementations": 2,
+      "observable_implementations": 2,
+      "detected_implementations": 2,
+      "implementation_coverage": 1.0,
+      "telemetry_coverage": 1.0,
+      "depth_level": 3,
+      "depth_label": "Level 3: Validated Implementation (Verified & Tested)",
+      "covered_vectors": [
+        "base64_encoded_cli_payload",
+        "high_shannon_entropy_file_write"
+      ],
+      "uncovered_vectors": [],
+      "detecting_engines": [
+        "signature"
+      ],
+      "rule_hits": [
+        "FILE-001",
+        "PROC-002"
+      ],
+      "telemetry_gaps": [],
+      "actionable_recommendations": [
+        "Integrate steganographic analysis and entropy variance filters for secondary file drops."
+      ]
+    },
+    {
+      "technique_id": "T1003.001",
+      "technique_name": "OS Credential Dumping: LSASS Memory",
+      "tactic": "Credential Access",
+      "total_implementations": 3,
+      "observable_implementations": 2,
+      "detected_implementations": 2,
+      "implementation_coverage": 0.6667,
+      "telemetry_coverage": 0.6667,
+      "depth_level": 4,
+      "depth_label": "Level 4: Resilient Multi-Vector Defense",
+      "covered_vectors": [
+        "mimikatz_cli_execution",
+        "procdump_lsass_dump"
+      ],
+      "uncovered_vectors": [
+        "lsass_direct_kernel_handle_duplication"
+      ],
+      "detecting_engines": [
+        "signature"
+      ],
+      "rule_hits": [
+        "PROC-004"
+      ],
+      "telemetry_gaps": [
+        "kernel.object_manager.handle_duplicate",
+        "process.target_handle"
+      ],
+      "actionable_recommendations": [
+        "Enable LSA protection (RunAsPPL) and deploy kernel object handle auditing on lsass.exe OpenProcess calls."
+      ]
+    },
+    {
+      "technique_id": "T1110.001",
+      "technique_name": "Brute Force: Password Guessing",
+      "tactic": "Credential Access",
+      "total_implementations": 3,
+      "observable_implementations": 2,
+      "detected_implementations": 1,
+      "implementation_coverage": 0.3333,
+      "telemetry_coverage": 0.6667,
+      "depth_level": 3,
+      "depth_label": "Level 3: Validated Implementation (Verified & Tested)",
+      "covered_vectors": [
+        "ssh_volumetric_brute_force"
+      ],
+      "uncovered_vectors": [
+        "ssh_low_and_slow_password_spray",
+        "ftp_cleartext_brute_force"
+      ],
+      "detecting_engines": [
+        "ml_anomaly",
+        "signature"
+      ],
+      "rule_hits": [
+        "MLDetectionEngine",
+        "NET-005"
+      ],
+      "telemetry_gaps": [
+        "auth.failure_count"
+      ],
+      "actionable_recommendations": [
+        "Implement cross-source entity sliding-window authentication failure accumulator to catch low-and-slow sprays."
+      ]
+    },
+    {
+      "technique_id": "T1046",
+      "technique_name": "Network Service Discovery",
+      "tactic": "Discovery",
+      "total_implementations": 2,
+      "observable_implementations": 1,
+      "detected_implementations": 1,
+      "implementation_coverage": 0.5,
+      "telemetry_coverage": 0.5,
+      "depth_level": 3,
+      "depth_label": "Level 3: Validated Implementation (Verified & Tested)",
+      "covered_vectors": [
+        "syn_port_scan_sweep"
+      ],
+      "uncovered_vectors": [
+        "slow_distributed_port_scan"
+      ],
+      "detecting_engines": [
+        "signature",
+        "statistical"
+      ],
+      "rule_hits": [
+        "NET-001",
+        "StatEngine"
+      ],
+      "telemetry_gaps": [
+        "time_window_hours"
+      ],
+      "actionable_recommendations": [
+        "Deploy 24-hour time-decay stateful IP tracking to capture distributed port-per-hour scanning patterns."
+      ]
+    },
+    {
+      "technique_id": "T1526",
+      "technique_name": "Cloud Service Discovery",
+      "tactic": "Discovery",
+      "total_implementations": 2,
+      "observable_implementations": 1,
+      "detected_implementations": 0,
+      "implementation_coverage": 0.0,
+      "telemetry_coverage": 0.5,
+      "depth_level": 1,
+      "depth_label": "Level 1: Telemetry Observable (No Detector)",
+      "covered_vectors": [],
+      "uncovered_vectors": [
+        "cloud_api_access_denied_enumeration",
+        "low_rate_authorized_cloud_read_enumeration"
+      ],
+      "detecting_engines": [],
+      "rule_hits": [],
+      "telemetry_gaps": [
+        "cloud.service"
+      ],
+      "actionable_recommendations": [
+        "Build baseline behavioral profile of cloud service enumeration APIs (Describe*, Get*) to catch low-rate reconnaissance."
+      ]
+    },
+    {
+      "technique_id": "T1021.002",
+      "technique_name": "Remote Services: SMB/Windows Admin Shares",
+      "tactic": "Lateral Movement",
+      "total_implementations": 2,
+      "observable_implementations": 1,
+      "detected_implementations": 1,
+      "implementation_coverage": 0.5,
+      "telemetry_coverage": 0.5,
+      "depth_level": 3,
+      "depth_label": "Level 3: Validated Implementation (Verified & Tested)",
+      "covered_vectors": [
+        "smb_port_445_high_volume_transfer"
+      ],
+      "uncovered_vectors": [
+        "psexec_named_pipe_creation"
+      ],
+      "detecting_engines": [
+        "signature"
+      ],
+      "rule_hits": [
+        "NET-006"
+      ],
+      "telemetry_gaps": [
+        "pipe.name"
+      ],
+      "actionable_recommendations": [
+        "Instrument Windows Named Pipe monitoring to intercept \\pipe\\psexecsvc and lateral administrative IPC$ sessions."
+      ]
+    },
+    {
+      "technique_id": "T1021.001",
+      "technique_name": "Remote Services: Remote Desktop Protocol",
+      "tactic": "Lateral Movement",
+      "total_implementations": 2,
+      "observable_implementations": 1,
+      "detected_implementations": 1,
+      "implementation_coverage": 0.5,
+      "telemetry_coverage": 0.5,
+      "depth_level": 3,
+      "depth_label": "Level 3: Validated Implementation (Verified & Tested)",
+      "covered_vectors": [
+        "rdp_inbound_external_connection"
+      ],
+      "uncovered_vectors": [
+        "rdp_tunnel_over_ssh_socks"
+      ],
+      "detecting_engines": [
+        "signature"
+      ],
+      "rule_hits": [
+        "NET-007"
+      ],
+      "telemetry_gaps": [
+        "flow.inner_protocol",
+        "network.tunnel_type"
+      ],
+      "actionable_recommendations": [
+        "Correlate SSH/SOCKS port forwarding tunnels with localhost RDP connections to detect proxied lateral movement."
+      ]
+    },
+    {
+      "technique_id": "T1005",
+      "technique_name": "Data from Local System",
+      "tactic": "Collection",
+      "total_implementations": 2,
+      "observable_implementations": 1,
+      "detected_implementations": 1,
+      "implementation_coverage": 0.5,
+      "telemetry_coverage": 0.5,
+      "depth_level": 3,
+      "depth_label": "Level 3: Validated Implementation (Verified & Tested)",
+      "covered_vectors": [
+        "sensitive_credential_file_access"
+      ],
+      "uncovered_vectors": [
+        "in_memory_browser_cookie_sqlite_access"
+      ],
+      "detecting_engines": [
+        "signature"
+      ],
+      "rule_hits": [
+        "FILE-003",
+        "FILE-004"
+      ],
+      "telemetry_gaps": [
+        "file.lock_override"
+      ],
+      "actionable_recommendations": [
+        "Enable process file handle lock monitoring to detect unauthorized read access to locked browser SQLite cookie databases."
+      ]
+    },
+    {
+      "technique_id": "T1074",
+      "technique_name": "Data Staged",
+      "tactic": "Collection",
+      "total_implementations": 2,
+      "observable_implementations": 1,
+      "detected_implementations": 0,
+      "implementation_coverage": 0.0,
+      "telemetry_coverage": 0.5,
+      "depth_level": 1,
+      "depth_label": "Level 1: Telemetry Observable (No Detector)",
+      "covered_vectors": [],
+      "uncovered_vectors": [
+        "tar_gzip_staging_in_tmp",
+        "ntfs_alternate_data_stream_staging"
+      ],
+      "detecting_engines": [],
+      "rule_hits": [],
+      "telemetry_gaps": [
+        "file.stream_name"
+      ],
+      "actionable_recommendations": [
+        "Enable NTFS alternate data stream (ADS) creation telemetry (:stream_name)."
+      ]
+    },
+    {
+      "technique_id": "T1071.001",
+      "technique_name": "Application Layer Protocol: Web Protocols",
+      "tactic": "Command and Control",
+      "total_implementations": 2,
+      "observable_implementations": 1,
+      "detected_implementations": 1,
+      "implementation_coverage": 0.5,
+      "telemetry_coverage": 0.5,
+      "depth_level": 3,
+      "depth_label": "Level 3: Validated Implementation (Verified & Tested)",
+      "covered_vectors": [
+        "c2_periodic_beaconing_fixed_interval"
+      ],
+      "uncovered_vectors": [
+        "jittered_c2_beacon_with_random_uri"
+      ],
+      "detecting_engines": [
+        "signature"
+      ],
+      "rule_hits": [
+        "NET-012"
+      ],
+      "telemetry_gaps": [
+        "dns.query_name",
+        "http.request.headers",
+        "http.request.uri"
+      ],
+      "actionable_recommendations": [
+        "Implement DNS query correlation and JA3/JA4 TLS client fingerprinting to detect domain-fronted C2 channels."
+      ]
+    },
+    {
+      "technique_id": "T1573.002",
+      "technique_name": "Encrypted Channel: Asymmetric Cryptography",
+      "tactic": "Command and Control",
+      "total_implementations": 3,
+      "observable_implementations": 2,
+      "detected_implementations": 1,
+      "implementation_coverage": 0.3333,
+      "telemetry_coverage": 0.6667,
+      "depth_level": 2,
+      "depth_label": "Level 2: Fragile Detection (Low Robustness / Precision)",
+      "covered_vectors": [
+        "encrypted_session_beaconing"
+      ],
+      "uncovered_vectors": [
+        "encrypted_session_interactive_shell",
+        "tor_obfs4_pluggable_transport"
+      ],
+      "detecting_engines": [
+        "encrypted_session"
+      ],
+      "rule_hits": [
+        "ENC:C2_BEACONING"
+      ],
+      "telemetry_gaps": [
+        "flow.entropy_profile",
+        "flow.handshake_suppression"
+      ],
+      "actionable_recommendations": [
+        "Deploy obfs4/packet-shaping entropy detection filters on edge proxy interfaces."
+      ]
+    },
+    {
+      "technique_id": "T1486",
+      "technique_name": "Data Encrypted for Impact",
+      "tactic": "Impact",
+      "total_implementations": 3,
+      "observable_implementations": 2,
+      "detected_implementations": 2,
+      "implementation_coverage": 0.6667,
+      "telemetry_coverage": 0.6667,
+      "depth_level": 4,
+      "depth_label": "Level 4: Resilient Multi-Vector Defense",
+      "covered_vectors": [
+        "ransomware_extension_rename",
+        "ransomware_high_entropy_bulk_writes"
+      ],
+      "uncovered_vectors": [
+        "vss_in_place_database_page_encryption"
+      ],
+      "detecting_engines": [
+        "signature"
+      ],
+      "rule_hits": [
+        "FILE-001",
+        "FILE-002"
+      ],
+      "telemetry_gaps": [
+        "file.io_offset",
+        "file.partial_entropy"
+      ],
+      "actionable_recommendations": [
+        "Implement partial file entropy delta monitoring to catch in-place database page encryption that preserves file headers."
+      ]
+    },
+    {
+      "technique_id": "T1498.001",
+      "technique_name": "Network Denial of Service: Direct Network Flood",
+      "tactic": "Impact",
+      "total_implementations": 3,
+      "observable_implementations": 3,
+      "detected_implementations": 1,
+      "implementation_coverage": 0.3333,
+      "telemetry_coverage": 1.0,
+      "depth_level": 3,
+      "depth_label": "Level 3: Validated Implementation (Verified & Tested)",
+      "covered_vectors": [
+        "syn_flood_volumetric"
+      ],
+      "uncovered_vectors": [
+        "udp_flood_packet_burst",
+        "dns_amplification_reflection"
+      ],
+      "detecting_engines": [
+        "signature"
+      ],
+      "rule_hits": [
+        "NET-002"
+      ],
+      "telemetry_gaps": [],
+      "actionable_recommendations": [
+        "Deploy hardware NIC offload telemetry for sub-millisecond SYN/UDP flood surge detection."
+      ]
+    },
+    {
+      "technique_id": "T1499",
+      "technique_name": "Endpoint Denial of Service",
+      "tactic": "Impact",
+      "total_implementations": 3,
+      "observable_implementations": 2,
+      "detected_implementations": 2,
+      "implementation_coverage": 0.6667,
+      "telemetry_coverage": 0.6667,
+      "depth_level": 4,
+      "depth_label": "Level 4: Resilient Multi-Vector Defense",
+      "covered_vectors": [
+        "slow_http_slowloris_exhaustion",
+        "http_volumetric_get_flood"
+      ],
+      "uncovered_vectors": [
+        "host_fork_bomb_process_exhaustion"
+      ],
+      "detecting_engines": [
+        "signature"
+      ],
+      "rule_hits": [
+        "NET-012"
+      ],
+      "telemetry_gaps": [
+        "process.rate_per_sec",
+        "system.process_count"
+      ],
+      "actionable_recommendations": [
+        "Configure reverse proxy worker thread monitoring and connection keep-alive timeout triggers against Slowloris."
+      ]
+    }
+  ],
+  "tactics": [
+    {
+      "tactic": "Execution",
+      "technique_count": 2,
+      "total_implementations": 6,
+      "observable_implementations": 4,
+      "detected_implementations": 3,
+      "implementation_coverage": 0.5,
+      "telemetry_coverage": 0.6667,
+      "depth_distribution": {
+        "0": 2,
+        "1": 1,
+        "2": 0,
+        "3": 3,
+        "4": 0
+      }
+    },
+    {
+      "tactic": "Persistence",
+      "technique_count": 2,
+      "total_implementations": 5,
+      "observable_implementations": 4,
+      "detected_implementations": 0,
+      "implementation_coverage": 0.0,
+      "telemetry_coverage": 0.8,
+      "depth_distribution": {
+        "0": 1,
+        "1": 4,
+        "2": 0,
+        "3": 0,
+        "4": 0
+      }
+    },
+    {
+      "tactic": "Privilege Escalation",
+      "technique_count": 2,
+      "total_implementations": 4,
+      "observable_implementations": 4,
+      "detected_implementations": 2,
+      "implementation_coverage": 0.5,
+      "telemetry_coverage": 1.0,
+      "depth_distribution": {
+        "0": 0,
+        "1": 2,
+        "2": 0,
+        "3": 2,
+        "4": 0
+      }
+    },
+    {
+      "tactic": "Defense Evasion",
+      "technique_count": 2,
+      "total_implementations": 5,
+      "observable_implementations": 4,
+      "detected_implementations": 3,
+      "implementation_coverage": 0.6,
+      "telemetry_coverage": 0.8,
+      "depth_distribution": {
+        "0": 1,
+        "1": 1,
+        "2": 1,
+        "3": 2,
+        "4": 0
+      }
+    },
+    {
+      "tactic": "Credential Access",
+      "technique_count": 2,
+      "total_implementations": 6,
+      "observable_implementations": 4,
+      "detected_implementations": 3,
+      "implementation_coverage": 0.5,
+      "telemetry_coverage": 0.6667,
+      "depth_distribution": {
+        "0": 2,
+        "1": 1,
+        "2": 0,
+        "3": 3,
+        "4": 0
+      }
+    },
+    {
+      "tactic": "Discovery",
+      "technique_count": 2,
+      "total_implementations": 4,
+      "observable_implementations": 2,
+      "detected_implementations": 1,
+      "implementation_coverage": 0.25,
+      "telemetry_coverage": 0.5,
+      "depth_distribution": {
+        "0": 2,
+        "1": 1,
+        "2": 0,
+        "3": 1,
+        "4": 0
+      }
+    },
+    {
+      "tactic": "Lateral Movement",
+      "technique_count": 2,
+      "total_implementations": 4,
+      "observable_implementations": 2,
+      "detected_implementations": 2,
+      "implementation_coverage": 0.5,
+      "telemetry_coverage": 0.5,
+      "depth_distribution": {
+        "0": 2,
+        "1": 0,
+        "2": 0,
+        "3": 2,
+        "4": 0
+      }
+    },
+    {
+      "tactic": "Collection",
+      "technique_count": 2,
+      "total_implementations": 4,
+      "observable_implementations": 2,
+      "detected_implementations": 1,
+      "implementation_coverage": 0.25,
+      "telemetry_coverage": 0.5,
+      "depth_distribution": {
+        "0": 2,
+        "1": 1,
+        "2": 0,
+        "3": 1,
+        "4": 0
+      }
+    },
+    {
+      "tactic": "Command and Control",
+      "technique_count": 2,
+      "total_implementations": 5,
+      "observable_implementations": 3,
+      "detected_implementations": 2,
+      "implementation_coverage": 0.4,
+      "telemetry_coverage": 0.6,
+      "depth_distribution": {
+        "0": 2,
+        "1": 1,
+        "2": 1,
+        "3": 1,
+        "4": 0
+      }
+    },
+    {
+      "tactic": "Impact",
+      "technique_count": 3,
+      "total_implementations": 9,
+      "observable_implementations": 7,
+      "detected_implementations": 5,
+      "implementation_coverage": 0.5556,
+      "telemetry_coverage": 0.7778,
+      "depth_distribution": {
+        "0": 2,
+        "1": 2,
+        "2": 0,
+        "3": 5,
+        "4": 0
+      }
+    }
+  ],
+  "system_actionable_recommendations": [
+    "Bridge Persistence Telemetry Gap: Integrate Windows TaskCache registry auditing and systemd unit file integrity monitoring.",
+    "Bridge Execution Memory Gap: Deploy CLR assembly load tracing (ETW) to detect in-process unmanaged PowerShell runspaces.",
+    "Bridge Lateral Movement IPC Gap: Capture Windows Named Pipe connection events to expose PsExec and remote service control execution.",
+    "Bridge Low-and-Slow Credential Gap: Add sliding-window cross-host authentication failure aggregators to detect distributed credential sprays."
+  ],
+  "manifest": {
+    "experiment_id": "EXP-22",
+    "code_version": "7ba27f516f43704833f3893be684342203fd3a1f",
+    "git_branch": "new-features",
+    "dataset_name": "MITRE_ATTACK_ENTERPRISE_V14",
+    "dataset_version": "14.1",
+    "dataset_hash": "27c84610a25e9665a921832cdbaecec68489cdf68fded3e69fdc96805a084c5e",
+    "configuration_hash": "2d460b1e35ce26be9d8eac56c400b34d82833006e9ae437c78a7722fde3fad9f",
+    "configuration": {
+      "benchmark": "Threat-Informed Detection Coverage",
+      "technique_catalog_tactics": 10,
+      "depth_hierarchy": [
+        "L0_Blind",
+        "L1_Telemetry",
+        "L2_Fragile",
+        "L3_Validated",
+        "L4_Resilient"
+      ],
+      "evasion_robustness_threshold": 0.5,
+      "empirical_precision_threshold": 0.6
+    },
+    "random_seed": 42,
+    "environment": {
+      "python_version": "3.14.6",
+      "os": "Linux-7.1.8-100.fc43.x86_64-x86_64-with-glibc2.42",
+      "architecture": "x86_64",
+      "dependencies": {
+        "numpy": "2.5.2",
+        "scikit-learn": "1.9.0"
+      }
+    },
+    "result_path": "/home/suyashpradhan/Downloads/AHRAS_Suyash-master/evaluation/results/DETECTION_COVERAGE_REPORT.json",
+    "timestamp": 1790422166.9137833
+  }
+}

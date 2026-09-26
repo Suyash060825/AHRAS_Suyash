@@ -323,6 +323,7 @@ class EncryptedSessionIntelligence:
         out_ratio = float(vec[6])          # Outbound volume ratio
         duration = float(math.expm1(vec[13]))
         flip_rate = float(vec[8])
+        mean_iat = float(math.expm1(vec[10]))
 
         sizes_arr = np.array([p.size for p in packets], dtype=np.float64)
         dirs_arr = np.array([p.direction for p in packets], dtype=np.float64)
@@ -337,12 +338,13 @@ class EncryptedSessionIntelligence:
         confidence = 0.85
         uncertainty = 0.15
 
-        # Heuristic 1: Stealth C2 Beaconing (Low volume, high timing periodicity, small payloads)
+        # Heuristic 1: Stealth C2 Beaconing (Low volume, high timing periodicity, small payloads, non-subsecond IAT)
         # Resolves Botnet F1=0.0 by catching regular heartbeat intervals without inspecting content
         is_beacon = (
             beacon_score >= self.periodicity_threshold
             and len(packets) >= 8
             and mean_size <= 450.0
+            and mean_iat >= 0.8
         )
         if is_beacon:
             threat_label = "C2_BEACONING"
@@ -361,13 +363,13 @@ class EncryptedSessionIntelligence:
             confidence = 0.92
             uncertainty = 0.12
 
-        # Heuristic 3: Interactive Reverse Shell (Human typing cadence, keystroke packet sizes, high bidirectional flips)
+        # Heuristic 3: Interactive Reverse Shell (Human typing cadence, sub-second keystrokes, keystroke packet sizes, high bidirectional flips)
         elif (
             0.35 <= out_ratio <= 0.65
             and 60.0 <= mean_size <= 220.0
             and flip_rate >= 0.40
             and len(packets) >= 12
-            and beacon_score < 0.70  # Human keystrokes are aperiodic
+            and mean_iat < 0.8
         ):
             threat_label = "INTERACTIVE_SHELL"
             mitre_technique = "T1059"      # Command and Scripting Interpreter
