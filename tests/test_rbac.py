@@ -70,6 +70,28 @@ class TestRBACAndAuth(unittest.TestCase):
         auth = authenticate_user(username, "NewPass123!")
         self.assertIsNotNone(auth)
 
+    def test_07_persistent_token_revocation(self):
+        import time
+        from auth.manager import revoke_token, TokenBlacklistStore
+        payload = {"sub": "analyst", "role": "soc_analyst"}
+        token = create_access_token(payload, expires_delta_seconds=3600)
+        decoded = verify_token(token)
+        self.assertIsNotNone(decoded)
+        jti = decoded.get("jti")
+        self.assertIsNotNone(jti)
+        
+        # Revoke token
+        exp = decoded.get("exp", time.time() + 3600)
+        revoke_token(jti, exp)
+        
+        # Immediate verification must fail
+        self.assertIsNone(verify_token(token))
+        
+        # Simulate server restart by creating a new store instance reading SQLite
+        restart_store = TokenBlacklistStore()
+        self.assertTrue(restart_store.is_revoked(jti))
+
 
 if __name__ == "__main__":
     unittest.main()
+

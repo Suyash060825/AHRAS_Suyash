@@ -97,8 +97,8 @@ def _norm_network(raw: dict) -> dict:
         },
         "protocol": _safe_str(raw.get("protocol"), "OTHER"),
         "traffic": {
-            "packets":      _safe_int(raw.get("packet_count")),
-            "bytes":        _safe_int(raw.get("byte_count")),
+            "packets":      _safe_int(raw.get("packet_count", raw.get("packets"))),
+            "bytes":        _safe_int(raw.get("byte_count") if raw.get("byte_count") is not None else raw.get("bytes")),
             "duration_sec": _safe_float(raw.get("duration_sec")),
         },
         "tcp_flags":        flags,

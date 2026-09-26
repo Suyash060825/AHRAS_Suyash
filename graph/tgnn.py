@@ -1,3 +1,4 @@
+import hashlib
 import time
 import numpy as np
 from typing import Dict, Tuple, Optional
@@ -12,13 +13,15 @@ class AttackPathPrediction:
 
 class TemporalGNN:
     """
-    Online Temporal Graph Neural Network (Simulated with Numpy).
+    Deterministic Temporal Graph Relational Feature Extractor & Directional Drift Engine.
     Uses exponential time-decay on edges to surface multi-stage APT movement
-    BEFORE the final hop lands. Intermediate node embeddings drift toward the 
-    attacker's embedding dynamically.
+    before the final hop lands. Node embeddings are deterministically initialized via
+    hash projection and intermediate embeddings drift toward the source attacker node
+    proportional to the temporal edge weight.
     """
-    def __init__(self, decay_rate: float = 0.01):
+    def __init__(self, decay_rate: float = 0.01, seed: int = 42):
         self.decay_rate = decay_rate
+        self.seed = seed
         
         # Maps node_id -> embedding (1D numpy array)
         self.node_embeddings: Dict[str, np.ndarray] = {}
@@ -31,15 +34,19 @@ class TemporalGNN:
         
     def _get_embedding(self, node_id: str) -> np.ndarray:
         if node_id not in self.node_embeddings:
-            # Initialize with random normally distributed vector
-            self.node_embeddings[node_id] = np.random.randn(self.dim) * 0.1
+            # Deterministic initialization based on SHA-256 hash of node_id and base seed
+            h = hashlib.sha256(f"{self.seed}:{node_id}".encode("utf-8")).digest()
+            seed_int = int.from_bytes(h[:4], "big")
+            rng = np.random.default_rng(seed_int)
+            vec = rng.normal(0.0, 0.1, size=self.dim)
+            norm = np.linalg.norm(vec)
+            self.node_embeddings[node_id] = vec / (norm + 1e-9)
         return self.node_embeddings[node_id]
 
     def _propagate(self, src: str, dst: str, weight: float) -> float:
         """
         Message passing step: update dst embedding based on src embedding.
-        Swapping in a real trained TGNN later just means replacing this 
-        with a trained model's forward pass — API unchanged.
+        Swapping in a learned deep TGNN model can replace this forward pass.
         """
         emb_src = self._get_embedding(src)
         emb_dst = self._get_embedding(dst)

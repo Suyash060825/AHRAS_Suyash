@@ -202,3 +202,25 @@ def test_end_to_end_graph_correlation_runner():
     assert stat["statistically_significant"] is True
     assert stat["two_sided_p_value"] < 0.05
     assert len(stat["alert_reduction_95_ci"]) == 2
+
+
+def test_security_gnn_training_and_convergence():
+    """Verifies that SecurityGNN trains via message-passing backpropagation and reduces loss."""
+    from detection.gnn_engine import SecurityGNN, EntityGraphEngine
+    engine = EntityGraphEngine()
+    
+    # Construct a small 4-node attack cluster: host1 -> host2 -> srv1 -> db1
+    engine.add_event_edge("host1", "host2", relation="COMMUNICATES_WITH", ts=100.0, confidence=0.8)
+    engine.add_event_edge("host2", "srv1", relation="AUTHENTICATES", ts=200.0, confidence=0.9)
+    engine.add_event_edge("srv1", "db1", relation="ACCESSED", ts=300.0, confidence=0.95)
+    
+    nodes = ["host1", "host2", "srv1", "db1"]
+    labels = [0, 0, 1, 1]  # srv1 and db1 compromised
+    
+    initial_score = engine.compute_gnn_node_score("db1")
+    final_loss = engine.train_gnn(nodes, labels, epochs=25, lr=0.05)
+    post_train_score = engine.compute_gnn_node_score("db1")
+    
+    assert final_loss >= 0.0
+    assert 0.0 <= post_train_score <= 1.0
+

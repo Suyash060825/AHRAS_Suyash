@@ -15,6 +15,8 @@ import base64
 import json
 import logging
 import re
+import sqlite3
+import threading
 from typing import Optional, Dict, Any, List, Set
 
 from config.settings import (
@@ -31,8 +33,104 @@ LOCKOUT_DURATION_SECONDS = 300 # 5 minutes
 
 # Brute-force tracking: username -> {"attempts": count, "locked_until": timestamp}
 _login_tracker: Dict[str, Dict[str, Any]] = {}
-# Token blacklist for revocation: token_jti -> expiration_timestamp
-_revoked_tokens: Dict[str, float] = {}
+
+
+class TokenBlacklistStore:
+    """Persistent SQLite-backed token revocation store with in-memory caching."""
+
+    def __init__(self, db_path: Optional[str] = None):
+        _base_dir = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
+        self.db_path = db_path or os.getenv(
+            "AHRAS_TOKEN_BLACKLIST_DB",
+            os.path.join(_base_dir, "data", "token_blacklist.db")
+        )
+        self._lock = threading.RLock()
+        self._cache: Dict[str, float] = {}
+        self._init_db()
+
+    def _init_db(self) -> None:
+        try:
+            os.makedirs(os.path.dirname(self.db_path), exist_ok=True)
+            with sqlite3.connect(self.db_path) as conn:
+                conn.execute("""
+                    CREATE TABLE IF NOT EXISTS token_blacklist (
+                        jti TEXT PRIMARY KEY,
+                        exp_timestamp REAL NOT NULL
+                    )
+                """)
+                conn.execute(
+                    "CREATE INDEX IF NOT EXISTS idx_blacklist_exp ON token_blacklist (exp_timestamp)"
+                )
+                now = time.time()
+                cur = conn.execute(
+                    "SELECT jti, exp_timestamp FROM token_blacklist WHERE exp_timestamp > ?",
+                    (now,)
+                )
+                for row in cur.fetchall():
+                    self._cache[row[0]] = float(row[1])
+                conn.execute(
+                    "DELETE FROM token_blacklist WHERE exp_timestamp <= ?", (now,)
+                )
+        except Exception as e:
+            log.warning(f"[AUTH] Persistent token blacklist SQLite fallback: {e}")
+
+    def revoke(self, jti: str, exp_timestamp: float) -> None:
+        with self._lock:
+            self._cache[jti] = float(exp_timestamp)
+            try:
+                with sqlite3.connect(self.db_path) as conn:
+                    conn.execute(
+                        "INSERT OR REPLACE INTO token_blacklist (jti, exp_timestamp) VALUES (?, ?)",
+                        (jti, float(exp_timestamp))
+                    )
+            except Exception as e:
+                log.error(f"[AUTH] Error writing revoked token to SQLite: {e}")
+
+    def is_revoked(self, jti: str) -> bool:
+        now = time.time()
+        with self._lock:
+            if jti in self._cache:
+                if self._cache[jti] > now:
+                    return True
+                else:
+                    del self._cache[jti]
+                    try:
+                        with sqlite3.connect(self.db_path) as conn:
+                            conn.execute("DELETE FROM token_blacklist WHERE jti = ?", (jti,))
+                    except Exception:
+                        pass
+                    return False
+
+            try:
+                with sqlite3.connect(self.db_path) as conn:
+                    cur = conn.execute(
+                        "SELECT exp_timestamp FROM token_blacklist WHERE jti = ?", (jti,)
+                    )
+                    row = cur.fetchone()
+                    if row:
+                        exp = float(row[0])
+                        if exp > now:
+                            self._cache[jti] = exp
+                            return True
+                        else:
+                            conn.execute("DELETE FROM token_blacklist WHERE jti = ?", (jti,))
+            except Exception:
+                pass
+            return False
+
+    def clear(self) -> None:
+        with self._lock:
+            self._cache.clear()
+            try:
+                with sqlite3.connect(self.db_path) as conn:
+                    conn.execute("DELETE FROM token_blacklist")
+            except Exception:
+                pass
+
+
+_blacklist_store = TokenBlacklistStore()
+_revoked_tokens = _blacklist_store._cache
+
 
 
 def _b64encode(data: bytes) -> str:
@@ -88,44 +186,63 @@ def verify_password(plain_password: str, hashed_password: str) -> bool:
         return False
 
 
-# Registered user database with initial seeded accounts
-DEFAULT_USERS: Dict[str, Dict[str, Any]] = {
-    "admin": {
-        "username": "admin",
-        "email": "admin@ahras.security",
-        "hashed_password": hash_password("AdminSecurePass2026!"),
-        "role": "admin",
-        "is_active": True,
-    },
-    "analyst": {
-        "username": "analyst",
-        "email": "analyst@ahras.security",
-        "hashed_password": hash_password("AnalystPass2026!"),
-        "role": "soc_analyst",
-        "is_active": True,
-    },
-    "hunter": {
-        "username": "hunter",
-        "email": "hunter@ahras.security",
-        "hashed_password": hash_password("HunterPass2026!"),
-        "role": "threat_hunter",
-        "is_active": True,
-    },
-    "responder": {
-        "username": "responder",
-        "email": "responder@ahras.security",
-        "hashed_password": hash_password("ResponderPass2026!"),
-        "role": "incident_responder",
-        "is_active": True,
-    },
-    "manager": {
-        "username": "manager",
-        "email": "manager@ahras.security",
-        "hashed_password": hash_password("ManagerPass2026!"),
-        "role": "manager",
-        "is_active": True,
-    },
-}
+# Registered user database with environment-aware seeding
+DEFAULT_USERS: Dict[str, Dict[str, Any]] = {}
+
+if DEV_MODE:
+    DEFAULT_USERS = {
+        "admin": {
+            "username": "admin",
+            "email": "admin@ahras.security",
+            "hashed_password": hash_password("AdminSecurePass2026!"),
+            "role": "admin",
+            "is_active": True,
+        },
+        "analyst": {
+            "username": "analyst",
+            "email": "analyst@ahras.security",
+            "hashed_password": hash_password("AnalystPass2026!"),
+            "role": "soc_analyst",
+            "is_active": True,
+        },
+        "hunter": {
+            "username": "hunter",
+            "email": "hunter@ahras.security",
+            "hashed_password": hash_password("HunterPass2026!"),
+            "role": "threat_hunter",
+            "is_active": True,
+        },
+        "responder": {
+            "username": "responder",
+            "email": "responder@ahras.security",
+            "hashed_password": hash_password("ResponderPass2026!"),
+            "role": "incident_responder",
+            "is_active": True,
+        },
+        "manager": {
+            "username": "manager",
+            "email": "manager@ahras.security",
+            "hashed_password": hash_password("ManagerPass2026!"),
+            "role": "manager",
+            "is_active": True,
+        },
+    }
+else:
+    # Fail-closed in Production: Only create admin if explicitly configured via environment
+    admin_pass = os.getenv("AHRAS_ADMIN_PASSWORD")
+    if admin_pass:
+        if validate_password_strength(admin_pass):
+            DEFAULT_USERS["admin"] = {
+                "username": "admin",
+                "email": os.getenv("AHRAS_ADMIN_EMAIL", "admin@ahras.security"),
+                "hashed_password": hash_password(admin_pass),
+                "role": "admin",
+                "is_active": True,
+            }
+        else:
+            log.error("[AUTH SECURITY] Provided AHRAS_ADMIN_PASSWORD does not meet complexity requirements.")
+    else:
+        log.warning("[AUTH SECURITY] No default users seeded in PRODUCTION. User accounts must be provisioned via IAM/SSO.")
 
 _user_db = dict(DEFAULT_USERS)
 
@@ -249,8 +366,8 @@ def create_access_token(data: dict, expires_delta_seconds: Optional[int] = None,
 
 
 def revoke_token(jti: str, exp_timestamp: float) -> None:
-    """Blacklists a token JTI until expiration."""
-    _revoked_tokens[jti] = exp_timestamp
+    """Blacklists a token JTI until expiration with SQLite persistence."""
+    _blacklist_store.revoke(jti, exp_timestamp)
 
 
 def verify_token(token: str, expected_type: str = "access") -> Optional[Dict[str, Any]]:
@@ -307,14 +424,11 @@ def verify_token(token: str, expected_type: str = "access") -> Optional[Dict[str
             log.warning(f"[AUTH SECURITY] Expected token type '{expected_type}', got '{typ}'")
             return None
             
-        # Check revocation blacklist
+        # Check revocation blacklist (persistent)
         jti = payload.get("jti")
-        if jti and jti in _revoked_tokens:
-            if _revoked_tokens[jti] > now:
-                log.warning("[AUTH SECURITY] Attempted use of revoked token.")
-                return None
-            else:
-                del _revoked_tokens[jti] # Clean expired
+        if jti and _blacklist_store.is_revoked(jti):
+            log.warning("[AUTH SECURITY] Attempted use of revoked token.")
+            return None
                 
         return payload
     except Exception as e:

@@ -463,12 +463,12 @@ def run_real_benchmark_suite(sampling_mode: str = "STRATIFIED_SAMPLE", sample_li
             "mean_latency_ms": cic["test_metrics"]["mean_latency_ms"],
         }
         for dest in [
-            os.path.join(_ROOT, "REAL_DATASET_VALIDATION_FINAL.json"),
-            os.path.join(_ROOT, "publication", "REAL_DATASET_VALIDATION_FINAL.json"),
+            os.path.join(_ROOT, "REAL_BENCHMARKS_VALIDATION_SUMMARY.json"),
+            os.path.join(_ROOT, "publication", "REAL_BENCHMARKS_VALIDATION_SUMMARY.json"),
         ]:
             with open(dest, "w") as f:
                 json.dump(real_data_validation, f, indent=2)
-        print(f"✓ REAL_DATASET_VALIDATION_FINAL.json written to root and publication/")
+        print(f"✓ REAL_BENCHMARKS_VALIDATION_SUMMARY.json written to root and publication/")
 
     print(f"\n✓ Real-world benchmark report written to: {out_path}")
     print(f"✓ Real experiment manifest written to: {manifest_path}")

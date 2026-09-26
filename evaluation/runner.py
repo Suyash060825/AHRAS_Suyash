@@ -45,6 +45,7 @@ def record_to_ocsf(rec: DatasetRecord) -> dict:
         "dst_port":         dst_port,
         "packet_count":     packet_count,
         "duration_sec":     duration_sec,
+        "byte_count":       bytes_count,
         "bytes":            bytes_count,
         "pps":              pps,
         "tcp_flags":        tcp_flags,
