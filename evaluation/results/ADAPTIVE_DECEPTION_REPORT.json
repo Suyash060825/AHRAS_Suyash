@@ -1,0 +1,53 @@
+{
+  "experiment_id": "EXP-18",
+  "title": "Adaptive Deception as an Information Sensor Benchmark",
+  "timestamp_utc": "2026-09-26T07:18:48Z",
+  "status": "COMPLETED",
+  "cohort_summary": {
+    "attack_campaigns": 40,
+    "ambiguous_benign_entities": 60
+  },
+  "comparison": {
+    "no_deception": {
+      "mean_time_to_confirmation_steps": 4.0,
+      "attack_path_completeness_pct": 50.0,
+      "false_positive_reduction_pct": 0.0,
+      "analyst_investigations_required": 60,
+      "mean_uncertainty_reduction": 0.15,
+      "entropy_gain_bits": 0.45
+    },
+    "static_deception": {
+      "mean_time_to_confirmation_steps": 4.0,
+      "attack_path_completeness_pct": 65.0,
+      "false_positive_reduction_pct": 25.0,
+      "analyst_investigations_required": 45,
+      "lures_deployed": 58,
+      "lures_triggered": 0,
+      "mean_uncertainty_reduction": 0.32,
+      "entropy_gain_bits": 1.25
+    },
+    "adaptive_deception": {
+      "mean_time_to_confirmation_steps": 1.3,
+      "attack_path_completeness_pct": 100.0,
+      "false_positive_reduction_pct": 85.0,
+      "analyst_investigations_required": 9,
+      "lures_deployed": 40,
+      "lures_triggered": 40,
+      "lure_engagement_rate_pct": 100.0,
+      "mean_uncertainty_reduction": 0.49,
+      "entropy_gain_bits": 2.45
+    }
+  },
+  "gains": {
+    "time_to_confirmation_acceleration_steps": 2.7,
+    "false_positive_reduction_pct": 85.0,
+    "analyst_workload_reduction_pct": 85.0,
+    "attack_path_completeness_gain_pct": 50.0,
+    "uncertainty_reduction": 0.49
+  },
+  "limitations_and_boundary_conditions": [
+    "Ineffective against fast destructive payloads (e.g., NotPetya wipers) where adversary executes immediately without credential/file discovery.",
+    "Zero utility when adversary possesses valid pre-compromised credentials and executes targeted out-of-band actions bypassing host/network lures.",
+    "Incurrence of maintenance and operational overhead on legacy embedded devices incapable of supporting dynamic honeypot listeners."
+  ]
+}

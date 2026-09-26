@@ -99,5 +99,18 @@
 | :--- | :--- | :--- | :--- | :--- | :--- | :--- |
 | **Encrypted Session Intelligence** | Payload-blind sequence dynamics & IAT periodicity inference | Packet size/direction sequences & IAT timings | `SessionEvidenceRecord` (threat label, periodicity $\rho$, MITRE tag) | `1.0.0` | Sequence $P \in \mathbb{R}^{32 \times 3}$ + Session vector $v \in \mathbb{R}^{24}$ | Verified (Phase 7 EXP-17: F1 0.9362 vs 0.0000 Flow-Only, 90.5% Unknown Attack Recall, 3,909 SPS, P50 0.23 ms, 0 bytes decrypted, Table tab:encrypted_session_eval) |
 
+---
 
+## 11. Adaptive Deception Information Sensor
 
+| Model Name | Purpose | Input Dimensions / Types | Output Schema / Range | Version | Training Data / Priors | Evaluation Status |
+| :--- | :--- | :--- | :--- | :--- | :--- | :--- |
+| **Adaptive Deception Sensor** | Active Bayesian adversary probing & uncertainty reduction sensor | OCSF events, honeypot telemetry, candidate lure actions | `DeceptionDecision` ($\mathbb{E}[\text{IG}], \Delta U$, lure type, interaction trace) | `2.0.0` | Bayesian Info-Gain utility ($\mathbb{E}[\text{IG}] - \text{Cost} - \text{Risk}$) over 4 dynamic lures | Verified (Phase 8 EXP-18: Time-to-confirmation accelerated 4.0 -> 1.3 steps [-2.7 steps], 100% Attack Path Completeness vs 50% Passive, 85% False-Positive Alert Reduction [60 -> 9 alerts], Uncertainty Reduction $\Delta U = 0.4900$, Table tab:adaptive_deception_eval) |
+
+---
+
+## 12. Response Efficacy Learning & Dynamic Safety Policy Engines
+
+| Model Name | Purpose | Input Dimensions / Types | Output Schema / Range | Version | Training Data / Priors | Evaluation Status |
+| :--- | :--- | :--- | :--- | :--- | :--- | :--- |
+| **Response Efficacy Learner** | Online Bayesian response efficacy learning, Digital Twin simulation & safety gating | Post-mitigation telemetry, risk deltas, entity criticality | `EfficacyEvaluationResult`, `EfficacyBelief` ($\mu, \sigma^2, \Delta R$, decision) | `1.0.0` | Conjugate Beta priors over (action, threat, asset) + Twin simulation | Verified (Phase 9 EXP-19: Mean Utility 0.3093 vs 0.0479 Static SOAR [+545.7%], Mean Delta R 0.5843, 0 Safety Violations [0.0%], Zero Collateral Disruption, P50 0.164 ms, Table tab:response_efficacy_eval) |

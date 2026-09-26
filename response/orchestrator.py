@@ -32,7 +32,7 @@ from datetime import datetime, timezone
 from typing import Any, Dict, List, Optional, Tuple
 
 from detection.risk_engine import RiskResult
-from config.settings import DEV_MODE, RESPONSE_MODE
+from config.settings import DEV_MODE, RESPONSE_MODE, USE_RESPONSE_EFFICACY_LEARNER
 
 log = logging.getLogger(__name__)
 
@@ -86,19 +86,91 @@ class ResponseOrchestrator:
     Thread-safe.
     """
 
-    def __init__(self, dry_run: bool = DEV_MODE, execution_mode: Optional[str] = None):
+    def __init__(
+        self,
+        dry_run: bool = DEV_MODE,
+        execution_mode: Optional[str] = None,
+        efficacy_learner: Optional[Any] = None,
+    ):
         self._dry_run = dry_run
         self.execution_mode = execution_mode or ("DRY_RUN" if dry_run else RESPONSE_MODE)
         self._action_history: List[ResponseAction] = []
         self._pending_queue: Dict[str, ResponseAction] = {}
         self._executed_targets: Dict[str, float] = {} # target -> last_executed_timestamp
         self._lock = threading.RLock()
+        
+        if efficacy_learner is not None:
+            self.efficacy_learner = efficacy_learner
+        elif USE_RESPONSE_EFFICACY_LEARNER:
+            try:
+                from response.efficacy_learner import get_response_efficacy_learner
+                self.efficacy_learner = get_response_efficacy_learner()
+            except Exception as e:
+                log.warning(f"Could not initialize ResponseEfficacyLearner: {e}")
+                self.efficacy_learner = None
+        else:
+            self.efficacy_learner = None
 
-    def compute_action_utility(self, action_type: str, risk_score: float, confidence: float, uncertainty: float) -> float:
+    def _infer_threat_and_asset(self, risk_res: RiskResult, evt: dict) -> Tuple[str, str]:
+        """Infers threat family and target asset class from event context and MITRE tags."""
+        cls = _get(evt, "ocsf_class", default="")
+        mitre = getattr(risk_res, "mitre_techniques", []) or []
+        details_str = (str(getattr(risk_res, "details", "")) + " " + str(getattr(risk_res, "explanation", ""))).lower()
+
+        threat = "GENERIC"
+        if cls == "file_activity" or "T1486" in mitre or "ransomware" in details_str:
+            threat = "RANSOMWARE"
+        elif "T1071" in mitre or "botnet" in details_str or "c2" in details_str:
+            threat = "BOTNET_C2"
+        elif "T1110" in mitre or "brute" in details_str:
+            threat = "BRUTE_FORCE"
+        elif "T1021" in mitre or "T1046" in mitre or "lateral" in details_str:
+            threat = "LATERAL_MOVEMENT"
+        elif "T1078" in mitre or "credential" in details_str or cls == "cloud_api":
+            threat = "CREDENTIAL_ABUSE"
+        elif "T1041" in mitre or "exfiltration" in details_str:
+            threat = "DATA_EXFILTRATION"
+
+        hostname = str(_get(evt, "device", "hostname") or _get(evt, "dst_endpoint", "hostname") or "").lower()
+        asset = "WORKSTATION"
+        if any(k in hostname for k in ("dc0", "dc-", "domain", "controller", "ad_")):
+            asset = "DOMAIN_CONTROLLER"
+        elif any(k in hostname for k in ("srv", "server", "prod", "database", "sql")):
+            asset = "CRITICAL_SERVER"
+        elif cls == "cloud_api":
+            asset = "CLOUD_SERVICE_ACCOUNT"
+
+        return threat, asset
+
+    def compute_action_utility(
+        self,
+        action_type: str,
+        risk_score: float,
+        confidence: float,
+        uncertainty: float,
+        threat_family: str = "GENERIC",
+        asset_class: str = "ALL",
+        twin_scenario: Optional[Any] = None,
+        twin_target: Optional[str] = None,
+    ) -> float:
         """
         Computes formal response utility score:
             Utility = ExpectedRiskReduction * Confidence - BlastRadius - ReversibilityCost - UncertaintyPenalty
+        Integrates with ResponseEfficacyLearner if active.
         """
+        if self.efficacy_learner is not None and USE_RESPONSE_EFFICACY_LEARNER:
+            eval_res = self.efficacy_learner.evaluate_action_utility(
+                action_type=action_type,
+                threat_family=threat_family,
+                asset_class=asset_class,
+                current_risk=risk_score,
+                confidence=confidence,
+                uncertainty=uncertainty,
+                twin_scenario=twin_scenario,
+                twin_target=twin_target,
+            )
+            return eval_res.learned_utility
+
         meta = ACTION_COST_MATRIX.get(action_type, {"blast_radius": 0.3, "reversibility_cost": 0.2, "expected_risk_reduction": 0.5})
         expected_red = meta["expected_risk_reduction"] * (risk_score / 1.0)
         blast = meta["blast_radius"]
@@ -111,6 +183,7 @@ class ResponseOrchestrator:
     def evaluate_and_respond(self, risk_res: RiskResult, evt: dict = None) -> List[ResponseAction]:
         """
         Evaluates risk state, confidence, and action utility to gate automatic vs staged response.
+        Applies hard safety invariants from ResponseEfficacyLearner.
         """
         if evt is None:
             evt = {}
@@ -121,6 +194,7 @@ class ResponseOrchestrator:
         actions_to_take = self._select_actions(risk_res, evt)
         executed_actions = []
         now = time.time()
+        threat_fam, asset_cls = self._infer_threat_and_asset(risk_res, evt)
 
         with self._lock:
             # Clean expired pending actions
@@ -136,14 +210,40 @@ class ResponseOrchestrator:
 
                 confidence = getattr(risk_res, "risk_confidence", 0.85)
                 uncertainty = getattr(risk_res, "risk_uncertainty", 0.15)
-                utility = self.compute_action_utility(action.action_type, risk_res.risk_score, confidence, uncertainty)
+                
+                safety_override = False
+                safety_reason = ""
+                if self.efficacy_learner is not None and USE_RESPONSE_EFFICACY_LEARNER:
+                    eval_res = self.efficacy_learner.evaluate_action_utility(
+                        action_type=action.action_type,
+                        threat_family=threat_fam,
+                        asset_class=asset_cls,
+                        current_risk=risk_res.risk_score,
+                        confidence=confidence,
+                        uncertainty=uncertainty,
+                    )
+                    utility = eval_res.learned_utility
+                    safety_override = eval_res.safety_override_triggered
+                    safety_reason = eval_res.safety_reason
+                else:
+                    utility = self.compute_action_utility(
+                        action.action_type, risk_res.risk_score, confidence, uncertainty,
+                        threat_family=threat_fam, asset_class=asset_cls
+                    )
+
                 action.utility_score = utility
                 action.execution_mode = self.execution_mode
+                action.details["threat_family"] = threat_fam
+                action.details["asset_class"] = asset_cls
+                if safety_override:
+                    action.details["safety_override"] = safety_reason
 
                 # Safety Gating: Auto-remediation requires CRITICAL risk (AUTO_REMEDIATE) + Sufficient Confidence (>= 0.70)
+                # AND No hard safety override
                 can_auto_remediate = (
                     risk_res.remediation_level == "AUTO_REMEDIATE"
                     and confidence >= 0.70
+                    and not safety_override
                 )
 
                 if can_auto_remediate:
@@ -162,9 +262,55 @@ class ResponseOrchestrator:
                     self._pending_queue[action.action_id] = action
                     self._action_history.append(action)
                     executed_actions.append(action)
-                    log.info(f"[RESPONSE] Staged {action.action_type} on '{action.target_identifier}' for SOC approval (Utility={utility:.3f}, Gated=True)")
+                    log.info(f"[RESPONSE] Staged {action.action_type} on '{action.target_identifier}' for SOC approval (Utility={utility:.3f}, Gated=True, SafetyOverride={safety_override})")
 
         return executed_actions
+
+    def record_action_feedback(
+        self,
+        action_id: str,
+        risk_after: float,
+        uncertainty_after: float = 0.10,
+        time_to_effect_sec: float = 1.0,
+        residual_activity: bool = False,
+        success: bool = True,
+        context: Optional[Dict[str, Any]] = None,
+    ) -> Optional[Any]:
+        """
+        Records the post-execution outcome for an executed action and updates the efficacy learner.
+        """
+        with self._lock:
+            target_act: Optional[ResponseAction] = None
+            for act in self._action_history:
+                if act.action_id == action_id:
+                    target_act = act
+                    break
+
+            if target_act is None:
+                log.warning(f"[RESPONSE] Action '{action_id}' not found for feedback.")
+                return None
+
+            if self.efficacy_learner is not None:
+                threat_fam = target_act.details.get("threat_family", "GENERIC")
+                asset_cls = target_act.details.get("asset_class", "ALL")
+                rec = self.efficacy_learner.record_outcome(
+                    action_type=target_act.action_type,
+                    threat_family=threat_fam,
+                    asset_class=asset_cls,
+                    entity_key=target_act.entity_key,
+                    target_identifier=target_act.target_identifier,
+                    risk_before=target_act.risk_score,
+                    risk_after=risk_after,
+                    uncertainty_before=0.15,
+                    uncertainty_after=uncertainty_after,
+                    time_to_effect_sec=time_to_effect_sec,
+                    residual_activity=residual_activity,
+                    success=success,
+                    context=context or {},
+                )
+                return rec
+            return None
+
 
     def _select_actions(self, risk_res: RiskResult, evt: dict) -> List[ResponseAction]:
         """Maps OCSF class and attack indicators to specific response action types."""

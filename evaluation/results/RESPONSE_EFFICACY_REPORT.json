@@ -1,0 +1,65 @@
+{
+  "static_soar": {
+    "mean_utility": 0.0479,
+    "std_utility": 0.1358,
+    "mean_risk_reduction": 0.4821,
+    "safety_violations": 0,
+    "violation_rate": 0.0,
+    "mean_collateral_disruption": 0.0,
+    "residual_threat_rate": 0.4583,
+    "latency_p50_ms": 0.001,
+    "latency_p95_ms": 0.002
+  },
+  "ungated_bandit": {
+    "mean_utility": 0.2516,
+    "std_utility": 0.1802,
+    "mean_risk_reduction": 0.7631,
+    "safety_violations": 0,
+    "violation_rate": 0.0,
+    "mean_collateral_disruption": 0.0,
+    "residual_threat_rate": 0.1583,
+    "latency_p50_ms": 0.006,
+    "latency_p95_ms": 0.009
+  },
+  "ahras_adaptive": {
+    "mean_utility": 0.3093,
+    "std_utility": 0.2223,
+    "mean_risk_reduction": 0.5843,
+    "safety_violations": 0,
+    "violation_rate": 0.0,
+    "mean_collateral_disruption": 0.0,
+    "residual_threat_rate": 0.3833,
+    "staged_for_soc_count": 0,
+    "staged_for_soc_rate": 0.0,
+    "latency_p50_ms": 0.164,
+    "latency_p95_ms": 0.338
+  },
+  "statistical_tests": {
+    "vs_static_soar": {
+      "utility_delta": 0.2614,
+      "relative_improvement_pct": 545.47,
+      "p_value": 0.0001,
+      "cohens_d": 0.9396,
+      "ci_95": [
+        0.211,
+        0.3107
+      ]
+    },
+    "vs_ungated_bandit": {
+      "utility_delta": 0.0577,
+      "relative_improvement_pct": 22.93,
+      "p_value": 0.072493,
+      "cohens_d": 0.1666,
+      "ci_95": [
+        -0.0042,
+        0.1204
+      ]
+    }
+  },
+  "meta": {
+    "experiment_id": "EXP-19",
+    "total_scenarios": 120,
+    "timestamp": 1790407636.8304272,
+    "date": "2026-09-26 07:27:16 UTC"
+  }
+}

@@ -1,0 +1,15 @@
+\begin{table}[t]
+\centering
+\small
+\caption{Response Efficacy Learning and Safety Invariant Benchmark (EXP-19). Comparing static SOAR, un-gated bandit RL, and AHRAS Adaptive Closed-Loop Response over 120 heterogeneous multi-stage incident scenarios.}
+\label{tab:response_efficacy_eval}
+\begin{tabular}{lccccc}
+\toprule
+\textbf{Response Architecture} & \textbf{Mean Utility} & \textbf{$\Delta$ Risk} & \textbf{Safety Violations} & \textbf{Collateral Disruption} & \textbf{Residual Threat} \\
+\midrule
+Static Cost-Matrix SOAR & $0.0479$ & $0.482$ & $0$ ($0.0\%$) & $0.000$ & $45.8\%$ \\
+Un-gated Empirical Bandit & $0.2516$ & $0.763$ & $0$ ($0.0\%$) & $0.000$ & $15.8\%$ \\
+\textbf{AHRAS Adaptive (EXP-19)} & \textbf{0.3093} & \textbf{0.584} & \textbf{0 (0.0\%)} & \textbf{0.000} & \textbf{38.3\%} \\
+\bottomrule
+\end{tabular}
+\end{table}

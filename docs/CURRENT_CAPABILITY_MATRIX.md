@@ -39,7 +39,7 @@
 | **Forecasting** | `forecast/predictor.py` | **A** | `tests/test_proactive_forecasting_evaluation.py`, `tests/test_forecast.py` | Phase 12 EXP-08: Holt linear causal smoothing, hazard thresholding ($\ge 3$ lead time) | **Keep** (Zero lookahead validated) |
 | **Conformal Selective Gate** | `detection/selective_gate.py` | **A** | `tests/test_conformal_autonomy_evaluation.py`, `tests/test_selective_gate.py` | Phase 10 EXP-06: Split conformal quantile calibration, 7 action tiers | **Keep** (Safe autonomy foundation) |
 | **Response Orchestrator** | `response/orchestrator.py` | **B** | `tests/test_response_policy_gating.py` | RASE expected utility policy, staged queue; lacks learned observed feedback | **Extend** (Add Response Efficacy Learning loop) |
-| **Deception / Honeypot** | `deception/honeypot_manager.py` | **B** | `tests/test_full_system.py` | Static threshold ($R \ge 0.70$) honeytoken/canary deployer; lacks utility math | **Extend** (Upgrade to Adaptive Deception via Information Gain) |
+| **Deception / Honeypot** | `deception/honeypot_manager.py` | **A** | `tests/test_adaptive_deception.py` | Phase 8 EXP-18: DeceptionValue optimization, 4 dynamic lure types, Time-to-Confirm 4.0 -> 1.3 steps, 85% FP cut, Delta U=0.49 | **Implemented (Phase 8)** |
 | **RAG / LLM Threat Narrator** | `xai/llm_narrator.py` | **B** | `tests/test_adversarial_redteam.py` | Template fallback + local Ollama; prompt injection sanitized; lacks provenance tag | **Extend** (Surface provenance flag in UI/API) |
 | **Dashboard & API** | `api/server.py`, `web/index.html` | **B** | `tests/test_module4.py` | FastAPI 6.1.0, WebSockets; needs RBAC dependencies attached to routes | **Extend** (Enforce RBAC dependencies, add new operational views) |
 | **Explanation Reliability 2.0**| `xai/reliability_audit.py` | **A** | `tests/test_xai_reliability_audit.py` | Phase 1 EXP-11: Multi-dimensional XAI audit, Sufficiency k in {3,5,10}, Comprehensiveness, Rank Stability J=0.88, Monotonicity | **Implemented (Phase 1)** |
@@ -49,7 +49,8 @@
 | **Early-Exit Model Router** | `detection/model_router.py` | **A** | `tests/test_model_router.py` | Phase 5 EXP-15: 4-stage adaptive cascade, 2.86x throughput speedup (54.8 -> 157.0 EPS), 65.1% latency reduction, P50 17.85ms -> 0.05ms, Zero F1 loss (0.2869) | **Implemented (Phase 5)** |
 | **Streaming Sketch Fast Path** | `detection/streaming_sketch.py` | **A** | `tests/test_streaming_sketch.py` | Phase 6 EXP-16: Count-Min + HLL fan-out, O(1) space (0.83MB vs 2.94MB exact), 10.3k EPS, P50 91.6us, HH F1 0.8889, 21.6% workload screened | **Implemented (Phase 6)** |
 | **Encrypted Session Intelligence**| `detection/encrypted_session.py` | **A** | `tests/test_encrypted_session.py` | Phase 7 EXP-17: Payload-blind sequence dynamics + IAT autocorrelation, F1 0.9362 vs 0.0000 Flow-Only, 90.5% Unknown Attack Recall, 3.9k SPS | **Implemented (Phase 7)** |
-| **Response Efficacy Learning**| *None* | **E** | *None* | *Not Evaluated* | **New Implementation (Phase 9)** |
+| **Adaptive Deception Sensor** | `deception/honeypot_manager.py` | **A** | `tests/test_adaptive_deception.py` | Phase 8 EXP-18: Bayesian Info-Gain lure optimization, Time-to-confirmation 4.0 -> 1.3 steps (-2.7 steps), 100% path completeness, 85% FP reduction | **Implemented (Phase 8)** |
+| **Response Efficacy Learning**| `response/efficacy_learner.py` | **A** | `tests/test_response_efficacy.py` | Phase 9 EXP-19: Online Bayesian Beta beliefs, Twin counterfactual simulation, Zero safety violations (0.0%), +545.7% security utility vs static SOAR | **Implemented (Phase 9)** |
 
 ---
 
