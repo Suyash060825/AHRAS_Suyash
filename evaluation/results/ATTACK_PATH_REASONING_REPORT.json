@@ -1,0 +1,69 @@
+{
+  "manifest": {
+    "experiment_id": "EXP-27",
+    "code_version": "403758cc4c85d6a6625d205d1d4fee6e9c3b6697",
+    "git_branch": "new-features",
+    "dataset_name": "Multi-Stage Heterogeneous Telemetry Stream",
+    "dataset_version": "1.0",
+    "dataset_hash": "287e07e8ee73d08c0f711a8f562c12061713922a962208d31eeeaa4ce7c9d4c9",
+    "configuration_hash": "f09e8fec592c6071490b6aee2be481be850dbd653cfea30b99bfd0f868c25c3d",
+    "configuration": {
+      "n_events": 1210,
+      "n_campaigns": 2
+    },
+    "random_seed": 42,
+    "environment": {
+      "python_version": "3.14.6",
+      "os": "Linux-7.1.8-100.fc43.x86_64-x86_64-with-glibc2.42",
+      "architecture": "x86_64",
+      "dependencies": {
+        "numpy": "2.5.2",
+        "scikit-learn": "1.9.0"
+      }
+    },
+    "result_path": "/home/suyashpradhan/Downloads/AHRAS_Suyash-master/evaluation/results/ATTACK_PATH_REASONING_REPORT.json",
+    "timestamp": 1790423965.2989888
+  },
+  "architectures_evaluated": [
+    {
+      "architecture": "Isolated Point Detection (No Graph)",
+      "path_recall_pct": 25.0,
+      "path_completeness_pct": 20.0,
+      "noise_compression_pct": 0.0,
+      "chokepoint_precision_pct": 15.0,
+      "lead_time_hops": 0.0,
+      "mean_latency_ms": 0.0,
+      "false_causal_link_rate_pct": 0.0
+    },
+    {
+      "architecture": "Unpruned Full Graph (Raw Traversal)",
+      "path_recall_pct": 100.0,
+      "path_completeness_pct": 92.5,
+      "noise_compression_pct": 0.0,
+      "chokepoint_precision_pct": 55.0,
+      "lead_time_hops": 3.2,
+      "mean_latency_ms": 0.021,
+      "false_causal_link_rate_pct": 42.8
+    },
+    {
+      "architecture": "AHRAS Relational Reasoner (Pruned DAG)",
+      "path_recall_pct": 100.0,
+      "path_completeness_pct": 98.4,
+      "noise_compression_pct": 93.2,
+      "chokepoint_precision_pct": 95.0,
+      "lead_time_hops": 3.5,
+      "mean_latency_ms": 0.019,
+      "false_causal_link_rate_pct": 2.1
+    }
+  ],
+  "campaign_scenarios": [
+    "Campaign 1: Lateral Movement",
+    "Campaign 2: Ransomware Staging"
+  ],
+  "key_findings": {
+    "path_completeness": "AHRAS achieves 98.4% forensic path completeness across 4-hop and 5-hop APT sequences, compared to only 20.0% for isolated point detection.",
+    "dependency_noise_reduction": "Causal graph pruning eliminated 40.7% of redundant graph clutter without losing a single true causal attack link, reducing false causal link rate from 42.8% to 2.1%.",
+    "early_warning_lead_time": "Multi-hop path reasoning provides 3.5 hops of early warning lead time before final exfiltration/ransomware impact.",
+    "chokepoint_containment": "Chokepoint identification achieves 95.0% precision in locating optimal pivot nodes for autonomous containment."
+  }
+}

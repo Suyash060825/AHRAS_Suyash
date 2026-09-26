@@ -1,9 +1,9 @@
 from __future__ import annotations
 """
-AHRAS Provenance & Attack Scenario Reconstruction Package
----------------------------------------------------------
+AHRAS Provenance & Relational Graph Reasoning Package
+------------------------------------------------------
 Enables heterogeneous forensic provenance DAG tracking, causal kill-chain
-reconstruction, unobserved stealth step inference, and structural graph comparison.
+reconstruction, stream ingestion, noise pruning, and multi-hop attack path reasoning.
 """
 
 from provenance.models import (
@@ -24,6 +24,10 @@ from provenance.metrics import (
     compute_structural_distance,
     compute_comprehensive_graph_quality,
 )
+from provenance.graph_builder import ProvenanceGraphBuilder
+from provenance.subgraph_extractor import SubgraphExtractor
+from provenance.causal_pruner import CausalGraphPruner
+from provenance.path_reasoner import RelationalPathReasoner, AttackPathSummary
 
 __all__ = [
     "ProvenanceNodeType",
@@ -40,4 +44,9 @@ __all__ = [
     "compute_depth_similarity",
     "compute_structural_distance",
     "compute_comprehensive_graph_quality",
+    "ProvenanceGraphBuilder",
+    "SubgraphExtractor",
+    "CausalGraphPruner",
+    "RelationalPathReasoner",
+    "AttackPathSummary",
 ]
