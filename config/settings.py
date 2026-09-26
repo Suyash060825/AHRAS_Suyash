@@ -89,6 +89,20 @@ MAX_REQUEST_BYTES = int(os.getenv("AHRAS_MAX_REQUEST_BYTES", str(2 * 1024 * 1024
 RESPONSE_MODE = os.getenv("AHRAS_RESPONSE_MODE", "DRY_RUN" if DEV_MODE else "SIMULATED").upper()
 USE_SECURITY_TWIN = os.getenv("AHRAS_USE_SECURITY_TWIN", "true").lower() == "true"
 USE_PROVENANCE_RECONSTRUCTOR = os.getenv("AHRAS_USE_PROVENANCE_RECONSTRUCTOR", "true").lower() == "true"
+USE_TEMPORAL_INSTABILITY = os.getenv("AHRAS_USE_TEMPORAL_INSTABILITY", "true").lower() == "true"
+USE_MODEL_ROUTER = os.getenv("AHRAS_USE_MODEL_ROUTER", "true").lower() == "true"
+ROUTER_CONF_THRESHOLD = float(os.getenv("AHRAS_ROUTER_CONF_THRESHOLD", "0.85"))
+ROUTER_UNCERTAINTY_THRESHOLD = float(os.getenv("AHRAS_ROUTER_UNCERTAINTY_THRESHOLD", "0.20"))
+ROUTER_MARGIN_THRESHOLD = float(os.getenv("AHRAS_ROUTER_MARGIN_THRESHOLD", "0.35"))
+USE_STREAMING_SKETCH = os.getenv("AHRAS_USE_STREAMING_SKETCH", "true").lower() == "true"
+SKETCH_WIDTH = int(os.getenv("AHRAS_SKETCH_WIDTH", "4096"))
+SKETCH_DEPTH = int(os.getenv("AHRAS_SKETCH_DEPTH", "5"))
+SKETCH_HEAVY_HITTER_THRESHOLD = float(os.getenv("AHRAS_SKETCH_HEAVY_HITTER_THRESHOLD", "0.01"))
+USE_ENCRYPTED_SESSION_INTEL = os.getenv("AHRAS_USE_ENCRYPTED_SESSION_INTEL", "true").lower() == "true"
+SESSION_SEQUENCE_LEN = int(os.getenv("AHRAS_SESSION_SEQUENCE_LEN", "32"))
+BEACON_PERIODICITY_THRESHOLD = float(os.getenv("AHRAS_BEACON_PERIODICITY_THRESHOLD", "0.75"))
+
+
 
 # ── Kafka (production message bus) ────────────────────────────────────────────
 KAFKA_BOOTSTRAP      = os.getenv("KAFKA_BOOTSTRAP", "localhost:9092")

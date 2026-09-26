@@ -66,3 +66,38 @@
 | Model Name | Purpose | Input Dimensions / Types | Output Schema / Range | Version | Training Data / Priors | Evaluation Status |
 | :--- | :--- | :--- | :--- | :--- | :--- | :--- |
 | **Attack Scenario Reconstructor & Forensic DAG** | Heterogeneous forensic provenance DAG & causal attack chain reconstruction | Multi-modal OCSF events across 12 node & 12 edge types | `ProvenanceAttackScenario`, `GraphQualityMetrics` | `1.0.0` | Multi-campaign security telemetry & MITRE kill-chain priors | Verified (Phase 3 EXP-13: Clean Graph F1 1.0000, 50% Missingness F1 0.6120, Path Completeness 100%, Automated Missing Step Inference, Table tab:provenance_reconstruction_eval) |
+
+---
+
+## 7. Temporal Epistemic Uncertainty & Instability Engines
+
+| Model Name | Purpose | Input Dimensions / Types | Output Schema / Range | Version | Training Data / Priors | Evaluation Status |
+| :--- | :--- | :--- | :--- | :--- | :--- | :--- |
+| **Temporal Epistemic Instability Tracker** | Sliding-window classification volatility & selective autonomy modulation | Streaming risk predictions $(t_i, p_i, c_i)$ per entity | `InstabilityMetrics` (Flips, Trajectory, Entropy, $I_t \in [0, 1]$) | `1.0.0` | 4 longitudinal cohorts (Benign, Attack, Gradual, Oscillating) | Verified (Phase 4 EXP-14: 100% FAIR Reduction [17 -> 0 false containments], 100% Oscillating Abstention Recall, ECE 0.2073 -> 0.1837, Zero Risk Inflation Guarantee, Table tab:temporal_instability_eval) |
+
+---
+
+## 8. Adaptive Early-Exit Model Routing Engines
+
+| Model Name | Purpose | Input Dimensions / Types | Output Schema / Range | Version | Training Data / Priors | Evaluation Status |
+| :--- | :--- | :--- | :--- | :--- | :--- | :--- |
+| **Confidence-Based Early-Exit Model Router** | Multi-stage adaptive detection cascade with sub-millisecond triage | Heterogeneous OCSF events across 4 stages | `RoutedDetectionResult` ($C_k, U_k, \text{OOD}_k$, stage $1\dots 4$, latencies) | `1.0.0` | 4-stage cascade (Signatures, ML Ensemble, Multimodal, Deep Graph) | Verified (Phase 5 EXP-15: 2.86x Throughput Speedup [54.8 -> 157.0 EPS], 65.1% Latency Reduction, P50 17.85ms -> 0.05ms, Zero F1 Loss [0.2869], 66.7% Early Exit Rate, Table tab:early_exit_routing_eval) |
+
+---
+
+## 9. Streaming Sketch Fast-Path Engines
+
+| Model Name | Purpose | Input Dimensions / Types | Output Schema / Range | Version | Training Data / Priors | Evaluation Status |
+| :--- | :--- | :--- | :--- | :--- | :--- | :--- |
+| **Streaming Sketch Fast Path** | Memory-bounded O(1) telemetry summarizer and line-rate heavy-hitter triage | Streaming raw/normalized network events | `SketchScreenResult`, `SketchEvidenceRecord` (bounds $\epsilon, \delta$, MRE) | `1.0.0` | Count-Min ($w=4096, d=5$) + HyperLogLog ($m=32$) | Verified (Phase 6 EXP-16: Fixed 0.83 MB footprint vs 2.94 MB exact [3.55x reduction], 10,351 EPS, P50 91.6 $\mu$s, Heavy-Hitter F1 0.8889, Recall 100%, 21.6% Downstream Workload Screened, Table tab:streaming_sketch_eval) |
+
+---
+
+## 10. Encrypted Session Intelligence Engines
+
+| Model Name | Purpose | Input Dimensions / Types | Output Schema / Range | Version | Training Data / Priors | Evaluation Status |
+| :--- | :--- | :--- | :--- | :--- | :--- | :--- |
+| **Encrypted Session Intelligence** | Payload-blind sequence dynamics & IAT periodicity inference | Packet size/direction sequences & IAT timings | `SessionEvidenceRecord` (threat label, periodicity $\rho$, MITRE tag) | `1.0.0` | Sequence $P \in \mathbb{R}^{32 \times 3}$ + Session vector $v \in \mathbb{R}^{24}$ | Verified (Phase 7 EXP-17: F1 0.9362 vs 0.0000 Flow-Only, 90.5% Unknown Attack Recall, 3,909 SPS, P50 0.23 ms, 0 bytes decrypted, Table tab:encrypted_session_eval) |
+
+
+

@@ -1,0 +1,66 @@
+{
+  "experiment_id": "EXP-14",
+  "title": "Temporal Epistemic Instability & Autonomy Gating Benchmark",
+  "timestamp_utc": "2026-09-26T06:34:27Z",
+  "status": "COMPLETED",
+  "runtime_seconds": 0.14,
+  "summary_metrics": {
+    "baseline_false_autonomous_interventions": 17,
+    "instability_false_autonomous_interventions": 0,
+    "false_intervention_rate_reduction": 100.0,
+    "oscillating_abstention_recall": 100.0,
+    "baseline_ece": 0.2073,
+    "calibrated_ece": 0.1837,
+    "ece_reduction": 11.36
+  },
+  "cohort_metrics": {
+    "Stable Benign": {
+      "entity_count": 50,
+      "mean_instability_score": 0.1231,
+      "mean_class_flips": 0.0,
+      "mean_trajectory_instability": 0.1168,
+      "mean_confidence_variance": 0.000396,
+      "mean_prediction_entropy": 0.3891,
+      "baseline_autonomous_containments": 0,
+      "instability_gated_containments": 0,
+      "abstentions": 0,
+      "escalations": 0
+    },
+    "Stable Attack": {
+      "entity_count": 50,
+      "mean_instability_score": 0.132,
+      "mean_class_flips": 0.0,
+      "mean_trajectory_instability": 0.1148,
+      "mean_confidence_variance": 0.000384,
+      "mean_prediction_entropy": 0.4269,
+      "baseline_autonomous_containments": 50,
+      "instability_gated_containments": 50,
+      "abstentions": 0,
+      "escalations": 0
+    },
+    "Gradual Attack": {
+      "entity_count": 50,
+      "mean_instability_score": 0.2489,
+      "mean_class_flips": 1.16,
+      "mean_trajectory_instability": 0.0752,
+      "mean_confidence_variance": 0.00089,
+      "mean_prediction_entropy": 0.8081,
+      "baseline_autonomous_containments": 50,
+      "instability_gated_containments": 50,
+      "abstentions": 0,
+      "escalations": 0
+    },
+    "Oscillating Ambiguous": {
+      "entity_count": 50,
+      "mean_instability_score": 0.5272,
+      "mean_class_flips": 17.04,
+      "mean_trajectory_instability": 0.4434,
+      "mean_confidence_variance": 0.019166,
+      "mean_prediction_entropy": 0.973,
+      "baseline_autonomous_containments": 17,
+      "instability_gated_containments": 0,
+      "abstentions": 50,
+      "escalations": 0
+    }
+  }
+}

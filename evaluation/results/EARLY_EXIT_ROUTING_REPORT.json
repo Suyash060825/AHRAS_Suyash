@@ -1,0 +1,176 @@
+{
+  "experiment_id": "EXP-15",
+  "title": "Confidence-Based Early-Exit Model Routing Benchmark",
+  "timestamp_utc": "2026-09-26T06:47:20Z",
+  "status": "COMPLETED",
+  "dataset": {
+    "total_events": 1000,
+    "attack_count": 400,
+    "benign_count": 600
+  },
+  "comparison": {
+    "full_pipeline": {
+      "f1": 0.2869,
+      "precision": 1.0,
+      "recall": 0.1675,
+      "fpr": 0.0,
+      "tp": 67,
+      "fp": 0,
+      "fn": 333,
+      "tn": 600,
+      "p50_latency_ms": 17.846,
+      "p95_latency_ms": 20.789,
+      "p99_latency_ms": 24.431,
+      "mean_latency_ms": 18.2,
+      "throughput_eps": 54.8,
+      "cpu_util_pct": 99.39,
+      "memory_mb": 189.99,
+      "wall_duration_sec": 18.234,
+      "exit_fractions": {
+        "f1": 0.0,
+        "f2": 0.0,
+        "f3": 0.0,
+        "f4": 1.0
+      },
+      "stage_exits": {
+        "stage_1": 0,
+        "stage_2": 0,
+        "stage_3": 0,
+        "stage_4": 1000
+      },
+      "early_exit_rate": 0.0
+    },
+    "early_exit_cascade": {
+      "f1": 0.2869,
+      "precision": 1.0,
+      "recall": 0.1675,
+      "fpr": 0.0,
+      "tp": 67,
+      "fp": 0,
+      "fn": 333,
+      "tn": 600,
+      "p50_latency_ms": 0.049,
+      "p95_latency_ms": 18.214,
+      "p99_latency_ms": 21.346,
+      "mean_latency_ms": 6.352,
+      "throughput_eps": 157.0,
+      "cpu_util_pct": 99.79,
+      "memory_mb": 191.43,
+      "wall_duration_sec": 6.368,
+      "exit_fractions": {
+        "f1": 0.667,
+        "f2": 0.0,
+        "f3": 0.0,
+        "f4": 0.333
+      },
+      "stage_exits": {
+        "stage_1": 667,
+        "stage_2": 0,
+        "stage_3": 0,
+        "stage_4": 333
+      },
+      "early_exit_rate": 0.667
+    },
+    "throughput_speedup": 2.86,
+    "latency_reduction_pct": 65.1,
+    "f1_delta": 0.0
+  },
+  "pareto_curve": [
+    {
+      "tau_conf": 0.7,
+      "f1": 0.2869,
+      "precision": 1.0,
+      "recall": 0.1675,
+      "p50_latency_ms": 0.048,
+      "p95_latency_ms": 17.242,
+      "throughput_eps": 178.5,
+      "early_exit_rate": 0.667,
+      "exit_fractions": {
+        "f1": 0.667,
+        "f2": 0.0,
+        "f3": 0.0,
+        "f4": 0.333
+      }
+    },
+    {
+      "tau_conf": 0.75,
+      "f1": 0.2869,
+      "precision": 1.0,
+      "recall": 0.1675,
+      "p50_latency_ms": 0.048,
+      "p95_latency_ms": 17.119,
+      "throughput_eps": 162.7,
+      "early_exit_rate": 0.667,
+      "exit_fractions": {
+        "f1": 0.667,
+        "f2": 0.0,
+        "f3": 0.0,
+        "f4": 0.333
+      }
+    },
+    {
+      "tau_conf": 0.8,
+      "f1": 0.2869,
+      "precision": 1.0,
+      "recall": 0.1675,
+      "p50_latency_ms": 0.049,
+      "p95_latency_ms": 17.598,
+      "throughput_eps": 146.7,
+      "early_exit_rate": 0.667,
+      "exit_fractions": {
+        "f1": 0.667,
+        "f2": 0.0,
+        "f3": 0.0,
+        "f4": 0.333
+      }
+    },
+    {
+      "tau_conf": 0.85,
+      "f1": 0.2869,
+      "precision": 1.0,
+      "recall": 0.1675,
+      "p50_latency_ms": 0.045,
+      "p95_latency_ms": 17.001,
+      "throughput_eps": 182.5,
+      "early_exit_rate": 0.667,
+      "exit_fractions": {
+        "f1": 0.667,
+        "f2": 0.0,
+        "f3": 0.0,
+        "f4": 0.333
+      }
+    },
+    {
+      "tau_conf": 0.9,
+      "f1": 0.2869,
+      "precision": 1.0,
+      "recall": 0.1675,
+      "p50_latency_ms": 0.049,
+      "p95_latency_ms": 17.432,
+      "throughput_eps": 160.4,
+      "early_exit_rate": 0.667,
+      "exit_fractions": {
+        "f1": 0.667,
+        "f2": 0.0,
+        "f3": 0.0,
+        "f4": 0.333
+      }
+    },
+    {
+      "tau_conf": 0.95,
+      "f1": 0.2869,
+      "precision": 1.0,
+      "recall": 0.1675,
+      "p50_latency_ms": 0.058,
+      "p95_latency_ms": 17.976,
+      "throughput_eps": 145.2,
+      "early_exit_rate": 0.6,
+      "exit_fractions": {
+        "f1": 0.6,
+        "f2": 0.0,
+        "f3": 0.0,
+        "f4": 0.4
+      }
+    }
+  ]
+}

@@ -1,0 +1,16 @@
+\begin{table*}[t]
+\centering
+\small
+\caption{AHRAS Streaming Sketch Fast-Path Performance vs. Exact Tracking (EXP-16)}
+\label{tab:streaming_sketch_eval}
+\begin{tabular}{lcccccc}
+\toprule
+\textbf{Architecture} & \textbf{Memory (MB)} & \textbf{Throughput (EPS)} & \textbf{Latency P50 ($\mu$s)} & \textbf{Mean Rel. Error} & \textbf{HH F1} & \textbf{Screening Filter \%} \\
+\midrule
+Exact Hash Table & 2.94 & 1397748.9 & -- & 0.0000 & 1.0000 & 0.0\% \\
+Streaming Sketch Fast-Path & 0.83 & 10351.3 & 91.6 & 0.0060 & 0.8889 & 21.6\% \\
+\midrule
+\multicolumn{7}{l}{\textit{Theoretical Bound: $\epsilon = 0.00066$, $\delta = 0.0067$ (Guarantee $\ge 99.3\%$, Max Error Observed: $2$ vs Theoretical: $16.59$)}} \\
+\bottomrule
+\end{tabular}
+\end{table*}

@@ -1,0 +1,54 @@
+{
+  "experiment_id": "EXP-17",
+  "title": "Encrypted Session Intelligence & Payload-Blind Threat Detection",
+  "timestamp_utc": "2026-09-26T07:13:06Z",
+  "status": "COMPLETED",
+  "dataset_summary": {
+    "total_sessions": 1000,
+    "benign_sessions": 550,
+    "known_attack_sessions": 250,
+    "unknown_attack_sessions": 200
+  },
+  "paradigms": {
+    "single_packet": {
+      "f1": 0.2517,
+      "precision": 0.5137,
+      "recall": 0.1667,
+      "macro_f1": 0.1258,
+      "known_recall": 0.3,
+      "unknown_recall": 0.0,
+      "p50_latency_ms": 0.002,
+      "p95_latency_ms": 0.006,
+      "mean_latency_ms": 0.003,
+      "throughput_sessions_per_sec": 348522.8
+    },
+    "flow_only": {
+      "f1": 0.0,
+      "precision": 0.0,
+      "recall": 0.0,
+      "macro_f1": 0.0,
+      "known_recall": 0.0,
+      "unknown_recall": 0.0,
+      "p50_latency_ms": 0.002,
+      "p95_latency_ms": 0.004,
+      "mean_latency_ms": 0.002,
+      "throughput_sessions_per_sec": 416754.7
+    },
+    "session_context": {
+      "f1": 0.9362,
+      "precision": 1.0,
+      "recall": 0.88,
+      "macro_f1": 0.9681,
+      "known_recall": 0.86,
+      "unknown_recall": 0.905,
+      "p50_latency_ms": 0.227,
+      "p95_latency_ms": 0.52,
+      "mean_latency_ms": 0.256,
+      "throughput_sessions_per_sec": 3909.5
+    }
+  },
+  "unknown_detection_gains": {
+    "flow_vs_session_gain_pct": 90500000.0,
+    "f1_gain": 0.9362
+  }
+}

@@ -1,0 +1,22 @@
+\begin{table*}[t]
+\centering
+\small
+\caption{AHRAS Confidence-Based Early-Exit Model Routing Performance (EXP-15)}
+\label{tab:early_exit_routing_eval}
+\begin{tabular}{lcccccccc}
+\toprule
+\textbf{Pipeline Architecture} & \textbf{F1} & \textbf{Precision} & \textbf{Recall} & \textbf{P50 (ms)} & \textbf{P99 (ms)} & \textbf{Throughput (EPS)} & \textbf{Early Exit \%} & $f_1 / f_2 / f_3 / f_4$ \\
+\midrule
+Full Pipeline Baseline & 0.2869 & 1.0000 & 0.1675 & 17.85 & 24.43 & 54.8 & 0.0\% & 0.00/0.00/0.00/1.00 \\
+Early-Exit Cascade (Default) & 0.2869 & 1.0000 & 0.1675 & 0.05 & 21.35 & 157.0 & 66.7\% & 0.67/0.00/0.00/0.33 \\
+\midrule
+\multicolumn{9}{l}{\textit{Pareto Sensitivity: Varying Confidence Threshold $\tau_{\mathrm{conf}}$}} \\
+Cascade ($\tau=0.70$) & 0.2869 & 1.0000 & 0.1675 & 0.05 & 17.24 & 178.5 & 66.7\% & 0.67/0.00/0.00/0.33 \\
+Cascade ($\tau=0.75$) & 0.2869 & 1.0000 & 0.1675 & 0.05 & 17.12 & 162.7 & 66.7\% & 0.67/0.00/0.00/0.33 \\
+Cascade ($\tau=0.80$) & 0.2869 & 1.0000 & 0.1675 & 0.05 & 17.60 & 146.7 & 66.7\% & 0.67/0.00/0.00/0.33 \\
+Cascade ($\tau=0.85$) & 0.2869 & 1.0000 & 0.1675 & 0.04 & 17.00 & 182.5 & 66.7\% & 0.67/0.00/0.00/0.33 \\
+Cascade ($\tau=0.90$) & 0.2869 & 1.0000 & 0.1675 & 0.05 & 17.43 & 160.4 & 66.7\% & 0.67/0.00/0.00/0.33 \\
+Cascade ($\tau=0.95$) & 0.2869 & 1.0000 & 0.1675 & 0.06 & 17.98 & 145.2 & 60.0\% & 0.60/0.00/0.00/0.40 \\
+\bottomrule
+\end{tabular}
+\end{table*}

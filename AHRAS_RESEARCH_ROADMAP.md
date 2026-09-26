@@ -157,3 +157,7 @@
 | **EXP-11** | RQ11 (XAI Reliability 2.0)| `evaluation/xai_reliability_audit.py` | `XAI_RELIABILITY_AUDIT.json` (Table XAI-Rel) |
 | **EXP-12** | RQ12 (Security Twin)      | `evaluation/run_security_twin_evaluation.py` | `SECURITY_TWIN_EVALUATION.json` (Table tab:security_twin_eval) |
 | **EXP-13** | RQ13 (Provenance Attack)  | `evaluation/attack_scenario_reconstruction.py` | `ATTACK_SCENARIO_RECONSTRUCTION.json` (Table tab:provenance_reconstruction_eval) |
+| **EXP-14** | RQ14 (Temporal Instability)| `evaluation/run_temporal_instability_evaluation.py` | `TEMPORAL_INSTABILITY_REPORT.json` (Table tab:temporal_instability_eval) |
+| **EXP-15** | RQ15 (Early-Exit Routing)  | `evaluation/run_early_exit_routing_evaluation.py` | `EARLY_EXIT_ROUTING_REPORT.json` (Table tab:early_exit_routing_eval) |
+| **EXP-16** | RQ16 (Streaming Sketch)    | `evaluation/run_streaming_sketch_evaluation.py` | `STREAMING_SKETCH_REPORT.json` (Table tab:streaming_sketch_eval) |
+| **EXP-17** | RQ17 (Encrypted Session)   | `evaluation/run_encrypted_session_evaluation.py` | `ENCRYPTED_SESSION_REPORT.json` (Table tab:encrypted_session_eval) |

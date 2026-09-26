@@ -42,13 +42,13 @@
 | **Deception / Honeypot** | `deception/honeypot_manager.py` | **B** | `tests/test_full_system.py` | Static threshold ($R \ge 0.70$) honeytoken/canary deployer; lacks utility math | **Extend** (Upgrade to Adaptive Deception via Information Gain) |
 | **RAG / LLM Threat Narrator** | `xai/llm_narrator.py` | **B** | `tests/test_adversarial_redteam.py` | Template fallback + local Ollama; prompt injection sanitized; lacks provenance tag | **Extend** (Surface provenance flag in UI/API) |
 | **Dashboard & API** | `api/server.py`, `web/index.html` | **B** | `tests/test_module4.py` | FastAPI 6.1.0, WebSockets; needs RBAC dependencies attached to routes | **Extend** (Enforce RBAC dependencies, add new operational views) |
-| **Explanation Reliability 2.0**| *None* | **E** | *None* | *Not Evaluated* | **New Implementation (Phase 1)** |
+| **Explanation Reliability 2.0**| `xai/reliability_audit.py` | **A** | `tests/test_xai_reliability_audit.py` | Phase 1 EXP-11: Multi-dimensional XAI audit, Sufficiency k in {3,5,10}, Comprehensiveness, Rank Stability J=0.88, Monotonicity | **Implemented (Phase 1)** |
 | **Security Twin Simulation** | `security_twin/` | **A** | `tests/test_security_twin.py` | Phase 2 EXP-12: Mean Optimal Containment 73.6%, Risk Reduction 85.0%, Path Breakage 100%, Blast-radius evaluated, N=500 MC sampling | **Implemented (Phase 2)** |
 | **Provenance Attack Reconstruction**| `provenance/` | **A** | `tests/test_provenance_reconstruction.py` | Phase 3 EXP-13: 12-node/12-edge heterogeneous DAG, Clean Graph F1 1.000, 50% Missingness F1 0.612, Path Completeness 100%, Gap Reasoning | **Implemented (Phase 3)** |
-| **Temporal Epistemic Instability**| *None* | **E** | *None* | *Not Evaluated* | **New Implementation (Phase 4)** |
-| **Early-Exit Model Router** | *None* | **E** | *None* | *Not Evaluated* | **New Implementation (Phase 5)** |
-| **Streaming Sketch Fast Path** | *None* | **E** | *None* | *Not Evaluated* | **New Implementation (Phase 6)** |
-| **Encrypted Session Intelligence**| *None* | **E** | *None* | *Not Evaluated* | **New Implementation (Phase 7)** |
+| **Temporal Epistemic Instability**| `instability/` | **A** | `tests/test_temporal_instability.py` | Phase 4 EXP-14: 5-component volatility metric, 100% FAIR reduction (17->0), 100% oscillating abstention recall, ECE 0.207->0.184 | **Implemented (Phase 4)** |
+| **Early-Exit Model Router** | `detection/model_router.py` | **A** | `tests/test_model_router.py` | Phase 5 EXP-15: 4-stage adaptive cascade, 2.86x throughput speedup (54.8 -> 157.0 EPS), 65.1% latency reduction, P50 17.85ms -> 0.05ms, Zero F1 loss (0.2869) | **Implemented (Phase 5)** |
+| **Streaming Sketch Fast Path** | `detection/streaming_sketch.py` | **A** | `tests/test_streaming_sketch.py` | Phase 6 EXP-16: Count-Min + HLL fan-out, O(1) space (0.83MB vs 2.94MB exact), 10.3k EPS, P50 91.6us, HH F1 0.8889, 21.6% workload screened | **Implemented (Phase 6)** |
+| **Encrypted Session Intelligence**| `detection/encrypted_session.py` | **A** | `tests/test_encrypted_session.py` | Phase 7 EXP-17: Payload-blind sequence dynamics + IAT autocorrelation, F1 0.9362 vs 0.0000 Flow-Only, 90.5% Unknown Attack Recall, 3.9k SPS | **Implemented (Phase 7)** |
 | **Response Efficacy Learning**| *None* | **E** | *None* | *Not Evaluated* | **New Implementation (Phase 9)** |
 
 ---
