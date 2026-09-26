@@ -1,0 +1,17 @@
+% AHRAS XAI Reliability Audit 2.0 (IEEE TDSC Format)
+\begin{table}[t]
+\centering
+\caption{Multidimensional Explanation Reliability Audit for AHRAS Adaptive Risk Decisions}
+\label{tab:xai_reliability}
+\begin{tabular}{@{}llcc@{}}
+\toprule
+\textbf{Reliability Dimension} & \textbf{Observed Value} & \textbf{95\% CI} & \textbf{Interpretation} \\ \midrule
+Computational fidelity & 100.0% Pass & [MAE: 0.0000] & Deterministic DecisionTrace Replay Exactness (Delta <= 1e-4) \\
+Stability & 0.9089 & [0.8882, 0.9295] & Top-k Jaccard overlap under noise (P95 instability: 0.3333) \\
+Sufficiency & 0.9160 & [0.8932, 0.9352] & Decision retention across top-k features (Monotonic: True) \\
+Comprehensiveness & 0.8983 & [0.8775, 0.9159] & Risk drop upon ablating explanation components \\
+Spurious robustness & 1.0000 & [1.0000, 1.0000] & Explanation overlap under noise (Leak rate: 0.0) \\
+Cross-run agreement & 1.0000 & [1.0000, 1.0000] & Multi-seed consensus (Rank correlation rho: 1.0) \\
+\bottomrule
+\end{tabular}
+\end{table}

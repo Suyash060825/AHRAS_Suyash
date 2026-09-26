@@ -109,6 +109,7 @@ class CounterfactualExplainer:
             sim_trace.raw_inputs[input_key] = 0.0
             if input_key == "delta_D":
                 sim_trace.raw_inputs["delta_D"] = 0.0
+            sim_trace.intermediate_terms = {}
 
             sim_risk = replay_decision_trace(sim_trace)
             r_delta = orig_risk - sim_risk

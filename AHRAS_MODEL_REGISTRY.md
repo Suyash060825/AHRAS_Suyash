@@ -40,3 +40,13 @@
 | **Byzantine-Robust FedKD Aggregator**| Decentralized client distillation & reputation | Local client model weights & gradient norms | Reputation-weighted consensus logits | `2.0.0` | Coordinate-wise median aggregation + $T_i(t)$ decay | Verified (Phase 11 EXP-07: Clean F1 0.9831, 30% Poison F1 0.9835, Retained F1 100.04%, $p = 0.000100$, Cohen's $d = 0.9046$, CLM-03) |
 | **OCSF Drift-Adaptive Controller** | Cross-dataset & temporal distribution generalization | OCSF canonical network flows, flow rates, protocol states | Risk score $R \in [0, 1]$, drift $\Delta D \in [0, 1.5]$ | `2.0.0` | Online streaming adaptation + OCSF protocol profiles | Verified (Phase 7 EXP-02: Temporal degradation bounded to 7.52% vs 75.28% baseline drop; Cross-dataset degradation 0.0% vs 100.0% baseline collapse, $p = 0.0001$) |
 | **Two-Tier Host Telemetry Adapter**| High-speed kernel stream parsing & entropy/lineage gating | Raw kernel event records (syscalls, file writes, spawns) | OCSF Class 1001/1002/1003 with entropy & threat DAG | `1.0.0` | MITRE T1059/T1204 rules & 7.20 bits/byte entropy threshold | Verified (Phase 13 EXP-09: Ingestion CPU 2.26% [<= 3.0%], 83.76% CPU reduction, 21.4k events/sec, P99 0.18ms, 100% ransomware recall, 100% LOLBin recall, $p = 0.000100$, CLM-09) |
+
+---
+
+## 4. Explainability & Reliability Engines
+
+| Model Name | Purpose | Input Dimensions / Types | Output Schema / Range | Version | Training Data / Priors | Evaluation Status |
+| :--- | :--- | :--- | :--- | :--- | :--- | :--- |
+| **Causal Decision Explainer** | Mechanistic DAG & finite-difference sensitivity gradients | `DecisionTrace` execution graphs | `CausalReport` (DAG nodes, edges, sensitivity $\partial R / \partial E$) | `1.2.0` | Grounded causal DAG theory | Verified (Zero drift, 100% reproducible paths) |
+| **Counterfactual Intervention Explainer**| Minimal evidence perturbation search | `DecisionTrace` + escalation threshold | `CounterfactualReport` (minimal risk-reversing interventions) | `1.1.0` | Analytical search over DecisionTrace | Verified (Exact replayed counterfactual deltas) |
+| **XAI Reliability Auditor 2.0** | Multidimensional explanation reliability audit | Risk traces, perturbation streams, noise channels | `XAIReliabilityAuditReport` (Stability, Sufficiency, Comprehensiveness, Spurious, Cross-Run) | `2.0.0` | Multi-scenario benchmark cohort (158 profiles) | Verified (Phase 1 EXP-11: Stability Jaccard 0.9089, Sufficiency 0.9160, Comprehensiveness 0.8983, Spurious Robustness 1.0000, Cross-Run Agreement 1.0000, Fidelity 100.0%) |

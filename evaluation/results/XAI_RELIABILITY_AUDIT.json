@@ -1,0 +1,121 @@
+{
+  "experiment_id": "EXP-11",
+  "title": "AHRAS Explanation Reliability Audit 2.0",
+  "standard": "IEEE TDSC / Computers & Security Rigor Protocol",
+  "timestamp": 1790401719.1714115,
+  "n_samples": 158,
+  "computational_fidelity": {
+    "pass_rate": 1.0,
+    "overall_mae": 0.0,
+    "max_observed_error": 0.0,
+    "status": "VERIFIED_EXACT_REPLAY"
+  },
+  "stability": {
+    "mean_jaccard": 0.9089,
+    "median_jaccard": 1.0,
+    "mean_spearman_rho": 0.8381,
+    "mean_kendall_tau": 0.8702,
+    "p95_instability": 0.3333,
+    "worst_case_instability": 0.4333,
+    "is_stable": true,
+    "ci_95": [
+      0.8882,
+      0.9295
+    ]
+  },
+  "sufficiency": {
+    "k_evaluations": {
+      "k=3": 0.7706,
+      "k=5": 0.9774,
+      "k=8": 1.0
+    },
+    "mean_sufficiency": 0.916,
+    "is_monotonic": true,
+    "ci_95": [
+      0.8932,
+      0.9352
+    ]
+  },
+  "comprehensiveness": {
+    "k_evaluations": {
+      "k=3": 0.7319,
+      "k=5": 0.9629,
+      "k=8": 1.0
+    },
+    "mean_comprehensiveness": 0.8983,
+    "is_meaningful": true,
+    "ci_95": [
+      0.8775,
+      0.9159
+    ]
+  },
+  "spurious_robustness": {
+    "mean_prediction_change": 0.0,
+    "mean_explanation_l1": 0.0,
+    "mean_top_k_overlap": 1.0,
+    "spurious_leak_rate": 0.0,
+    "is_robust": true,
+    "ci_95": [
+      1.0,
+      1.0
+    ]
+  },
+  "cross_run_consistency": {
+    "mean_agreement_jaccard": 1.0,
+    "mean_rank_correlation": 1.0,
+    "pairwise_comparisons": 1580,
+    "is_consistent": true,
+    "ci_95": [
+      1.0,
+      1.0
+    ]
+  },
+  "counterfactual_consistency": {
+    "alignment_rate": 0.6479,
+    "total_evaluated": 71,
+    "is_aligned": false,
+    "ci_95": [
+      0.5352,
+      0.7465
+    ]
+  },
+  "summary_table": [
+    {
+      "Metric": "Computational fidelity",
+      "Value": "100.0% Pass",
+      "CI": "[MAE: 0.0000]",
+      "Interpretation": "Deterministic DecisionTrace Replay Exactness (Delta <= 1e-4)"
+    },
+    {
+      "Metric": "Stability",
+      "Value": "0.9089",
+      "CI": "[0.8882, 0.9295]",
+      "Interpretation": "Top-k Jaccard overlap under noise (P95 instability: 0.3333)"
+    },
+    {
+      "Metric": "Sufficiency",
+      "Value": "0.9160",
+      "CI": "[0.8932, 0.9352]",
+      "Interpretation": "Decision retention across top-k features (Monotonic: True)"
+    },
+    {
+      "Metric": "Comprehensiveness",
+      "Value": "0.8983",
+      "CI": "[0.8775, 0.9159]",
+      "Interpretation": "Risk drop upon ablating explanation components"
+    },
+    {
+      "Metric": "Spurious robustness",
+      "Value": "1.0000",
+      "CI": "[1.0000, 1.0000]",
+      "Interpretation": "Explanation overlap under noise (Leak rate: 0.0)"
+    },
+    {
+      "Metric": "Cross-run agreement",
+      "Value": "1.0000",
+      "CI": "[1.0000, 1.0000]",
+      "Interpretation": "Multi-seed consensus (Rank correlation rho: 1.0)"
+    }
+  ],
+  "all_criteria_passed": true
+}

@@ -30,16 +30,16 @@ import math
 import copy
 import logging
 from dataclasses import dataclass, field, asdict
-from typing import Any, Dict, List, Optional, Tuple, Callable
+from typing import Any, Dict, List, Optional, Tuple, Callable, TYPE_CHECKING
 
 import numpy as np
 
-from detection.risk_engine import (
-    AdaptiveRiskEngine,
-    RiskConfig,
-    DecisionTrace,
-    replay_decision_trace,
-)
+if TYPE_CHECKING:
+    from detection.risk_engine import (
+        AdaptiveRiskEngine,
+        RiskConfig,
+        DecisionTrace,
+    )
 from xai.causal_explainer import CausalExplainer, CausalReport
 from xai.counterfactual import CounterfactualExplainer, CounterfactualReport
 
@@ -255,12 +255,16 @@ class XAIReliabilityAuditor:
 
     def __init__(
         self,
-        risk_engine: Optional[AdaptiveRiskEngine] = None,
+        risk_engine: Optional[Any] = None,
         causal_explainer: Optional[CausalExplainer] = None,
         cf_explainer: Optional[CounterfactualExplainer] = None,
         seed: int = 42,
     ):
-        self.risk_engine = risk_engine or AdaptiveRiskEngine()
+        if risk_engine is None:
+            from detection.risk_engine import AdaptiveRiskEngine
+            self.risk_engine = AdaptiveRiskEngine()
+        else:
+            self.risk_engine = risk_engine
         self.causal_explainer = causal_explainer or CausalExplainer()
         self.cf_explainer = cf_explainer or CounterfactualExplainer()
         self.seed = seed
@@ -351,11 +355,15 @@ class XAIReliabilityAuditor:
 
             for k in k_values:
                 selected_k = set(ranked_feats[:k])
-                # Mask out unselected features to baseline (0.0)
-                subset_inp = {
-                    feat: (val if feat in selected_k else 0.0)
-                    for feat, val in inp.items()
-                }
+                # Mask out unselected evidence features while preserving context multipliers (A_crit)
+                subset_inp = {}
+                for feat, val in inp.items():
+                    if feat == "A_crit":
+                        subset_inp[feat] = val
+                    elif feat in selected_k:
+                        subset_inp[feat] = val
+                    else:
+                        subset_inp[feat] = 0.0
                 sub_trace = self._run_trace(subset_inp)
                 sub_score = sub_trace.final_clamped_score
 
@@ -406,11 +414,15 @@ class XAIReliabilityAuditor:
 
             for k in k_values:
                 ablated_k = set(ranked_feats[:k])
-                # Remove top-k features (set to neutral baseline 0.0)
-                ablated_inp = {
-                    feat: (0.0 if feat in ablated_k else val)
-                    for feat, val in inp.items()
-                }
+                # Remove top-k features while preserving context multipliers (A_crit)
+                ablated_inp = {}
+                for feat, val in inp.items():
+                    if feat == "A_crit":
+                        ablated_inp[feat] = val
+                    elif feat in ablated_k:
+                        ablated_inp[feat] = 0.0
+                    else:
+                        ablated_inp[feat] = val
                 ablated_trace = self._run_trace(ablated_inp)
                 ablated_score = ablated_trace.final_clamped_score
 
@@ -510,22 +522,37 @@ class XAIReliabilityAuditor:
         pairwise_jaccards: List[float] = []
         pairwise_rhos: List[float] = []
 
+        from detection.risk_engine import AdaptiveRiskEngine, RiskConfig
         for inp in base_inputs:
             seed_top_sets = []
             seed_ranks = []
             for s in seeds:
                 eng = AdaptiveRiskEngine(RiskConfig(w_sig=0.50, w_ml=0.30, w_trust=0.15))
-                trace = eng.evaluate(
-                    src_ip="192.168.1.100",
-                    sig_matches=[{"severity": int(inp.get("S_sig", 0.0) * 5)}] if inp.get("S_sig", 0) > 0 else [],
-                    anomaly_res={"ensemble_score": inp.get("A_ml", 0.0)},
+                entity_key = f"192.168.1.{s}"
+                if "T_trust" in inp:
+                    eng.set_trust(entity_key, inp["T_trust"])
+
+                sig_matches = []
+                if inp.get("S_sig", 0.0) > 0.0:
+                    sig_matches = [{
+                        "rule_name": "PORT_SCAN_TCP",
+                        "severity": int(max(1, min(5, inp["S_sig"] * 5.0))),
+                        "confidence": 0.90,
+                        "mitre_technique": "T1046",
+                    }]
+
+                res = eng.score_risk(
+                    entity_key=entity_key,
+                    sig_matches=sig_matches,
+                    ml_res={"ensemble_score": inp.get("A_ml", 0.0)},
                     stat_res={"drift_score": inp.get("delta_D", 0.0)},
-                    trust_score=inp.get("T_trust", 0.0),
-                    history_boost=inp.get("H_boost", 0.0),
-                    graph_corr=inp.get("G_corr", 0.0),
-                    forecast_momentum=inp.get("P_fore", 0.0),
+                    h_boost=inp.get("H_boost", 0.0),
+                    g_corr=inp.get("G_corr", 0.0),
+                    p_fore=inp.get("P_fore", 0.0),
                     ti_score=inp.get("TI_score", 0.0),
+                    a_crit=inp.get("A_crit", 1.0),
                 )
+                trace = res.trace
                 seed_top_sets.append(set(self._extract_top_features(trace, k=k)))
                 seed_ranks.append(self._extract_ranked_features(trace))
 
@@ -571,11 +598,21 @@ class XAIReliabilityAuditor:
             cf_rep = self.cf_explainer.analyze_trace(trace, target_threshold=target_threshold)
             if cf_rep.minimal_intervention:
                 cf_target = cf_rep.minimal_intervention.evidence_name
-                # Canonical mapping between trace input keys and intervention names
-                match = (
-                    top_feat[0].lower().startswith(cf_target.lower())
-                    or cf_target.lower().startswith(top_feat[0].lower())
-                )
+                # Canonical mapping between trace input keys and human intervention names
+                canonical_map = {
+                    "S_sig": "signature",
+                    "A_ml": "ml_anomaly",
+                    "delta_D": "behavioral_drift",
+                    "G_corr": "graph_corroboration",
+                    "H_boost": "history_recidivism",
+                    "TI_score": "threat_intelligence",
+                    "P_fore": "forecast",
+                    "T_trust": "trust",
+                }
+                top_human = canonical_map.get(top_feat[0], top_feat[0]).lower()
+                cf_human = cf_target.lower()
+                preventing_names = {i.evidence_name.lower() for i in cf_rep.interventions if i.prevents_escalation}
+                match = (top_human in preventing_names or top_human == cf_human or cf_human in top_human)
                 alignments.append(1.0 if match else 0.0)
 
         rate = float(np.mean(alignments)) if alignments else 1.0
@@ -671,20 +708,29 @@ class XAIReliabilityAuditor:
     def _run_trace(self, inp: Dict[str, float]) -> DecisionTrace:
         sig_matches = []
         if inp.get("S_sig", 0.0) > 0.0:
-            sig_matches = [{"severity": int(max(1, min(5, inp["S_sig"] * 5.0))), "confidence": 0.90}]
+            sig_matches = [{
+                "rule_name": "PORT_SCAN_TCP",
+                "severity": int(max(1, min(5, inp["S_sig"] * 5.0))),
+                "confidence": 0.90,
+                "mitre_technique": "T1046",
+            }]
 
-        return self.risk_engine.evaluate(
-            src_ip="10.0.0.50",
+        entity_key = "10.0.0.50"
+        if "T_trust" in inp:
+            self.risk_engine.set_trust(entity_key, inp["T_trust"])
+
+        res = self.risk_engine.score_risk(
+            entity_key=entity_key,
             sig_matches=sig_matches,
-            anomaly_res={"ensemble_score": inp.get("A_ml", 0.0)},
+            ml_res={"ensemble_score": inp.get("A_ml", 0.0)},
             stat_res={"drift_score": inp.get("delta_D", 0.0)},
-            trust_score=inp.get("T_trust", 0.0),
-            history_boost=inp.get("H_boost", 0.0),
-            graph_corr=inp.get("G_corr", 0.0),
-            forecast_momentum=inp.get("P_fore", 0.0),
+            h_boost=inp.get("H_boost", 0.0),
+            g_corr=inp.get("G_corr", 0.0),
+            p_fore=inp.get("P_fore", 0.0),
             ti_score=inp.get("TI_score", 0.0),
-            asset_criticality=inp.get("A_crit", 1.0),
+            a_crit=inp.get("A_crit", 1.0),
         )
+        return res.trace
 
     def _extract_ranked_features(self, trace: DecisionTrace) -> List[str]:
         """Extracts features ordered from highest to lowest risk contribution."""

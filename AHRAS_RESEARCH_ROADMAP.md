@@ -154,3 +154,4 @@
 | **EXP-08** | RQ8 (Proactive Forecast)| `evaluation/run_proactive_forecasting_evaluation.py` | `PROACTIVE_FORECASTING_REPORT.json` / `CLAIMS_MANIFEST_FINAL.json` (CLM-08) |
 | **EXP-09** | RQ9 (Two-Tier Telemetry)| `evaluation/run_host_telemetry_evaluation.py` | `HOST_TELEMETRY_REPORT.json` / `CLAIMS_MANIFEST_FINAL.json` (CLM-09) |
 | **EXP-10** | RQ10 (Multimodal Fusion)| `evaluation/run_multimodal_fusion_evaluation.py` | `MULTIMODAL_FUSION_REPORT.json` / `CLAIMS_MANIFEST_FINAL.json` (CLM-10) |
+| **EXP-11** | RQ11 (XAI Reliability 2.0)| `evaluation/xai_reliability_audit.py` | `XAI_RELIABILITY_AUDIT.json` (Table XAI-Rel) |
