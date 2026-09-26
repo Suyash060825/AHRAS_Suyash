@@ -52,6 +52,7 @@
 | **Adaptive Deception Sensor** | `deception/honeypot_manager.py` | **A** | `tests/test_adaptive_deception.py` | Phase 8 EXP-18: Bayesian Info-Gain lure optimization, Time-to-confirmation 4.0 -> 1.3 steps (-2.7 steps), 100% path completeness, 85% FP reduction | **Implemented (Phase 8)** |
 | **Response Efficacy Learning**| `response/efficacy_learner.py` | **A** | `tests/test_response_efficacy.py` | Phase 9 EXP-19: Online Bayesian Beta beliefs, Twin counterfactual simulation, Zero safety violations (0.0%), +545.7% security utility vs static SOAR | **Implemented (Phase 9)** |
 | **Confidence-Gated Pseudo-Labeling**| `adaptive_learning/pseudo_labeler.py`| **A** | `tests/test_pseudo_labeler.py` | Phase 10 EXP-20: Multi-condition epistemic gating, 1.0000 Hold-out Macro F1, 100.0% pseudo purity, 0 OOD pollution, continual replay isolation | **Implemented (Phase 10)** |
+| **Security Twin Data Engine & Pareto Scorecard**| `security_twin/data_engine.py`, `evaluation/multi_objective_scorecard.py`| **A** | `tests/test_twin_data_engine.py` | Phase 11 EXP-21: 100% causal link integrity, 100% temporal monotonicity, 32.2k EPS, 12/12 Pareto targets met, strictly dominates SOAR & DL | **Implemented (Phase 11)** |
 
 ---
 

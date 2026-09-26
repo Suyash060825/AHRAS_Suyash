@@ -1,0 +1,141 @@
+{
+  "total_dimensions": 12,
+  "targets_met_count": 12,
+  "target_compliance_pct": 100.0,
+  "pareto_dominates_traditional_soar": true,
+  "pareto_dominates_monolithic_dl": true,
+  "dimensions": [
+    {
+      "name": "Known Attack Detection Macro F1",
+      "pillar": "Generalization",
+      "unit": "Macro F1",
+      "direction": "HIGHER_IS_BETTER",
+      "ahras_value": 0.9765,
+      "traditional_soar_value": 0.8721,
+      "monolithic_dl_value": 0.914,
+      "target_threshold": 0.95,
+      "is_met": true
+    },
+    {
+      "name": "Unknown / Zero-Day Recall",
+      "pillar": "Unknown-Attack Detection",
+      "unit": "Recall",
+      "direction": "HIGHER_IS_BETTER",
+      "ahras_value": 0.905,
+      "traditional_soar_value": 0.0,
+      "monolithic_dl_value": 0.485,
+      "target_threshold": 0.8,
+      "is_met": true
+    },
+    {
+      "name": "Expected Calibration Error (ECE)",
+      "pillar": "Safe Response",
+      "unit": "ECE",
+      "direction": "LOWER_IS_BETTER",
+      "ahras_value": 0.048,
+      "traditional_soar_value": 0.225,
+      "monolithic_dl_value": 0.184,
+      "target_threshold": 0.06,
+      "is_met": true
+    },
+    {
+      "name": "False Autonomy Interruption Rate",
+      "pillar": "Safe Response",
+      "unit": "FAIR Count",
+      "direction": "LOWER_IS_BETTER",
+      "ahras_value": 0.0,
+      "traditional_soar_value": 17.0,
+      "monolithic_dl_value": 14.0,
+      "target_threshold": 0.0,
+      "is_met": true
+    },
+    {
+      "name": "Line-Rate Ingestion Throughput",
+      "pillar": "Generalization",
+      "unit": "EPS",
+      "direction": "HIGHER_IS_BETTER",
+      "ahras_value": 10351.0,
+      "traditional_soar_value": 850.0,
+      "monolithic_dl_value": 120.0,
+      "target_threshold": 5000.0,
+      "is_met": true
+    },
+    {
+      "name": "Decision Latency P50",
+      "pillar": "Safe Response",
+      "unit": "ms",
+      "direction": "LOWER_IS_BETTER",
+      "ahras_value": 0.05,
+      "traditional_soar_value": 17.85,
+      "monolithic_dl_value": 45.2,
+      "target_threshold": 0.5,
+      "is_met": true
+    },
+    {
+      "name": "Memory Footprint Bound",
+      "pillar": "Adaptation",
+      "unit": "MB",
+      "direction": "LOWER_IS_BETTER",
+      "ahras_value": 0.83,
+      "traditional_soar_value": 2.94,
+      "monolithic_dl_value": 485.0,
+      "target_threshold": 1.5,
+      "is_met": true
+    },
+    {
+      "name": "Explanation Rank Stability (Jaccard)",
+      "pillar": "Trustworthy Explanation",
+      "unit": "Jaccard Index",
+      "direction": "HIGHER_IS_BETTER",
+      "ahras_value": 0.9089,
+      "traditional_soar_value": 0.45,
+      "monolithic_dl_value": 0.62,
+      "target_threshold": 0.85,
+      "is_met": true
+    },
+    {
+      "name": "Forensic Path Completeness",
+      "pillar": "Relational Reasoning",
+      "unit": "%",
+      "direction": "HIGHER_IS_BETTER",
+      "ahras_value": 100.0,
+      "traditional_soar_value": 42.0,
+      "monolithic_dl_value": 55.0,
+      "target_threshold": 95.0,
+      "is_met": true
+    },
+    {
+      "name": "Early-Warning Lead Time",
+      "pillar": "Relational Reasoning",
+      "unit": "events",
+      "direction": "HIGHER_IS_BETTER",
+      "ahras_value": 3.42,
+      "traditional_soar_value": 0.0,
+      "monolithic_dl_value": 1.1,
+      "target_threshold": 3.0,
+      "is_met": true
+    },
+    {
+      "name": "Active Defense Utility Gain over SOAR",
+      "pillar": "Safe Response",
+      "unit": "%",
+      "direction": "HIGHER_IS_BETTER",
+      "ahras_value": 545.7,
+      "traditional_soar_value": 0.0,
+      "monolithic_dl_value": 18.5,
+      "target_threshold": 50.0,
+      "is_met": true
+    },
+    {
+      "name": "Safety Invariant Violations on Tier-1",
+      "pillar": "Safe Response",
+      "unit": "Violations",
+      "direction": "LOWER_IS_BETTER",
+      "ahras_value": 0.0,
+      "traditional_soar_value": 12.0,
+      "monolithic_dl_value": 8.0,
+      "target_threshold": 0.0,
+      "is_met": true
+    }
+  ]
+}

@@ -1,0 +1,11 @@
+{
+  "total_campaigns_generated": 50,
+  "total_telemetry_events": 1578,
+  "total_attack_steps": 78,
+  "total_background_events": 1500,
+  "causal_linkage_integrity_pct": 100.0,
+  "temporal_monotonicity_pct": 100.0,
+  "ocsf_schema_compliance_pct": 100.0,
+  "generation_throughput_eps": 32202.7,
+  "generation_duration_sec": 0.049
+}

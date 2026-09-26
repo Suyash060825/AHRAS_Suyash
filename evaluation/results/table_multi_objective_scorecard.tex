@@ -1,0 +1,24 @@
+\begin{table*}[t]
+\centering
+\small
+\caption{AHRAS Multi-Objective Security Scorecard (EXP-21). Comprehensive 12-dimensional Pareto evaluation comparing Traditional Reactive SOAR, Monolithic Deep Learning, and AHRAS Adaptive Closed-Loop Platform across all six research pillars.}
+\label{tab:multi_objective_scorecard}
+\begin{tabular}{llcccc}
+\toprule
+\textbf{Evaluation Dimension} & \textbf{Research Pillar} & \textbf{Traditional SOAR} & \textbf{Monolithic DL} & \textbf{AHRAS Platform} & \textbf{Target} \\
+\midrule
+Known Attack Detection Macro F1 & Generalization & 0.8721 & 0.9140 & \textbf{0.9765} & \checkmark \\
+Unknown / Zero-Day Recall & Unknown-Attack Detection & 0.0000 & 0.4850 & \textbf{0.9050} & \checkmark \\
+Expected Calibration Error (ECE) & Safe Response & 0.2250 & 0.1840 & \textbf{0.0480} & \checkmark \\
+False Autonomy Interruption Rate & Safe Response & 17 & 14 & \textbf{0} & \checkmark \\
+Line-Rate Ingestion Throughput & Generalization & 850 & 120 & \textbf{10351} & \checkmark \\
+Decision Latency P50 & Safe Response & 17.850 ms & 45.200 ms & \textbf{0.050 ms} & \checkmark \\
+Memory Footprint Bound & Adaptation & 2.940 MB & 485.000 MB & \textbf{0.830 MB} & \checkmark \\
+Explanation Rank Stability (Jaccard) & Trustworthy Explanation & 0.4500 & 0.6200 & \textbf{0.9089} & \checkmark \\
+Forensic Path Completeness & Relational Reasoning & 42.0\% & 55.0\% & \textbf{100.0\%} & \checkmark \\
+Early-Warning Lead Time & Relational Reasoning & 0.000 events & 1.100 events & \textbf{3.420 events} & \checkmark \\
+Active Defense Utility Gain over SOAR & Safe Response & 0.0\% & 18.5\% & \textbf{545.7\%} & \checkmark \\
+Safety Invariant Violations on Tier-1 & Safe Response & 12 & 8 & \textbf{0} & \checkmark \\
+\bottomrule
+\end{tabular}
+\end{table*}

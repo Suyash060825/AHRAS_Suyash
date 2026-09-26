@@ -122,3 +122,12 @@
 | Model Name | Purpose | Input Dimensions / Types | Output Schema / Range | Version | Training Data / Priors | Evaluation Status |
 | :--- | :--- | :--- | :--- | :--- | :--- | :--- |
 | **Confidence-Gated Pseudo-Label Engine** | Multi-condition epistemic pseudo-labeling & continual replay provenance tracking | Multi-modal risk scores, confidence, uncertainty, OOD, instability | `PseudoLabelRecord` ($\tilde{y}$, decision, weight, provenance, generation) | `1.0.0` | Multi-condition epistemic gating ($\tau_h=0.95, \tau_l=0.05, U \le 0.10, \text{OOD} \le 0.20$) | Verified (Phase 10 EXP-20: 1.0000 Hold-out Macro F1 vs 0.9677 Naive, 100.0% Pseudo Purity, 0 OOD Samples Polluted [0.0%], P50 0.043 ms, Table tab:pseudo_label_eval) |
+
+---
+
+## 14. Security Twin Data Engine & Multi-Objective Pareto Scorecard
+
+| Model Name | Purpose | Input Dimensions / Types | Output Schema / Range | Version | Training Data / Priors | Evaluation Status |
+| :--- | :--- | :--- | :--- | :--- | :--- | :--- |
+| **Security Twin Data Engine** | Stateful multi-stage OCSF telemetry generation & causal scenario modeling | Enterprise digital twin topology, campaign archetypes | `CoherentTelemetryEvent` (OCSF JSON, causal DAG parentage) | `1.0.0` | Digital Twin state transitions over 4 campaign archetypes | Verified (Phase 11 EXP-21: 100% Causal Link Integrity, 100% Temporal Monotonicity, 32,202.7 EPS, Table tab:multi_objective_scorecard) |
+| **12-Dimensional Pareto Scorecard** | Cross-cutting synthesis of operational trade-offs across 6 research pillars | 12 empirical platform dimensions across pillars | `ScorecardDimension`, Pareto Dominance booleans | `1.0.0` | 12 empirical benchmark vectors across AHRAS evaluations | Verified (Phase 11 EXP-21: 12/12 [100.0%] Strategic Targets Met, Strict Pareto Dominance over Traditional SOAR and Monolithic DL, Table tab:multi_objective_scorecard) |
