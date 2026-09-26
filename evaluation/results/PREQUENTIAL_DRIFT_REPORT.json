@@ -1,0 +1,587 @@
+{
+  "experiment_id": "EXP-25",
+  "benchmark_name": "Streaming Prequential Evaluation & Concept Drift Benchmark",
+  "summary": {
+    "total_stream_events": 1000,
+    "static_mean_f1": 0.7433,
+    "streaming_immediate_mean_f1": 0.9706,
+    "adaptation_gain_macro_f1": 0.2273,
+    "peak_memory_mb": 0.0028
+  },
+  "comparisons": [
+    {
+      "strategy": "static",
+      "delay_label": "No Feedback (Frozen)",
+      "label_delay": 0,
+      "mean_macro_f1": 0.7433,
+      "final_f1": 0.806,
+      "final_recall": 0.9643,
+      "final_brier_score": 0.1242,
+      "adaptation_delay_steps": 0,
+      "mean_memory_mb": 0.0028
+    },
+    {
+      "strategy": "streaming_updated",
+      "delay_label": "Immediate Oracle",
+      "label_delay": 0,
+      "mean_macro_f1": 0.9706,
+      "final_f1": 0.88,
+      "final_recall": 0.7857,
+      "final_brier_score": 0.0475,
+      "adaptation_delay_steps": 0,
+      "mean_memory_mb": 0.024
+    },
+    {
+      "strategy": "streaming_updated",
+      "delay_label": "1-Hour Delay",
+      "label_delay": 60,
+      "mean_macro_f1": 0.876,
+      "final_f1": 0.8333,
+      "final_recall": 0.7143,
+      "final_brier_score": 0.0628,
+      "adaptation_delay_steps": 0,
+      "mean_memory_mb": 0.0306
+    },
+    {
+      "strategy": "streaming_updated",
+      "delay_label": "1-Day Delay",
+      "label_delay": 240,
+      "mean_macro_f1": 0.7653,
+      "final_f1": 0.6667,
+      "final_recall": 0.5,
+      "final_brier_score": 0.1026,
+      "adaptation_delay_steps": 0,
+      "mean_memory_mb": 0.0474
+    },
+    {
+      "strategy": "streaming_updated",
+      "delay_label": "1-Week Delay",
+      "label_delay": 1000,
+      "mean_macro_f1": 0.7454,
+      "final_f1": 0.8182,
+      "final_recall": 0.9643,
+      "final_brier_score": 0.1236,
+      "adaptation_delay_steps": 11,
+      "mean_memory_mb": 0.0714
+    }
+  ],
+  "regime_comparisons": [
+    {
+      "regime": "sudden_drift",
+      "regime_name": "Sudden (Abrupt) Drift",
+      "static_f1": 0.5806,
+      "streaming_f1": 1.0,
+      "adaptation_gain_f1": 0.4194,
+      "adaptation_delay_steps": 0,
+      "drift_alerts": 0
+    },
+    {
+      "regime": "gradual_drift",
+      "regime_name": "Gradual Covariate Drift",
+      "static_f1": 0.5821,
+      "streaming_f1": 1.0,
+      "adaptation_gain_f1": 0.4179,
+      "adaptation_delay_steps": 0,
+      "drift_alerts": 0
+    },
+    {
+      "regime": "recurring_drift",
+      "regime_name": "Recurring Seasonality Drift",
+      "static_f1": 0.8615,
+      "streaming_f1": 0.8772,
+      "adaptation_gain_f1": 0.0157,
+      "adaptation_delay_steps": 0,
+      "drift_alerts": 0
+    }
+  ],
+  "time_series_snapshot": [
+    {
+      "step": 1,
+      "regime": "baseline_stationary",
+      "accuracy": 1.0,
+      "precision": 1.0,
+      "recall": 1.0,
+      "f1_score": 1.0,
+      "brier_score": 0.0046,
+      "memory_mb": 0.0028,
+      "drift_alert": false
+    },
+    {
+      "step": 26,
+      "regime": "baseline_stationary",
+      "accuracy": 1.0,
+      "precision": 1.0,
+      "recall": 1.0,
+      "f1_score": 1.0,
+      "brier_score": 0.0583,
+      "memory_mb": 0.0028,
+      "drift_alert": false
+    },
+    {
+      "step": 51,
+      "regime": "baseline_stationary",
+      "accuracy": 1.0,
+      "precision": 1.0,
+      "recall": 1.0,
+      "f1_score": 1.0,
+      "brier_score": 0.0737,
+      "memory_mb": 0.0028,
+      "drift_alert": false
+    },
+    {
+      "step": 76,
+      "regime": "baseline_stationary",
+      "accuracy": 1.0,
+      "precision": 1.0,
+      "recall": 1.0,
+      "f1_score": 1.0,
+      "brier_score": 0.0815,
+      "memory_mb": 0.0028,
+      "drift_alert": false
+    },
+    {
+      "step": 101,
+      "regime": "baseline_stationary",
+      "accuracy": 1.0,
+      "precision": 1.0,
+      "recall": 1.0,
+      "f1_score": 1.0,
+      "brier_score": 0.0823,
+      "memory_mb": 0.0028,
+      "drift_alert": false
+    },
+    {
+      "step": 126,
+      "regime": "baseline_stationary",
+      "accuracy": 1.0,
+      "precision": 1.0,
+      "recall": 1.0,
+      "f1_score": 1.0,
+      "brier_score": 0.0869,
+      "memory_mb": 0.0028,
+      "drift_alert": false
+    },
+    {
+      "step": 151,
+      "regime": "baseline_stationary",
+      "accuracy": 1.0,
+      "precision": 1.0,
+      "recall": 1.0,
+      "f1_score": 1.0,
+      "brier_score": 0.0799,
+      "memory_mb": 0.0028,
+      "drift_alert": false
+    },
+    {
+      "step": 176,
+      "regime": "baseline_stationary",
+      "accuracy": 1.0,
+      "precision": 1.0,
+      "recall": 1.0,
+      "f1_score": 1.0,
+      "brier_score": 0.0765,
+      "memory_mb": 0.0028,
+      "drift_alert": false
+    },
+    {
+      "step": 201,
+      "regime": "baseline_stationary",
+      "accuracy": 1.0,
+      "precision": 1.0,
+      "recall": 1.0,
+      "f1_score": 1.0,
+      "brier_score": 0.0754,
+      "memory_mb": 0.0028,
+      "drift_alert": false
+    },
+    {
+      "step": 226,
+      "regime": "baseline_stationary",
+      "accuracy": 1.0,
+      "precision": 1.0,
+      "recall": 1.0,
+      "f1_score": 1.0,
+      "brier_score": 0.0781,
+      "memory_mb": 0.0028,
+      "drift_alert": false
+    },
+    {
+      "step": 251,
+      "regime": "sudden_drift",
+      "accuracy": 1.0,
+      "precision": 1.0,
+      "recall": 1.0,
+      "f1_score": 1.0,
+      "brier_score": 0.0762,
+      "memory_mb": 0.0028,
+      "drift_alert": false
+    },
+    {
+      "step": 276,
+      "regime": "sudden_drift",
+      "accuracy": 0.83,
+      "precision": 0.66,
+      "recall": 1.0,
+      "f1_score": 0.7952,
+      "brier_score": 0.1146,
+      "memory_mb": 0.0028,
+      "drift_alert": false
+    },
+    {
+      "step": 301,
+      "regime": "sudden_drift",
+      "accuracy": 0.66,
+      "precision": 0.4769,
+      "recall": 1.0,
+      "f1_score": 0.6458,
+      "brier_score": 0.164,
+      "memory_mb": 0.0028,
+      "drift_alert": false
+    },
+    {
+      "step": 326,
+      "regime": "sudden_drift",
+      "accuracy": 0.53,
+      "precision": 0.4268,
+      "recall": 1.0,
+      "f1_score": 0.5983,
+      "brier_score": 0.1934,
+      "memory_mb": 0.0028,
+      "drift_alert": false
+    },
+    {
+      "step": 351,
+      "regime": "sudden_drift",
+      "accuracy": 0.35,
+      "precision": 0.3158,
+      "recall": 1.0,
+      "f1_score": 0.48,
+      "brier_score": 0.2412,
+      "memory_mb": 0.0028,
+      "drift_alert": false
+    },
+    {
+      "step": 376,
+      "regime": "sudden_drift",
+      "accuracy": 0.36,
+      "precision": 0.3191,
+      "recall": 1.0,
+      "f1_score": 0.4839,
+      "brier_score": 0.2439,
+      "memory_mb": 0.0028,
+      "drift_alert": false
+    },
+    {
+      "step": 401,
+      "regime": "sudden_drift",
+      "accuracy": 0.34,
+      "precision": 0.3196,
+      "recall": 1.0,
+      "f1_score": 0.4844,
+      "brier_score": 0.2474,
+      "memory_mb": 0.0028,
+      "drift_alert": false
+    },
+    {
+      "step": 426,
+      "regime": "sudden_drift",
+      "accuracy": 0.3,
+      "precision": 0.2632,
+      "recall": 1.0,
+      "f1_score": 0.4167,
+      "brier_score": 0.2668,
+      "memory_mb": 0.0028,
+      "drift_alert": false
+    },
+    {
+      "step": 451,
+      "regime": "sudden_drift",
+      "accuracy": 0.28,
+      "precision": 0.234,
+      "recall": 1.0,
+      "f1_score": 0.3793,
+      "brier_score": 0.2789,
+      "memory_mb": 0.0028,
+      "drift_alert": false
+    },
+    {
+      "step": 476,
+      "regime": "sudden_drift",
+      "accuracy": 0.26,
+      "precision": 0.2128,
+      "recall": 1.0,
+      "f1_score": 0.3509,
+      "brier_score": 0.2902,
+      "memory_mb": 0.0028,
+      "drift_alert": false
+    },
+    {
+      "step": 501,
+      "regime": "gradual_drift",
+      "accuracy": 0.28,
+      "precision": 0.2088,
+      "recall": 1.0,
+      "f1_score": 0.3455,
+      "brier_score": 0.2891,
+      "memory_mb": 0.0028,
+      "drift_alert": false
+    },
+    {
+      "step": 526,
+      "regime": "gradual_drift",
+      "accuracy": 0.45,
+      "precision": 0.2949,
+      "recall": 1.0,
+      "f1_score": 0.4554,
+      "brier_score": 0.2391,
+      "memory_mb": 0.0028,
+      "drift_alert": false
+    },
+    {
+      "step": 551,
+      "regime": "gradual_drift",
+      "accuracy": 0.65,
+      "precision": 0.4615,
+      "recall": 1.0,
+      "f1_score": 0.6316,
+      "brier_score": 0.1877,
+      "memory_mb": 0.0028,
+      "drift_alert": false
+    },
+    {
+      "step": 576,
+      "regime": "gradual_drift",
+      "accuracy": 0.83,
+      "precision": 0.6667,
+      "recall": 1.0,
+      "f1_score": 0.8,
+      "brier_score": 0.1398,
+      "memory_mb": 0.0028,
+      "drift_alert": false
+    },
+    {
+      "step": 601,
+      "regime": "gradual_drift",
+      "accuracy": 1.0,
+      "precision": 1.0,
+      "recall": 1.0,
+      "f1_score": 1.0,
+      "brier_score": 0.0956,
+      "memory_mb": 0.0028,
+      "drift_alert": false
+    },
+    {
+      "step": 626,
+      "regime": "gradual_drift",
+      "accuracy": 0.99,
+      "precision": 0.9722,
+      "recall": 1.0,
+      "f1_score": 0.9859,
+      "brier_score": 0.1129,
+      "memory_mb": 0.0028,
+      "drift_alert": false
+    },
+    {
+      "step": 651,
+      "regime": "gradual_drift",
+      "accuracy": 0.92,
+      "precision": 0.7778,
+      "recall": 1.0,
+      "f1_score": 0.875,
+      "brier_score": 0.1385,
+      "memory_mb": 0.0028,
+      "drift_alert": false
+    },
+    {
+      "step": 676,
+      "regime": "gradual_drift",
+      "accuracy": 0.84,
+      "precision": 0.6279,
+      "recall": 1.0,
+      "f1_score": 0.7714,
+      "brier_score": 0.155,
+      "memory_mb": 0.0028,
+      "drift_alert": false
+    },
+    {
+      "step": 701,
+      "regime": "gradual_drift",
+      "accuracy": 0.74,
+      "precision": 0.5185,
+      "recall": 1.0,
+      "f1_score": 0.6829,
+      "brier_score": 0.1658,
+      "memory_mb": 0.0028,
+      "drift_alert": false
+    },
+    {
+      "step": 726,
+      "regime": "gradual_drift",
+      "accuracy": 0.63,
+      "precision": 0.4559,
+      "recall": 1.0,
+      "f1_score": 0.6263,
+      "brier_score": 0.1788,
+      "memory_mb": 0.0028,
+      "drift_alert": false
+    },
+    {
+      "step": 751,
+      "regime": "recurring_drift",
+      "accuracy": 0.52,
+      "precision": 0.4,
+      "recall": 1.0,
+      "f1_score": 0.5714,
+      "brier_score": 0.1943,
+      "memory_mb": 0.0028,
+      "drift_alert": false
+    },
+    {
+      "step": 776,
+      "regime": "recurring_drift",
+      "accuracy": 0.53,
+      "precision": 0.3816,
+      "recall": 1.0,
+      "f1_score": 0.5524,
+      "brier_score": 0.1971,
+      "memory_mb": 0.0028,
+      "drift_alert": false
+    },
+    {
+      "step": 801,
+      "regime": "recurring_drift",
+      "accuracy": 0.62,
+      "precision": 0.3934,
+      "recall": 0.96,
+      "f1_score": 0.5581,
+      "brier_score": 0.1764,
+      "memory_mb": 0.0028,
+      "drift_alert": false
+    },
+    {
+      "step": 826,
+      "regime": "recurring_drift",
+      "accuracy": 0.68,
+      "precision": 0.4151,
+      "recall": 0.9565,
+      "f1_score": 0.5789,
+      "brier_score": 0.1668,
+      "memory_mb": 0.0028,
+      "drift_alert": false
+    },
+    {
+      "step": 851,
+      "regime": "recurring_drift",
+      "accuracy": 0.85,
+      "precision": 0.6389,
+      "recall": 0.92,
+      "f1_score": 0.7541,
+      "brier_score": 0.1251,
+      "memory_mb": 0.0028,
+      "drift_alert": false
+    },
+    {
+      "step": 876,
+      "regime": "recurring_drift",
+      "accuracy": 0.85,
+      "precision": 0.6667,
+      "recall": 0.9286,
+      "f1_score": 0.7761,
+      "brier_score": 0.119,
+      "memory_mb": 0.0028,
+      "drift_alert": false
+    },
+    {
+      "step": 901,
+      "regime": "recurring_drift",
+      "accuracy": 0.86,
+      "precision": 0.675,
+      "recall": 0.9643,
+      "f1_score": 0.7941,
+      "brier_score": 0.1224,
+      "memory_mb": 0.0028,
+      "drift_alert": false
+    },
+    {
+      "step": 926,
+      "regime": "recurring_drift",
+      "accuracy": 0.87,
+      "precision": 0.7073,
+      "recall": 0.9667,
+      "f1_score": 0.8169,
+      "brier_score": 0.1172,
+      "memory_mb": 0.0028,
+      "drift_alert": false
+    },
+    {
+      "step": 951,
+      "regime": "recurring_drift",
+      "accuracy": 0.88,
+      "precision": 0.7333,
+      "recall": 1.0,
+      "f1_score": 0.8462,
+      "brier_score": 0.1191,
+      "memory_mb": 0.0028,
+      "drift_alert": false
+    },
+    {
+      "step": 976,
+      "regime": "recurring_drift",
+      "accuracy": 0.88,
+      "precision": 0.7073,
+      "recall": 1.0,
+      "f1_score": 0.8286,
+      "brier_score": 0.1236,
+      "memory_mb": 0.0028,
+      "drift_alert": false
+    },
+    {
+      "step": 1000,
+      "regime": "recurring_drift",
+      "accuracy": 0.87,
+      "precision": 0.6923,
+      "recall": 0.9643,
+      "f1_score": 0.806,
+      "brier_score": 0.1242,
+      "memory_mb": 0.0028,
+      "drift_alert": false
+    }
+  ],
+  "manifest": {
+    "experiment_id": "EXP-25",
+    "code_version": "77df4847dc42699fade325a918d57b327f973f0a",
+    "git_branch": "new-features",
+    "dataset_name": "AHRAS_PREQUENTIAL_STREAM_V1",
+    "dataset_version": "1.0",
+    "dataset_hash": "3e89b05a0d019155be855c8212a360c6310bb185ac4c1dd3ed69fbdc4f67c200",
+    "configuration_hash": "cb2ece450e67c3161693c14a84490e5318233bdd0fe86f884855962eecde210a",
+    "configuration": {
+      "benchmark": "Streaming Prequential Drift",
+      "stream_length": 1000,
+      "window_size": 100,
+      "delay_scenarios": [
+        0,
+        60,
+        240,
+        1000
+      ],
+      "drift_regimes": [
+        "sudden",
+        "gradual",
+        "recurring"
+      ]
+    },
+    "random_seed": 42,
+    "environment": {
+      "python_version": "3.14.6",
+      "os": "Linux-7.1.8-100.fc43.x86_64-x86_64-with-glibc2.42",
+      "architecture": "x86_64",
+      "dependencies": {
+        "numpy": "2.5.2",
+        "scikit-learn": "1.9.0"
+      }
+    },
+    "result_path": "/home/suyashpradhan/Downloads/AHRAS_Suyash-master/evaluation/results/PREQUENTIAL_DRIFT_REPORT.json",
+    "timestamp": 1790423322.4701266
+  }
+}
