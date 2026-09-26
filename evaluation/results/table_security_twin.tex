@@ -1,0 +1,25 @@
+\begin{table*}[t]
+\centering
+\small
+\caption{AHRAS Digital Security Twin Response Counterfactual \& Monte Carlo Evaluation (EXP-12)}
+\label{tab:security_twin_eval}
+\begin{tabular}{llcccccc}
+\toprule
+\textbf{Attack Scenario} & \textbf{Candidate Mitigation} & \textbf{Pre-Risk} & \textbf{Post-Risk} & \textbf{Path Break} & \textbf{Blast Radius} & \textbf{P(Contain)} & \textbf{Status} \\
+\midrule
+Ransomware Burst & NO_ACTION (none) & 0.85 & 0.97 & 0\% & 0.00 & 0.0\% & VALIDATED \\
+ & BLOCK_SOURCE (203.0.113.55) & 0.85 & 0.13 & 100\% & 0.08 & 73.6\% & VALIDATED \\
+ & ISOLATE_HOST (host-web-01) & 0.85 & 0.27 & 80\% & 0.40 & 73.6\% & VALIDATED \\
+ & TERMINATE_PROCESS (1024) & 0.85 & 0.85 & 0\% & 0.54 & 73.6\% & VALIDATED \\
+\midrule
+Lateral Movement & NO_ACTION (none) & 0.80 & 0.92 & 0\% & 0.00 & 0.0\% & VALIDATED \\
+ & BLOCK_SOURCE (198.51.100.1) & 0.80 & 0.12 & 100\% & 0.08 & 73.6\% & VALIDATED \\
+ & ISOLATE_HOST (host-bastion) & 0.80 & 0.12 & 100\% & 0.40 & 73.6\% & VALIDATED \\
+ & ISOLATE_HOST (host-db-prod) & 0.80 & 0.46 & 50\% & 0.76 & 73.6\% & VALIDATED \\
+\midrule
+Credential Abuse & NO_ACTION (none) & 0.82 & 0.94 & 0\% & 0.00 & 0.0\% & VALIDATED \\
+ & REVOKE_TOKEN (tok-jwt-ops-) & 0.82 & 0.12 & 100\% & 0.10 & 73.6\% & VALIDATED \\
+ & ISOLATE_HOST (host-cloud-m) & 0.82 & 0.82 & 0\% & 0.42 & 73.6\% & VALIDATED \\
+\bottomrule
+\end{tabular}
+\end{table*}

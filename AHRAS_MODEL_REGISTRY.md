@@ -50,3 +50,11 @@
 | **Causal Decision Explainer** | Mechanistic DAG & finite-difference sensitivity gradients | `DecisionTrace` execution graphs | `CausalReport` (DAG nodes, edges, sensitivity $\partial R / \partial E$) | `1.2.0` | Grounded causal DAG theory | Verified (Zero drift, 100% reproducible paths) |
 | **Counterfactual Intervention Explainer**| Minimal evidence perturbation search | `DecisionTrace` + escalation threshold | `CounterfactualReport` (minimal risk-reversing interventions) | `1.1.0` | Analytical search over DecisionTrace | Verified (Exact replayed counterfactual deltas) |
 | **XAI Reliability Auditor 2.0** | Multidimensional explanation reliability audit | Risk traces, perturbation streams, noise channels | `XAIReliabilityAuditReport` (Stability, Sufficiency, Comprehensiveness, Spurious, Cross-Run) | `2.0.0` | Multi-scenario benchmark cohort (158 profiles) | Verified (Phase 1 EXP-11: Stability Jaccard 0.9089, Sufficiency 0.9160, Comprehensiveness 0.8983, Spurious Robustness 1.0000, Cross-Run Agreement 1.0000, Fidelity 100.0%) |
+
+---
+
+## 5. Security Twin & Safe Response Simulation Engines
+
+| Model Name | Purpose | Input Dimensions / Types | Output Schema / Range | Version | Training Data / Priors | Evaluation Status |
+| :--- | :--- | :--- | :--- | :--- | :--- | :--- |
+| **Security Twin Simulator & Replay Lab** | Pre-action counterfactual simulation & Monte Carlo uncertainty sampling | Enterprise twin topology, multi-stage attack scenarios, candidate mitigation actions | `SimulationResult`, `MonteCarloResult` (Path breakage, Post-risk, Blast radius, P(Contain)) | `1.0.0` | Multi-stage cyber kill-chain scenarios (Ransomware, Lateral Movement, Credential Abuse) | Verified (Phase 2 EXP-12: Mean Optimal Containment 73.60%, Risk Reduction 85.00%, Path Breakage 100.0%, P99 Residual Risk <= 0.77 vs 0.99 Baseline, 11 Policy Evaluations, 500 MC Iterations, Table tab:security_twin_eval) |

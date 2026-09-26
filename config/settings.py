@@ -87,6 +87,7 @@ MAX_REQUEST_BYTES = int(os.getenv("AHRAS_MAX_REQUEST_BYTES", str(2 * 1024 * 1024
 # ── Response Execution Mode ───────────────────────────────────────────────────
 # Modes: DRY_RUN | SIMULATED | SANDBOX | REAL_PRODUCTION
 RESPONSE_MODE = os.getenv("AHRAS_RESPONSE_MODE", "DRY_RUN" if DEV_MODE else "SIMULATED").upper()
+USE_SECURITY_TWIN = os.getenv("AHRAS_USE_SECURITY_TWIN", "true").lower() == "true"
 
 # ── Kafka (production message bus) ────────────────────────────────────────────
 KAFKA_BOOTSTRAP      = os.getenv("KAFKA_BOOTSTRAP", "localhost:9092")
