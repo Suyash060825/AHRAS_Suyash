@@ -1,0 +1,36 @@
+# AHRAS Recent Research Gap Analysis
+
+**Platform**: Adaptive, Hybrid, Risk-Aware Security (AHRAS)  
+**Evaluation Standard**: Six Research Pillars (Generalization, Adaptation, Unknown-Attack Detection, Relational Reasoning, Trustworthy Explanation, Safe Response)  
+**Date**: 2026-09-26  
+
+---
+
+## 1. Research Gap Analysis Matrix
+
+| Proposed Capability | Existing AHRAS Support | Identified Architectural Gap | Research Value | Implementation Effort | Priority |
+| :--- | :--- | :--- | :--- | :---: | :---: |
+| **Explanation Reliability Audit 2.0 (Phase 1)** | `xai/computational_fidelity.py`, `xai/faithfulness.py`, `xai/causal_explainer.py` | Current framework only measures computational reconstructibility ($\Delta \le 10^{-6}$) and rudimentary deletion steps. Lacks formal multi-dimensional reliability: Rank stability, Sufficiency ($k \in \{3,5,10\}$), Comprehensiveness, Spurious feature robustness, and Cross-run consensus. | **Critical for Pillar 5 (Trustworthy Explanation)**. Proves explanations are causal drivers rather than post-hoc artifacts. Required by IEEE TDSC reviewers. | Medium (12h) | **P0 (Immediate)** |
+| **Security Twin + Attack Replay Lab (Phase 2)** | Static mock telemetry in `evaluation/data/` | No stateful representation of enterprise assets, identities, or controls. Cannot answer "What happens if AHRAS blocks IP or isolates host?" without affecting live environments. | **Critical for Pillar 6 (Safe Response)**. Enables pre-action counterfactual simulation, blast-radius estimation, and Monte Carlo risk distribution sampling. | High (20h) | **P1** |
+| **Provenance Attack Scenario Reconstruction (Phase 3)** | `detection/gnn_engine.py` (2-hop neighborhood), `detection/attack_path.py` (Noisy-OR) | Graph engine only reasons over local entity pairs ($src\_ip \to dst\_ip$). Lacks unified heterogeneous provenance DAG linking Process $\to$ Socket $\to$ File $\to$ Technique $\to$ Incident with structural similarity metrics. | **Critical for Pillar 4 (Relational Reasoning)**. Converts isolated atomic alerts into explainable multi-stage attack scenarios. | High (18h) | **P1** |
+| **Temporal Epistemic Instability (Phase 4)** | `detection/statistical_engine/stat_engine.py` (Welford drift), `forecast/predictor.py` (Holt) | Distinguishes statistical point anomaly from *epistemic prediction volatility*. Entities oscillating rapidly between benign and alert states are not explicitly quantified as high-uncertainty signals for selective abstention. | **High (Pillars 2 & 5)**. Disentangles persistent stealthy threats from noisy model ambiguity, preventing false autonomous interventions on flickering entities. | Medium (10h) | **P2** |
+| **Confidence-Based Early-Exit Model Routing (Phase 5)** | Linear cascade in `detection/hybrid_engine.py` | Every telemetry event is processed by every detector (Sig $\to$ ML $\to$ Stat $\to$ OOD $\to$ Graph). Incurs unnecessary computational overhead on obvious benign or high-confidence signature hits. | **High (Pillar 1 - Operational Scalability)**. Enables 5x–10x throughput scaling by exiting high-confidence events at Stage 1 or 2 while preserving detection F1. | Medium (12h) | **P2** |
+| **Streaming Sketch Fast Path (Phase 6)** | `detection/statistical_engine/stat_engine.py` (In-memory dict per entity) | Entity tracking memory grows linearly $O(N)$ with unique IP/MAC cardinality. Vulnerable to memory exhaustion under high-cardinality spoofing or DDoS. | **High (Operational Robustness)**. Provides $O(1)$ space Count-Min / Heavy-Hitter screening for line-rate traffic (>100k EPS) with bounded approximation error. | Medium (10h) | **P2** |
+| **Encrypted Session Intelligence (Phase 7)** | Network flow stats in `normalizer/ocsf_normalizer.py` | Only uses flow-level aggregates (bytes, duration, ports). Blind to packet size dynamics, direction sequence transitions, and inter-arrival time periodicity characteristic of TLS/QUIC C2 beaconing. | **High (Pillar 3 - Unknown Attacks)**. Directly addresses Botnet F1=0 failure by classifying traffic from timing/size sequences without payload decryption. | High (16h) | **P2** |
+| **Adaptive Deception as Information Sensor (Phase 8)** | `deception/honeypot_manager.py` (Hardcoded $R \ge 0.70$ honey-tokens) | Static rule deployer with no information-theoretic decisioning. Does not compute Expected Information Gain vs. Operational Risk vs. Deployment Cost. | **Medium (Pillars 4 & 5)**. Elevates deception from passive trap to active information-gathering sensor that reduces graph risk uncertainty. | Medium (10h) | **P3** |
+| **Response Efficacy Learning (Phase 9)** | `response/orchestrator.py` (Fixed utility formula RASE) | Expected utility is computed statically before execution. The system never records *observed* risk reduction post-execution to update its future response utility models. | **Critical for Pillar 6 (Closed-Loop Safe Response)**. Completes the active defense loop: $\text{Predict Utility} \to \text{Act} \to \text{Measure Real Utility} \to \text{Update Prior}$. | Medium (12h) | **P3** |
+| **Confidence-Gated Pseudo-Label Learning (Phase 10)** | `adaptive_learning/active_learner.py` (Human-only queue) | Active learning queries require manual human analyst intervention for 100% of samples. High analyst cost creates bottleneck in high-throughput streams. | **High (Pillar 2 - Adaptation)**. Allows safe automated continuous learning from ultra-confident, low-uncertainty in-distribution predictions while isolating unverified samples. | Medium (8h) | **P3** |
+| **Security Twin Training Data Engine (Phase 11)** | `detection/dataset_generator.py` (Pure synthetic Gaussian distributions) | Generated synthetic datasets lack realistic attack graph topologies, process execution lineage, and multi-stage temporal coherence. | **High (Pillar 1 - Generalization)**. Generates leak-free, reproducible, multi-stage attack datasets with explicit provenance metadata for controlled bench testing. | High (14h) | **P3** |
+| **Multi-Objective Security Scorecard (Cross-Cutting)** | Single scalar F1 and RASE reporting in `evaluation/metrics.py` | Collapsing multidimensional cyber performance into a single F1 score masks critical trade-offs between latency, calibration, unknown detection, and safety. | **High (Scientific Rigor)**. Establishes a 12-dimensional Pareto scorecard for high-assurance cybersecurity evaluation. | Low (6h) | **P2** |
+
+---
+
+## 2. Research Value & Strategy Alignment
+
+The identified capabilities do not replace or duplicate any functioning AHRAS module. Instead, they directly map into the **Six Research Pillars**:
+1. **Generalization**: Enabled by Encrypted Session Intelligence and Security Twin Scenario Generation.
+2. **Adaptation**: Enabled by Response Efficacy Learning and Confidence-Gated Pseudo-Labeling with Provenance.
+3. **Unknown-Attack Detection**: Strengthened by Streaming Sketches and Encrypted Beaconing Sequence Analysis.
+4. **Relational Reasoning**: Upgraded through Provenance Attack Scenario Reconstruction.
+5. **Trustworthy Explanation**: Formalized through Explanation Reliability Audit 2.0 and Epistemic Instability Quantification.
+6. **Safe Response**: Realized through Security Twin Pre-Execution Simulation and Closed-Loop Observed Utility Tracking.
