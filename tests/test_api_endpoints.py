@@ -77,3 +77,52 @@ def test_alert_intelligence_endpoints():
     metrics_data = resp_metrics.json()
     assert "deduplication" in metrics_data
     assert metrics_data["deduplication"]["total_ingested"] >= 1
+
+
+def test_knowledge_graph_endpoints():
+    # 1. Detection lineage
+    resp = client.get("/api/knowledge-graph/enables/tech-t1059")
+    assert resp.status_code == 200
+    data = resp.json()
+    assert data["is_detected"] is True
+    assert len(data["detection_rules"]) >= 1
+
+    # 2. Missing sensors
+    resp_sens = client.get("/api/knowledge-graph/missing-sensors/tech-t1059")
+    assert resp_sens.status_code == 200
+    data_sens = resp_sens.json()
+    assert "missing_sensors" in data_sens
+
+    # 3. Sensor impact
+    resp_imp = client.get("/api/knowledge-graph/sensor-impact/sensor-zeek")
+    assert resp_imp.status_code == 200
+    data_imp = resp_imp.json()
+    assert "affected_detectors" in data_imp
+
+
+def test_campaign_match_endpoint():
+    payload = {
+        "incident_id": "api-inc-01",
+        "name": "Live Ransomware Test",
+        "techniques": ["T1190", "T1059", "T1486"],
+        "affected_entities": ["srv-1"],
+    }
+    resp = client.post("/api/campaign/match", json=payload)
+    assert resp.status_code == 200
+    data = resp.json()
+    assert "matches" in data
+    assert len(data["matches"]) >= 1
+
+
+def test_vulnerabilities_prioritize_endpoint():
+    payload = {
+        "active_path_entities": ["ast-dmz-01", "web-dmz-01"],
+        "observed_techniques": ["T1190"],
+    }
+    resp = client.post("/api/vulnerabilities/prioritize", json=payload)
+    assert resp.status_code == 200
+    data = resp.json()
+    assert "prioritized_vulnerabilities" in data
+    assert len(data["prioritized_vulnerabilities"]) >= 1
+    # Top vulnerability should be CVE-2021-44228 on the DMZ web server
+    assert data["prioritized_vulnerabilities"][0]["cve_id"] == "CVE-2021-44228"

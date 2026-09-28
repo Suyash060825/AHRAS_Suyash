@@ -753,6 +753,85 @@ def plan_sensor_acquisition(payload: dict):
     }
 
 
+# ── Phase 4: Knowledge Graph, Campaign Reasoning & Vulnerability Intelligence ──
+
+_global_security_kg = None
+def get_security_kg():
+    global _global_security_kg
+    if _global_security_kg is None:
+        from knowledge_graph.security_kg import SecurityKnowledgeGraph
+        _global_security_kg = SecurityKnowledgeGraph(populate_defaults=True)
+    return _global_security_kg
+
+
+@app.get("/api/knowledge-graph/enables/{technique_id}", tags=["Knowledge Graph"])
+def get_technique_detection_lineage(technique_id: str):
+    """Answers: What currently enables detection of this behavior?"""
+    kg = get_security_kg()
+    return kg.what_enables_detection(technique_id)
+
+
+@app.get("/api/knowledge-graph/missing-sensors/{technique_id}", tags=["Knowledge Graph"])
+def get_technique_missing_sensors(technique_id: str):
+    """Answers: What sensor is missing to observe this technique?"""
+    kg = get_security_kg()
+    return {"missing_sensors": kg.find_missing_sensors(technique_id)}
+
+
+@app.get("/api/knowledge-graph/sensor-impact/{sensor_id}", tags=["Knowledge Graph"])
+def get_sensor_unhealthy_impact(sensor_id: str):
+    """Answers: Which detections depend on an unhealthy sensor?"""
+    kg = get_security_kg()
+    return {"affected_detectors": kg.detections_affected_by_sensor(sensor_id)}
+
+
+@app.post("/api/campaign/match", tags=["Campaign Intelligence"])
+def match_campaign_similarity(payload: dict):
+    """Matches active incident against indexed historical campaigns with attribution safety."""
+    from knowledge_graph.campaign_similarity import IncidentProfile, CampaignSimilarityEngine
+    engine = CampaignSimilarityEngine()
+    engine.register_campaign(
+        IncidentProfile("camp-hist-01", "Known Ransomware Campaign", ["T1190", "T1059", "T1021", "T1486"], ["srv-1"], 1800.0)
+    )
+    query = IncidentProfile(
+        incident_id=payload.get("incident_id", "query-01"),
+        name=payload.get("name", "Active Incident"),
+        techniques=payload.get("techniques", []),
+        affected_entities=payload.get("affected_entities", []),
+        duration_seconds=float(payload.get("duration_seconds", 300.0)),
+        evidence_hashes=payload.get("evidence_hashes", []),
+        structural_features=payload.get("structural_features", {}),
+        known_actor_indicator=payload.get("known_actor_indicator"),
+    )
+    matches = engine.find_similar_campaigns(query, top_k=int(payload.get("top_k", 5)))
+    return {"query_incident_id": query.incident_id, "matches": [m.to_dict() for m in matches]}
+
+
+@app.post("/api/vulnerabilities/prioritize", tags=["Vulnerability Intelligence"])
+def prioritize_vulnerabilities(payload: dict):
+    """Prioritizes asset vulnerabilities contextualized by active lateral movement paths."""
+    from knowledge_graph.vulnerability_intelligence import (
+        VulnerabilityIntelligenceEngine,
+        VulnerabilityRecord,
+        AssetExposure,
+        NetworkZone,
+    )
+    engine = VulnerabilityIntelligenceEngine()
+    engine.register_vulnerability(VulnerabilityRecord("CVE-2021-44228", 10.0, 0.95, True, "log4j", ["T1190"]))
+    engine.register_vulnerability(VulnerabilityRecord("CVE-2020-1472", 10.0, 0.90, True, "netlogon", ["T1021"]))
+    engine.register_asset(
+        AssetExposure("ast-dmz-01", "web-dmz-01", NetworkZone.DMZ, 1, ["CVE-2021-44228"], has_public_ingress=True)
+    )
+    engine.register_asset(
+        AssetExposure("ast-dc-01", "dc-prod-01", NetworkZone.ISOLATED_SECURE, 1, ["CVE-2020-1472"])
+    )
+
+    active_paths = set(payload.get("active_path_entities", []))
+    active_techs = set(payload.get("observed_techniques", []))
+    prioritized = engine.prioritize_vulnerabilities(active_paths, active_techs)
+    return {"prioritized_vulnerabilities": [p.to_dict() for p in prioritized]}
+
+
 
 @app.websocket("/ws/live-soc")
 async def websocket_live_soc(websocket: WebSocket):

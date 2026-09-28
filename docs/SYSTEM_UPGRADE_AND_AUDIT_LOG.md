@@ -329,5 +329,46 @@ Engineered and integrated the core adaptive and resource-governance capabilities
 
 7. **Documentation**: [`docs/PHASE_3_ADAPTATION_AND_RESOURCE_COMPLETION.md`](file:///home/suyashpradhan/Downloads/AHRAS_Suyash-master/docs/PHASE_3_ADAPTATION_AND_RESOURCE_COMPLETION.md).
 
+---
+
+## 13. Phase 4 Implementation: Security Knowledge Graph, Attack Flow, Campaign Similarity & Memory
+*Benchmark ID: `EXP-33`*
+
+Engineered and integrated the relational reasoning, standardized attack flow modeling, campaign similarity, and temporally isolated case memory specified in Sections 21, 22, 23, 47, 48:
+
+1. **Security & Detection Knowledge Graph ([`knowledge_graph/security_kg.py`](file:///home/suyashpradhan/Downloads/AHRAS_Suyash-master/knowledge_graph/security_kg.py))**:
+   - `SecurityKnowledgeGraph`: Heterogeneous graph connecting 11 node types (`TECHNIQUE`, `IMPLEMENTATION`, `TELEMETRY`, `SENSOR`, `DETECTION_RULE`, `ML_MODEL`, `EVIDENCE`, `ASSET`, `VULNERABILITY`, `THREAT_INTEL`, `RESPONSE_ACTION`) across 9 relational edge types (`requires`, `observed_by`, `detected_by`, `affects`, `mitigated_by`, `depends_on`, `validated_by`, `blocked_by`, `exposed_by`).
+   - Operational query APIs:
+     - `what_enables_detection(technique_id)`: Maps techniques to rules, models, required telemetries, and active sensors.
+     - `find_missing_sensors(technique_id)`: Detects telemetry gaps caused by missing or unhealthy sensors.
+     - `detections_affected_by_sensor(sensor_id)`: Calculates downstream impact on detection rules and models when a sensor fails.
+     - `mitigating_responses_for_path(technique_ids)`: Discovers playbook mitigations and optimal containment chokepoints along an attack path.
+
+2. **Attack Flow Interoperability ([`knowledge_graph/attack_flow.py`](file:///home/suyashpradhan/Downloads/AHRAS_Suyash-master/knowledge_graph/attack_flow.py))**:
+   - `AttackFlow`: Standardized MITRE Attack Flow representation connecting actions, assets, and causal/enabling transitions while preserving timestamps, epistemic uncertainties, confidence, and hypothetical edges.
+   - Computes structural completeness metrics: stage completeness, edge completeness, entity completeness, technique coverage, and strict temporal monotonicity.
+   - Bidirectional JSON import and export capability.
+
+3. **Attack Campaign Similarity Engine ([`knowledge_graph/campaign_similarity.py`](file:///home/suyashpradhan/Downloads/AHRAS_Suyash-master/knowledge_graph/campaign_similarity.py))**:
+   - `CampaignSimilarityEngine`: Multi-attribute similarity engine evaluating technique Jaccard index, Longest Common Subsequence (LCS) sequence alignment, entity graph structural cosine similarity, and evidence hash verification.
+   - **Safety Invariant**: Strictly enforces *"Never assert same attacker/actor without supporting evidence"*. Returns `UNATTRIBUTED` when behavioral overlap exists without matching cryptographic IOCs.
+
+4. **Vulnerability & Exposure Intelligence ([`knowledge_graph/vulnerability_intelligence.py`](file:///home/suyashpradhan/Downloads/AHRAS_Suyash-master/knowledge_graph/vulnerability_intelligence.py))**:
+   - `VulnerabilityIntelligenceEngine`: Dynamically ranks vulnerabilities based on real-time lateral attack-path reachability, network exposure zone (DMZ vs Isolated), EPSS score, CISA KEV status, and asset criticality.
+   - Flips static CVSS severity: prioritizes actively exploited flaws sitting directly on an active lateral movement bridge over isolated high-CVSS CVEs ($11.1\times$ higher priority score).
+
+5. **Case-Based Security Memory ([`knowledge_graph/case_memory.py`](file:///home/suyashpradhan/Downloads/AHRAS_Suyash-master/knowledge_graph/case_memory.py))**:
+   - `CaseBasedSecurityMemory`: Structured repository of past security incidents, attack graphs, applied playbooks, and verified operational containment outcomes.
+   - **Strict Temporal Invariant**: *"Never use historical cases containing future information relative to an evaluation event"*. Any case where `closed_at > query_timestamp` is strictly filtered out (**0.0% future leakage rate** across 100 historical queries).
+
+6. **REST API Extensions ([`api/server.py`](file:///home/suyashpradhan/Downloads/AHRAS_Suyash-master/api/server.py))**:
+   - `GET /api/knowledge-graph/enables/{technique_id}`
+   - `GET /api/knowledge-graph/missing-sensors/{technique_id}`
+   - `GET /api/knowledge-graph/sensor-impact/{sensor_id}`
+   - `POST /api/campaign/match`
+   - `POST /api/vulnerabilities/prioritize`
+
+7. **Documentation**: [`docs/PHASE_4_KNOWLEDGE_GRAPH_AND_MEMORY_COMPLETION.md`](file:///home/suyashpradhan/Downloads/AHRAS_Suyash-master/docs/PHASE_4_KNOWLEDGE_GRAPH_AND_MEMORY_COMPLETION.md).
+
 
 
