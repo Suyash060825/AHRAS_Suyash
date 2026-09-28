@@ -75,8 +75,22 @@ class ModelUpdate:
     local_loss:    float
     timestamp:     float
     client_token:  str = "authenticated_client"
-    round_id:      int = 0
+    round_id:      Optional[int] = None
     logits:        Optional[np.ndarray] = None  # Optional soft logits for FedKD
+    model_version: str = "1.0.0"
+    update_hash:   Optional[str] = None
+    auth_status:   str = "AUTHENTICATED"
+
+    def compute_update_hash(self) -> str:
+        import hashlib
+        h = hashlib.sha256()
+        h.update(self.client_id.encode())
+        h.update(str(self.round_id if self.round_id is not None else 0).encode())
+        h.update(self.model_version.encode())
+        for k in sorted(self.weights.keys()):
+            h.update(k.encode())
+            h.update(np.ascontiguousarray(self.weights[k]).tobytes())
+        return h.hexdigest()
 
     def to_dict(self) -> dict:
         return {
@@ -85,6 +99,9 @@ class ModelUpdate:
             "local_loss":   round(self.local_loss, 4),
             "timestamp":    self.timestamp,
             "round_id":     self.round_id,
+            "model_version": self.model_version,
+            "update_hash":  self.update_hash,
+            "auth_status":  self.auth_status,
             "layer_shapes": {k: list(np.array(v).shape) for k, v in self.weights.items()},
         }
 
@@ -182,6 +199,7 @@ class FederatedIDSServer:
         aggregation_strategy: Optional[str] = None,
         quarantine_threshold: float = 0.25,
         reputation_tracker: Optional[ClientReputationTracker] = None,
+        expected_model_version: str = "1.0.0",
     ):
         self._min_clients = min_clients
         self._clip_norm = byzantine_clip_norm
@@ -189,6 +207,7 @@ class FederatedIDSServer:
         self._enable_reputation_weighting = enable_reputation_weighting
         self.aggregation_strategy = aggregation_strategy
         self.quarantine_threshold = quarantine_threshold
+        self.expected_model_version = expected_model_version
         
         self.reputation_tracker = reputation_tracker or ClientReputationTracker()
         self.knowledge_distiller = FederatedKnowledgeDistiller()
@@ -203,10 +222,46 @@ class FederatedIDSServer:
 
     def receive_update(self, update: ModelUpdate) -> bool:
         """
-        Validates client authenticity and gradient norm before enqueuing for aggregation.
+        Validates client authenticity, version compatibility, round staleness,
+        duplicate prevention, integrity hash, and gradient norm before enqueuing.
         """
         with self._lock:
-            # Validate parameter shapes
+            # 1. Authenticate client
+            if update.auth_status != "AUTHENTICATED":
+                log.warning(f"[FEDERATED] Rejected unauthorized update from client '{update.client_id}': auth_status='{update.auth_status}'")
+                self._rejected_updates.append({"client_id": update.client_id, "reason": "Unauthorized / Invalid Auth Status", "round": self._current_round})
+                return False
+
+            # 2. Check stale round updates
+            if update.round_id is not None and update.round_id < self._current_round:
+                log.warning(f"[FEDERATED] Rejected stale update from client '{update.client_id}': round {update.round_id} < current round {self._current_round}")
+                self._rejected_updates.append({"client_id": update.client_id, "reason": "Stale round update", "round": self._current_round})
+                return False
+
+            # 3. Prevent duplicate submissions in same round
+            if any(u.client_id == update.client_id for u in self._round_updates):
+                log.warning(f"[FEDERATED] Rejected duplicate update from client '{update.client_id}' for round {self._current_round}")
+                self._rejected_updates.append({"client_id": update.client_id, "reason": "Duplicate submission in current round", "round": self._current_round})
+                return False
+
+            # 4. Check model architecture / schema version
+            if update.model_version != self.expected_model_version:
+                log.warning(f"[FEDERATED] Rejected version mismatch update from client '{update.client_id}': {update.model_version} != {self.expected_model_version}")
+                self._rejected_updates.append({"client_id": update.client_id, "reason": f"Version mismatch ({update.model_version} != {self.expected_model_version})", "round": self._current_round})
+                return False
+
+            # 5. Cryptographic update hash verification
+            if update.update_hash is not None:
+                expected_hash = update.compute_update_hash()
+                if update.update_hash != expected_hash:
+                    log.warning(f"[FEDERATED] Rejected tampered update from client '{update.client_id}': hash mismatch")
+                    self._rejected_updates.append({"client_id": update.client_id, "reason": "Tampered update / Hash mismatch", "round": self._current_round})
+                    self.reputation_tracker.update_reputation(update.client_id, update_valid=False, local_loss=1.0, is_byzantine=True)
+                    return False
+            else:
+                update.update_hash = update.compute_update_hash()
+
+            # 6. Validate parameter shapes, NaN/Inf, and extreme gradient norms
             for key, val in update.weights.items():
                 arr = np.array(val, dtype=np.float64)
                 norm = float(np.linalg.norm(arr))

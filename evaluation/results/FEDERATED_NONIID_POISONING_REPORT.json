@@ -1,0 +1,134 @@
+{
+  "manifest": {
+    "experiment_id": "EXP-34",
+    "code_version": "c38ddd65beecb2efe12418d0d88031c518def967",
+    "git_branch": "new-features",
+    "dataset_name": "10-Tenant Non-IID Multi-Enterprise Dirichlet Telemetry",
+    "dataset_version": "1.0",
+    "dataset_hash": "525e6abdcec78c93d72c0f2f86dfa0ba9485946e265d180c46817e3457f6b145",
+    "configuration_hash": "1ce59caffbd620c35ee271e9131d65edb014adb7d28a4492f750467034368d4a",
+    "configuration": {
+      "n_clients": 10,
+      "benign_clients": 8,
+      "poisoned_clients": 2,
+      "poison_ratio": 0.2,
+      "rounds": 5,
+      "strategies": [
+        "fedavg",
+        "norm_clip",
+        "coordinate_median",
+        "fedkd_reputation"
+      ]
+    },
+    "random_seed": 42,
+    "environment": {
+      "python_version": "3.14.6",
+      "os": "Linux-7.1.8-100.fc43.x86_64-x86_64-with-glibc2.42",
+      "architecture": "x86_64",
+      "dependencies": {
+        "numpy": "2.5.2",
+        "scikit-learn": "1.9.0"
+      }
+    },
+    "result_path": "/home/suyashpradhan/Downloads/AHRAS_Suyash-master/evaluation/results/FEDERATED_NONIID_POISONING_REPORT.json",
+    "timestamp": 1790573597.8384104
+  },
+  "strategy_benchmarks": {
+    "fedavg": {
+      "strategy": "fedavg",
+      "accuracy": 0.589,
+      "macro_f1": 0.589,
+      "precision": 0.589,
+      "recall": 0.589,
+      "false_quarantine_rate_pct": 0.0,
+      "total_benign_submissions": 40,
+      "total_poison_submissions": 10,
+      "reputations": {
+        "tenant_0_finance": 0.7416,
+        "tenant_1_healthcare": 0.7272,
+        "tenant_2_ecommerce": 0.7476,
+        "tenant_3_cloud": 0.7463,
+        "tenant_4_government": 0.7054,
+        "tenant_5_telecom": 0.7443,
+        "tenant_6_energy": 0.7164,
+        "tenant_7_enterprise": 0.7359,
+        "tenant_8_manufacturing": 0.187,
+        "tenant_9_aerospace": 0.3638
+      }
+    },
+    "norm_clip": {
+      "strategy": "norm_clip",
+      "accuracy": 0.652,
+      "macro_f1": 0.652,
+      "precision": 0.652,
+      "recall": 0.652,
+      "false_quarantine_rate_pct": 0.0,
+      "total_benign_submissions": 40,
+      "total_poison_submissions": 10,
+      "reputations": {
+        "tenant_0_finance": 0.7416,
+        "tenant_1_healthcare": 0.7272,
+        "tenant_2_ecommerce": 0.7476,
+        "tenant_3_cloud": 0.7463,
+        "tenant_4_government": 0.7054,
+        "tenant_5_telecom": 0.7443,
+        "tenant_6_energy": 0.7164,
+        "tenant_7_enterprise": 0.7359,
+        "tenant_8_manufacturing": 0.187,
+        "tenant_9_aerospace": 0.3638
+      }
+    },
+    "coordinate_median": {
+      "strategy": "coordinate_median",
+      "accuracy": 0.975,
+      "macro_f1": 0.975,
+      "precision": 0.975,
+      "recall": 0.975,
+      "false_quarantine_rate_pct": 0.0,
+      "total_benign_submissions": 40,
+      "total_poison_submissions": 10,
+      "reputations": {
+        "tenant_0_finance": 0.7931,
+        "tenant_1_healthcare": 0.7852,
+        "tenant_2_ecommerce": 0.7875,
+        "tenant_3_cloud": 0.7933,
+        "tenant_4_government": 0.7714,
+        "tenant_5_telecom": 0.7812,
+        "tenant_6_energy": 0.7788,
+        "tenant_7_enterprise": 0.79,
+        "tenant_8_manufacturing": 0.187,
+        "tenant_9_aerospace": 0.3638
+      }
+    },
+    "fedkd_reputation": {
+      "strategy": "fedkd_reputation",
+      "accuracy": 0.9834,
+      "macro_f1": 0.9834,
+      "precision": 0.9834,
+      "recall": 0.9834,
+      "false_quarantine_rate_pct": 0.0,
+      "total_benign_submissions": 40,
+      "total_poison_submissions": 10,
+      "reputations": {
+        "tenant_0_finance": 0.7931,
+        "tenant_1_healthcare": 0.7852,
+        "tenant_2_ecommerce": 0.7875,
+        "tenant_3_cloud": 0.7933,
+        "tenant_4_government": 0.7714,
+        "tenant_5_telecom": 0.7812,
+        "tenant_6_energy": 0.7788,
+        "tenant_7_enterprise": 0.79,
+        "tenant_8_manufacturing": 0.187,
+        "tenant_9_aerospace": 0.3638
+      }
+    }
+  },
+  "security_gates_evaluation": {
+    "auth_gate_rejection_rate_pct": 100.0,
+    "stale_round_rejection_rate_pct": 100.0,
+    "duplicate_submission_rejection_rate_pct": 100.0,
+    "version_mismatch_rejection_rate_pct": 100.0,
+    "hash_tamper_rejection_rate_pct": 100.0,
+    "all_security_gates_passed": true
+  }
+}

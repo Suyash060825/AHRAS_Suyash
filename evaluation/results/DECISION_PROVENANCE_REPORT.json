@@ -1,0 +1,139 @@
+{
+  "manifest": {
+    "experiment_id": "EXP-35",
+    "code_version": "c38ddd65beecb2efe12418d0d88031c518def967",
+    "git_branch": "new-features",
+    "dataset_name": "AHRAS High-Impact Automated Decision Provenance Epoch Ledger",
+    "dataset_version": "1.0",
+    "dataset_hash": "525e6abdcec78c93d72c0f2f86dfa0ba9485946e265d180c46817e3457f6b145",
+    "configuration_hash": "e1ac470a91cb135dbc7b99bbb8aef8993d83dc0833b6a96d8480a69032a01205",
+    "configuration": {
+      "n_decisions": 2000,
+      "epoch_capacities": [
+        25,
+        50,
+        100,
+        200
+      ],
+      "tamper_trials": 100,
+      "merkle_hash_algo": "SHA-256"
+    },
+    "random_seed": 42,
+    "environment": {
+      "python_version": "3.14.6",
+      "os": "Linux-7.1.8-100.fc43.x86_64-x86_64-with-glibc2.42",
+      "architecture": "x86_64",
+      "dependencies": {
+        "numpy": "2.5.2",
+        "scikit-learn": "1.9.0"
+      }
+    },
+    "result_path": "/home/suyashpradhan/Downloads/AHRAS_Suyash-master/evaluation/results/DECISION_PROVENANCE_REPORT.json",
+    "timestamp": 1790573415.8934941
+  },
+  "append_and_checkpointing": {
+    "n_decisions_evaluated": 2000,
+    "capacity_benchmarks": [
+      {
+        "epoch_capacity": 25,
+        "total_decisions": 2000,
+        "total_epochs": 80,
+        "total_time_seconds": 0.0514,
+        "throughput_decisions_per_sec": 38924.58,
+        "append_latency_mean_us": 5.67,
+        "append_latency_p50_us": 0.78,
+        "append_latency_p95_us": 3.79,
+        "append_latency_p99_us": 154.17,
+        "audit_valid": true,
+        "audit_time_ms": 25.22,
+        "audit_rate_decisions_per_sec": 79301.74
+      },
+      {
+        "epoch_capacity": 50,
+        "total_decisions": 2000,
+        "total_epochs": 40,
+        "total_time_seconds": 0.0462,
+        "throughput_decisions_per_sec": 43251.66,
+        "append_latency_mean_us": 4.7,
+        "append_latency_p50_us": 0.68,
+        "append_latency_p95_us": 1.69,
+        "append_latency_p99_us": 178.64,
+        "audit_valid": true,
+        "audit_time_ms": 27.06,
+        "audit_rate_decisions_per_sec": 73900.62
+      },
+      {
+        "epoch_capacity": 100,
+        "total_decisions": 2000,
+        "total_epochs": 20,
+        "total_time_seconds": 0.0455,
+        "throughput_decisions_per_sec": 44003.22,
+        "append_latency_mean_us": 3.83,
+        "append_latency_p50_us": 0.63,
+        "append_latency_p95_us": 1.49,
+        "append_latency_p99_us": 16.05,
+        "audit_valid": true,
+        "audit_time_ms": 27.75,
+        "audit_rate_decisions_per_sec": 72069.82
+      },
+      {
+        "epoch_capacity": 200,
+        "total_decisions": 2000,
+        "total_epochs": 10,
+        "total_time_seconds": 0.0381,
+        "throughput_decisions_per_sec": 52456.66,
+        "append_latency_mean_us": 2.94,
+        "append_latency_p50_us": 0.53,
+        "append_latency_p95_us": 1.28,
+        "append_latency_p99_us": 3.94,
+        "audit_valid": true,
+        "audit_time_ms": 28.27,
+        "audit_rate_decisions_per_sec": 70735.1
+      }
+    ]
+  },
+  "tamper_detection_audit": {
+    "trials_evaluated": 100,
+    "epochs_in_ledger": 10,
+    "decisions_in_ledger": 500,
+    "tamper_detected_count": 100,
+    "tamper_detection_rate_pct": 100.0,
+    "mean_detection_latency_ms": 5.169,
+    "p95_detection_latency_ms": 7.725,
+    "field_breakdown": {
+      "event_hash": {
+        "trials": 13,
+        "detected": 13
+      },
+      "model_hash": {
+        "trials": 13,
+        "detected": 13
+      },
+      "config_hash": {
+        "trials": 13,
+        "detected": 13
+      },
+      "policy_version": {
+        "trials": 13,
+        "detected": 13
+      },
+      "composite_risk": {
+        "trials": 12,
+        "detected": 12
+      },
+      "xai_hash": {
+        "trials": 12,
+        "detected": 12
+      },
+      "simulation_hash": {
+        "trials": 12,
+        "detected": 12
+      },
+      "response_action": {
+        "trials": 12,
+        "detected": 12
+      }
+    },
+    "section_27_1_verified": true
+  }
+}

@@ -60,6 +60,74 @@ class TestFederatedHardening(unittest.TestCase):
         accepted = self.server.receive_update(nan_update)
         self.assertFalse(accepted)
 
+    def test_unauthorized_client_rejection(self):
+        unauth_update = ModelUpdate(
+            client_id="Rogue_Client",
+            num_samples=50,
+            weights={"layer1": np.array([1.0, 2.0, 3.0])},
+            local_loss=0.1,
+            timestamp=104.0,
+            auth_status="UNAUTHORIZED",
+        )
+        accepted = self.server.receive_update(unauth_update)
+        self.assertFalse(accepted)
+
+    def test_stale_round_rejection(self):
+        self.server._current_round = 3
+        stale_update = ModelUpdate(
+            client_id="Slow_Client",
+            num_samples=50,
+            weights={"layer1": np.array([1.0, 2.0, 3.0])},
+            local_loss=0.1,
+            timestamp=105.0,
+            round_id=2,  # round 2 < current round 3
+        )
+        accepted = self.server.receive_update(stale_update)
+        self.assertFalse(accepted)
+
+    def test_duplicate_submission_in_same_round_rejection(self):
+        up1 = ModelUpdate(
+            client_id="Client_Alpha",
+            num_samples=50,
+            weights={"layer1": np.array([1.0, 2.0, 3.0])},
+            local_loss=0.1,
+            timestamp=106.0,
+        )
+        up2 = ModelUpdate(
+            client_id="Client_Alpha",  # Duplicate submission in round 0
+            num_samples=50,
+            weights={"layer1": np.array([1.5, 2.5, 3.5])},
+            local_loss=0.08,
+            timestamp=107.0,
+        )
+        self.server.receive_update(up1)
+        accepted_dup = self.server.receive_update(up2)
+        self.assertFalse(accepted_dup)
+
+    def test_model_version_mismatch_rejection(self):
+        mismatch_update = ModelUpdate(
+            client_id="Legacy_Client",
+            num_samples=50,
+            weights={"layer1": np.array([1.0, 2.0, 3.0])},
+            local_loss=0.1,
+            timestamp=108.0,
+            model_version="0.9.0",  # Server expects 1.0.0
+        )
+        accepted = self.server.receive_update(mismatch_update)
+        self.assertFalse(accepted)
+
+    def test_tampered_update_hash_rejection(self):
+        tampered_update = ModelUpdate(
+            client_id="Tampered_Client",
+            num_samples=50,
+            weights={"layer1": np.array([1.0, 2.0, 3.0])},
+            local_loss=0.1,
+            timestamp=109.0,
+            update_hash="0" * 64,  # Incorrect hash
+        )
+        accepted = self.server.receive_update(tampered_update)
+        self.assertFalse(accepted)
+
 
 if __name__ == "__main__":
     unittest.main()
