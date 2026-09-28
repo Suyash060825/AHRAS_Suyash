@@ -36,9 +36,7 @@ def record_to_ocsf(rec: DatasetRecord) -> dict:
     syn_count = feats.get("SYN Flag Count", feats.get("syn_count", 0))
     tcp_flags = ["SYN"] if syn_count > 0 else ["ACK"]
     
-    unique_dst_ports = feats.get("unique_dst_ports", 1)
-    if unique_dst_ports == 1 and dst_port > 1024 and feats.get("Total Fwd Packets", 0) <= 3:
-        unique_dst_ports = 150  # Heuristic for port scanning if raw features indicate
+    unique_dst_ports = int(feats.get("unique_dst_ports", 1))
 
     return _norm_network({
         "src_ip":           rec.src_ip,

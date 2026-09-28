@@ -114,26 +114,27 @@ def optimize_threshold_on_validation(y_val: List[int], scores_val: List[float]) 
     return round(best_tau, 4), round(best_f1, 4)
 
 
-def fit_probability_calibration(y_val: List[int], scores_val: List[float]) -> Dict[str, float]:
+def fit_probability_calibration(y_val: List[int], scores_val: List[float]) -> Tuple[Dict[str, float], np.ndarray]:
     """
     Fits Platt scaling (logistic sigmoid) calibration parameters (a, b) on validation data:
-        P(Y=1 | score) = 1 / (1 + exp(a * score + b))
+        P(Y=1 | score) = 1 / (1 + exp(-(a * score + b)))
     """
-    # Simple logistic regression / slope-intercept fit on validation
-    scores_arr = np.array(scores_val, dtype=np.float64)
-    y_arr = np.array(y_val, dtype=np.float64)
-    
-    # Clipped log-odds estimation
-    pos_mask = (y_arr == 1)
-    neg_mask = (y_arr == 0)
-    
-    mean_pos = float(np.mean(scores_arr[pos_mask])) if np.sum(pos_mask) > 0 else 0.8
-    mean_neg = float(np.mean(scores_arr[neg_mask])) if np.sum(neg_mask) > 0 else 0.2
-    
-    slope = 5.0 if mean_pos > mean_neg else 1.0
-    intercept = -slope * ((mean_pos + mean_neg) / 2.0)
-    
-    return {"calib_slope": round(slope, 4), "calib_intercept": round(intercept, 4)}
+    scores_arr = np.array(scores_val, dtype=np.float64).reshape(-1, 1)
+    y_arr = np.array(y_val, dtype=np.int32)
+
+    if len(set(y_val)) > 1:
+        from sklearn.linear_model import LogisticRegression
+        lr = LogisticRegression(solver="lbfgs")
+        lr.fit(scores_arr, y_arr)
+        slope = float(lr.coef_[0][0])
+        intercept = float(lr.intercept_[0])
+        calib_probs = lr.predict_proba(scores_arr)[:, 1]
+    else:
+        slope = 5.0
+        intercept = -2.5
+        calib_probs = 1.0 / (1.0 + np.exp(-(slope * scores_arr.flatten() + intercept)))
+
+    return {"calib_slope": round(slope, 4), "calib_intercept": round(intercept, 4)}, calib_probs
 
 
 def run_benchmark_for_dataset(
@@ -141,7 +142,7 @@ def run_benchmark_for_dataset(
     path: str,
     sampling_mode: str = "STRATIFIED_SAMPLE",
     sample_limit: Optional[int] = None,
-    split_strategy: str = "CHRONOLOGICAL_TEMPORAL",
+    split_strategy: str = "COMBINED_CHRONOLOGICAL_ENTITY_DISJOINT",
     seed: int = 42,
 ) -> Dict[str, Any]:
     """
@@ -158,7 +159,7 @@ def run_benchmark_for_dataset(
     if sampling_mode == "FULL":
         records = list(loader.iter_records())
     elif sampling_mode == "STRATIFIED_SAMPLE":
-        stride = 69 if sample_limit and sample_limit <= 10000 else 1
+        stride = 69 if "cicids" in name.lower() and sample_limit and sample_limit <= 10000 else 1
         records = list(loader.iter_records(limit=sample_limit or 10000, stride=stride))
     else:
         records = list(loader.iter_records(limit=sample_limit or 10000))
@@ -273,13 +274,13 @@ def run_benchmark_for_dataset(
 
 
     tau_star, val_f1 = optimize_threshold_on_validation(y_val, s_val)
-    calib_params = fit_probability_calibration(y_val, s_val)
+    calib_params, calib_probs_val = fit_probability_calibration(y_val, s_val)
     print(f"  [+] Validation Locked Parameters: tau*={tau_star:.3f} (Val F1={val_f1:.4f}) | Calib Slope={calib_params['calib_slope']}")
 
-    # Conformal Calibration
-    conformal_gate = ConformalRiskGate()
-    conformal_tau = conformal_gate.calibrate(s_val, y_val)
-    print(f"  [+] Conformal Gate Calibrated: tau*={conformal_tau:.4f}")
+    # Conformal Calibration (using calibrated probabilities to prevent distribution shift collapse)
+    conformal_gate = ConformalRiskGate(target_coverage=0.90)
+    conformal_tau = conformal_gate.calibrate(calib_probs_val.tolist(), y_val)
+    print(f"  [+] Conformal Gate Calibrated: tau*={conformal_tau:.4f} (Status: {conformal_gate.calibration_status})")
 
 
     # 6. Final Test Evaluation (Strictly on Untouched Test Partition)
@@ -416,7 +417,8 @@ def run_real_benchmark_suite(sampling_mode: str = "STRATIFIED_SAMPLE", sample_li
             continue
 
         datasets_found += 1
-        res = run_benchmark_for_dataset(name, path, sampling_mode=sampling_mode, sample_limit=sample_limit)
+        split_strat = "CHRONOLOGICAL_TEMPORAL" if "unsw" in name.lower() else "COMBINED_CHRONOLOGICAL_ENTITY_DISJOINT"
+        res = run_benchmark_for_dataset(name, path, sampling_mode=sampling_mode, sample_limit=sample_limit, split_strategy=split_strat)
         results[name] = res
         print(f"  [✓] Benchmark Complete: F1={res['test_metrics']['f1']:.4f} (95% CI: {res['test_metrics']['f1_ci_95']})")
 

@@ -294,7 +294,8 @@ def _rule_dos_slow_http(evt: dict) -> Optional[SignatureMatch]:
     dst_p = _int(_get(evt, "dst_endpoint", "port"))
     pps   = pkts / max(dur, 0.001)
     # Slowloris / GoldenEye keep-alive connection holding on web ports (80, 8080)
-    if dst_p in (80, 8080) and dur >= 5.0 and pps < 5.0 and pkts >= 2:
+    # Characterized by extended duration (>25s), low packet exchange (<1.0 pps), and low packet count
+    if dst_p in (80, 8080) and dur >= 25.0 and pps < 1.0 and 2 <= pkts <= 35:
         return SignatureMatch(
             rule_id="NET-011", rule_name="Slow HTTP / Keep-Alive Exhaustion DoS",
             attack_type="dos_slow_http", severity=4, confidence=0.88,
@@ -311,7 +312,8 @@ def _rule_dos_http_flood(evt: dict) -> Optional[SignatureMatch]:
     dst_p = _int(_get(evt, "dst_endpoint", "port"))
     pps   = pkts / max(dur, 0.001)
     # HTTP request flood (DoS Hulk, High Rate HTTP DoS)
-    if dst_p in (80, 443, 8080, 8443) and (pps >= 200.0 or pkts >= 1000):
+    # Characterized by high packet rate (>=250 pps) or rapid burst (>=500 pkts in <=5s)
+    if dst_p in (80, 443, 8080, 8443) and (pps >= 250.0 or (pkts >= 500 and dur <= 5.0)):
         return SignatureMatch(
             rule_id="NET-012", rule_name="HTTP Request Flood",
             attack_type="dos_http_flood", severity=4, confidence=0.85,

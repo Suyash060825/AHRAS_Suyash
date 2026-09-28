@@ -9,49 +9,49 @@
     "total_records": 10000,
     "split_counts": {
       "train": 7000,
-      "val": 1500,
-      "test": 1500
+      "val": 1480,
+      "test": 1520
     },
-    "split_strategy": "CHRONOLOGICAL_TEMPORAL",
-    "is_entity_disjoint": false,
+    "split_strategy": "COMBINED_CHRONOLOGICAL_ENTITY_DISJOINT",
+    "is_entity_disjoint": true,
     "leakage_audit_passed": true,
     "locked_parameters": {
-      "tau_star": 0.3,
-      "val_f1": 0.1911,
+      "tau_star": 0.22,
+      "val_f1": 0.6478,
       "learned_weights": {
-        "signature": 0.4002,
-        "anomaly": 0.2891,
-        "density": 0.2071,
-        "drift_rate": 0.1036
+        "signature": 0.4175,
+        "anomaly": 0.3131,
+        "density": 0.1799,
+        "drift_rate": 0.0895
       },
       "calibration": {
-        "calib_slope": 5.0,
-        "calib_intercept": -2.206
+        "calib_slope": 0.0881,
+        "calib_intercept": -0.5596
       }
     },
     "test_metrics": {
-      "precision": 0.13717693836978131,
-      "recall": 0.9857142857142858,
-      "f1": 0.24083769633507854,
+      "precision": 0.5497159090909091,
+      "recall": 0.6935483870967742,
+      "f1": 0.613312202852615,
       "f1_ci_95": [
-        0.1948,
-        0.2845
+        0.5804,
+        0.6442
       ],
-      "pr_auc": 0.0998,
-      "roc_auc": 0.7358,
-      "fpr": 0.3034965034965035,
-      "fnr": 0.014285714285714285,
-      "balanced_accuracy": 0.8411088911088911,
-      "brier_score": 0.2620256035733333,
-      "ece": 0.3216336,
-      "mean_latency_ms": 19.61,
-      "p95_latency_ms": 19.995,
+      "pr_auc": 0.3687,
+      "roc_auc": 0.5256,
+      "fpr": 0.3295218295218295,
+      "fnr": 0.3064516129032258,
+      "balanced_accuracy": 0.6820132787874724,
+      "brier_score": 0.31863840420394735,
+      "ece": 0.35947730263157895,
+      "mean_latency_ms": 20.082,
+      "p95_latency_ms": 21.092,
       "baseline_comparison": {
-        "RandomForest_F1": 0.5385,
-        "GradientBoosting_F1": 0.5098,
-        "IsolationForest_F1": 0
+        "RandomForest_F1": 0.9849,
+        "GradientBoosting_F1": 0.9741,
+        "IsolationForest_F1": 0.0778
       },
-      "conformal_tau": 1.0
+      "conformal_tau": 0.635602358886765
     }
   },
   "UNSW_NB15": {
@@ -61,52 +61,52 @@
     "dataset_sha256": "a71a9dc641b2878d63133d46a2a5bc8488e82010208cf237c89f3fa710b8c628",
     "file_size_mb": 1.07,
     "sampling_mode": "STRATIFIED_SAMPLE",
-    "total_records": 73,
+    "total_records": 5000,
     "split_counts": {
-      "train": 51,
-      "val": 10,
-      "test": 12
+      "train": 3500,
+      "val": 750,
+      "test": 750
     },
     "split_strategy": "CHRONOLOGICAL_TEMPORAL",
     "is_entity_disjoint": false,
     "leakage_audit_passed": true,
     "locked_parameters": {
-      "tau_star": 0.44,
-      "val_f1": 1.0,
+      "tau_star": 0.34,
+      "val_f1": 0.986,
       "learned_weights": {
-        "signature": 0.3945,
-        "anomaly": 0.3103,
-        "density": 0.1967,
-        "drift_rate": 0.0985
+        "signature": 0.3879,
+        "anomaly": 0.3266,
+        "density": 0.1904,
+        "drift_rate": 0.0951
       },
       "calibration": {
-        "calib_slope": 5.0,
-        "calib_intercept": -1.6549
+        "calib_slope": 9.1342,
+        "calib_intercept": -3.8689
       }
     },
     "test_metrics": {
-      "precision": 0.0,
-      "recall": 0.0,
-      "f1": 0.0,
+      "precision": 0.9538461538461539,
+      "recall": 1.0,
+      "f1": 0.9763779527559054,
       "f1_ci_95": [
-        0.0,
-        0.0
+        0.9587,
+        0.9897
       ],
-      "pr_auc": null,
-      "roc_auc": null,
-      "fpr": 0.16666666666666666,
+      "pr_auc": 0.9996,
+      "roc_auc": 0.9998,
+      "fpr": 0.015957446808510637,
       "fnr": 0.0,
-      "balanced_accuracy": 0.4166666666666667,
-      "brier_score": 0.0467536225,
-      "ece": 0.17330833333333334,
-      "mean_latency_ms": 17.617,
-      "p95_latency_ms": 20.993,
+      "balanced_accuracy": 0.9920212765957447,
+      "brier_score": 0.03403114276,
+      "ece": 0.0936132,
+      "mean_latency_ms": 21.317,
+      "p95_latency_ms": 21.566,
       "baseline_comparison": {
-        "RandomForest_F1": 0,
-        "GradientBoosting_F1": 0,
-        "IsolationForest_F1": 0
+        "RandomForest_F1": 0.9526,
+        "GradientBoosting_F1": 0.9556,
+        "IsolationForest_F1": 0.5179
       },
-      "conformal_tau": 0.499
+      "conformal_tau": 0.2001817851489478
     }
   }
 }
