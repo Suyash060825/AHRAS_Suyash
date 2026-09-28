@@ -214,6 +214,8 @@ python3 -m pytest -q
 
 ### Git Commit History on `new-features`
 ```
+ed6888a docs(audit): complete Phase 0 integrity audit — manifests, capability matrix, experiment matrix, and integrity report
+4a0214e docs: record comprehensive upgrade log and audit tracking in SYSTEM_UPGRADE_AND_AUDIT_LOG.md
 1f66ebe docs(paper): expand paper/main.tex into full IEEE TDSC journal manuscript with references.bib (ISSUE-11)
 2a76ffa docs: reconcile latency claims across 3-tier hierarchy (Tier 0 screening 0.04ms vs Tier 2 analytical 19.61ms) (ISSUE-16)
 111c6a7 feat(frontend): implement D3.js GNN graph, dynamic MITRE matrix, approval queue endpoints, and live risk sparkline (FRONTEND-1..7)
@@ -222,3 +224,19 @@ python3 -m pytest -q
 2a005bd fix(security): audit quick-wins R1 — XSS/DOM, WS backoff, CSP hardening, dev-mode warning, ledger TTL, RASE description, gate diagnostic
 81f80ae feat(pareto): implement 12-Dimensional Strategic Pareto Scorecard (Phase 10 / EXP-31)
 ```
+
+---
+
+## 9. Phase 0 Audit & Integrity Certification
+*Commit: `ed6888a`*
+
+Completed full repository audit and produced all mandatory Phase 0 baseline documents:
+1. [`evaluation/environment_manifest.json`](file:///home/suyashpradhan/Downloads/AHRAS_Suyash-master/evaluation/environment_manifest.json): Machine-readable system specs (12 vCPUs, 32GB RAM, Python 3.14.6, Linux 7.1.8-100.fc43.x86_64, locked package versions).
+2. [`evaluation/data/dataset_registry.json`](file:///home/suyashpradhan/Downloads/AHRAS_Suyash-master/evaluation/data/dataset_registry.json): Cryptographic registry of authentic datasets (CICIDS2017 Wednesday 214.74 MB / 692,703 records, UNSW-NB15 1.07 MB / 5,000 records).
+3. [`docs/CURRENT_CAPABILITY_MATRIX.md`](file:///home/suyashpradhan/Downloads/AHRAS_Suyash-master/docs/CURRENT_CAPABILITY_MATRIX.md): Comprehensive capability table across all 37 core system capabilities classified by status, test suites, and required extensions.
+4. [`docs/RESEARCH_FRONTIER_BASELINE.md`](file:///home/suyashpradhan/Downloads/AHRAS_Suyash-master/docs/RESEARCH_FRONTIER_BASELINE.md): Locked empirical baselines, 3-tier latency hierarchy, and real-world benchmark metrics.
+5. [`docs/AHRAS_NEXTGEN_ARCHITECTURE.md`](file:///home/suyashpradhan/Downloads/AHRAS_Suyash-master/docs/AHRAS_NEXTGEN_ARCHITECTURE.md): Full closed-loop 9-stage operational loop specification and data contracts.
+6. [`docs/IMPLEMENTATION_PRIORITY_MATRIX.md`](file:///home/suyashpradhan/Downloads/AHRAS_Suyash-master/docs/IMPLEMENTATION_PRIORITY_MATRIX.md): 10-phase roadmap with prerequisites and immediate Phase 1 deliverables.
+7. [`docs/RESEARCH_EXPERIMENT_MATRIX.md`](file:///home/suyashpradhan/Downloads/AHRAS_Suyash-master/docs/RESEARCH_EXPERIMENT_MATRIX.md): Complete catalog of EXP-01 through EXP-31 + EXP-ABL with hypotheses, metrics, and artifact targets.
+8. [`docs/PHASE_0_INTEGRITY_REPORT.md`](file:///home/suyashpradhan/Downloads/AHRAS_Suyash-master/docs/PHASE_0_INTEGRITY_REPORT.md): Integrity certification certifying complete test suite health (549 passed, 43 subtests passed = 592 units in 69.95s) and readiness for Phase 1.
+
