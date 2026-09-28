@@ -2,11 +2,14 @@
 
 [![Python 3.9+](https://img.shields.io/badge/python-3.9%2B-blue.svg)](https://www.python.org/downloads/)
 [![License: MIT](https://img.shields.io/badge/License-MIT-green.svg)](LICENSE)
-[![Tests: 262/262 Passed](https://img.shields.io/badge/tests-262%2F262%20passed-brightgreen.svg)]()
+[![Tests: 549/549 Passed](https://img.shields.io/badge/tests-549%2F549%20passed-brightgreen.svg)]()
 [![OCSF Standard Compliant](https://img.shields.io/badge/schema-OCSF%20v1.1-purple.svg)](https://schema.ocsf.io/)
 [![Live Research Evaluation](https://img.shields.io/badge/evaluation-100%25%20Live%20Computed-blue.svg)]()
+[![Audit & Upgrades](https://img.shields.io/badge/Audit%20Log-Complete-blueviolet.svg)](docs/SYSTEM_UPGRADE_AND_AUDIT_LOG.md)
 
 > **AHRAS** is an evidence-driven, closed-loop cyber defense controller. It converts heterogeneous multi-modal detection evidence into uncertainty-aware entity/episode risk, executes safety-gated active response decisions, and maintains complete cryptographic provenance and exact mathematical reconstructibility for all security decisions.
+>
+> 📖 **Comprehensive System Upgrade & Audit Log**: See [`docs/SYSTEM_UPGRADE_AND_AUDIT_LOG.md`](docs/SYSTEM_UPGRADE_AND_AUDIT_LOG.md) for the complete record of research extensions (Phases 1–10: EXP-22 through EXP-31), authentic real-world benchmark evaluations (UNSW-NB15 & CICIDS2017), SOC dashboard rebuild, and IEEE TDSC journal manuscript.
 
 ---
 
