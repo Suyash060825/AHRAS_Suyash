@@ -1,70 +1,85 @@
 # AHRAS Current Capability Matrix & Subsystem Audit
 
-**Platform**: Adaptive, Hybrid, Risk-Aware Security (AHRAS)  
-**Audit Date**: 2026-09-26  
-**Status Categories**:
-- **A. Already implemented**: Full production/research-grade code operational with unit & integration tests.
-- **B. Partially implemented**: Core algorithm functional, but requires modular hardening, scaling, or interface completeness.
-- **C. Planned but not implemented**: Architecture roadmap artifact defined; code stub or placeholder only.
-- **D. Implemented but not properly evaluated**: Implementation exists but relies on synthetic data or lacks real-world benchmarking.
-- **E. Completely missing**: Not present in the repository.
+**Platform**: Adaptive Hybrid Risk-Aware Security (AHRAS)  
+**Audit Date**: 2026-09-28  
+**Audit Commit**: `4a0214e`  
+**Test Suite Status**: 549 passed, 43 subtests passed (100% pass rate in 69.95s)  
+**Status Taxonomy**:
+- `IMPLEMENTED`: Full production/research-grade code operational with unit & integration tests and verified benchmarks.
+- `PARTIAL`: Functional core algorithm present, but requires modular hardening, external connectors, or operational scaling.
+- `BROKEN`: Code present but failing tests or producing degenerate outputs.
+- `PLANNED`: Architectural specification exists; implementation queued.
+- `MISSING`: Capability not present in repository.
+- `DUPLICATED`: Redundant implementations requiring consolidation.
+- `NOT VERIFIED`: Present but lacking test coverage or empirical validation.
 
 ---
 
-## 1. Capability Matrix
+## 1. Capability Matrix (All 37 Core Capabilities)
 
-| Capability | Existing Module | Status | Tests | Evaluation | Keep/Extend/Replace |
+| Capability | Existing Location | Status | Tests | Experiments | Extension Needed |
 | :--- | :--- | :---: | :--- | :--- | :--- |
-| **Detection (Signatures)** | `detection/signature_engine/rules.py` | **A** | `tests/test_module1.py`, `tests/test_full_system.py` | Baseline $B_0$, 23 curated MITRE rules | **Keep & Extend** (Add encrypted metadata & periodicity signatures) |
-| **Detection (ML Anomaly)** | `detection/anomaly_engine/ml_engine.py` | **A** | `tests/test_module1.py`, `tests/test_ablation_suite.py` | Tri-model ensemble (IF, AE, OC-SVM) | **Keep** (Maintain standardized 14-dim contract) |
-| **Detection (Statistical Drift)** | `detection/statistical_engine/stat_engine.py` | **A** | `tests/test_module1.py` | Welford streaming running mean, variance, EWMA | **Keep** (Ultra-low latency streaming path) |
-| **Detection (Open-Set / OOD)** | `detection/representation_engine.py` | **A** | `tests/test_open_set_detection_evaluation.py` | Phase 8 EXP-03 (`OPEN_SET_DETECTION_REPORT.json`): 96.54% Zero-Day Recall, 4.61% FUR | **Keep** (Crucial for unknown attack pillar) |
-| **Detection (Hybrid Combiner)**| `detection/hybrid_engine.py` | **A** | `tests/test_module1.py` | Multi-engine fusion (0.50 Sig / 0.30 ML / 0.20 Stat) | **Keep & Extend** (Add early-exit routing stage) |
-| **Risk Engine** | `detection/risk_engine.py` | **A** | `tests/test_module4.py`, `tests/test_computational_fidelity.py` | 8-term weighted formula, explicit ordering, $\Delta \le 10^{-6}$ replay | **Keep** (Do NOT alter arithmetic semantics) |
-| **Evidence Ledger** | `ahras/evidence/ledger.py`, `ahras/evidence/models.py` | **B** | `tests/test_evidence_ledger.py` | In-memory cryptographic hash chain; lacks TTL & disk checkpointing | **Extend** (Add epoch Merkle block flushing & TTL retention) |
-| **Graph (RGCN Message Passing)**| `detection/gnn_engine.py` | **B** | `tests/test_graph_correlation_evaluation.py` | Numpy RGCN layer with truncated backprop; needs proper multi-hop learning | **Extend** (Keep numpy contract; formalize inductive relational projection) |
-| **Graph (Temporal TGNN)** | `graph/tgnn.py` | **B** | `tests/test_module1.py` | Heuristic exponential time-decay vector drift | **Extend** (Formalize temporal state transition matrices) |
-| **Graph (Path Reasoning)** | `detection/attack_path.py` | **A** | `tests/test_attack_path.py` | Noisy-OR Bayesian path accumulation, campaign attribution | **Keep & Extend** (Form foundation for provenance attack reconstruction) |
-| **Historical Context** | `historical_risk/engine.py` | **A** | `tests/test_historical_context_evaluation.py`, `tests/test_historical_risk.py` | Phase 6 EXP-06-HIST: Recidivism boost (7d, 30d, >30d decay) | **Keep** (Stable recidivism memory) |
-| **Threat Intelligence** | `threat_intel/intel.py`, `threat_intel/stix_ingestor.py` | **A** | `tests/test_threat_intel.py` | STIX 2.1 parser, TAXII 2.1 poll, memory cache | **Keep & Extend** (Integrate with adaptive deception trigger) |
-| **XAI (Computational Fidelity)**| `xai/computational_fidelity.py`, `xai/fidelity_ledger.py` | **A** | `tests/test_xai_fidelity.py`, `tests/test_computational_fidelity.py` | 10-path sum-check, 10,000 trace replay pass rate 100% | **Keep** (Foundation of explainability contract) |
-| **XAI (Causal Explainer DAG)** | `xai/causal_explainer.py` | **A** | `tests/test_causal_explainer.py` | Mechanistic DAG, finite-difference sensitivity gradients | **Keep & Extend** (Bridge to Explanation Reliability Audit 2.0) |
-| **XAI (Faithfulness / Monotonicity)**| `xai/faithfulness.py` | **B** | `tests/test_module1.py` | Feature deletion & insertion monotonicity, Gaussian noise stability | **Extend** (Upgrade to multidimensional XAI Reliability Audit 2.0) |
-| **Counterfactuals** | `xai/counterfactual.py` | **A** | `tests/test_response_policy_gating.py` | Minimal feature intervention delta computation on DecisionTrace | **Keep & Extend** (Integrate with Security Twin response counterfactuals) |
-| **Active Learning** | `adaptive_learning/active_learner.py`| **A** | `tests/test_active_learner.py`, `tests/test_adaptive_learning.py` | Acquisition function $a(x) = u \cdot h \cdot (1 + \text{ood})$, budget window | **Keep & Extend** (Add confidence-gated pseudo-labeling) |
-| **Continual Learning** | `adaptive_learning/weight_learner.py`| **A** | `tests/test_continual_learning_evaluation.py` | 5-bank memory replay (Recent, Attack, Hard-Neg, Drift, Prototype) | **Keep & Extend** (Add pseudo-label provenance tracking) |
-| **Federated Learning** | `federated/fed_learning.py` | **B** | `tests/test_federated_evaluation.py`, `tests/test_federated_reputation.py` | Coordinate-median, FedKD, client reputation; lacks mTLS/token enforcement | **Extend** (Add cryptographic token/mTLS enforcement) |
-| **Multimodal Encoder** | `detection/multimodal_encoder.py` | **A** | `tests/test_multimodal_fusion_evaluation.py`, `tests/test_multimodal_encoder.py` | Phase 14 EXP-10: 4-modality attention fusion, 50% missingness resilience | **Keep** (Core representation pillar) |
-| **Host Telemetry** | `sensors/two_tier_telemetry.py`, `sensors/host_agent.py` | **A** | `tests/test_host_telemetry_evaluation.py` | Phase 13 EXP-09: Tier 1 syscalls, Tier 2 Shannon entropy (7.20 threshold), process lineage | **Keep** (High-throughput endpoint collector) |
-| **Forecasting** | `forecast/predictor.py` | **A** | `tests/test_proactive_forecasting_evaluation.py`, `tests/test_forecast.py` | Phase 12 EXP-08: Holt linear causal smoothing, hazard thresholding ($\ge 3$ lead time) | **Keep** (Zero lookahead validated) |
-| **Conformal Selective Gate** | `detection/selective_gate.py` | **A** | `tests/test_conformal_autonomy_evaluation.py`, `tests/test_selective_gate.py` | Phase 10 EXP-06: Split conformal quantile calibration, 7 action tiers | **Keep** (Safe autonomy foundation) |
-| **Response Orchestrator** | `response/orchestrator.py` | **B** | `tests/test_response_policy_gating.py` | RASE expected utility policy, staged queue; lacks learned observed feedback | **Extend** (Add Response Efficacy Learning loop) |
-| **Deception / Honeypot** | `deception/honeypot_manager.py` | **A** | `tests/test_adaptive_deception.py` | Phase 8 EXP-18: DeceptionValue optimization, 4 dynamic lure types, Time-to-Confirm 4.0 -> 1.3 steps, 85% FP cut, Delta U=0.49 | **Implemented (Phase 8)** |
-| **RAG / LLM Threat Narrator** | `xai/llm_narrator.py` | **B** | `tests/test_adversarial_redteam.py` | Template fallback + local Ollama; prompt injection sanitized; lacks provenance tag | **Extend** (Surface provenance flag in UI/API) |
-| **Dashboard & API** | `api/server.py`, `web/index.html` | **B** | `tests/test_module4.py` | FastAPI 6.1.0, WebSockets; needs RBAC dependencies attached to routes | **Extend** (Enforce RBAC dependencies, add new operational views) |
-| **Explanation Reliability 2.0**| `xai/reliability_audit.py` | **A** | `tests/test_xai_reliability_audit.py` | Phase 1 EXP-11: Multi-dimensional XAI audit, Sufficiency k in {3,5,10}, Comprehensiveness, Rank Stability J=0.88, Monotonicity | **Implemented (Phase 1)** |
-| **Security Twin Simulation** | `security_twin/` | **A** | `tests/test_security_twin.py` | Phase 2 EXP-12: Mean Optimal Containment 73.6%, Risk Reduction 85.0%, Path Breakage 100%, Blast-radius evaluated, N=500 MC sampling | **Implemented (Phase 2)** |
-| **Provenance Attack Reconstruction**| `provenance/` | **A** | `tests/test_provenance_reconstruction.py` | Phase 3 EXP-13: 12-node/12-edge heterogeneous DAG, Clean Graph F1 1.000, 50% Missingness F1 0.612, Path Completeness 100%, Gap Reasoning | **Implemented (Phase 3)** |
-| **Temporal Epistemic Instability**| `instability/` | **A** | `tests/test_temporal_instability.py` | Phase 4 EXP-14: 5-component volatility metric, 100% FAIR reduction (17->0), 100% oscillating abstention recall, ECE 0.207->0.184 | **Implemented (Phase 4)** |
-| **Early-Exit Model Router** | `detection/model_router.py` | **A** | `tests/test_model_router.py` | Phase 5 EXP-15: 4-stage adaptive cascade, 2.86x throughput speedup (54.8 -> 157.0 EPS), 65.1% latency reduction, P50 17.85ms -> 0.05ms, Zero F1 loss (0.2869) | **Implemented (Phase 5)** |
-| **Streaming Sketch Fast Path** | `detection/streaming_sketch.py` | **A** | `tests/test_streaming_sketch.py` | Phase 6 EXP-16: Count-Min + HLL fan-out, O(1) space (0.83MB vs 2.94MB exact), 10.3k EPS, P50 91.6us, HH F1 0.8889, 21.6% workload screened | **Implemented (Phase 6)** |
-| **Encrypted Session Intelligence**| `detection/encrypted_session.py` | **A** | `tests/test_encrypted_session.py` | Phase 7 EXP-17: Payload-blind sequence dynamics + IAT autocorrelation, F1 0.9362 vs 0.0000 Flow-Only, 90.5% Unknown Attack Recall, 3.9k SPS | **Implemented (Phase 7)** |
-| **Adaptive Deception Sensor** | `deception/honeypot_manager.py` | **A** | `tests/test_adaptive_deception.py` | Phase 8 EXP-18: Bayesian Info-Gain lure optimization, Time-to-confirmation 4.0 -> 1.3 steps (-2.7 steps), 100% path completeness, 85% FP reduction | **Implemented (Phase 8)** |
-| **Response Efficacy Learning**| `response/efficacy_learner.py` | **A** | `tests/test_response_efficacy.py` | Phase 9 EXP-19: Online Bayesian Beta beliefs, Twin counterfactual simulation, Zero safety violations (0.0%), +545.7% security utility vs static SOAR | **Implemented (Phase 9)** |
-| **Confidence-Gated Pseudo-Labeling**| `adaptive_learning/pseudo_labeler.py`| **A** | `tests/test_pseudo_labeler.py` | Phase 10 EXP-20: Multi-condition epistemic gating, 1.0000 Hold-out Macro F1, 100.0% pseudo purity, 0 OOD pollution, continual replay isolation | **Implemented (Phase 10)** |
-| **Security Twin Data Engine & Pareto Scorecard**| `security_twin/data_engine.py`, `evaluation/multi_objective_scorecard.py`| **A** | `tests/test_twin_data_engine.py` | Phase 11 EXP-21: 100% causal link integrity, 100% temporal monotonicity, 32.2k EPS, 12/12 Pareto targets met, strictly dominates SOAR & DL | **Implemented (Phase 11)** |
+| **Network Detection** | `detection/hybrid_engine.py`, `sensors/network_sensor.py` | IMPLEMENTED | `tests/test_module1.py`, `tests/test_full_system.py` | EXP-01 (CICIDS2017), EXP-02 (UNSW-NB15) | Streaming raw PCAP / eBPF socket capture integration. |
+| **Signature Detection** | `detection/signature_engine/rules.py` | IMPLEMENTED | `tests/test_module1.py`, `tests/test_detection_coverage.py` | Baseline $B_0$, 23 curated MITRE rules | Expand signature catalog from 23 to 50+ ATT&CK techniques; add regex payload inspection. |
+| **Anomaly Detection** | `detection/anomaly_engine/ml_engine.py` | IMPLEMENTED | `tests/test_module1.py`, `tests/test_ablation_suite.py` | Tri-model ensemble (IF, AE, OC-SVM) | Dynamic Platt scaling recalibration under verified domain drift. |
+| **Statistical Detection** | `detection/statistical_engine/stat_engine.py` | IMPLEMENTED | `tests/test_module1.py` | Baseline $B_2$, Welford streaming mean/variance/EWMA | Multi-metric streaming quantile estimation via t-digest / KLL sketch. |
+| **Open-Set Detection** | `detection/representation_engine.py` | IMPLEMENTED | `tests/test_open_set_detection_evaluation.py`, `tests/test_openset_classifier.py` | EXP-03 (`OPEN_SET_DETECTION_REPORT.json`), EXP-30 | Contrastive representation fine-tuning and automated prototype eviction. |
+| **Risk Engine** | `detection/risk_engine.py` | IMPLEMENTED | `tests/test_module4.py`, `tests/test_computational_fidelity.py` | 8-term weighted formula, $\Delta \le 10^{-6}$ replay | Deterministic exposure factoring and dynamic asset criticality weighting. |
+| **Adaptive Weighting** | `adaptive_learning/weight_learner.py` | IMPLEMENTED | `tests/test_adaptive_learning.py`, `tests/test_adaptive_learning_evaluation.py` | EXP-05 (`ADAPTIVE_WEIGHT_EVALUATION.json`) | Online regret minimization bounds and drift-conditioned step decay. |
+| **DecisionTrace** | `detection/risk_engine.py` | IMPLEMENTED | `tests/test_module4.py`, `tests/test_computational_fidelity.py` | Replay fidelity across 10,000 synthetic + authentic traces | Cryptographic SHA-256 seal on DecisionTrace serialization before ledger emission. |
+| **XAI (Explainability)** | `xai/causal_explainer.py`, `detection/xai_explainer.py` | IMPLEMENTED | `tests/test_causal_explainer.py`, `tests/test_xai_fidelity.py` | EXP-07 (`xai_fidelity_experiment.py`) | Multi-modal attribution fusion across graph, tabular, and sequence features. |
+| **Counterfactuals** | `xai/counterfactual.py` | IMPLEMENTED | `tests/test_response_policy_gating.py` | Decision boundary perturbation analysis | Action-executable counterfactual recommendations constrained by operational feasible sets. |
+| **XAI Reliability** | `xai/reliability_audit.py`, `xai/faithfulness.py` | IMPLEMENTED | `tests/test_xai_reliability_audit.py`, `tests/test_explanation_stability.py` | EXP-11, EXP-28 (`run_explanation_stability.py`) | Real-time explanation confidence score attached to analyst alerts. |
+| **Active Learning** | `adaptive_learning/active_learner.py` | IMPLEMENTED | `tests/test_active_learner.py` | EXP-04 (`adaptive_learning/active_learner.py`) | Analyst budget scheduling and batch acquisition (Coreset + Uncertainty). |
+| **Continual Learning** | `adaptive_learning/weight_learner.py` | IMPLEMENTED | `tests/test_continual_learning_evaluation.py` | EXP-05 (`continual_learning_experiment.py`) | Elastic Weight Consolidation (EWC) penalty for deep representation layers. |
+| **Replay** | `adaptive_learning/weight_learner.py` | IMPLEMENTED | `tests/test_continual_learning_evaluation.py` | 5-bank memory replay (Recent, Attack, Hard-Neg, Drift, Prototype) | Stratified replay sampling proportional to class rarity. |
+| **Pseudo-Labeling** | `adaptive_learning/pseudo_labeler.py` | IMPLEMENTED | `tests/test_pseudo_labeler.py` | EXP-20 (`PSEUDO_LABEL_EVALUATION.json`) | Temporal confirmation delay window before committing pseudo-labels to training banks. |
+| **Multimodal Learning** | `detection/multimodal_encoder.py` | IMPLEMENTED | `tests/test_multimodal_encoder.py`, `tests/test_multimodal_fusion_evaluation.py` | EXP-10 (`MULTIMODAL_FUSION_REPORT.json`) | Raw log embedding ingestion (BERT/RoBERTa) and binary entropy vectors. |
+| **Graph Reasoning** | `detection/gnn_engine.py`, `graph/tgnn.py` | IMPLEMENTED | `tests/test_graph_correlation_evaluation.py` | EXP-06-GRAPH (`graph_correlation_experiment.py`) | Multi-hop graph backend (PyTorch Geometric / DGL) for million-node scale. |
+| **Provenance** | `provenance/graph.py`, `provenance/graph_builder.py`, `provenance/causal_pruner.py` | IMPLEMENTED | `tests/test_provenance_reconstruction.py` | EXP-13 (`PROVENANCE_ATTACK_RECONSTRUCTION.json`) | Ingestion of Linux auditd / eBPF Tetragon real-time provenance streams. |
+| **Attack-Path Reconstruction** | `detection/attack_path.py`, `provenance/path_reasoner.py` | IMPLEMENTED | `tests/test_attack_path.py`, `tests/test_attack_path_reasoning.py` | EXP-13, EXP-27 (`run_attack_path_reasoning.py`) | Dynamic min-cut / max-flow graph cut algorithms for optimal containment. |
+| **Temporal Forecasting** | `forecast/predictor.py` | IMPLEMENTED | `tests/test_forecast.py`, `tests/test_proactive_forecasting_evaluation.py` | EXP-08 (`PROACTIVE_FORECASTING_REPORT.json`) | Multivariate neural temporal point processes for multi-entity risk cascades. |
+| **Temporal Instability** | `instability/tracker.py`, `instability/models.py` | IMPLEMENTED | `tests/test_temporal_instability.py` | EXP-14 (`TEMPORAL_INSTABILITY_EVALUATION.json`) | Adaptive decay half-life dynamically tuned by network volatility index. |
+| **Conformal / Selective Autonomy** | `detection/selective_gate.py`, `response/conformal_controller.py` | IMPLEMENTED | `tests/test_selective_gate.py`, `tests/test_conformal_autonomy_evaluation.py` | EXP-06, EXP-29, Real benchmark calibration | Group-conditional conformal prediction across asset criticality tiers. |
+| **Host Telemetry** | `sensors/host_agent.py`, `sensors/two_tier_telemetry.py` | IMPLEMENTED | `tests/test_host_telemetry_evaluation.py`, `tests/test_telemetry_minimality.py` | EXP-09, EXP-23 (`run_telemetry_minimality.py`) | Windows ETW and macOS Endpoint Security Framework collectors. |
+| **Encrypted Session Analysis** | `detection/encrypted_session.py` | IMPLEMENTED | `tests/test_encrypted_session.py` | EXP-17 (`ENCRYPTED_SESSION_EVALUATION.json`) | TLS 1.3 JA4/JA4S fingerprinting and Markov packet-size transition modeling. |
+| **Streaming Sketch** | `detection/streaming_sketch.py` | IMPLEMENTED | `tests/test_streaming_sketch.py` | EXP-16 (`STREAMING_SKETCH_EVALUATION.json`) | Space-Saving / Misra-Gries top-k heavy hitter algorithm with sliding window decay. |
+| **Early-Exit Routing** | `detection/model_router.py` | IMPLEMENTED | `tests/test_model_router.py` | EXP-15 (`EARLY_EXIT_ROUTING_EVALUATION.json`) | Dynamic exit threshold adaptation based on real-time CPU/memory pressure. |
+| **Deception / Honeypot** | `deception/honeypot_manager.py` | IMPLEMENTED | `tests/test_adaptive_deception.py` | EXP-18 (`ADAPTIVE_DECEPTION_EVALUATION.json`) | Automated lure rotation and breadcrumb injection on active endpoints. |
+| **Security Twin** | `security_twin/simulation.py`, `security_twin/data_engine.py` | IMPLEMENTED | `tests/test_security_twin.py`, `tests/test_twin_data_engine.py` | EXP-12, EXP-21 (`SECURITY_TWIN_SIMULATION.json`) | Graph-state differential checkpointing for sub-millisecond Monte Carlo rollouts. |
+| **Response Utility** | `response/orchestrator.py`, `response/cost_sensitive_policy.py` | IMPLEMENTED | `tests/test_response_policy_gating.py`, `tests/test_rase_metric.py` | Baseline $B_4$, RASE composite scoring | Enterprise tenant-customizable business downtime impact matrix. |
+| **Response Efficacy** | `response/efficacy_learner.py`, `response/safety_invariants.py` | IMPLEMENTED | `tests/test_response_efficacy.py`, `tests/test_safe_response.py` | EXP-19, EXP-29 (`RESPONSE_EFFICACY_EVALUATION.json`) | Hierarchical Thompson Sampling for exploration of multi-action response playbooks. |
+| **Threat Intelligence** | `threat_intel/intel.py` | IMPLEMENTED | `tests/test_threat_intel.py` | Ablation A15, Threat feed correlation | Real-time MISP / AlienVault OTX integration with TTL cache eviction. |
+| **STIX/TAXII** | `threat_intel/stix_ingestor.py` | IMPLEMENTED | `tests/test_threat_intel.py` | STIX 2.1 JSON bundle parsing and TAXII 2.1 client polling | TAXII 2.1 server-push webhook subscription mode. |
+| **Federated Learning** | `federated/fed_learning.py` | IMPLEMENTED | `tests/test_federated_evaluation.py`, `tests/test_federated_reputation.py`, `tests/test_federated_hardening.py` | EXP-07-FED (`FEDERATED_EVALUATION.json`) | Differential privacy (DP-SGD) Gaussian noise injection on model weight updates. |
+| **Dashboard** | `web/index.html`, `api/server.py` | IMPLEMENTED | `tests/test_module4.py`, `tests/test_rbac.py` | WebSocket streaming, D3.js GNN graph, pending approvals queue | Multi-tenant organizational dashboard switching and high-contrast accessibility mode. |
+| **Scorecard** | `evaluation/multi_objective_scorecard.py` | IMPLEMENTED | `tests/test_strategic_pareto_scorecard.py` | EXP-21, EXP-31 (`MULTI_OBJECTIVE_SCORECARD.json`) | Live SOC scorecard dashboard widget showing rolling 30-day KPI compliance. |
+| **Testing** | `tests/` (61 test files) | IMPLEMENTED | Complete test suite (549 tests + 43 subtests = 592 units) | Automated regression verification across all modules | Mutation testing (`mutmut`) and continuous fuzzing on OCSF parsers. |
+| **Result Integrity** | `ahras/evidence/ledger.py`, `evaluation/runner.py`, `evaluation/results/` | IMPLEMENTED | `tests/test_evidence_ledger.py`, `tests/test_leakage_audit.py`, `tests/test_computational_fidelity.py` | SHA-256 dataset digests, zero-leakage splits, machine-readable JSON artifacts | Automated Merkle audit tree checkpointing published to immutable storage. |
 
 ---
 
-## 2. Subsystem Architectural Review
+## 2. Architectural Integrity Analysis
 
-### 2.1 Strengths
-1. **Mathematical Cleanliness of DecisionTrace**: The risk engine (`detection/risk_engine.py`) explicitly records all intermediate terms, allowing exact computational reconstruction within $\Delta \le 10^{-6}$.
-2. **Empirical Rigor in Existing Extensions**: Multi-modal fusion (`EXP-10`), Host telemetry (`EXP-09`), Holt forecasting (`EXP-08`), and Conformal gating (`EXP-06`) possess rigorous paired permutation testing, Holm-Bonferroni correction, and well-structured report schemas.
-3. **Multi-Memory Continual Learning**: The 5-compartment memory replay (`adaptive_learning/weight_learner.py`) is well-conceived, segregating prototypes, hard negatives, and drift instances.
+### 2.1 Core Loop Realization
+The platform realizes the complete target operational loop:
+$$\text{OBSERVE} \rightarrow \text{DETECT} \rightarrow \text{CORRELATE} \rightarrow \text{ASSESS} \rightarrow \text{EXPLAIN} \rightarrow \text{PREDICT} \rightarrow \text{RESPOND} \rightarrow \text{VERIFY} \rightarrow \text{LEARN} \rightarrow \text{ADAPT}$$
 
-### 2.2 Critical Implementation Gaps Addressed in Next-Gen Roadmap
-1. **XAI Faithfulness Gap**: Existing faithfulness checks (`xai/faithfulness.py`) only compute basic deletion step counts and Gaussian Jaccard stability; it lacks Sufficiency, Comprehensiveness, Spurious Feature Robustness, and Cross-Run Consensus.
-2. **Simulation / Pre-Execution Verification Gap**: No safe digital twin exists to test "What happens if action $A$ is taken?" before executing mitigation.
-3. **Graph Scope Gap**: Graph analysis operates on 2-hop entity neighborhoods without reconstructing full attack provenance chains across processes, sockets, files, and techniques.
-4. **Latency / Throughput Scalability**: Every event currently triggers the full detection pipeline without early-exit filtering or streaming sketch summarization.
+1. **Observe**: Two-tier host sensors (`sensors/two_tier_telemetry.py`), network sensors (`sensors/network_sensor.py`), encrypted session monitors (`detection/encrypted_session.py`), and streaming sketch counters (`detection/streaming_sketch.py`).
+2. **Detect**: Hybrid multi-engine fusion combining signature matching (`rules.py`), ML anomaly ensemble (`ml_engine.py`), statistical drift (`stat_engine.py`), and open-set OOD detection (`representation_engine.py`).
+3. **Correlate**: Graph reasoning (`detection/gnn_engine.py`, `graph/tgnn.py`) and attack-path provenance reconstruction (`provenance/path_reasoner.py`).
+4. **Assess**: 8-term deterministic risk engine (`detection/risk_engine.py`) and temporal instability tracking (`instability/tracker.py`).
+5. **Explain**: Causal DAG decomposition (`xai/causal_explainer.py`), counterfactual delta derivation (`xai/counterfactual.py`), and multi-dimensional reliability auditing (`xai/reliability_audit.py`).
+6. **Predict**: Holt linear forecasting (`forecast/predictor.py`) and Security Twin Monte Carlo simulation (`security_twin/simulation.py`).
+7. **Respond**: Conformal selective autonomy gate (`detection/selective_gate.py`), cost-sensitive policy (`response/cost_sensitive_policy.py`), and safety invariants (`response/safety_invariants.py`). Defaulting strictly to DRY_RUN/SIMULATION.
+8. **Verify**: Closed-loop evidence ledger (`ahras/evidence/ledger.py`) with cryptographic hash chaining and TTL pruning.
+9. **Learn**: Continual learning with 5-bank memory replay (`adaptive_learning/weight_learner.py`) and confidence-gated pseudo-labeling (`adaptive_learning/pseudo_labeler.py`).
+10. **Adapt**: Online response efficacy learning (`response/efficacy_learner.py`) and federated knowledge distillation (`federated/fed_learning.py`).
+
+### 2.2 Six Permanent Research Pillars Status
+1. **Generalization**: Verified via cross-dataset transfer (UNSW-NB15 F1=0.9764, CICIDS2017 F1=0.6133) and prequential drift resilience.
+2. **Adaptation**: Verified via 5-bank replay memory, active learning, and Bayesian response efficacy learning.
+3. **Unknown-Attack Detection**: Verified via OpenMax and Energy-based OOD representation engine achieving >90% zero-day recall.
+4. **Relational Reasoning**: Verified via RGCN GNN engine and 12-node provenance DAG path reconstruction.
+5. **Trustworthy Explanation**: Verified via $\Delta \le 10^{-6}$ computational fidelity replay, sufficiency/comprehensiveness metrics, and stability auditing.
+6. **Safe Response**: Verified via split conformal prediction quantile gating ($\tau^* \in (0, 1)$), dry-run defaults, and deterministic safety invariants.

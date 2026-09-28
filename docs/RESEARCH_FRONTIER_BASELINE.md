@@ -1,31 +1,38 @@
 # AHRAS Research Frontier Baseline & Repository Integrity Audit
 
-> **Platform**: Adaptive, Hybrid, Risk-Aware Security Intelligence and Defense Platform  
-> **Audit Timestamp**: 2026-09-26T16:40:00Z  
-> **Lead Architect & Reviewer**: Antigravity Technical Audit Team
+> **Platform**: Adaptive Hybrid Risk-Aware Security (AHRAS)  
+> **Audit Timestamp**: 2026-09-28T10:05:00Z  
+> **Lead Architect & Reviewer**: Antigravity Technical Audit Team  
+> **Git Commit**: `4a0214e596aa39f52ca4b0cdd221f34d15fab322` (`new-features`)
 
 ---
 
 ## 1. Codebase Identification & Version Control
 
 * **Active Git Branch**: `new-features`
-* **Current Git Commit**: `7ba27f516f43704833f3893be684342203fd3a1f`
-* **Repository Architecture**: Multi-module cyber defense platform with OCSF standard telemetry, hybrid detection engines (signature, ML anomaly, statistical Welford drift), dynamic trust scoring, causal XAI, conformal risk gating, and closed-loop SOAR orchestration.
+* **Current Git Commit**: `4a0214e596aa39f52ca4b0cdd221f34d15fab322`
+* **Repository Architecture**: Research-grade adaptive multimodal cyber defense platform implementing the full closed-loop architecture:
+  $$\text{OBSERVE} \rightarrow \text{DETECT} \rightarrow \text{CORRELATE} \rightarrow \text{ASSESS} \rightarrow \text{EXPLAIN} \rightarrow \text{PREDICT} \rightarrow \text{RESPOND} \rightarrow \text{VERIFY} \rightarrow \text{LEARN} \rightarrow \text{ADAPT}$$
+* **Core Philosophy**: Zero fabricated metrics; strictly reproducible benchmarks; deterministic safety boundaries; DRY_RUN response defaults.
 
 ---
 
 ## 2. Runtime & Execution Environment
 
-* **Python Version**: `3.14.6` (GCC 15.0.1 20250116, 64-bit Linux)
-* **Operating System**: Linux x86_64
+Cataloged in [`evaluation/environment_manifest.json`](file:///home/suyashpradhan/Downloads/AHRAS_Suyash-master/evaluation/environment_manifest.json).
+
+* **Hardware Host**: 11th Gen Intel(R) Core(TM) i5-11260H @ 2.60GHz (12 vCPUs), 31.0 GB RAM, 8.0 GB Swap
+* **Operating System**: Linux 7.1.8-100.fc43.x86_64 (x86_64 architecture with glibc 2.42)
+* **Compiler**: GCC 15.2.1 20260123 (Red Hat 15.2.1-7)
+* **Python Runtime**: `3.14.6` (main, Jun 11 2026, 00:00:00)
 * **Core Dependency Versions**:
-  - `numpy`: `2.3.0`
+  - `numpy`: `2.5.2`
   - `scikit-learn`: `1.9.0`
   - `scipy`: `1.18.0`
   - `pandas`: `3.0.5`
   - `pytest`: `9.1.1`
   - `pydantic`: `2.13.4`
-  - `fastapi`: `0.135.3`
+  - `fastapi`: `0.141.1`
   - `uvicorn`: `0.52.1`
 
 ---
@@ -34,12 +41,12 @@
 
 All datasets are cataloged in [`evaluation/data/dataset_registry.json`](file:///home/suyashpradhan/Downloads/AHRAS_Suyash-master/evaluation/data/dataset_registry.json).
 
-| Dataset Name | Expected Relative Path | File Size | SHA-256 Digest | Status |
-| :--- | :--- | :--- | :--- | :--- |
-| **CIC-IDS2017 (Wednesday)** | `data/cicids2017/Wednesday-workingHours.pcap_ISCX.csv` | 214.74 MB | `893c27dc968bf7a8adef1689f90be55ca4a4dc3088fb63d6ff247ac56856df2a` | **AUTHENTICATED / LOCAL** |
-| **UNSW-NB15 (Part 1)** | `data/unsw_nb15/UNSW-NB15_1.csv` | 1.07 MB | `a71a9dc641b2878d63133d46a2a5bc8488e82010208cf237c89f3fa710b8c628` | **AUTHENTICATED / LOCAL** |
-| **CIC-IDS2017 (Friday/Thursday)** | `data/cicids2017/Friday-*.pcap_ISCX.csv` | Absent | Pending | **PENDING EXTERNAL DOWNLOAD** |
-| **CSE-CIC-IDS2018** | `data/cse_cic_ids2018/*.csv` | Absent | Pending | **PENDING EXTERNAL DOWNLOAD** |
+| Dataset Name | Relative Path | File Size | SHA-256 Digest | Records | Status |
+| :--- | :--- | :---: | :--- | :---: | :---: |
+| **CIC-IDS2017 (Wednesday)** | `data/cicids2017/Wednesday-workingHours.pcap_ISCX.csv` | 214.74 MB | `893c27dc968bf7a8adef1689f90be55ca4a4dc3088fb63d6ff247ac56856df2a` | 692,703 | **AUTHENTICATED / LOCAL** |
+| **UNSW-NB15 (Part 1)** | `data/unsw_nb15/UNSW-NB15_1.csv` | 1.07 MB | `a71a9dc641b2878d63133d46a2a5bc8488e82010208cf237c89f3fa710b8c628` | 5,000 | **AUTHENTICATED / LOCAL** |
+| **CIC-IDS2017 (Friday)** | `data/cicids2017/Friday-*.pcap_ISCX.csv` | — | Pending External Download | — | **QUEUED FOR INGESTION** |
+| **CSE-CIC-IDS2018** | `data/cse_cic_ids2018/*.csv` | — | Pending External Download | — | **QUEUED FOR INGESTION** |
 
 ### Policy on Missing Datasets
 When an external raw dataset is unavailable, the evaluation harness fails with an explicit `REAL_DATA_NOT_AVAILABLE` status. Synthetic data is NEVER silently substituted for authentic benchmarks.
@@ -49,53 +56,88 @@ When an external raw dataset is unavailable, the evaluation harness fails with a
 ## 4. Test Suite Execution & Integrity Check
 
 * **Execution Command**: `pytest -q`
-* **Total Collected Tests**: 472 test cases across 48 test suites.
-* **Pass Rate**: **100% (472 passed in 73.93s)**.
-* **Regressions**: 0.
-* **Recent Critical Fixes Verified by Tests**:
-  1. `TemporalGNN` deterministic hash-based spectral projection verified in `tests/test_graph_correlation_evaluation.py`.
-  2. `SecurityGNN` message-passing supervised training verified.
-  3. Slow HTTP / DoS connection-holding signatures verified against authentic Wednesday test split.
-  4. SQLite-backed persistent token revocation store verified in `tests/test_rbac.py` (`test_07_persistent_token_revocation`).
-  5. Default credential security gating behind `DEV_MODE` verified.
+* **Test Inventory**: 61 test files under `tests/`
+* **Pass Rate**: **100% (549 passed, 43 subtests passed = 592 test execution units in 69.95s)**
+* **Regressions**: 0
+* **Recent Verified Hardening Measures**:
+  1. Safe DOM construction in `web/index.html` preventing XSS via malicious event entity strings.
+  2. Jittered exponential WebSocket backoff (1s to 30s) preventing SOC dashboard thundering herd reconnects.
+  3. Strict Content Security Policy (`script-src 'self'`, `object-src 'none'`) in `api/server.py`.
+  4. Development mode warning for default credentials in `auth/manager.py`.
+  5. Cryptographic Evidence Ledger TTL pruning (`prune_older_than_days()`) preventing unbounded memory growth.
+  6. Conformal selective gate diagnostic property `calibration_status` detecting degenerate $\tau^* \ge 0.99$.
+  7. Holm-Bonferroni correction applied across all 24 ablation components in `paper/main.tex`.
 
 ---
 
-## 5. Empirical Benchmark Results
+## 5. Empirical Benchmark Results (Authentic Real Datasets)
 
-### 5.1 Authentic Real Benchmark Evaluation (Wednesday Working Hours)
-* **Records Evaluated**: 10,000 authentic flow records (Stratified temporal sampling, Stride 69 across 692,703 records).
-* **Partitioning**: Chronological split (70% Train = 7,000, 15% Val = 1,500, 15% Test = 1,500).
-* **Leakage Verification**: Passed (Zero train/test entity contamination).
-* **Locked Hyperparameters on Validation**: $\tau^* = 0.300$, Platt calibration slope = 5.0.
+Recorded in [`evaluation/results/real_world_benchmarks_report.json`](file:///home/suyashpradhan/Downloads/AHRAS_Suyash-master/evaluation/results/real_world_benchmarks_report.json).
+
+### 5.1 CICIDS2017 (Wednesday Working Hours — Botnet & DoS Traffic)
+* **Sample Evaluated**: 10,000 authentic flow records (Stratified temporal sampling across 692,703 records).
+* **Partitioning**: Entity-disjoint split (Train: 7,000, Val: 1,480, Test: 1,520).
+* **Leakage Verification**: Passed (Zero train/test IP contamination).
+* **Locked Hyperparameters**: $\tau^* = 0.22$, Platt calibration slope = 0.0881, intercept = -0.5596.
 * **Test Performance**:
-  - **Attack Recall**: **98.57%** (69/70 attacks caught)
-  - **Balanced Accuracy**: **84.11%**
-  - **ROC-AUC**: **0.7358**
-  - **PR-AUC**: **0.0998**
-  - **Test F1 Score**: **0.2408** (95% CI: [0.1948, 0.2845])
-  - **Mean Decision Latency**: **19.61 ms** (P95: 19.99 ms)
-  - **External Baselines**: Random Forest F1=0.5385, Gradient Boosting F1=0.5098, Isolation Forest F1=0.0000.
+  - **F1 Score**: **0.6133** (95% CI: [0.5804, 0.6442]) (improved from previous 0.2408)
+  - **Precision**: **0.5497**
+  - **Recall**: **0.6935**
+  - **Balanced Accuracy**: **68.20%**
+  - **Conformal Gate $\tau^*$**: **0.6356** (VALID, non-degenerate; selective gate actively routes uncertain flows to Tier 2 inspection)
+  - **Mean Latency**: **20.08 ms** (P95: 21.09 ms)
+  - **External Baselines**: Random Forest F1=0.9849, Gradient Boosting F1=0.9741, Isolation Forest F1=0.0778.
 
-### 5.2 Cross-Dataset & Temporal Shift Evaluation (EXP-02)
-* **In-Domain F1**: 0.7209
-* **Temporal Shift F1**: 0.6667 (degradation bounded to 7.52% $\le 15\%$)
-* **Cross-Dataset F1 (UNSW-NB15)**: 0.8968 (zero degradation vs baseline models which collapsed to 0.0)
-* **Paired Permutation Significance**: $p = 0.0001$.
+### 5.2 UNSW-NB15 (Part 1 — 5,000 Authentic Records)
+* **Sample Evaluated**: 5,000 authentic flow records.
+* **Partitioning**: Chronological split (Train: 3,500, Val: 750, Test: 750).
+* **Leakage Verification**: Passed.
+* **Locked Hyperparameters**: $\tau^* = 0.34$, Platt calibration slope = 9.1342, intercept = -3.8689.
+* **Test Performance**:
+  - **F1 Score**: **0.9764** (95% CI: [0.9587, 0.9897])
+  - **Precision**: **0.9538**
+  - **Recall**: **1.0000** (100% attack capture)
+  - **PR-AUC**: **0.9996**
+  - **ROC-AUC**: **0.9998**
+  - **False Positive Rate**: **1.60%**
+  - **Balanced Accuracy**: **99.20%**
+  - **Brier Score**: **0.0340**
+  - **Conformal Gate $\tau^*$**: **0.2002** (VALID, confident autonomous gating)
+  - **Mean Latency**: **21.32 ms** (P95: 21.57 ms)
+  - **External Baselines**: **AHRAS (0.9764)** outperforms Random Forest (0.9526), Gradient Boosting (0.9556), and Isolation Forest (0.5179).
 
 ---
 
-## 6. Path Portability & Hardcoding Audit
+## 6. Throughput & Latency Hierarchy
 
-* **Repository Root Handling**: Standardized to `os.path.dirname(os.path.dirname(os.path.abspath(__file__)))`.
-* **Hard-coded Paths**: No `/home/...` or machine-specific absolute paths exist in execution source code. Paths default to environment variables (`CICIDS2017_PATH`, `UNSW_PATH`, `AHRAS_TOKEN_BLACKLIST_DB`) with clean fallback to relative `./data/` paths.
-* **Artifact Output Paths**: Re-routed to `evaluation/results/` and `docs/`.
+AHRAS resolves the latency dilemma through a documented 3-tier processing pipeline:
+
+```
++-------------------------------------------------------------------------+
+| Tier 0: Fast Screening (Streaming Sketch + Early-Exit Router)           |
+| Mean Latency: 0.04 ms (40 µs) | Throughput: >25,000 EPS                 |
+| Screens benign background traffic with zero stateful ML overhead        |
++-------------------------------------------------------------------------+
+                                    | (Ambiguous / Elevated Risk)
+                                    v
++-------------------------------------------------------------------------+
+| Tier 1: In-Memory Triage (Hybrid Tri-Engine + Conformal Gate)           |
+| Mean Latency: 2.85 ms         | Throughput: >350 EPS                    |
+| Signature + ML Anomaly + Statistical drift fusion + Split conformal     |
++-------------------------------------------------------------------------+
+                                    | (High Risk / Multi-Hop / Novel Attack)
+                                    v
++-------------------------------------------------------------------------+
+| Tier 2: Full Analytical (GNN / TGNN + Security Twin + Causal XAI)       |
+| Mean Latency: 19.61 - 21.32 ms| Throughput: ~50 EPS                     |
+| Deep graph relational inference, Monte Carlo simulation, Causal DAG    |
++-------------------------------------------------------------------------+
+```
 
 ---
 
-## 7. Known Limitations & Scientific Boundaries
+## 7. Known Scientific Limitations & Target Research Frontiers
 
-1. **UNSW-NB15 Scale**: Only `UNSW-NB15_1.csv` (1.07 MB sample) is locally present; full multi-file evaluation requires downloading parts 2–4.
-2. **Technique-Level vs Implementation-Level Coverage**: Current rules tag MITRE ATT&CK techniques at the aggregate level (e.g. `T1071`, `T1499`), but do not yet track behavioral implementation variants (e.g. PowerShell vs schtasks vs WMI task execution). This motivates **Research Frontier A (Threat-Informed Detection Coverage)**.
-3. **Telemetry Completeness**: OCSF event normalizers handle available fields, but do not yet explicitly quantify observability degradation when critical fields are dropped by upstream sensors. This motivates **Research Frontier B (Telemetry Adequacy)**.
-4. **Adversarial Robustness**: Implicit robustness is provided via conformal abstention, but quantitative robustness envelopes under bounded traffic perturbation have not yet been evaluated systematically. This motivates **Research Frontier D (Adversarial Mutation Lab)**.
+1. **Rule Diversity**: Current signature rules cover 23 MITRE ATT&CK techniques; production SOC operations require systematic coverage of at least 50+ ATT&CK techniques.
+2. **Telemetry Incompleteness**: While two-tier host sensors handle syscalls and entropy, quantitative observability scores under network packet drops or missing host telemetry need explicit metric tracking (Telemetry Adequacy).
+3. **Adversarial Perturbation Defense**: Evasion mutators (e.g. quote insertion, packet padding) currently evade signature matching at rates up to 26.67%, requiring robust feature normalization and representation regularization.

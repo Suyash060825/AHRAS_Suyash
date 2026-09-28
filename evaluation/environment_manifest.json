@@ -1,0 +1,36 @@
+{
+  "manifest_version": "1.0.0",
+  "generated_at": "2026-09-28T10:04:00Z",
+  "git_commit": "4a0214e596aa39f52ca4b0cdd221f34d15fab322",
+  "git_branch": "new-features",
+  "hardware": {
+    "cpu_model": "11th Gen Intel(R) Core(TM) i5-11260H @ 2.60GHz",
+    "cpu_cores": 12,
+    "ram_total_gb": 31.0,
+    "ram_available_gb": 23.0,
+    "swap_total_gb": 8.0
+  },
+  "operating_system": {
+    "platform": "Linux-7.1.8-100.fc43.x86_64-x86_64-with-glibc2.42",
+    "arch": "x86_64",
+    "compiler": "GCC 15.2.1 20260123 (Red Hat 15.2.1-7)"
+  },
+  "runtime_environment": {
+    "python_version": "3.14.6 (main, Jun 11 2026, 00:00:00)",
+    "package_versions": {
+      "numpy": "2.5.2",
+      "scikit-learn": "1.9.0",
+      "scipy": "1.18.0",
+      "pandas": "3.0.5",
+      "pydantic": "2.13.4",
+      "fastapi": "0.141.1",
+      "uvicorn": "0.52.1",
+      "pytest": "9.1.1"
+    }
+  },
+  "working_directory": "/home/suyashpradhan/Downloads/AHRAS_Suyash-master",
+  "data_paths": {
+    "cicids2017": "data/cicids2017/Wednesday-workingHours.pcap_ISCX.csv",
+    "unsw_nb15": "data/unsw_nb15/UNSW-NB15_1.csv"
+  }
+}
