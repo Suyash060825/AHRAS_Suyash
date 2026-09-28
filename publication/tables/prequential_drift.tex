@@ -7,16 +7,16 @@
 \toprule
 \textbf{Adaptation Strategy} & \textbf{Label Delay ($\Delta$)} & \textbf{Macro F1} & \textbf{Final Recall} & \textbf{Brier Score} & \textbf{Adaptation Lag} & \textbf{Memory (MB)} \\
 \midrule
-Static & No Feedback (Frozen) & 73.2\% & 96.4\% & 0.126 & N/A & 0.003 MB \\
-Streaming\_Updated & Immediate Oracle & 97.1\% & 78.6\% & 0.047 & N/A & 0.024 MB \\
-Streaming\_Updated & 1-Hour Delay & 88.4\% & 67.9\% & 0.066 & N/A & 0.031 MB \\
-Streaming\_Updated & 1-Day Delay & 79.9\% & 50.0\% & 0.103 & N/A & 0.047 MB \\
-Streaming\_Updated & 1-Week Delay & 74.9\% & 96.4\% & 0.124 & 11 steps & 0.071 MB \\
+Static & No Feedback (Frozen) & 73.5\% & 96.4\% & 0.125 & N/A & 0.003 MB \\
+Streaming\_Updated & Immediate Oracle & 96.8\% & 75.0\% & 0.051 & N/A & 0.024 MB \\
+Streaming\_Updated & 1-Hour Delay & 88.1\% & 67.9\% & 0.063 & N/A & 0.031 MB \\
+Streaming\_Updated & 1-Day Delay & 80.7\% & 50.0\% & 0.106 & N/A & 0.047 MB \\
+Streaming\_Updated & 1-Week Delay & 75.4\% & 96.4\% & 0.123 & 11 steps & 0.071 MB \\
 \midrule
 \multicolumn{7}{l}{\textbf{Performance Breakdown Across Non-Stationary Drift Regimes:}} \\
-\quad Sudden\_Drift & \multicolumn{2}{l}{Static F1: 60.5\%} & \multicolumn{2}{l}{Streaming F1: 100.0\%} & \multicolumn{2}{l}{Adaptation Gain: \textbf{+39.5\%}} \\
+\quad Sudden\_Drift & \multicolumn{2}{l}{Static F1: 56.7\%} & \multicolumn{2}{l}{Streaming F1: 100.0\%} & \multicolumn{2}{l}{Adaptation Gain: \textbf{+43.3\%}} \\
 \quad Gradual\_Drift & \multicolumn{2}{l}{Static F1: 59.1\%} & \multicolumn{2}{l}{Streaming F1: 100.0\%} & \multicolumn{2}{l}{Adaptation Gain: \textbf{+40.9\%}} \\
-\quad Recurring\_Drift & \multicolumn{2}{l}{Static F1: 85.3\%} & \multicolumn{2}{l}{Streaming F1: 87.7\%} & \multicolumn{2}{l}{Adaptation Gain: \textbf{+2.4\%}} \\
+\quad Recurring\_Drift & \multicolumn{2}{l}{Static F1: 86.6\%} & \multicolumn{2}{l}{Streaming F1: 88.1\%} & \multicolumn{2}{l}{Adaptation Gain: \textbf{+1.6\%}} \\
 \bottomrule
 \end{tabular}
 \end{table*}
