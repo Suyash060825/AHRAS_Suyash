@@ -19,6 +19,7 @@
 
 | Capability | Existing Location | Status | Tests | Experiments | Extension Needed |
 | :--- | :--- | :---: | :--- | :--- | :--- |
+| **Alert Intelligence & Deduplication** | `alert_intelligence/` | IMPLEMENTED | `tests/test_alert_intelligence.py` | EXP-ALERT-INTEL-01 (`ALERT_INTELLIGENCE_REPORT.json`): 97.52% noise reduction, 1250:1 compression, 100% evidence retention | Exposure-aware cross-tenant federation and automated SOC ticket dispatch. |
 | **Network Detection** | `detection/hybrid_engine.py`, `sensors/network_sensor.py` | IMPLEMENTED | `tests/test_module1.py`, `tests/test_full_system.py` | EXP-01 (CICIDS2017), EXP-02 (UNSW-NB15) | Streaming raw PCAP / eBPF socket capture integration. |
 | **Signature Detection** | `detection/signature_engine/rules.py` | IMPLEMENTED | `tests/test_module1.py`, `tests/test_detection_coverage.py` | Baseline $B_0$, 23 curated MITRE rules | Expand signature catalog from 23 to 50+ ATT&CK techniques; add regex payload inspection. |
 | **Anomaly Detection** | `detection/anomaly_engine/ml_engine.py` | IMPLEMENTED | `tests/test_module1.py`, `tests/test_ablation_suite.py` | Tri-model ensemble (IF, AE, OC-SVM) | Dynamic Platt scaling recalibration under verified domain drift. |

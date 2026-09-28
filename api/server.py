@@ -650,6 +650,68 @@ def reject_response_action(payload: dict):
     return {"status": "not_found", "alert_id": alert_id}
 
 
+# ── Alert Intelligence Layer Endpoints ───────────────────────────────────────
+_alert_pipeline = None
+
+def get_alert_pipeline():
+    global _alert_pipeline
+    if _alert_pipeline is None:
+        from alert_intelligence import AlertIntelligencePipeline
+        _alert_pipeline = AlertIntelligencePipeline()
+    return _alert_pipeline
+
+
+@app.get("/api/incidents", tags=["Alert Intelligence"])
+def get_incident_clusters():
+    """Lists all active correlated incident clusters ordered by exposure-aware priority."""
+    pipeline = get_alert_pipeline()
+    incidents = pipeline.get_all_incidents()
+    return {
+        "total_incidents": len(incidents),
+        "incidents": [inc.model_dump() for inc in incidents]
+    }
+
+
+@app.get("/api/incidents/{incident_id}", tags=["Alert Intelligence"])
+def get_incident_detail(incident_id: str):
+    """Retrieves full contextual details for a specific incident cluster."""
+    pipeline = get_alert_pipeline()
+    incident = pipeline.get_incident(incident_id)
+    if not incident:
+        raise HTTPException(status_code=404, detail=f"Incident '{incident_id}' not found")
+    return incident.model_dump()
+
+
+@app.post("/api/alerts/ingest", tags=["Alert Intelligence"])
+def ingest_raw_alert(alert_data: dict):
+    """Ingests a raw detector alert into the deduplication, clustering, and triage pipeline."""
+    from alert_intelligence.models import RawAlert
+    try:
+        raw_alert = RawAlert(**alert_data)
+        pipeline = get_alert_pipeline()
+        cluster, decision = pipeline.ingest_alert(raw_alert)
+        if cluster and decision:
+            return {
+                "status": "CLUSTERED",
+                "cluster_id": cluster.cluster_id,
+                "triage_level": decision.triage_level.value,
+                "priority_score": decision.priority_score,
+                "recommended_action": decision.recommended_action
+            }
+        return {"status": "DEDUPLICATED", "message": "Alert duplicate folded into active window"}
+    except Exception as e:
+        log.error(f"[API] Alert ingestion error: {e}")
+        raise HTTPException(status_code=400, detail=str(e))
+
+
+@app.get("/api/alert-intelligence/metrics", tags=["Alert Intelligence"])
+def get_alert_intelligence_metrics():
+    """Returns operational telemetry for deduplication, clustering, and triage distribution."""
+    pipeline = get_alert_pipeline()
+    return pipeline.metrics
+
+
+
 @app.websocket("/ws/live-soc")
 async def websocket_live_soc(websocket: WebSocket):
     """Real-time bi-directional SOC WebSocket streaming live alert events, risk vectors, and XAI traces."""

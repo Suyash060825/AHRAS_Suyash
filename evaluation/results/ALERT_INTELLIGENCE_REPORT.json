@@ -1,0 +1,53 @@
+{
+  "manifest": {
+    "experiment_id": "EXP-ALERT-INTEL-01",
+    "phase": "Phase 1: Alert Intelligence Layer",
+    "generated_at": "2026-09-28T04:50:24Z",
+    "total_alerts_evaluated": 5000
+  },
+  "performance_benchmarks": {
+    "throughput_eps": 45925.61,
+    "mean_latency_us": 21.64,
+    "p50_latency_us": 3.28,
+    "p95_latency_us": 51.36,
+    "p99_latency_us": 519.35,
+    "line_rate_capable_25k_eps": true
+  },
+  "noise_reduction_and_clustering": {
+    "raw_alerts_ingested": 5000,
+    "suppressed_alert_duplicates": 4876,
+    "noise_reduction_ratio": 0.9752,
+    "active_incident_clusters": 4,
+    "compression_ratio": 1250.0
+  },
+  "invariants_and_integrity": {
+    "evidence_retention_completeness": 1.0,
+    "zero_evidence_loss_invariant": true,
+    "multi_stage_progression_detected": true
+  },
+  "triage_distribution": {
+    "CRITICAL": 2,
+    "HIGH": 1,
+    "MEDIUM": 1,
+    "LOW": 0,
+    "INFO": 0
+  },
+  "top_incident_case_study": {
+    "cluster_id": "INC-673edabd4c",
+    "title": "Multi-Stage Attack: Initial Access -> Execution -> Persistence on host:web-public-01 (+2 entities)",
+    "primary_entity": "host:web-public-01",
+    "entities_involved": [
+      "host:web-public-01",
+      "host:workstation-101",
+      "host:dc-prod-01"
+    ],
+    "triage_level": "CRITICAL",
+    "priority_score": 0.9314,
+    "progression_score": 1.0,
+    "tactics_count": 10,
+    "techniques_count": 10,
+    "evidence_count": 1690,
+    "recommended_action": "IMMEDIATE_CONTAINMENT_DISPATCH",
+    "rationale": "Triage Priority 0.931 (CRITICAL) derived from: Detector Severity=0.960, Progression=1.000 (10 tactics), Asset Criticality=1.00, Zone Exposure=0.96, Epistemic Uncertainty=0.160."
+  }
+}
