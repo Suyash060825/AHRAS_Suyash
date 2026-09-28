@@ -404,6 +404,53 @@ Engineered and integrated the cryptographic audit trail and hardened multi-tenan
    - [`publication/tables/federated_noniid_poisoning.tex`](file:///home/suyashpradhan/Downloads/AHRAS_Suyash-master/publication/tables/federated_noniid_poisoning.tex)
 4. **Documentation**: [`docs/PHASE_5_PROVENANCE_AND_FEDERATED_COMPLETION.md`](file:///home/suyashpradhan/Downloads/AHRAS_Suyash-master/docs/PHASE_5_PROVENANCE_AND_FEDERATED_COMPLETION.md).
 
+---
+
+## 15. Phase 6 Implementation: Security Twin Response Lab, Adaptive Deception & Resilience Recovery
+*Benchmark IDs: `EXP-36`, `EXP-37`, `EXP-38`*
+
+Engineered and integrated the pre-execution response lab, adaptive deception engine, continuous response efficacy learning, 6-stage resilience recovery closed loop, and privacy-preserving data minimization specified in Sections 30, 31, 32, 33, 34, 35:
+
+1. **Security Twin Counterfactual Response Lab ([`security_twin/simulation.py`](file:///home/suyashpradhan/Downloads/AHRAS_Suyash-master/security_twin/simulation.py))**:
+   - `simulate_candidate_responses()`: Simulates candidate mitigations (`NO_ACTION`, `BLOCK_SOURCE`, `ISOLATE_HOST`, `REVOKE_TOKEN`, `TERMINATE_PROCESS`) in an isolated digital twin fork.
+   - Evaluates multi-objective utility balancing risk reduction ($0.40$), path breakage ($0.25$), reversibility ($0.15$), and blast radius penalty ($-0.20$).
+   - Strictly enforces DRY_RUN / simulation guarantees with zero destructive side-effects.
+   - **EXP-36 Benchmark**: Recommended Pareto-optimal actions across multi-stage attack scenarios (`BLOCK_SOURCE` with utility 0.6757, 100% path breakage, 0.08 blast radius, 0.95 reversibility; `ISOLATE_HOST` for DBA abuse with utility 0.5996).
+
+2. **Information-Theoretic Adaptive Deception ([`deception/honeypot_manager.py`](file:///home/suyashpradhan/Downloads/AHRAS_Suyash-master/deception/honeypot_manager.py))**:
+   - Dynamic Bayesian lure optimization: $\text{DeceptionValue} = \text{ExpectedInformationGain} - \text{DeploymentCost} - \text{OperationalRisk}$.
+   - Deploys contextual lures: `HONEY_TOKEN`, `FAKE_PORT`, `DECOY_FILE`, `CANARY_CREDENTIAL`.
+   - **EXP-37 Benchmark**:
+     - Reduces Mean Time to Detect (MTTD) from **185.7s to 31.5s** (**$5.8\times$ faster detection**).
+     - Reduces adversary dwell time from **245.6s to 55.7s** (**$4.4\times$ reduction**).
+     - Delivers **84.0% ground-truth confirmation** with **0.0% false positive triggers** on benign users and **+0.474** net deception value.
+
+3. **Resilience & Recovery Closed Loop ([`response/recovery_loop.py`](file:///home/suyashpradhan/Downloads/AHRAS_Suyash-master/response/recovery_loop.py))**:
+   - `ResilienceRecoveryEngine`: Enforces 6-stage lifecycle (`DETECT -> CONTAIN -> ERADICATE -> RESTORE -> VERIFY -> RECOVER`).
+   - Active post-recovery recurrence watchdog: Monitors residual risk and automatically reopens incidents upon adversary reinfection.
+   - **EXP-38 Benchmark (Part A)**: Mean TTC of **2.55s**, Mean TTR of **33.42s**, **96.34% risk elimination** (residual risk 0.0306), and **100.0% accuracy** in detecting recurrence spikes and reopening incidents.
+
+4. **Privacy-Aware Telemetry & Data Minimization ([`sensors/privacy_manager.py`](file:///home/suyashpradhan/Downloads/AHRAS_Suyash-master/sensors/privacy_manager.py))**:
+   - `TelemetryPrivacyManager`: Enforces 4 classification tiers (`PUBLIC`, `INTERNAL`, `SENSITIVE`, `HIGHLY_SENSITIVE`).
+   - Applies IP subnet masking (/24 and /16), keyed HMAC user pseudonymization, commandline/credential redaction, and 64-character cryptographic SHA-256 raw vault reference seals.
+   - **EXP-38 Benchmark (Part B)**: Retains **99.24% of clean detection F1** ($0.9835 \to 0.9760$) and **0.9500 rare-attack recall** under `HIGHLY_SENSITIVE` minimization, preserving 100% forensic vault link integrity.
+
+5. **REST API Extensions ([`api/server.py`](file:///home/suyashpradhan/Downloads/AHRAS_Suyash-master/api/server.py))**:
+   - `POST /api/security-twin/simulate-candidates`: Counterfactual response lab simulation.
+   - `GET /api/recovery/incident/{incident_id}`: Incident recovery lifecycle tracking.
+   - `POST /api/recovery/register`: Incident recovery registration.
+   - `POST /api/privacy/sanitize`: Data minimization transformation.
+
+6. **Evaluation Artifacts**:
+   - [`evaluation/results/SECURITY_TWIN_RESPONSE_LAB_REPORT.json`](file:///home/suyashpradhan/Downloads/AHRAS_Suyash-master/evaluation/results/SECURITY_TWIN_RESPONSE_LAB_REPORT.json)
+   - [`evaluation/results/ADAPTIVE_DECEPTION_REPORT.json`](file:///home/suyashpradhan/Downloads/AHRAS_Suyash-master/evaluation/results/ADAPTIVE_DECEPTION_REPORT.json)
+   - [`evaluation/results/RESILIENCE_RECOVERY_REPORT.json`](file:///home/suyashpradhan/Downloads/AHRAS_Suyash-master/evaluation/results/RESILIENCE_RECOVERY_REPORT.json)
+   - [`publication/tables/security_twin_response_lab.tex`](file:///home/suyashpradhan/Downloads/AHRAS_Suyash-master/publication/tables/security_twin_response_lab.tex)
+   - [`publication/tables/adaptive_deception.tex`](file:///home/suyashpradhan/Downloads/AHRAS_Suyash-master/publication/tables/adaptive_deception.tex)
+   - [`publication/tables/resilience_recovery.tex`](file:///home/suyashpradhan/Downloads/AHRAS_Suyash-master/publication/tables/resilience_recovery.tex)
+7. **Documentation**: [`docs/PHASE_6_SECURITY_TWIN_AND_RESILIENCE_COMPLETION.md`](file:///home/suyashpradhan/Downloads/AHRAS_Suyash-master/docs/PHASE_6_SECURITY_TWIN_AND_RESILIENCE_COMPLETION.md).
+
+
 
 
 

@@ -1,0 +1,195 @@
+{
+  "manifest": {
+    "experiment_id": "EXP-36",
+    "code_version": "49f08ff3123a533be94bbed595f92876f1fc5155",
+    "git_branch": "new-features",
+    "dataset_name": "Enterprise Digital Twin Counterfactual Response Lab",
+    "dataset_version": "1.0",
+    "dataset_hash": "525e6abdcec78c93d72c0f2f86dfa0ba9485946e265d180c46817e3457f6b145",
+    "configuration_hash": "20ef7506594335cdf729ec01a62f96507ad4f5d12efed40781340d179738ded8",
+    "configuration": {
+      "scenarios_count": 2,
+      "candidates_per_scenario": 4,
+      "dry_run_safety": true
+    },
+    "random_seed": 42,
+    "environment": {
+      "python_version": "3.14.6",
+      "os": "Linux-7.1.8-100.fc43.x86_64-x86_64-with-glibc2.42",
+      "architecture": "x86_64",
+      "dependencies": {
+        "numpy": "2.5.2",
+        "scikit-learn": "1.9.0"
+      }
+    },
+    "result_path": "/home/suyashpradhan/Downloads/AHRAS_Suyash-master/evaluation/results/SECURITY_TWIN_RESPONSE_LAB_REPORT.json",
+    "timestamp": 1790574042.412281
+  },
+  "response_lab_evaluation": {
+    "scenarios_evaluated": 2,
+    "results": [
+      {
+        "scenario_name": "External Web Application Exploit & Lateral Spread",
+        "incident_risk": 0.88,
+        "candidate_evaluations": [
+          {
+            "action_type": "NO_ACTION",
+            "target_entity": "web-prod-01",
+            "pre_action_risk": 0.88,
+            "expected_post_action_risk": 1.0,
+            "risk_reduction": 0.0,
+            "path_breakage_probability": 0.0,
+            "remaining_attack_steps": 2,
+            "blast_radius_score": 0.0,
+            "collateral_disruption_cost": 0.0,
+            "time_to_containment_sec": 999.0,
+            "reversibility": 1.0,
+            "utility_score": 0.0,
+            "validation_status": "VALIDATED",
+            "is_recommended": false,
+            "explanation": "Action NO_ACTION on web-prod-01: Path breakage 0.0%, 0 steps halted (2 unmitigated steps). Post-risk: 1.000 (Blast radius: 0.00)."
+          },
+          {
+            "action_type": "BLOCK_SOURCE",
+            "target_entity": "198.51.100.99",
+            "pre_action_risk": 0.88,
+            "expected_post_action_risk": 0.132,
+            "risk_reduction": 0.748,
+            "path_breakage_probability": 1.0,
+            "remaining_attack_steps": 0,
+            "blast_radius_score": 0.08,
+            "collateral_disruption_cost": 8.0,
+            "time_to_containment_sec": 1.2,
+            "reversibility": 0.95,
+            "utility_score": 0.6757,
+            "validation_status": "VALIDATED",
+            "is_recommended": true,
+            "explanation": "Action BLOCK_SOURCE on 198.51.100.99: Path breakage 100.0%, 2 steps halted (0 unmitigated steps). Post-risk: 0.132 (Blast radius: 0.08). First blocked at step 0: Source IP 198.51.100.99 is blocked by perimeter control."
+          },
+          {
+            "action_type": "ISOLATE_HOST",
+            "target_entity": "web-prod-01",
+            "pre_action_risk": 0.88,
+            "expected_post_action_risk": 0.132,
+            "risk_reduction": 0.748,
+            "path_breakage_probability": 1.0,
+            "remaining_attack_steps": 0,
+            "blast_radius_score": 0.35,
+            "collateral_disruption_cost": 21.0,
+            "time_to_containment_sec": 2.4,
+            "reversibility": 0.9,
+            "utility_score": 0.6142,
+            "validation_status": "VALIDATED",
+            "is_recommended": false,
+            "explanation": "Action ISOLATE_HOST on web-prod-01: Path breakage 100.0%, 2 steps halted (0 unmitigated steps). Post-risk: 0.132 (Blast radius: 0.35). First blocked at step 0: Destination host web-prod-01 is isolated from network."
+          },
+          {
+            "action_type": "TERMINATE_PROCESS",
+            "target_entity": "8080",
+            "pre_action_risk": 0.88,
+            "expected_post_action_risk": 0.88,
+            "risk_reduction": 0.0,
+            "path_breakage_probability": 0.0,
+            "remaining_attack_steps": 2,
+            "blast_radius_score": 0.24,
+            "collateral_disruption_cost": 9.6,
+            "time_to_containment_sec": 1.8,
+            "reversibility": 0.15,
+            "utility_score": -0.0255,
+            "validation_status": "VALIDATED",
+            "is_recommended": false,
+            "explanation": "Action TERMINATE_PROCESS on 8080: Path breakage 0.0%, 0 steps halted (2 unmitigated steps). Post-risk: 0.880 (Blast radius: 0.24)."
+          }
+        ],
+        "recommended_action": "BLOCK_SOURCE",
+        "recommended_target": "198.51.100.99",
+        "recommended_utility": 0.6757,
+        "recommended_risk_reduction": 0.748,
+        "recommended_path_breakage": 1.0,
+        "recommended_blast_radius": 0.08,
+        "recommended_reversibility": 0.95
+      },
+      {
+        "scenario_name": "Privileged Service Account Compromise & Internal Exfiltration",
+        "incident_risk": 0.94,
+        "candidate_evaluations": [
+          {
+            "action_type": "NO_ACTION",
+            "target_entity": "db-prod-01",
+            "pre_action_risk": 0.94,
+            "expected_post_action_risk": 1.0,
+            "risk_reduction": 0.0,
+            "path_breakage_probability": 0.0,
+            "remaining_attack_steps": 2,
+            "blast_radius_score": 0.0,
+            "collateral_disruption_cost": 0.0,
+            "time_to_containment_sec": 999.0,
+            "reversibility": 1.0,
+            "utility_score": 0.0,
+            "validation_status": "VALIDATED",
+            "is_recommended": false,
+            "explanation": "Action NO_ACTION on db-prod-01: Path breakage 0.0%, 0 steps halted (2 unmitigated steps). Post-risk: 1.000 (Blast radius: 0.00)."
+          },
+          {
+            "action_type": "REVOKE_TOKEN",
+            "target_entity": "user-dba",
+            "pre_action_risk": 0.94,
+            "expected_post_action_risk": 0.94,
+            "risk_reduction": 0.0,
+            "path_breakage_probability": 0.0,
+            "remaining_attack_steps": 2,
+            "blast_radius_score": 0.2,
+            "collateral_disruption_cost": 10.0,
+            "time_to_containment_sec": 1.5,
+            "reversibility": 0.8,
+            "utility_score": 0.08,
+            "validation_status": "VALIDATED",
+            "is_recommended": false,
+            "explanation": "Action REVOKE_TOKEN on user-dba: Path breakage 0.0%, 0 steps halted (2 unmitigated steps). Post-risk: 0.940 (Blast radius: 0.20)."
+          },
+          {
+            "action_type": "ISOLATE_HOST",
+            "target_entity": "db-prod-01",
+            "pre_action_risk": 0.94,
+            "expected_post_action_risk": 0.141,
+            "risk_reduction": 0.799,
+            "path_breakage_probability": 1.0,
+            "remaining_attack_steps": 0,
+            "blast_radius_score": 0.525,
+            "collateral_disruption_cost": 49.88,
+            "time_to_containment_sec": 2.4,
+            "reversibility": 0.9,
+            "utility_score": 0.5996,
+            "validation_status": "VALIDATED",
+            "is_recommended": true,
+            "explanation": "Action ISOLATE_HOST on db-prod-01: Path breakage 100.0%, 2 steps halted (0 unmitigated steps). Post-risk: 0.141 (Blast radius: 0.53). First blocked at step 0: Destination host db-prod-01 is isolated from network."
+          },
+          {
+            "action_type": "TERMINATE_PROCESS",
+            "target_entity": "5432",
+            "pre_action_risk": 0.94,
+            "expected_post_action_risk": 0.94,
+            "risk_reduction": 0.0,
+            "path_breakage_probability": 0.0,
+            "remaining_attack_steps": 2,
+            "blast_radius_score": 0.38,
+            "collateral_disruption_cost": 15.2,
+            "time_to_containment_sec": 1.8,
+            "reversibility": 0.15,
+            "utility_score": -0.0535,
+            "validation_status": "VALIDATED",
+            "is_recommended": false,
+            "explanation": "Action TERMINATE_PROCESS on 5432: Path breakage 0.0%, 0 steps halted (2 unmitigated steps). Post-risk: 0.940 (Blast radius: 0.38)."
+          }
+        ],
+        "recommended_action": "ISOLATE_HOST",
+        "recommended_target": "db-prod-01",
+        "recommended_utility": 0.5996,
+        "recommended_risk_reduction": 0.799,
+        "recommended_path_breakage": 1.0,
+        "recommended_blast_radius": 0.525,
+        "recommended_reversibility": 0.9
+      }
+    ]
+  }
+}

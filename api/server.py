@@ -19,6 +19,7 @@ import os
 import time
 import uuid
 import logging
+import threading
 from collections import defaultdict
 from typing import Any, Dict, List, Optional
 
@@ -830,6 +831,100 @@ def prioritize_vulnerabilities(payload: dict):
     active_techs = set(payload.get("observed_techniques", []))
     prioritized = engine.prioritize_vulnerabilities(active_paths, active_techs)
     return {"prioritized_vulnerabilities": [p.to_dict() for p in prioritized]}
+
+
+# ── Phase 6: Response Lab, Resilience Recovery & Privacy Telemetry ───────────
+
+_global_recovery_engine = None
+_global_privacy_manager = None
+_recovery_lock = threading.Lock()
+
+
+def get_recovery_engine():
+    global _global_recovery_engine
+    with _recovery_lock:
+        if _global_recovery_engine is None:
+            from response.recovery_loop import ResilienceRecoveryEngine
+            _global_recovery_engine = ResilienceRecoveryEngine()
+        return _global_recovery_engine
+
+
+def get_privacy_manager():
+    global _global_privacy_manager
+    with _recovery_lock:
+        if _global_privacy_manager is None:
+            from sensors.privacy_manager import TelemetryPrivacyManager
+            _global_privacy_manager = TelemetryPrivacyManager()
+        return _global_privacy_manager
+
+
+@app.post("/api/security-twin/simulate-candidates", tags=["Security Twin Response Lab"])
+def simulate_candidate_responses_endpoint(payload: dict):
+    """Simulates candidate response mitigations in an isolated digital twin fork (Section 31)."""
+    from security_twin.state import SecurityTwin
+    from security_twin.simulation import SecurityTwinSimulator
+    from security_twin.models import AttackScenario, AttackStep, AttackStage, Host
+
+    twin = SecurityTwin("twin-api-eval")
+    twin.add_host(Host(host_id="web-prod-01", hostname="web-prod-01", ip_address="10.0.1.10", criticality=0.7))
+    twin.add_host(Host(host_id="db-prod-01", hostname="db-prod-01", ip_address="10.0.1.50", criticality=0.95))
+
+    scenario = AttackScenario(
+        scenario_id=payload.get("scenario_id", "scen-api-01"),
+        name=payload.get("name", "Simulated Threat Scenario"),
+        description="API simulated kill-chain progression",
+        steps=[
+            AttackStep(
+                step_id="step-1",
+                stage=AttackStage.INITIAL_ACCESS,
+                timestamp=time.time(),
+                source=payload.get("attacker_ip", "198.51.100.44"),
+                destination="10.0.1.10",
+                technique="T1190",
+                technique_name="Exploit Public-Facing Application",
+                preconditions={"src_ip": payload.get("attacker_ip", "198.51.100.44"), "dst_host": "web-prod-01"},
+            )
+        ],
+    )
+    simulator = SecurityTwinSimulator(twin)
+    candidates = payload.get("candidates", [("NO_ACTION", "web-prod-01"), ("BLOCK_SOURCE", payload.get("attacker_ip", "198.51.100.44"))])
+    evals = simulator.simulate_candidate_responses(scenario, candidates, current_risk=float(payload.get("current_risk", 0.85)))
+    return {"scenario_id": scenario.scenario_id, "candidate_evaluations": evals}
+
+
+@app.get("/api/recovery/incident/{incident_id}", tags=["Resilience & Recovery"])
+def get_incident_recovery_status(incident_id: str):
+    """Retrieves current recovery stage, TTC, TTR, and recurrence telemetry (Section 34)."""
+    engine = get_recovery_engine()
+    rec = engine.get_incident(incident_id)
+    if not rec:
+        raise HTTPException(status_code=404, detail=f"Incident '{incident_id}' not found in recovery loop")
+    return rec.to_dict()
+
+
+@app.post("/api/recovery/register", tags=["Resilience & Recovery"])
+def register_recovery_incident(payload: dict):
+    """Registers an incident into the 6-stage resilience recovery tracking loop."""
+    engine = get_recovery_engine()
+    rec = engine.register_incident(
+        incident_id=payload["incident_id"],
+        entity_id=payload["entity_id"],
+        initial_risk=float(payload.get("initial_risk", 0.85)),
+    )
+    return rec.to_dict()
+
+
+@app.post("/api/privacy/sanitize", tags=["Privacy-Aware Telemetry"])
+def sanitize_telemetry_event(payload: dict):
+    """Sanitizes an incoming telemetry event according to regulatory privacy classification (Section 35)."""
+    mgr = get_privacy_manager()
+    event_dict = payload.get("event", {})
+    tier_str = payload.get("target_tier")
+    from sensors.privacy_manager import PrivacyTier
+    target_tier = PrivacyTier(tier_str) if tier_str else None
+    sanitized = mgr.sanitize_event(event_dict, target_tier=target_tier)
+    return {"sanitized_event": sanitized}
+
 
 
 

@@ -1,0 +1,96 @@
+{
+  "manifest": {
+    "experiment_id": "EXP-38",
+    "code_version": "49f08ff3123a533be94bbed595f92876f1fc5155",
+    "git_branch": "new-features",
+    "dataset_name": "Closed-Loop Resilience Recovery & Privacy-Preserving Telemetry",
+    "dataset_version": "1.0",
+    "dataset_hash": "525e6abdcec78c93d72c0f2f86dfa0ba9485946e265d180c46817e3457f6b145",
+    "configuration_hash": "7f5cdc994188a4d268edd5992d634cfd66c2bf240b2b9a8e1745b4930805fe57",
+    "configuration": {
+      "recovery_incidents": 50,
+      "privacy_events": 1000,
+      "safe_risk_threshold": 0.15,
+      "recurrence_window_sec": 300.0
+    },
+    "random_seed": 42,
+    "environment": {
+      "python_version": "3.14.6",
+      "os": "Linux-7.1.8-100.fc43.x86_64-x86_64-with-glibc2.42",
+      "architecture": "x86_64",
+      "dependencies": {
+        "numpy": "2.5.2",
+        "scikit-learn": "1.9.0"
+      }
+    },
+    "result_path": "/home/suyashpradhan/Downloads/AHRAS_Suyash-master/evaluation/results/RESILIENCE_RECOVERY_REPORT.json",
+    "timestamp": 1790574089.852492
+  },
+  "recovery_loop_benchmark": {
+    "incidents_evaluated": 50,
+    "mean_ttc_sec": 2.55,
+    "p95_ttc_sec": 3.35,
+    "mean_ttr_sec": 33.42,
+    "p95_ttr_sec": 43.45,
+    "mean_initial_risk": 0.8358,
+    "mean_residual_risk": 0.0306,
+    "risk_elimination_rate_pct": 96.34,
+    "verification_gate_rejections": 3,
+    "recurrence_simulated_trials": 50,
+    "recurrence_reopened_count": 11,
+    "recurrence_reopen_accuracy_pct": 100.0
+  },
+  "privacy_aware_telemetry_benchmark": {
+    "events_evaluated": 1000,
+    "tier_benchmarks": {
+      "PUBLIC": {
+        "tier": "PUBLIC",
+        "events_processed": 1000,
+        "anonymization_coverage_pct": 100.0,
+        "pseudonymization_coverage_pct": 100.0,
+        "credential_redaction_coverage_pct": 100.0,
+        "forensic_hash_integrity_pct": 100.0,
+        "detection_macro_f1": 0.9835,
+        "f1_retention_ratio_pct": 100.0,
+        "rare_attack_recall": 0.962,
+        "rare_recall_retention_pct": 100.0
+      },
+      "INTERNAL": {
+        "tier": "INTERNAL",
+        "events_processed": 1000,
+        "anonymization_coverage_pct": 100.0,
+        "pseudonymization_coverage_pct": 100.0,
+        "credential_redaction_coverage_pct": 100.0,
+        "forensic_hash_integrity_pct": 100.0,
+        "detection_macro_f1": 0.983,
+        "f1_retention_ratio_pct": 99.95,
+        "rare_attack_recall": 0.961,
+        "rare_recall_retention_pct": 99.9
+      },
+      "SENSITIVE": {
+        "tier": "SENSITIVE",
+        "events_processed": 1000,
+        "anonymization_coverage_pct": 100.0,
+        "pseudonymization_coverage_pct": 100.0,
+        "credential_redaction_coverage_pct": 100.0,
+        "forensic_hash_integrity_pct": 100.0,
+        "detection_macro_f1": 0.98,
+        "f1_retention_ratio_pct": 99.64,
+        "rare_attack_recall": 0.956,
+        "rare_recall_retention_pct": 99.38
+      },
+      "HIGHLY_SENSITIVE": {
+        "tier": "HIGHLY_SENSITIVE",
+        "events_processed": 1000,
+        "anonymization_coverage_pct": 100.0,
+        "pseudonymization_coverage_pct": 100.0,
+        "credential_redaction_coverage_pct": 100.0,
+        "forensic_hash_integrity_pct": 100.0,
+        "detection_macro_f1": 0.976,
+        "f1_retention_ratio_pct": 99.24,
+        "rare_attack_recall": 0.95,
+        "rare_recall_retention_pct": 98.75
+      }
+    }
+  }
+}

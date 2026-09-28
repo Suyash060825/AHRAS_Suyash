@@ -370,3 +370,81 @@ class SecurityTwinSimulator:
             blast_radius_mean=round(float(np.mean(blast_samples)), 4),
             risk_samples=risk_samples,
         )
+
+    # ── Response Lab: Multi-Candidate Simulation & Trade-off Optimization ───
+
+    def simulate_candidate_responses(
+        self,
+        scenario: AttackScenario,
+        candidates: List[Tuple[str, str]],
+        current_risk: float = 0.85,
+    ) -> List[Dict[str, Any]]:
+        """
+        Simulates a set of candidate mitigation actions in the digital twin response lab.
+        Evaluates risk reduction, path breakage, residual risk, time to containment,
+        collateral effect (blast radius), and reversibility (Section 31).
+        Strictly offline / dry-run with no real-world destructive actuation.
+        """
+        reversibility_map = {
+            ActionType.NO_ACTION.value: 1.0,
+            "NO_ACTION": 1.0,
+            ActionType.BLOCK_SOURCE.value: 0.95,
+            "BLOCK_SOURCE": 0.95,
+            "BLOCK_IP": 0.95,
+            ActionType.ISOLATE_HOST.value: 0.90,
+            "ISOLATE_HOST": 0.90,
+            ActionType.REVOKE_TOKEN.value: 0.80,
+            "REVOKE_TOKEN": 0.80,
+            ActionType.TERMINATE_PROCESS.value: 0.15,
+            "TERMINATE_PROCESS": 0.15,
+        }
+
+        evaluations: List[Dict[str, Any]] = []
+
+        for action_type, target_entity in candidates:
+            sim = self.simulate_action(scenario, action_type, target_entity, current_risk)
+            risk_red = max(0.0, current_risk - sim.expected_post_action_risk)
+            reversibility = reversibility_map.get(action_type, 0.50)
+
+            # Multi-objective utility:
+            # U = 0.40 * risk_reduction + 0.25 * path_breakage + 0.15 * reversibility - 0.20 * blast_radius
+            if action_type in (ActionType.NO_ACTION.value, "NO_ACTION"):
+                utility = 0.0  # Zero defensive utility for inactivity
+            elif sim.validation_status == SimulationStatus.VALIDATED.value:
+                utility = (
+                    0.40 * risk_red
+                    + 0.25 * sim.path_breakage_probability
+                    + 0.15 * reversibility
+                    - 0.20 * sim.blast_radius_score
+                )
+            else:
+                utility = -1.0  # Infeasible or policy violation
+
+            evaluations.append({
+                "action_type": action_type,
+                "target_entity": target_entity,
+                "pre_action_risk": round(current_risk, 4),
+                "expected_post_action_risk": round(sim.expected_post_action_risk, 4),
+                "risk_reduction": round(risk_red, 4),
+                "path_breakage_probability": round(sim.path_breakage_probability, 4),
+                "remaining_attack_steps": sim.remaining_attack_steps,
+                "blast_radius_score": round(sim.blast_radius_score, 4),
+                "collateral_disruption_cost": round(sim.collateral_disruption_cost, 2),
+                "time_to_containment_sec": round(sim.time_to_containment, 2),
+                "reversibility": round(reversibility, 2),
+                "utility_score": round(utility, 4),
+                "validation_status": sim.validation_status,
+                "is_recommended": False,
+                "explanation": sim.explanation,
+            })
+
+        # Rank and select best feasible candidate
+        valid_evals = [e for e in evaluations if e["validation_status"] == SimulationStatus.VALIDATED.value]
+        if valid_evals:
+            best = max(valid_evals, key=lambda x: x["utility_score"])
+            for e in evaluations:
+                if e["action_type"] == best["action_type"] and e["target_entity"] == best["target_entity"]:
+                    e["is_recommended"] = True
+                    break
+
+        return evaluations
