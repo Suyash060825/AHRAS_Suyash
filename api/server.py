@@ -711,6 +711,48 @@ def get_alert_intelligence_metrics():
     return pipeline.metrics
 
 
+@app.get("/api/registry/models", tags=["Model & Detection Registry"])
+def get_registered_models(name: Optional[str] = None):
+    """Returns versioned models and training/calibration artifacts from registry."""
+    from evaluation.registry import AHRASRegistryManager
+    mgr = AHRASRegistryManager()
+    return {"models": mgr.get_models(name=name)}
+
+
+@app.get("/api/registry/detections", tags=["Model & Detection Registry"])
+def get_registered_detections(technique: Optional[str] = None):
+    """Returns registered detection rules and MITRE ATT&CK technique mappings."""
+    from evaluation.registry import AHRASRegistryManager
+    mgr = AHRASRegistryManager()
+    return {"detections": mgr.get_detections(technique=technique)}
+
+
+@app.post("/api/sensor-acquisition/plan", tags=["Adaptive Telemetry"])
+def plan_sensor_acquisition(payload: dict):
+    """Evaluates optimal sensor modalities based on formal Value of Information (VOI)."""
+    from sensors.sensor_acquisition import AdaptiveSensorAcquisitionEngine
+    engine = AdaptiveSensorAcquisitionEngine()
+    event_id = payload.get("event_id", f"evt-{int(time.time())}")
+    threat_prior = float(payload.get("threat_prior", 0.5))
+    uncertainty = float(payload.get("uncertainty", 0.5))
+    criticality = float(payload.get("asset_criticality", 1.0))
+    cpu_load = float(payload.get("cpu_load", 0.3))
+
+    plan = engine.plan_event_telemetry(
+        event_id=event_id,
+        threat_prior=threat_prior,
+        epistemic_uncertainty=uncertainty,
+        asset_criticality=criticality,
+        cpu_load=cpu_load,
+    )
+    return {
+        "event_id": event_id,
+        "planned_modalities": [d.to_dict() for d in plan],
+        "total_estimated_latency_ms": round(sum(d.estimated_latency_ms for d in plan if d.should_acquire), 2),
+        "total_cost_units": round(sum(d.collection_cost for d in plan if d.should_acquire), 3),
+    }
+
+
 
 @app.websocket("/ws/live-soc")
 async def websocket_live_soc(websocket: WebSocket):

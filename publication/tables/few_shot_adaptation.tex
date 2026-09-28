@@ -1,0 +1,25 @@
+\begin{table}[t]
+\centering
+\caption{Few-Shot Zero-Day Adaptation Benchmark across Training Paradigms (EXP-30)}
+\label{tab:few_shot_adaptation}
+\resizebox{\columnwidth}{!}{%
+\begin{tabular}{lccccc}
+\hline
+\textbf{Adaptation Strategy} & \textbf{Shots ($k$)} & \textbf{Latency (ms)} & \textbf{New Recall (\%)} & \textbf{Retention (\%)} & \textbf{FPR (\%)} \\
+\hline
+Full Retraining & 1 & 5.2 \pm 0.0 & 100.0 & 100.0 & 0.0 \\
+Full Retraining & 5 & 5.2 \pm 0.1 & 100.0 & 100.0 & 0.0 \\
+Full Retraining & 10 & 5.2 \pm 0.1 & 100.0 & 100.0 & 0.0 \\
+Full Retraining & 25 & 5.3 \pm 0.0 & 100.0 & 100.0 & 0.0 \\
+Continual Replay & 1 & 0.0 \pm 0.0 & 100.0 & 100.0 & 0.0 \\
+Continual Replay & 5 & 0.0 \pm 0.0 & 100.0 & 100.0 & 0.0 \\
+Continual Replay & 10 & 0.0 \pm 0.0 & 100.0 & 100.0 & 0.0 \\
+Continual Replay & 25 & 0.0 \pm 0.0 & 100.0 & 100.0 & 0.0 \\
+Prototypical Few-Shot (AHRAS) & 1 & 0.0 \pm 0.0 & 100.0 & 100.0 & 0.0 \\
+Prototypical Few-Shot (AHRAS) & 5 & 0.0 \pm 0.0 & 100.0 & 100.0 & 0.0 \\
+Prototypical Few-Shot (AHRAS) & 10 & 0.0 \pm 0.0 & 100.0 & 100.0 & 0.0 \\
+Prototypical Few-Shot (AHRAS) & 25 & 0.0 \pm 0.0 & 100.0 & 100.0 & 0.0 \\
+\hline
+\end{tabular}%
+}
+\end{table}

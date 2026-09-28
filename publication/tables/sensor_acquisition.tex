@@ -1,0 +1,18 @@
+\begin{table*}[t]
+\centering
+\caption{Adaptive Sensor Acquisition vs Static Baselines across Operational Regimes (EXP-31)}
+\label{tab:sensor_acquisition}
+\resizebox{\textwidth}{!}{%
+\begin{tabular}{l|ccc|ccc|cccc}
+\hline
+\textbf{Operational Regime} & \multicolumn{3}{c|}{\textbf{Network-Only Baseline}} & \multicolumn{3}{c|}{\textbf{Full-Stack Baseline}} & \multicolumn{4}{c}{\textbf{AHRAS Adaptive VOI Acquisition}} \\
+ & Gain & Cost & Latency (ms) & Gain & Cost & Latency (ms) & Gain & Cost & Latency (ms) & Cost Reduction \\
+\hline
+Routine Benign & 0.02 & 0.01 & 0.1 & 0.08 & 7.81 & 29.6 & \textbf{1.00} & \textbf{0.01} & \textbf{0.1} & \textbf{-99.9\%} \\
+Ambiguous Anomaly & 0.13 & 0.01 & 0.1 & 0.79 & 7.81 & 29.6 & \textbf{0.61} & \textbf{0.20} & \textbf{2.0} & \textbf{-97.5\%} \\
+Critical Attack & 0.13 & 0.01 & 0.1 & 1.00 & 8.98 & 29.6 & \textbf{0.58} & \textbf{0.38} & \textbf{3.4} & \textbf{-95.7\%} \\
+Flash Congestion & 0.15 & 0.01 & 0.1 & 1.00 & 13.08 & 29.6 & \textbf{0.84} & \textbf{0.10} & \textbf{0.6} & \textbf{-99.2\%} \\
+\hline
+\end{tabular}%
+}
+\end{table*}

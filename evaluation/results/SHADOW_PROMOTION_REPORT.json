@@ -1,0 +1,91 @@
+{
+  "manifest": {
+    "experiment_id": "EXP-32",
+    "code_version": "d2386454506b50620e07cfde07b8fc0d76d24f8e",
+    "git_branch": "new-features",
+    "dataset_name": "Multi-Metric Shadow Model Benchmark Suite",
+    "dataset_version": "1.0",
+    "dataset_hash": "525e6abdcec78c93d72c0f2f86dfa0ba9485946e265d180c46817e3457f6b145",
+    "configuration_hash": "0966f043d3e69ce0caf6ecb27928bd92d35ea09c0d0e7352ed1d7f63de99693e",
+    "configuration": {
+      "gates_count": 9,
+      "candidates_count": 4
+    },
+    "random_seed": 42,
+    "environment": {
+      "python_version": "3.14.6",
+      "os": "Linux-7.1.8-100.fc43.x86_64-x86_64-with-glibc2.42",
+      "architecture": "x86_64",
+      "dependencies": {
+        "numpy": "2.5.2",
+        "scikit-learn": "1.9.0"
+      }
+    },
+    "result_path": "/home/suyashpradhan/Downloads/AHRAS_Suyash-master/evaluation/results/SHADOW_PROMOTION_REPORT.json",
+    "timestamp": 1790572400.8107703
+  },
+  "champion_baseline": {
+    "name": "AHRAS-Core-Ensemble",
+    "version": "v1.0.0",
+    "f1_score": 0.965,
+    "p95_latency_ms": 12.5,
+    "ece": 0.075,
+    "mitre_coverage": 23
+  },
+  "candidates_evaluated": [
+    {
+      "candidate_version": "v1.1.0-alpha",
+      "status": "PROMOTED",
+      "all_gates_passed": true,
+      "passed_gate_count": 9,
+      "total_gate_count": 9,
+      "f1_score": 0.974,
+      "p95_latency_ms": 11.1,
+      "ece_calibration": 0.058,
+      "mitre_coverage": 27,
+      "rejection_reasons": []
+    },
+    {
+      "candidate_version": "v1.1.0-beta-slow",
+      "status": "REJECTED",
+      "all_gates_passed": false,
+      "passed_gate_count": 8,
+      "total_gate_count": 9,
+      "f1_score": 0.982,
+      "p95_latency_ms": 34.8,
+      "ece_calibration": 0.045,
+      "mitre_coverage": 28,
+      "rejection_reasons": [
+        "P95 latency SLA breached: 34.80ms > 25.0ms"
+      ]
+    },
+    {
+      "candidate_version": "v1.1.0-gamma-uncal",
+      "status": "REJECTED",
+      "all_gates_passed": false,
+      "passed_gate_count": 8,
+      "total_gate_count": 9,
+      "f1_score": 0.971,
+      "p95_latency_ms": 12.2,
+      "ece_calibration": 0.235,
+      "mitre_coverage": 24,
+      "rejection_reasons": [
+        "Calibration ECE too high: 0.2350 > 0.15"
+      ]
+    },
+    {
+      "candidate_version": "v1.1.0-delta-regress",
+      "status": "REJECTED",
+      "all_gates_passed": false,
+      "passed_gate_count": 8,
+      "total_gate_count": 9,
+      "f1_score": 0.968,
+      "p95_latency_ms": 12.0,
+      "ece_calibration": 0.07,
+      "mitre_coverage": 17,
+      "rejection_reasons": [
+        "MITRE coverage decreased by 6 techniques"
+      ]
+    }
+  ]
+}

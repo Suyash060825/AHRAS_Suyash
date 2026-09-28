@@ -1,0 +1,155 @@
+{
+  "manifest": {
+    "experiment_id": "EXP-30",
+    "code_version": "d2386454506b50620e07cfde07b8fc0d76d24f8e",
+    "git_branch": "new-features",
+    "dataset_name": "Multi-Stage Synthetic Zero-Day Telemetry Stream",
+    "dataset_version": "1.0",
+    "dataset_hash": "525e6abdcec78c93d72c0f2f86dfa0ba9485946e265d180c46817e3457f6b145",
+    "configuration_hash": "da1273200c3ab72e7eca1dee7afe063b66db8eb96e40685c63ae3ceaf3ae501f",
+    "configuration": {
+      "trials_per_config": 5,
+      "embed_dim": 14,
+      "temperature": 0.1
+    },
+    "random_seed": 42,
+    "environment": {
+      "python_version": "3.14.6",
+      "os": "Linux-7.1.8-100.fc43.x86_64-x86_64-with-glibc2.42",
+      "architecture": "x86_64",
+      "dependencies": {
+        "numpy": "2.5.2",
+        "scikit-learn": "1.9.0"
+      }
+    },
+    "result_path": "/home/suyashpradhan/Downloads/AHRAS_Suyash-master/evaluation/results/FEW_SHOT_ADAPTATION_REPORT.json",
+    "timestamp": 1790572367.4504378
+  },
+  "benchmark_results": [
+    {
+      "strategy": "Full Retraining",
+      "strategy_enum": "FULL_RETRAINING",
+      "k_shots": 1,
+      "mean_latency_ms": 5.17,
+      "std_latency_ms": 0.02,
+      "new_attack_recall_pct": 100.0,
+      "old_attack_retention_pct": 100.0,
+      "benign_fpr_pct": 0.0
+    },
+    {
+      "strategy": "Full Retraining",
+      "strategy_enum": "FULL_RETRAINING",
+      "k_shots": 5,
+      "mean_latency_ms": 5.19,
+      "std_latency_ms": 0.06,
+      "new_attack_recall_pct": 100.0,
+      "old_attack_retention_pct": 100.0,
+      "benign_fpr_pct": 0.0
+    },
+    {
+      "strategy": "Full Retraining",
+      "strategy_enum": "FULL_RETRAINING",
+      "k_shots": 10,
+      "mean_latency_ms": 5.2,
+      "std_latency_ms": 0.06,
+      "new_attack_recall_pct": 100.0,
+      "old_attack_retention_pct": 100.0,
+      "benign_fpr_pct": 0.0
+    },
+    {
+      "strategy": "Full Retraining",
+      "strategy_enum": "FULL_RETRAINING",
+      "k_shots": 25,
+      "mean_latency_ms": 5.26,
+      "std_latency_ms": 0.04,
+      "new_attack_recall_pct": 100.0,
+      "old_attack_retention_pct": 100.0,
+      "benign_fpr_pct": 0.0
+    },
+    {
+      "strategy": "Continual Replay",
+      "strategy_enum": "CONTINUAL_REPLAY_UPDATE",
+      "k_shots": 1,
+      "mean_latency_ms": 0.03,
+      "std_latency_ms": 0.01,
+      "new_attack_recall_pct": 100.0,
+      "old_attack_retention_pct": 100.0,
+      "benign_fpr_pct": 0.0
+    },
+    {
+      "strategy": "Continual Replay",
+      "strategy_enum": "CONTINUAL_REPLAY_UPDATE",
+      "k_shots": 5,
+      "mean_latency_ms": 0.03,
+      "std_latency_ms": 0.0,
+      "new_attack_recall_pct": 100.0,
+      "old_attack_retention_pct": 100.0,
+      "benign_fpr_pct": 0.0
+    },
+    {
+      "strategy": "Continual Replay",
+      "strategy_enum": "CONTINUAL_REPLAY_UPDATE",
+      "k_shots": 10,
+      "mean_latency_ms": 0.03,
+      "std_latency_ms": 0.01,
+      "new_attack_recall_pct": 100.0,
+      "old_attack_retention_pct": 100.0,
+      "benign_fpr_pct": 0.0
+    },
+    {
+      "strategy": "Continual Replay",
+      "strategy_enum": "CONTINUAL_REPLAY_UPDATE",
+      "k_shots": 25,
+      "mean_latency_ms": 0.03,
+      "std_latency_ms": 0.01,
+      "new_attack_recall_pct": 100.0,
+      "old_attack_retention_pct": 100.0,
+      "benign_fpr_pct": 0.0
+    },
+    {
+      "strategy": "Prototypical Few-Shot (AHRAS)",
+      "strategy_enum": "PROTOTYPE_CENTROID",
+      "k_shots": 1,
+      "mean_latency_ms": 0.04,
+      "std_latency_ms": 0.02,
+      "new_attack_recall_pct": 100.0,
+      "old_attack_retention_pct": 100.0,
+      "benign_fpr_pct": 0.0
+    },
+    {
+      "strategy": "Prototypical Few-Shot (AHRAS)",
+      "strategy_enum": "PROTOTYPE_CENTROID",
+      "k_shots": 5,
+      "mean_latency_ms": 0.02,
+      "std_latency_ms": 0.0,
+      "new_attack_recall_pct": 100.0,
+      "old_attack_retention_pct": 100.0,
+      "benign_fpr_pct": 0.0
+    },
+    {
+      "strategy": "Prototypical Few-Shot (AHRAS)",
+      "strategy_enum": "PROTOTYPE_CENTROID",
+      "k_shots": 10,
+      "mean_latency_ms": 0.02,
+      "std_latency_ms": 0.01,
+      "new_attack_recall_pct": 100.0,
+      "old_attack_retention_pct": 100.0,
+      "benign_fpr_pct": 0.0
+    },
+    {
+      "strategy": "Prototypical Few-Shot (AHRAS)",
+      "strategy_enum": "PROTOTYPE_CENTROID",
+      "k_shots": 25,
+      "mean_latency_ms": 0.02,
+      "std_latency_ms": 0.01,
+      "new_attack_recall_pct": 100.0,
+      "old_attack_retention_pct": 100.0,
+      "benign_fpr_pct": 0.0
+    }
+  ],
+  "dataset_metadata": {
+    "n_hist_benign": 500,
+    "n_hist_attack": 200,
+    "n_novel_test": 300
+  }
+}

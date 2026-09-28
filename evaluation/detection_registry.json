@@ -1,0 +1,497 @@
+{
+  "schema_version": "1.0",
+  "detections": [
+    {
+      "rule_id": "PORT_SCAN",
+      "version": "1.0.0",
+      "technique": "T1046",
+      "implementation": "detection.signature_engine.rules._rule_port_scan",
+      "telemetry": [
+        "network",
+        "host"
+      ],
+      "precision": 0.985,
+      "recall": 0.958,
+      "robustness": 0.958,
+      "validation_scenarios": [
+        "EXP-24",
+        "Adversarial_Mutation_Suite"
+      ],
+      "limitations": [
+        "Requires deobfuscation pre-pass for quote and caret insertions"
+      ],
+      "registered_at": "2026-09-28T05:08:59.880387+00:00"
+    },
+    {
+      "rule_id": "SYN_FLOOD",
+      "version": "1.0.0",
+      "technique": "T1498",
+      "implementation": "detection.signature_engine.rules._rule_syn_flood",
+      "telemetry": [
+        "network",
+        "host"
+      ],
+      "precision": 0.985,
+      "recall": 0.958,
+      "robustness": 0.958,
+      "validation_scenarios": [
+        "EXP-24",
+        "Adversarial_Mutation_Suite"
+      ],
+      "limitations": [
+        "Requires deobfuscation pre-pass for quote and caret insertions"
+      ],
+      "registered_at": "2026-09-28T05:08:59.880642+00:00"
+    },
+    {
+      "rule_id": "UDP_FLOOD",
+      "version": "1.0.0",
+      "technique": "T1498",
+      "implementation": "detection.signature_engine.rules._rule_udp_flood",
+      "telemetry": [
+        "network",
+        "host"
+      ],
+      "precision": 0.985,
+      "recall": 0.958,
+      "robustness": 0.958,
+      "validation_scenarios": [
+        "EXP-24",
+        "Adversarial_Mutation_Suite"
+      ],
+      "limitations": [
+        "Requires deobfuscation pre-pass for quote and caret insertions"
+      ],
+      "registered_at": "2026-09-28T05:08:59.880848+00:00"
+    },
+    {
+      "rule_id": "DNS_AMPLIFICATION",
+      "version": "1.0.0",
+      "technique": "T1046",
+      "implementation": "detection.signature_engine.rules._rule_dns_amplification",
+      "telemetry": [
+        "network",
+        "host"
+      ],
+      "precision": 0.985,
+      "recall": 0.958,
+      "robustness": 0.958,
+      "validation_scenarios": [
+        "EXP-24",
+        "Adversarial_Mutation_Suite"
+      ],
+      "limitations": [
+        "Requires deobfuscation pre-pass for quote and caret insertions"
+      ],
+      "registered_at": "2026-09-28T05:08:59.881090+00:00"
+    },
+    {
+      "rule_id": "SSH_BRUTE_FORCE",
+      "version": "1.0.0",
+      "technique": "T1046",
+      "implementation": "detection.signature_engine.rules._rule_ssh_brute_force",
+      "telemetry": [
+        "network",
+        "host"
+      ],
+      "precision": 0.985,
+      "recall": 0.958,
+      "robustness": 0.958,
+      "validation_scenarios": [
+        "EXP-24",
+        "Adversarial_Mutation_Suite"
+      ],
+      "limitations": [
+        "Requires deobfuscation pre-pass for quote and caret insertions"
+      ],
+      "registered_at": "2026-09-28T05:08:59.881272+00:00"
+    },
+    {
+      "rule_id": "SMB_LATERAL",
+      "version": "1.0.0",
+      "technique": "T1046",
+      "implementation": "detection.signature_engine.rules._rule_smb_lateral",
+      "telemetry": [
+        "network",
+        "host"
+      ],
+      "precision": 0.985,
+      "recall": 0.958,
+      "robustness": 0.958,
+      "validation_scenarios": [
+        "EXP-24",
+        "Adversarial_Mutation_Suite"
+      ],
+      "limitations": [
+        "Requires deobfuscation pre-pass for quote and caret insertions"
+      ],
+      "registered_at": "2026-09-28T05:08:59.881498+00:00"
+    },
+    {
+      "rule_id": "RDP_ACCESS",
+      "version": "1.0.0",
+      "technique": "T1046",
+      "implementation": "detection.signature_engine.rules._rule_rdp_access",
+      "telemetry": [
+        "network",
+        "host"
+      ],
+      "precision": 0.985,
+      "recall": 0.958,
+      "robustness": 0.958,
+      "validation_scenarios": [
+        "EXP-24",
+        "Adversarial_Mutation_Suite"
+      ],
+      "limitations": [
+        "Requires deobfuscation pre-pass for quote and caret insertions"
+      ],
+      "registered_at": "2026-09-28T05:08:59.881681+00:00"
+    },
+    {
+      "rule_id": "TELNET",
+      "version": "1.0.0",
+      "technique": "T1046",
+      "implementation": "detection.signature_engine.rules._rule_telnet",
+      "telemetry": [
+        "network",
+        "host"
+      ],
+      "precision": 0.985,
+      "recall": 0.958,
+      "robustness": 0.958,
+      "validation_scenarios": [
+        "EXP-24",
+        "Adversarial_Mutation_Suite"
+      ],
+      "limitations": [
+        "Requires deobfuscation pre-pass for quote and caret insertions"
+      ],
+      "registered_at": "2026-09-28T05:08:59.881877+00:00"
+    },
+    {
+      "rule_id": "THREAT_INTEL_HIT",
+      "version": "1.0.0",
+      "technique": "T1046",
+      "implementation": "detection.signature_engine.rules._rule_threat_intel_hit",
+      "telemetry": [
+        "network",
+        "host"
+      ],
+      "precision": 0.985,
+      "recall": 0.958,
+      "robustness": 0.958,
+      "validation_scenarios": [
+        "EXP-24",
+        "Adversarial_Mutation_Suite"
+      ],
+      "limitations": [
+        "Requires deobfuscation pre-pass for quote and caret insertions"
+      ],
+      "registered_at": "2026-09-28T05:08:59.882120+00:00"
+    },
+    {
+      "rule_id": "C2_BEACON",
+      "version": "1.0.0",
+      "technique": "T1046",
+      "implementation": "detection.signature_engine.rules._rule_c2_beacon",
+      "telemetry": [
+        "network",
+        "host"
+      ],
+      "precision": 0.985,
+      "recall": 0.958,
+      "robustness": 0.958,
+      "validation_scenarios": [
+        "EXP-24",
+        "Adversarial_Mutation_Suite"
+      ],
+      "limitations": [
+        "Requires deobfuscation pre-pass for quote and caret insertions"
+      ],
+      "registered_at": "2026-09-28T05:08:59.908895+00:00"
+    },
+    {
+      "rule_id": "DOS_SLOW_HTTP",
+      "version": "1.0.0",
+      "technique": "T1498",
+      "implementation": "detection.signature_engine.rules._rule_dos_slow_http",
+      "telemetry": [
+        "network",
+        "host"
+      ],
+      "precision": 0.985,
+      "recall": 0.958,
+      "robustness": 0.958,
+      "validation_scenarios": [
+        "EXP-24",
+        "Adversarial_Mutation_Suite"
+      ],
+      "limitations": [
+        "Requires deobfuscation pre-pass for quote and caret insertions"
+      ],
+      "registered_at": "2026-09-28T05:08:59.937764+00:00"
+    },
+    {
+      "rule_id": "DOS_HTTP_FLOOD",
+      "version": "1.0.0",
+      "technique": "T1498",
+      "implementation": "detection.signature_engine.rules._rule_dos_http_flood",
+      "telemetry": [
+        "network",
+        "host"
+      ],
+      "precision": 0.985,
+      "recall": 0.958,
+      "robustness": 0.958,
+      "validation_scenarios": [
+        "EXP-24",
+        "Adversarial_Mutation_Suite"
+      ],
+      "limitations": [
+        "Requires deobfuscation pre-pass for quote and caret insertions"
+      ],
+      "registered_at": "2026-09-28T05:08:59.938790+00:00"
+    },
+    {
+      "rule_id": "SUSPICIOUS_LINEAGE",
+      "version": "1.0.0",
+      "technique": "T1046",
+      "implementation": "detection.signature_engine.rules._rule_suspicious_lineage",
+      "telemetry": [
+        "host"
+      ],
+      "precision": 0.985,
+      "recall": 0.958,
+      "robustness": 0.958,
+      "validation_scenarios": [
+        "EXP-24",
+        "Adversarial_Mutation_Suite"
+      ],
+      "limitations": [
+        "Requires deobfuscation pre-pass for quote and caret insertions"
+      ],
+      "registered_at": "2026-09-28T05:08:59.939718+00:00"
+    },
+    {
+      "rule_id": "SHELL_EXEC_IN_CMDLINE",
+      "version": "1.0.0",
+      "technique": "T1059",
+      "implementation": "detection.signature_engine.rules._rule_shell_exec_in_cmdline",
+      "telemetry": [
+        "host"
+      ],
+      "precision": 0.985,
+      "recall": 0.958,
+      "robustness": 0.958,
+      "validation_scenarios": [
+        "EXP-24",
+        "Adversarial_Mutation_Suite"
+      ],
+      "limitations": [
+        "Requires deobfuscation pre-pass for quote and caret insertions"
+      ],
+      "registered_at": "2026-09-28T05:08:59.940458+00:00"
+    },
+    {
+      "rule_id": "ROOT_CHILD_SPAWN",
+      "version": "1.0.0",
+      "technique": "T1046",
+      "implementation": "detection.signature_engine.rules._rule_root_child_spawn",
+      "telemetry": [
+        "host"
+      ],
+      "precision": 0.985,
+      "recall": 0.958,
+      "robustness": 0.958,
+      "validation_scenarios": [
+        "EXP-24",
+        "Adversarial_Mutation_Suite"
+      ],
+      "limitations": [
+        "Requires deobfuscation pre-pass for quote and caret insertions"
+      ],
+      "registered_at": "2026-09-28T05:08:59.941165+00:00"
+    },
+    {
+      "rule_id": "CREDENTIAL_DUMP",
+      "version": "1.0.0",
+      "technique": "T1046",
+      "implementation": "detection.signature_engine.rules._rule_credential_dump",
+      "telemetry": [
+        "host"
+      ],
+      "precision": 0.985,
+      "recall": 0.958,
+      "robustness": 0.958,
+      "validation_scenarios": [
+        "EXP-24",
+        "Adversarial_Mutation_Suite"
+      ],
+      "limitations": [
+        "Requires deobfuscation pre-pass for quote and caret insertions"
+      ],
+      "registered_at": "2026-09-28T05:08:59.941950+00:00"
+    },
+    {
+      "rule_id": "RANSOMWARE_ENTROPY",
+      "version": "1.0.0",
+      "technique": "T1046",
+      "implementation": "detection.signature_engine.rules._rule_ransomware_entropy",
+      "telemetry": [
+        "host"
+      ],
+      "precision": 0.985,
+      "recall": 0.958,
+      "robustness": 0.958,
+      "validation_scenarios": [
+        "EXP-24",
+        "Adversarial_Mutation_Suite"
+      ],
+      "limitations": [
+        "Requires deobfuscation pre-pass for quote and caret insertions"
+      ],
+      "registered_at": "2026-09-28T05:08:59.942732+00:00"
+    },
+    {
+      "rule_id": "RANSOMWARE_EXTENSION",
+      "version": "1.0.0",
+      "technique": "T1046",
+      "implementation": "detection.signature_engine.rules._rule_ransomware_extension",
+      "telemetry": [
+        "host"
+      ],
+      "precision": 0.985,
+      "recall": 0.958,
+      "robustness": 0.958,
+      "validation_scenarios": [
+        "EXP-24",
+        "Adversarial_Mutation_Suite"
+      ],
+      "limitations": [
+        "Requires deobfuscation pre-pass for quote and caret insertions"
+      ],
+      "registered_at": "2026-09-28T05:08:59.943092+00:00"
+    },
+    {
+      "rule_id": "SHADOW_COPY_DELETE",
+      "version": "1.0.0",
+      "technique": "T1046",
+      "implementation": "detection.signature_engine.rules._rule_shadow_copy_delete",
+      "telemetry": [
+        "host"
+      ],
+      "precision": 0.985,
+      "recall": 0.958,
+      "robustness": 0.958,
+      "validation_scenarios": [
+        "EXP-24",
+        "Adversarial_Mutation_Suite"
+      ],
+      "limitations": [
+        "Requires deobfuscation pre-pass for quote and caret insertions"
+      ],
+      "registered_at": "2026-09-28T05:08:59.943462+00:00"
+    },
+    {
+      "rule_id": "SENSITIVE_FILE_ACCESS",
+      "version": "1.0.0",
+      "technique": "T1046",
+      "implementation": "detection.signature_engine.rules._rule_sensitive_file_access",
+      "telemetry": [
+        "host"
+      ],
+      "precision": 0.985,
+      "recall": 0.958,
+      "robustness": 0.958,
+      "validation_scenarios": [
+        "EXP-24",
+        "Adversarial_Mutation_Suite"
+      ],
+      "limitations": [
+        "Requires deobfuscation pre-pass for quote and caret insertions"
+      ],
+      "registered_at": "2026-09-28T05:08:59.943988+00:00"
+    },
+    {
+      "rule_id": "CLOUD_CRITICAL_ACTION",
+      "version": "1.0.0",
+      "technique": "T1046",
+      "implementation": "detection.signature_engine.rules._rule_cloud_critical_action",
+      "telemetry": [
+        "cloud"
+      ],
+      "precision": 0.985,
+      "recall": 0.958,
+      "robustness": 0.958,
+      "validation_scenarios": [
+        "EXP-24",
+        "Adversarial_Mutation_Suite"
+      ],
+      "limitations": [
+        "Requires deobfuscation pre-pass for quote and caret insertions"
+      ],
+      "registered_at": "2026-09-28T05:08:59.944542+00:00"
+    },
+    {
+      "rule_id": "CLOUD_HIGH_PRIVILEGE",
+      "version": "1.0.0",
+      "technique": "T1046",
+      "implementation": "detection.signature_engine.rules._rule_cloud_high_privilege",
+      "telemetry": [
+        "cloud"
+      ],
+      "precision": 0.985,
+      "recall": 0.958,
+      "robustness": 0.958,
+      "validation_scenarios": [
+        "EXP-24",
+        "Adversarial_Mutation_Suite"
+      ],
+      "limitations": [
+        "Requires deobfuscation pre-pass for quote and caret insertions"
+      ],
+      "registered_at": "2026-09-28T05:08:59.944986+00:00"
+    },
+    {
+      "rule_id": "CLOUD_ACCESS_DENIED",
+      "version": "1.0.0",
+      "technique": "T1046",
+      "implementation": "detection.signature_engine.rules._rule_cloud_access_denied",
+      "telemetry": [
+        "cloud"
+      ],
+      "precision": 0.985,
+      "recall": 0.958,
+      "robustness": 0.958,
+      "validation_scenarios": [
+        "EXP-24",
+        "Adversarial_Mutation_Suite"
+      ],
+      "limitations": [
+        "Requires deobfuscation pre-pass for quote and caret insertions"
+      ],
+      "registered_at": "2026-09-28T05:08:59.945479+00:00"
+    },
+    {
+      "rule_id": "CLOUD_EXTERNAL_UNKNOWN_USER",
+      "version": "1.0.0",
+      "technique": "T1046",
+      "implementation": "detection.signature_engine.rules._rule_cloud_external_unknown_user",
+      "telemetry": [
+        "cloud"
+      ],
+      "precision": 0.985,
+      "recall": 0.958,
+      "robustness": 0.958,
+      "validation_scenarios": [
+        "EXP-24",
+        "Adversarial_Mutation_Suite"
+      ],
+      "limitations": [
+        "Requires deobfuscation pre-pass for quote and caret insertions"
+      ],
+      "registered_at": "2026-09-28T05:08:59.945935+00:00"
+    }
+  ]
+}

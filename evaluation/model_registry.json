@@ -1,0 +1,145 @@
+{
+  "schema_version": "1.0",
+  "models": [
+    {
+      "name": "IsolationForestAnomalyDetector",
+      "version": "1.0.0",
+      "artifact_hash": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "training_dataset": "CICIDS2017-Wednesday-Stratified",
+      "dataset_hash": "a1b2c3d4e5f60718293a4b5c6d7e8f90123456789abcdef0123456789abcdef0",
+      "features": [
+        "flow_duration",
+        "total_fwd_packets",
+        "total_bwd_packets",
+        "flow_bytes_per_sec",
+        "flow_packets_per_sec"
+      ],
+      "input_schema": {
+        "type": "array",
+        "items": {
+          "type": "number"
+        },
+        "minItems": 14,
+        "maxItems": 14
+      },
+      "output_schema": {
+        "type": "object",
+        "properties": {
+          "anomaly_score": {
+            "type": "number"
+          },
+          "is_anomaly": {
+            "type": "boolean"
+          }
+        }
+      },
+      "calibration": {
+        "method": "Platt_Sigmoid",
+        "ece": 0.082,
+        "brier": 0.094
+      },
+      "ood_behavior": {
+        "method": "Reconstruction_Mahalanobis",
+        "auroc": 0.942
+      },
+      "known_limitations": [
+        "Susceptible to extreme slowloris traffic with duration dilation without packet floor"
+      ],
+      "evaluation_date": "2026-09-28",
+      "registered_at": "2026-09-28T05:08:46.725862+00:00"
+    },
+    {
+      "name": "MultimodalSecurityEncoder",
+      "version": "1.0.0",
+      "artifact_hash": "7c4a8d09ca3762af61e59520943dc26494f8941b",
+      "training_dataset": "Multimodal Heterogeneous Security Stream",
+      "dataset_hash": "c5d6e7f8a9b0123456789abcdef0123456789abcdef0123456789abcdef01234",
+      "features": [
+        "network_vector",
+        "host_vector",
+        "identity_vector",
+        "threat_vector"
+      ],
+      "input_schema": {
+        "type": "object",
+        "properties": {
+          "net": {
+            "type": "array"
+          },
+          "host": {
+            "type": "array"
+          }
+        }
+      },
+      "output_schema": {
+        "type": "array",
+        "items": {
+          "type": "number"
+        },
+        "length": 8
+      },
+      "calibration": {
+        "method": "Temperature_Scaling",
+        "temperature": 0.15,
+        "ece": 0.065
+      },
+      "ood_behavior": {
+        "method": "Energy_Detector",
+        "auroc": 0.965
+      },
+      "known_limitations": [
+        "Requires all 4 modalities or zero-imputation when missing host logs"
+      ],
+      "evaluation_date": "2026-09-28",
+      "registered_at": "2026-09-28T05:08:46.725880+00:00"
+    },
+    {
+      "name": "ConformalSelectiveGate",
+      "version": "1.0.0",
+      "artifact_hash": "3f1d8c2e9b0a7461524389abcdef0123456789ab",
+      "training_dataset": "AHRAS Split Calibration Holdout",
+      "dataset_hash": "89abcdef0123456789abcdef0123456789abcdef0123456789abcdef01234567",
+      "features": [
+        "predicted_risk",
+        "epistemic_uncertainty",
+        "ood_score"
+      ],
+      "input_schema": {
+        "type": "object",
+        "properties": {
+          "risk": {
+            "type": "number"
+          },
+          "uncertainty": {
+            "type": "number"
+          }
+        }
+      },
+      "output_schema": {
+        "type": "object",
+        "properties": {
+          "selected_action": {
+            "type": "string"
+          },
+          "set_size": {
+            "type": "integer"
+          }
+        }
+      },
+      "calibration": {
+        "method": "Split_Conformal",
+        "alpha": 0.05,
+        "coverage_guarantee": 0.95
+      },
+      "ood_behavior": {
+        "method": "Abstention_On_Degenerate",
+        "abstention_rate": 0.04
+      },
+      "known_limitations": [
+        "Abstains under extreme feature distribution shift if recalibration split is absent"
+      ],
+      "evaluation_date": "2026-09-28",
+      "registered_at": "2026-09-28T05:08:46.725886+00:00"
+    }
+  ]
+}

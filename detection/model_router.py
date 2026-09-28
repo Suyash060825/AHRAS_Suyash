@@ -99,6 +99,8 @@ class RoutedDetectionResult(DetectionResult):
     per_stage_latencies: dict[str, float] = field(default_factory=dict)
     exit_reason: str = ""
     early_exited: bool = True
+    models_executed: list[str] = field(default_factory=list)
+    models_skipped: list[str] = field(default_factory=list)
 
     def to_dict(self) -> dict:
         d = asdict(self)
@@ -471,6 +473,8 @@ class ConfidenceModelRouter:
                 per_stage_latencies=stage_latencies,
                 exit_reason=exit_reason,
                 early_exited=True,
+                models_executed=["signature_engine", "heuristic_filter"],
+                models_skipped=["ml_anomaly_ensemble", "statistical_engine", "multimodal_encoder", "attack_path_reasoner"],
             )
 
         # ── Stage 2: ML Ensemble ─────────────────────────────────────────────
@@ -578,6 +582,8 @@ class ConfidenceModelRouter:
                 per_stage_latencies=stage_latencies,
                 exit_reason=exit_reason,
                 early_exited=True,
+                models_executed=["signature_engine", "heuristic_filter", "ml_anomaly_ensemble", "statistical_engine"],
+                models_skipped=["multimodal_encoder", "attack_path_reasoner"],
             )
 
         # ── Stage 3: Behavioral / Multimodal ─────────────────────────────────
@@ -664,6 +670,8 @@ class ConfidenceModelRouter:
                 per_stage_latencies=stage_latencies,
                 exit_reason=exit_reason,
                 early_exited=True,
+                models_executed=["signature_engine", "heuristic_filter", "ml_anomaly_ensemble", "statistical_engine", "multimodal_encoder"],
+                models_skipped=["attack_path_reasoner"],
             )
 
         # ── Stage 4: Deep Relational & Graph Analysis ─────────────────────────
@@ -736,6 +744,8 @@ class ConfidenceModelRouter:
             per_stage_latencies=stage_latencies,
             exit_reason=exit_reason,
             early_exited=False,
+            models_executed=["signature_engine", "heuristic_filter", "ml_anomaly_ensemble", "statistical_engine", "multimodal_encoder", "attack_path_reasoner"],
+            models_skipped=[],
         )
 
     def process(self, evt: dict) -> Optional[RoutedDetectionResult]:
