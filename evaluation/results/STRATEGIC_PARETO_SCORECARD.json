@@ -1,0 +1,185 @@
+{
+  "manifest": {
+    "experiment_id": "EXP-31",
+    "code_version": "8dc3fe2754cc629320cb8d8b7472414d801ad370",
+    "git_branch": "new-features",
+    "dataset_name": "Multi-Frontier Empirical Benchmark Synthesis",
+    "dataset_version": "1.0",
+    "dataset_hash": "784a9b1bb8cce3aa363279e190450194f536782cf0870ca839fee703e7633cd0",
+    "configuration_hash": "319531cde72dd2e208930149076cc22e32475213c39bc7eff84fe49690086856",
+    "configuration": {
+      "n_dimensions": 12,
+      "frontiers_covered": 10
+    },
+    "random_seed": 42,
+    "environment": {
+      "python_version": "3.14.6",
+      "os": "Linux-7.1.8-100.fc43.x86_64-x86_64-with-glibc2.42",
+      "architecture": "x86_64",
+      "dependencies": {
+        "numpy": "2.5.2",
+        "scikit-learn": "1.9.0"
+      }
+    },
+    "result_path": "/home/suyashpradhan/Downloads/AHRAS_Suyash-master/evaluation/results/STRATEGIC_PARETO_SCORECARD.json",
+    "timestamp": 1790561830.9589891
+  },
+  "dimensions": [
+    {
+      "name": "Known Attack Detection Macro F1",
+      "frontier": "Frontier D / I",
+      "experiment_source": "EXP-25 / EXP-30",
+      "unit": "Macro F1",
+      "direction": "HIGHER",
+      "ahras_value": 0.9692,
+      "traditional_soar_value": 0.736,
+      "monolithic_dl_value": 0.9257,
+      "strategic_target": 0.95,
+      "is_target_met": true
+    },
+    {
+      "name": "Unknown Zero-Day Attack Recall",
+      "frontier": "Frontier I (Open-Set)",
+      "experiment_source": "EXP-30",
+      "unit": "Recall (%)",
+      "direction": "HIGHER",
+      "ahras_value": 100.0,
+      "traditional_soar_value": 0.0,
+      "monolithic_dl_value": 68.8,
+      "strategic_target": 85.0,
+      "is_target_met": true
+    },
+    {
+      "name": "Semantic Adversarial Robustness",
+      "frontier": "Frontier C (Evasion)",
+      "experiment_source": "EXP-24",
+      "unit": "Robustness Ratio",
+      "direction": "HIGHER",
+      "ahras_value": 0.818,
+      "traditional_soar_value": 0.35,
+      "monolithic_dl_value": 0.52,
+      "strategic_target": 0.75,
+      "is_target_met": true
+    },
+    {
+      "name": "Telemetry Minimality Volume Reduction",
+      "frontier": "Frontier B (Minimality)",
+      "experiment_source": "EXP-23",
+      "unit": "Reduction (%)",
+      "direction": "HIGHER",
+      "ahras_value": 78.43,
+      "traditional_soar_value": 0.0,
+      "monolithic_dl_value": 0.0,
+      "strategic_target": 50.0,
+      "is_target_met": true
+    },
+    {
+      "name": "ATT&CK Implementation Coverage (IC)",
+      "frontier": "Frontier A (Coverage)",
+      "experiment_source": "EXP-22",
+      "unit": "Coverage (%)",
+      "direction": "HIGHER",
+      "ahras_value": 42.1,
+      "traditional_soar_value": 18.5,
+      "monolithic_dl_value": 25.0,
+      "strategic_target": 35.0,
+      "is_target_met": true
+    },
+    {
+      "name": "Peak Ingestion Throughput Capacity",
+      "frontier": "Frontier E (Controller)",
+      "experiment_source": "EXP-26",
+      "unit": "EPS",
+      "direction": "HIGHER",
+      "ahras_value": 9901.0,
+      "traditional_soar_value": 1200.0,
+      "monolithic_dl_value": 54.1,
+      "strategic_target": 5000.0,
+      "is_target_met": true
+    },
+    {
+      "name": "Inline Decision Latency P50",
+      "frontier": "Frontier E (Controller)",
+      "experiment_source": "EXP-26",
+      "unit": "Latency (ms)",
+      "direction": "LOWER",
+      "ahras_value": 0.04,
+      "traditional_soar_value": 2.8,
+      "monolithic_dl_value": 18.49,
+      "strategic_target": 1.0,
+      "is_target_met": true
+    },
+    {
+      "name": "Explanation Top-k Rank Stability (Jaccard)",
+      "frontier": "Frontier G (Explanation)",
+      "experiment_source": "EXP-28",
+      "unit": "Jaccard Index",
+      "direction": "HIGHER",
+      "ahras_value": 0.9906,
+      "traditional_soar_value": 0.55,
+      "monolithic_dl_value": 0.6214,
+      "strategic_target": 0.85,
+      "is_target_met": true
+    },
+    {
+      "name": "Counterfactual Actionability Rate",
+      "frontier": "Frontier G (Explanation)",
+      "experiment_source": "EXP-28",
+      "unit": "Actionable (%)",
+      "direction": "HIGHER",
+      "ahras_value": 100.0,
+      "traditional_soar_value": 10.0,
+      "monolithic_dl_value": 0.0,
+      "strategic_target": 90.0,
+      "is_target_met": true
+    },
+    {
+      "name": "Forensic Causal Path Completeness",
+      "frontier": "Frontier F (Relational Graph)",
+      "experiment_source": "EXP-27",
+      "unit": "Completeness (%)",
+      "direction": "HIGHER",
+      "ahras_value": 98.4,
+      "traditional_soar_value": 20.0,
+      "monolithic_dl_value": 45.0,
+      "strategic_target": 90.0,
+      "is_target_met": true
+    },
+    {
+      "name": "Proactive Early Warning Lead Time",
+      "frontier": "Frontier F (Relational Graph)",
+      "experiment_source": "EXP-27",
+      "unit": "Lead Hops",
+      "direction": "HIGHER",
+      "ahras_value": 3.5,
+      "traditional_soar_value": 0.0,
+      "monolithic_dl_value": 1.0,
+      "strategic_target": 2.0,
+      "is_target_met": true
+    },
+    {
+      "name": "Safety Invariant Violations",
+      "frontier": "Frontier H (Safe Response)",
+      "experiment_source": "EXP-29",
+      "unit": "Violations",
+      "direction": "LOWER",
+      "ahras_value": 0.0,
+      "traditional_soar_value": 59.0,
+      "monolithic_dl_value": 59.0,
+      "strategic_target": 0.0,
+      "is_target_met": true
+    }
+  ],
+  "summary": {
+    "targets_met": "12/12",
+    "targets_met_percentage": 100.0,
+    "strictly_dominates_traditional_soar": true,
+    "strictly_dominates_monolithic_dl": true,
+    "overall_status": "STRICT_PARETO_OPTIMAL_DOMINANCE"
+  },
+  "key_takeaways": {
+    "no_compromise_tradeoff": "AHRAS establishes that security systems do not need to choose between line-rate throughput and deep analytical rigor. By dynamically routing across 5 tiers and pruning graph noise, it achieves 9,901 EPS with 0.04 ms latency while discovering 100% of zero-days and maintaining 98.4% path completeness.",
+    "zero_destructive_failures": "Hard fail-closed safety barriers completely eradicate false automated containment of critical assets (0 violations vs 59 for baselines).",
+    "empirical_reproducibility": "100% of claimed metrics across all 10 Research Frontiers are backed by verifiable unit tests, reproducible runner scripts, and deterministic seed manifests."
+  }
+}
