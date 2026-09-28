@@ -7,17 +7,17 @@
 \toprule
 \textbf{Detection Engine} & \textbf{Baseline Detection} & \textbf{Mutated Detection} & \textbf{Evasion Rate} & \textbf{Robustness Score} \\
 \midrule
-Signature & 42.3\% & 34.7\% & 17.9\% & \textbf{0.821} \\
+Signature & 42.3\% & 40.5\% & 4.2\% & \textbf{0.958} \\
 Encrypted\_Session & 1.9\% & 1.4\% & 25.0\% & \textbf{0.750} \\
-Ml\_Anomaly & 1.9\% & 1.4\% & 25.0\% & \textbf{0.750} \\
+Ml\_Anomaly & 1.9\% & 1.9\% & 0.0\% & \textbf{1.000} \\
 Statistical & 1.9\% & 1.9\% & 0.0\% & \textbf{1.000} \\
-Hybrid & 44.2\% & 36.2\% & 18.2\% & \textbf{0.818} \\
+Hybrid & 44.2\% & 42.0\% & 5.1\% & \textbf{0.950} \\
 \midrule
 \multicolumn{5}{l}{\textbf{Top High-Leverage Evasion Mutation Strategies:}} \\
-\quad \texttt{quote\_insertion} (Process) & \multicolumn{2}{l}{Evasion Success: 26.7\%} & \multicolumn{2}{l}{Evaded: \textit{hybrid, signature}} \\
-\quad \texttt{duration\_dilation} (Network) & \multicolumn{2}{l}{Evasion Success: 22.2\%} & \multicolumn{2}{l}{Evaded: \textit{hybrid, signature}} \\
-\quad \texttt{caret\_insertion} (Process) & \multicolumn{2}{l}{Evasion Success: 20.0\%} & \multicolumn{2}{l}{Evaded: \textit{hybrid, signature}} \\
-\quad \texttt{port\_variation} (Network) & \multicolumn{2}{l}{Evasion Success: 16.7\%} & \multicolumn{2}{l}{Evaded: \textit{hybrid, ml_anomaly}} \\
+\quad \texttt{duration\_dilation} (Network) & \multicolumn{2}{l}{Evasion Success: 11.1\%} & \multicolumn{2}{l}{Evaded: \textit{hybrid, signature}} \\
+\quad \texttt{flag\_reordering} (Process) & \multicolumn{2}{l}{Evasion Success: 6.7\%} & \multicolumn{2}{l}{Evaded: \textit{hybrid, signature}} \\
+\quad \texttt{timing\_jitter} (Network) & \multicolumn{2}{l}{Evasion Success: 5.6\%} & \multicolumn{2}{l}{Evaded: \textit{encrypted_session, hybrid}} \\
+\quad \texttt{port\_variation} (Network) & \multicolumn{2}{l}{Evasion Success: 5.6\%} & \multicolumn{2}{l}{Evaded: \textit{hybrid, signature}} \\
 \bottomrule
 \end{tabular}
 \end{table*}

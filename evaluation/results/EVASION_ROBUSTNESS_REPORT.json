@@ -5,16 +5,16 @@
     "total_evaluated_vectors": 52,
     "total_mutation_trials": 189,
     "overall_baseline_recall": 0.4423,
-    "overall_mutated_recall": 0.4286,
-    "overall_evasion_rate": 0.031
+    "overall_mutated_recall": 0.4974,
+    "overall_evasion_rate": 0.0
   },
   "detector_scores": [
     {
       "engine_name": "signature",
       "baseline_detection_rate": 0.4231,
-      "mutated_detection_rate": 0.3474,
-      "evasion_rate": 0.1789,
-      "robustness_score": 0.8211
+      "mutated_detection_rate": 0.4053,
+      "evasion_rate": 0.0421,
+      "robustness_score": 0.9579
     },
     {
       "engine_name": "encrypted_session",
@@ -26,9 +26,9 @@
     {
       "engine_name": "ml_anomaly",
       "baseline_detection_rate": 0.0192,
-      "mutated_detection_rate": 0.0144,
-      "evasion_rate": 0.25,
-      "robustness_score": 0.75
+      "mutated_detection_rate": 0.0192,
+      "evasion_rate": 0.0,
+      "robustness_score": 1.0
     },
     {
       "engine_name": "statistical",
@@ -40,63 +40,18 @@
     {
       "engine_name": "hybrid",
       "baseline_detection_rate": 0.4423,
-      "mutated_detection_rate": 0.3619,
-      "evasion_rate": 0.1818,
-      "robustness_score": 0.8182
+      "mutated_detection_rate": 0.42,
+      "evasion_rate": 0.0505,
+      "robustness_score": 0.9495
     }
   ],
   "strategy_efficacies": [
     {
-      "strategy_name": "quote_insertion",
-      "modality": "process",
-      "total_trials": 15,
-      "evasions_achieved": 4,
-      "evasion_rate_pct": 26.67,
-      "target_detectors_evaded": [
-        "hybrid",
-        "signature"
-      ]
-    },
-    {
       "strategy_name": "duration_dilation",
       "modality": "network",
       "total_trials": 18,
-      "evasions_achieved": 4,
-      "evasion_rate_pct": 22.22,
-      "target_detectors_evaded": [
-        "hybrid",
-        "signature"
-      ]
-    },
-    {
-      "strategy_name": "caret_insertion",
-      "modality": "process",
-      "total_trials": 15,
-      "evasions_achieved": 3,
-      "evasion_rate_pct": 20.0,
-      "target_detectors_evaded": [
-        "hybrid",
-        "signature"
-      ]
-    },
-    {
-      "strategy_name": "port_variation",
-      "modality": "network",
-      "total_trials": 18,
-      "evasions_achieved": 3,
-      "evasion_rate_pct": 16.67,
-      "target_detectors_evaded": [
-        "hybrid",
-        "ml_anomaly",
-        "signature"
-      ]
-    },
-    {
-      "strategy_name": "whitespace_padding",
-      "modality": "process",
-      "total_trials": 15,
       "evasions_achieved": 2,
-      "evasion_rate_pct": 13.33,
+      "evasion_rate_pct": 11.11,
       "target_detectors_evaded": [
         "hybrid",
         "signature"
@@ -125,7 +80,42 @@
       ]
     },
     {
+      "strategy_name": "port_variation",
+      "modality": "network",
+      "total_trials": 18,
+      "evasions_achieved": 1,
+      "evasion_rate_pct": 5.56,
+      "target_detectors_evaded": [
+        "hybrid",
+        "signature"
+      ]
+    },
+    {
       "strategy_name": "case_alternation",
+      "modality": "process",
+      "total_trials": 15,
+      "evasions_achieved": 0,
+      "evasion_rate_pct": 0.0,
+      "target_detectors_evaded": []
+    },
+    {
+      "strategy_name": "caret_insertion",
+      "modality": "process",
+      "total_trials": 15,
+      "evasions_achieved": 0,
+      "evasion_rate_pct": 0.0,
+      "target_detectors_evaded": []
+    },
+    {
+      "strategy_name": "quote_insertion",
+      "modality": "process",
+      "total_trials": 15,
+      "evasions_achieved": 0,
+      "evasion_rate_pct": 0.0,
+      "target_detectors_evaded": []
+    },
+    {
+      "strategy_name": "whitespace_padding",
       "modality": "process",
       "total_trials": 15,
       "evasions_achieved": 0,
@@ -198,23 +188,23 @@
     },
     {
       "epsilon": 0.1,
-      "detection_recall_pct": 40.5,
-      "f1_score": 0.381,
-      "evasion_rate_pct": 59.5,
+      "detection_recall_pct": 48.6,
+      "f1_score": 0.457,
+      "evasion_rate_pct": 51.4,
       "mean_uncertainty": 0.25
     },
     {
       "epsilon": 0.15,
-      "detection_recall_pct": 29.7,
-      "f1_score": 0.279,
-      "evasion_rate_pct": 70.3,
+      "detection_recall_pct": 45.9,
+      "f1_score": 0.431,
+      "evasion_rate_pct": 54.1,
       "mean_uncertainty": 0.325
     },
     {
       "epsilon": 0.2,
-      "detection_recall_pct": 46.2,
-      "f1_score": 0.434,
-      "evasion_rate_pct": 53.8,
+      "detection_recall_pct": 51.3,
+      "f1_score": 0.482,
+      "evasion_rate_pct": 48.7,
       "mean_uncertainty": 0.4
     }
   ],
@@ -227,8 +217,8 @@
   ],
   "manifest": {
     "experiment_id": "EXP-24",
-    "code_version": "9b4d16436ff11980057f16017b2d393e2327e26f",
-    "git_branch": "new-features",
+    "code_version": "11f3e77778ebb6124ff6e8bd2b66c0fa9e7b96b3",
+    "git_branch": "home",
     "dataset_name": "AHRAS_SEMANTIC_MUTATION_LAB_V1",
     "dataset_version": "1.0",
     "dataset_hash": "025371e27e1cddb72401f4aea9a365f953db4c6605ec810445fda31baa088275",
@@ -260,6 +250,6 @@
       }
     },
     "result_path": "/home/suyashpradhan/Downloads/AHRAS_Suyash-master/evaluation/results/EVASION_ROBUSTNESS_REPORT.json",
-    "timestamp": 1790571104.472944
+    "timestamp": 1790571528.333352
   }
 }

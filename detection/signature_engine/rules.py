@@ -200,14 +200,14 @@ def _rule_dns_amplification(evt: dict) -> Optional[SignatureMatch]:
 def _rule_ssh_brute_force(evt: dict) -> Optional[SignatureMatch]:
     dst_port = _int(_get(evt, "dst_endpoint", "port"))
     pkts     = _float(_get(evt, "traffic", "packets"))
-    if dst_port == 22 and pkts >= _T["ssh_brute_pkts"]:
+    if dst_port in (22, 2222, 2200) and pkts >= _T["ssh_brute_pkts"]:
         return SignatureMatch(
             rule_id="NET-005", rule_name="SSH Brute Force",
             attack_type="brute_force_ssh", severity=4, confidence=0.85,
-            description=f"SSH brute force: {pkts:.0f} packets to port 22",
+            description=f"SSH brute force: {pkts:.0f} packets to port {dst_port}",
             mitre_tactic="Credential Access",
             mitre_technique="T1110 - Brute Force",
-            evidence={"packets": pkts, "dst_port": 22},
+            evidence={"packets": pkts, "dst_port": dst_port},
         )
 
 
@@ -216,28 +216,28 @@ def _rule_smb_lateral(evt: dict) -> Optional[SignatureMatch]:
     src_ip   = _str(_get(evt, "src_endpoint", "ip"))
     is_priv  = _get(evt, "enrichment", "is_private", default=True)
     pkts     = _float(_get(evt, "traffic", "packets"))
-    if dst_port == 445 and is_priv and pkts > 10:
+    if dst_port in (445, 139) and is_priv and pkts > 10:
         return SignatureMatch(
             rule_id="NET-006", rule_name="SMB Lateral Movement",
             attack_type="lateral_movement_smb", severity=4, confidence=0.80,
-            description=f"SMB lateral movement: {src_ip} → port 445",
+            description=f"SMB lateral movement: {src_ip} → port {dst_port}",
             mitre_tactic="Lateral Movement",
             mitre_technique="T1021.002 - SMB/Windows Admin Shares",
-            evidence={"dst_port": 445, "src_ip": src_ip},
+            evidence={"dst_port": dst_port, "src_ip": src_ip},
         )
 
 
 def _rule_rdp_access(evt: dict) -> Optional[SignatureMatch]:
     dst_port = _int(_get(evt, "dst_endpoint", "port"))
     is_priv  = _get(evt, "enrichment", "is_private", default=True)
-    if dst_port == 3389 and not is_priv:
+    if dst_port in (3389, 33890, 3388) and not is_priv:
         return SignatureMatch(
             rule_id="NET-007", rule_name="External RDP Access",
             attack_type="rdp_external", severity=4, confidence=0.82,
-            description=f"External RDP from {_get(evt,'src_endpoint','ip',default='')}",
+            description=f"External RDP from {_get(evt,'src_endpoint','ip',default='')} to port {dst_port}",
             mitre_tactic="Lateral Movement",
             mitre_technique="T1021.001 - Remote Desktop Protocol",
-            evidence={"dst_port": 3389, "external": True},
+            evidence={"dst_port": dst_port, "external": True},
         )
 
 
@@ -288,22 +288,42 @@ def _rule_c2_beacon(evt: dict) -> Optional[SignatureMatch]:
         )
 
 
+def _deobfuscate_cmdline(raw_cmd: Any) -> str:
+    """
+    De-obfuscates command line strings against adversarial evasion perturbations:
+    - Strips quote insertions (" and ')
+    - Strips caret insertions (^)
+    - Strips backtick escapes (`)
+    - Normalizes multiple spaces and tabs
+    """
+    if raw_cmd is None:
+        return ""
+    s = str(raw_cmd).lower()
+    cleaned = s.replace("^", "").replace("`", "").replace('"', "").replace("'", "")
+    return " ".join(cleaned.split())
+
+
 def _rule_dos_slow_http(evt: dict) -> Optional[SignatureMatch]:
     pkts  = _float(_get(evt, "traffic", "packets"))
     dur   = _float(_get(evt, "traffic", "duration_sec"))
+    b_val = _float(_get(evt, "traffic", "bytes"))
     dst_p = _int(_get(evt, "dst_endpoint", "port"))
     pps   = pkts / max(dur, 0.001)
-    # Slowloris / GoldenEye keep-alive connection holding on web ports (80, 8080)
-    # Characterized by extended duration (>25s), low packet exchange (<1.0 pps), and low packet count
-    if dst_p in (80, 8080) and dur >= 25.0 and pps < 1.0 and 2 <= pkts <= 35:
-        return SignatureMatch(
-            rule_id="NET-011", rule_name="Slow HTTP / Keep-Alive Exhaustion DoS",
-            attack_type="dos_slow_http", severity=4, confidence=0.88,
-            description=f"Slow HTTP connection holding: {pkts:.0f} pkts over {dur:.1f}s ({pps:.2f} pps) to port {dst_p}",
-            mitre_tactic="Impact",
-            mitre_technique="T1499.003 - Application Exhaustion Flood",
-            evidence={"packets": pkts, "duration": dur, "dst_port": dst_p, "pps": round(pps, 3)},
-        )
+    bytes_per_pkt = b_val / max(pkts, 1.0)
+    # Slowloris / GoldenEye keep-alive connection holding on web ports (80, 443, 8080, 8443)
+    # Characterized by:
+    # 1. Extended duration (>25s) with low packet exchange (<1.0 pps) and low packet count (2-35)
+    # 2. Or abnormally low payload bytes per packet (<20 bytes/pkt with >=30 pkts on web ports)
+    if dst_p in (80, 443, 8080, 8443):
+        if (dur >= 25.0 and pps < 1.0 and 2 <= pkts <= 35) or (pkts >= 30 and bytes_per_pkt < 20.0):
+            return SignatureMatch(
+                rule_id="NET-011", rule_name="Slow HTTP / Keep-Alive Exhaustion DoS",
+                attack_type="dos_slow_http", severity=4, confidence=0.88,
+                description=f"Slow HTTP connection holding: {pkts:.0f} pkts over {dur:.1f}s ({pps:.2f} pps) to port {dst_p}",
+                mitre_tactic="Impact",
+                mitre_technique="T1499.003 - Application Exhaustion Flood",
+                evidence={"packets": pkts, "duration": dur, "dst_port": dst_p, "pps": round(pps, 3), "bytes_per_pkt": round(bytes_per_pkt, 1)},
+            )
 
 
 def _rule_dos_http_flood(evt: dict) -> Optional[SignatureMatch]:
@@ -312,8 +332,9 @@ def _rule_dos_http_flood(evt: dict) -> Optional[SignatureMatch]:
     dst_p = _int(_get(evt, "dst_endpoint", "port"))
     pps   = pkts / max(dur, 0.001)
     # HTTP request flood (DoS Hulk, High Rate HTTP DoS)
-    # Characterized by high packet rate (>=250 pps) or rapid burst (>=500 pkts in <=5s)
-    if dst_p in (80, 443, 8080, 8443) and (pps >= 250.0 or (pkts >= 500 and dur <= 5.0)):
+    # Characterized by high packet rate (>=250 pps), rapid burst (>=500 pkts in <=5s),
+    # or high aggregate HTTP request volume (>=1000 pkts on web ports even under dilated duration)
+    if dst_p in (80, 443, 8080, 8443) and (pps >= 250.0 or (pkts >= 500 and dur <= 5.0) or pkts >= 1000):
         return SignatureMatch(
             rule_id="NET-012", rule_name="HTTP Request Flood",
             attack_type="dos_http_flood", severity=4, confidence=0.85,
@@ -351,9 +372,10 @@ def _rule_suspicious_lineage(evt: dict) -> Optional[SignatureMatch]:
 
 def _rule_shell_exec_in_cmdline(evt: dict) -> Optional[SignatureMatch]:
     actor   = _get(evt, "actor", "process") or {}
-    raw_cmd = actor.get("cmd_line")
+    raw_cmd = actor.get("cmd_line") or _get(evt, "process", "cmd") or ""
     cmdline = _str(raw_cmd).lower()          # safe: _str handles None
-    hits    = [b for b in _T["shell_patterns"] if b in cmdline]
+    deobf   = _deobfuscate_cmdline(raw_cmd)
+    hits    = [b for b in _T["shell_patterns"] if (b in cmdline or b in deobf)]
     if hits:
         return SignatureMatch(
             rule_id="PROC-002", rule_name="Shell Code Execution",
@@ -369,7 +391,8 @@ def _rule_root_child_spawn(evt: dict) -> Optional[SignatureMatch]:
     actor    = _get(evt, "actor", "process") or {}
     username = _str(_get(actor, "user", "name"))
     name     = _str(actor.get("name"))
-    if username in ("root", "SYSTEM", "Administrator") and name in _T["suspicious_children"]:
+    base_name = name.replace("\\", "/").split("/")[-1]
+    if username in ("root", "SYSTEM", "Administrator") and (name in _T["suspicious_children"] or base_name in _T["suspicious_children"]):
         return SignatureMatch(
             rule_id="PROC-003", rule_name="Root Spawned Shell",
             attack_type="privilege_abuse", severity=5, confidence=0.90,
@@ -382,9 +405,10 @@ def _rule_root_child_spawn(evt: dict) -> Optional[SignatureMatch]:
 
 def _rule_credential_dump(evt: dict) -> Optional[SignatureMatch]:
     actor   = _get(evt, "actor", "process") or {}
-    raw_cmd = actor.get("cmd_line")
+    raw_cmd = actor.get("cmd_line") or _get(evt, "process", "cmd") or ""
     cmdline = _str(raw_cmd).lower()          # safe: _str handles None
-    hits    = [c for c in _T["cred_patterns"] if c in cmdline]
+    deobf   = _deobfuscate_cmdline(raw_cmd)
+    hits    = [c for c in _T["cred_patterns"] if (c in cmdline or c in deobf)]
     if hits:
         return SignatureMatch(
             rule_id="PROC-004", rule_name="Credential Dumping",
