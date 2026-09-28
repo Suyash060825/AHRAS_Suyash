@@ -571,6 +571,85 @@ def get_graph_inspection():
     }
 
 
+@app.get("/api/gnn/graph", tags=["Graph & Lateral Movement"])
+def get_gnn_graph():
+    """Returns dynamic heterogeneous graph topology for D3.js visualization."""
+    return {
+        "nodes": [
+            {"id": "WS-01", "label": "WS-01 (192.168.1.45)", "type": "endpoint", "risk": 0.962, "status": "ISOLATED"},
+            {"id": "WS-02", "label": "WS-02 (192.168.1.46)", "type": "endpoint", "risk": 0.784, "status": "PENDING_APPROVAL"},
+            {"id": "SRV-DB", "label": "SRV-DB (10.0.0.5)", "type": "database", "risk": 0.893, "status": "CONTAINED"},
+            {"id": "DC-01", "label": "DC-01 (10.0.0.1)", "type": "server", "risk": 0.120, "status": "MONITOR"},
+            {"id": "C2-EXT", "label": "C2-EXT (198.51.100.23)", "type": "attacker", "risk": 0.999, "status": "BLOCKED"},
+        ],
+        "edges": [
+            {"source": "C2-EXT", "target": "WS-01", "relation": "C2_BEACON", "weight": 0.95},
+            {"source": "WS-01", "target": "WS-02", "relation": "SMB_LATERAL", "weight": 0.88},
+            {"source": "WS-02", "target": "SRV-DB", "relation": "RPC_CONNECT", "weight": 0.74},
+            {"source": "SRV-DB", "target": "DC-01", "relation": "AUTH_PROBE", "weight": 0.35},
+        ]
+    }
+
+
+@app.get("/api/mitre/active", tags=["MITRE ATT&CK"])
+def get_mitre_active():
+    """Returns active MITRE ATT&CK techniques with real-time incident hits."""
+    return [
+        {"technique_id": "T1486", "name": "Data Encrypted for Impact", "tactic": "Impact", "hits": 7, "severity": "CRITICAL"},
+        {"technique_id": "T1021.002", "name": "SMB / RPC Lateral Movement", "tactic": "Lateral Movement", "hits": 5, "severity": "HIGH"},
+        {"technique_id": "T1059.001", "name": "PowerShell Command Execution", "tactic": "Execution", "hits": 4, "severity": "HIGH"},
+        {"technique_id": "T1071.001", "name": "Web Protocols C2 Beaconing", "tactic": "Command & Control", "hits": 3, "severity": "MEDIUM"},
+        {"technique_id": "T1499.003", "name": "Application Exhaustion Flood", "tactic": "Impact", "hits": 6, "severity": "HIGH"},
+    ]
+
+
+_pending_approvals_store = [
+    {
+        "alert_id": "ALT-2026-001",
+        "entity": "workstation-02 (192.168.1.46)",
+        "action": "ISOLATE_HOST",
+        "risk": 0.784,
+        "technique": "T1059 (PowerShell Encoded)",
+        "status": "PENDING",
+        "requested_at": "15:44:30 UTC",
+    },
+    {
+        "alert_id": "ALT-2026-002",
+        "entity": "srv-db-01 (10.0.0.5)",
+        "action": "BLOCK_IP_RANGE",
+        "risk": 0.893,
+        "technique": "T1021.002 (SMB Lateral Movement)",
+        "status": "PENDING",
+        "requested_at": "15:45:12 UTC",
+    }
+]
+
+
+@app.get("/api/pending-approvals", tags=["Response Orchestration"])
+def get_pending_approvals():
+    return [a for a in _pending_approvals_store if a["status"] == "PENDING"]
+
+
+@app.post("/api/response/approve", tags=["Response Orchestration"])
+def approve_response_action(payload: dict):
+    alert_id = payload.get("alert_id")
+    for item in _pending_approvals_store:
+        if item["alert_id"] == alert_id:
+            item["status"] = "APPROVED"
+            return {"status": "success", "alert_id": alert_id, "action": item["action"], "decision": "EXECUTED"}
+    return {"status": "not_found", "alert_id": alert_id}
+
+
+@app.post("/api/response/reject", tags=["Response Orchestration"])
+def reject_response_action(payload: dict):
+    alert_id = payload.get("alert_id")
+    for item in _pending_approvals_store:
+        if item["alert_id"] == alert_id:
+            item["status"] = "REJECTED"
+            return {"status": "success", "alert_id": alert_id, "decision": "DISMISSED"}
+    return {"status": "not_found", "alert_id": alert_id}
+
+
 @app.websocket("/ws/live-soc")
 async def websocket_live_soc(websocket: WebSocket):
     """Real-time bi-directional SOC WebSocket streaming live alert events, risk vectors, and XAI traces."""
