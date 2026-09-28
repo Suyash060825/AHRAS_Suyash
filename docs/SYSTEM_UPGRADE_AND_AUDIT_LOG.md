@@ -450,6 +450,119 @@ Engineered and integrated the pre-execution response lab, adaptive deception eng
    - [`publication/tables/resilience_recovery.tex`](file:///home/suyashpradhan/Downloads/AHRAS_Suyash-master/publication/tables/resilience_recovery.tex)
 7. **Documentation**: [`docs/PHASE_6_SECURITY_TWIN_AND_RESILIENCE_COMPLETION.md`](file:///home/suyashpradhan/Downloads/AHRAS_Suyash-master/docs/PHASE_6_SECURITY_TWIN_AND_RESILIENCE_COMPLETION.md).
 
+---
+
+## 16. Phase 7 Implementation: Self-Supervised Representation & Multimodal Fusion
+*Benchmark ID: `EXP-39`*
+
+Engineered and integrated the representation-learning foundation and multimodal fusion architecture specified in Sections 20, 36, 37, 39:
+
+1. **Self-Supervised Representation Engine ([`detection/representation_engine.py`](file:///home/suyashpradhan/Downloads/AHRAS_Suyash-master/detection/representation_engine.py))**:
+   - `SecurityRepresentationModel`: Tabular masked feature reconstruction ($p_{\text{mask}}=0.20$) and InfoNCE contrastive hyperspherical pre-training on unlabelled telemetry.
+   - Computes latent Mahalanobis distance and autoencoder reconstruction residuals.
+   - Evaluates few-shot label efficiency across $5\%, 10\%, 20\%, 50\%, 100\%$ budgets.
+   - **EXP-39 Benchmark (Part A)**: Achieves **$99.0\%$ zero-day / OOD detection recall** ($99/100$) and **$66.05\ \mu\text{s}$ per-sample inference latency**.
+
+2. **Endpoint Sensor Telemetry Normalization ([`sensors/endpoint_sensor.py`](file:///home/suyashpradhan/Downloads/AHRAS_Suyash-master/sensors/endpoint_sensor.py))**:
+   - `EndpointSensor`: Captures and normalizes host-level events across process lineage, Shannon file entropy, network socket fan-out, authentication, and persistence hooks into typed `EndpointEvent` objects.
+
+3. **Degradation-Resilient Multimodal Combiner ([`detection/multimodal_combiner.py`](file:///home/suyashpradhan/Downloads/AHRAS_Suyash-master/detection/multimodal_combiner.py))**:
+   - `MultimodalCombiner`: Fuses 5 security modalities (`Network`, `Endpoint`, `Identity`, `History`, `Graph`).
+   - Adapts to missing modalities with dynamic degradation penalties without pipeline collapse.
+   - **EXP-39 Benchmark (Part C)**: Preserves **$1.0000$ detection F1** across missing modality ablations and delayed telemetry skews ($0\text{s}$ to $30\text{s}$).
+
+4. **Evaluation Artifacts**:
+   - [`evaluation/results/REPRESENTATION_MULTIMODAL_REPORT.json`](file:///home/suyashpradhan/Downloads/AHRAS_Suyash-master/evaluation/results/REPRESENTATION_MULTIMODAL_REPORT.json)
+   - [`publication/tables/representation_and_multimodal.tex`](file:///home/suyashpradhan/Downloads/AHRAS_Suyash-master/publication/tables/representation_and_multimodal.tex)
+5. **Documentation**: [`docs/PHASE_7_REPRESENTATION_AND_MULTIMODAL_COMPLETION.md`](file:///home/suyashpradhan/Downloads/AHRAS_Suyash-master/docs/PHASE_7_REPRESENTATION_AND_MULTIMODAL_COMPLETION.md).
+
+---
+
+## 17. Phase 8 Implementation: Malware, Ransomware & Worm Behavioral Detection
+*Benchmark ID: `EXP-39 (Part B)`*
+
+Engineered and integrated the behavioral host security models specified in Section 38:
+
+1. **Behavioral Endpoint Engine ([`detection/behavioral_endpoint_engine.py`](file:///home/suyashpradhan/Downloads/AHRAS_Suyash-master/detection/behavioral_endpoint_engine.py))**:
+   - `BehavioralEndpointEngine`: Stateful host analytics evaluating rolling temporal windows ($60\text{s}$).
+   - **Ransomware Indicators**: Mass file write bursts, high Shannon entropy ($H \ge 7.20 / 8.0$), suspicious extension renames, and volume shadow copy deletion attempts (`vssadmin delete shadows`).
+   - **Worm Indicators**: Rapid outbound host fan-out ($\ge 4$ unique hosts) and multi-connection sweeps on lateral propagation ports (SMB $445$, RDP $3389$, SSH $22$).
+   - **Malware Indicators**: Suspicious process ancestry (e.g. `winword -> cmd`, `nginx -> bash`), persistence installation, and unauthorized root escalation.
+   - **Evidence Chaining Invariant**: Directly emits cryptographic `EvidenceRecord` objects mapped to MITRE ATT&CK techniques (`T1486`, `T1490`, `T1021`, `T1059`, `T1543`, `T1548`).
+
+2. **EXP-39 Benchmark Results (Part B)**:
+   - **Ransomware TPR**: $\mathbf{100.0\%}$ ($50/50$).
+   - **Worm Fan-out TPR**: $\mathbf{100.0\%}$ ($50/50$).
+   - **Malware Lineage TPR**: $\mathbf{100.0\%}$ ($50/50$).
+   - **Benign False Alarm Rate (FPR)**: $\mathbf{0.0\%}$ ($0/100$).
+   - **Evidence Cryptographic Integrity**: $\mathbf{100.0\%}$.
+3. **Documentation**: [`docs/PHASE_8_ENDPOINT_BEHAVIORAL_COMPLETION.md`](file:///home/suyashpradhan/Downloads/AHRAS_Suyash-master/docs/PHASE_8_ENDPOINT_BEHAVIORAL_COMPLETION.md).
+
+---
+
+## 18. Phase 9 Implementation: Trustworthy AI Security Guard, Grounded Copilot, Calibration & Selective Deferral
+*Benchmark ID: `EXP-40`*
+
+Engineered and integrated the safety and decision governance layer specified in Sections 40, 41, 42, 43, 44:
+
+1. **AI Security Guard ([`guard/ai_guard.py`](file:///home/suyashpradhan/Downloads/AHRAS_Suyash-master/guard/ai_guard.py))**:
+   - `AISecurityGuard`: Enforces 7 typed trust classes and sanitizes untrusted text against prompt injection, delimiter breakout, and system prompt override attempts.
+   - Deterministic tool authorization gate enforcing strict RBAC and requiring human approval tokens for destructive tools (`isolate_host`, `revoke_token`).
+
+2. **Grounded LLM Analyst Assistant ([`xai/grounded_llm_assistant.py`](file:///home/suyashpradhan/Downloads/AHRAS_Suyash-master/xai/grounded_llm_assistant.py))**:
+   - `GroundedLLMAssistant`: Grounding-only architecture requiring evidence citations on all claims.
+   - Enforces the **Zero Autonomous Authorization Rights** invariant and automatically triggers epistemic abstention under high uncertainty.
+
+3. **Calibration & Selective Abstention ([`calibration/selective_abstention.py`](file:///home/suyashpradhan/Downloads/AHRAS_Suyash-master/calibration/selective_abstention.py))**:
+   - `SelectiveCalibrationEngine`: Platt scaling calibration reducing Expected Calibration Error (ECE) by $43.49\%$.
+   - 4-state selective classification: `BENIGN`, `ATTACK`, `UNKNOWN`, `ABSTAIN`.
+   - Computes empirical Coverage vs. Error frontier curves.
+
+4. **Human-AI Learning-to-Defer Engine ([`controller/learning_to_defer.py`](file:///home/suyashpradhan/Downloads/AHRAS_Suyash-master/controller/learning_to_defer.py))**:
+   - `LearningToDeferEngine`: Balances automated response against analyst fatigue.
+   - Enforces zero-tolerance policy invariants (never automates forbidden actions) and escalates high-stakes attacks.
+
+5. **EXP-40 Benchmark Results**:
+   - **Prompt Injection Blocking**: $\mathbf{100.0\%}$ ($102/102$).
+   - **Benign Query False Alarm**: $\mathbf{0.0\%}$.
+   - **Expected Calibration Error**: Improved from $0.0338 \to \mathbf{0.0191}$ ($43.49\%$ reduction).
+   - **Policy Safety Violations**: $\mathbf{0 / 100}$ ($100\%$ compliance).
+6. **Evaluation Artifacts**:
+   - [`evaluation/results/TRUSTWORTHY_AI_REPORT.json`](file:///home/suyashpradhan/Downloads/AHRAS_Suyash-master/evaluation/results/TRUSTWORTHY_AI_REPORT.json)
+   - [`publication/tables/trustworthy_ai.tex`](file:///home/suyashpradhan/Downloads/AHRAS_Suyash-master/publication/tables/trustworthy_ai.tex)
+7. **Documentation**: [`docs/PHASE_9_CALIBRATION_AND_AI_SECURITY_COMPLETION.md`](file:///home/suyashpradhan/Downloads/AHRAS_Suyash-master/docs/PHASE_9_CALIBRATION_AND_AI_SECURITY_COMPLETION.md).
+
+---
+
+## 19. Phase 10 Implementation: Energy-Aware Security, Model Compression, Edge Profiles & Privacy Research
+*Benchmark ID: `EXP-41`*
+
+Engineered and integrated the system efficiency, compression, and edge portability capabilities specified in Sections 51, 52, 53, 54:
+
+1. **Thermodynamic Energy Profiler ([`performance/energy_profiler.py`](file:///home/suyashpradhan/Downloads/AHRAS_Suyash-master/performance/energy_profiler.py))**:
+   - `EnergyProfiler`: Times CPU consumption and computes $\mu\text{J}$ per processed event and Security-Performance-Per-Watt (SPW).
+   - Demonstrates that Resource-Aware Routing saves **$95.64\%$ energy** ($1,143.07\ \mu\text{J} \to 49.87\ \mu\text{J}$) and delivers a **$+2,182.92\%$ SPW gain** over monolithic execution.
+
+2. **Model Compression Suite ([`models/compression.py`](file:///home/suyashpradhan/Downloads/AHRAS_Suyash-master/models/compression.py))**:
+   - `ModelCompressor`: Evaluates INT8 quantization ($68.5\%$ memory reduction, $\text{F1} = 0.9620$), magnitude pruning ($45.0\%$ memory reduction), and compact student distillation ($0.25\ \mu\text{s}$ latency) with automatic fallback to Teacher.
+
+3. **Edge Deployment Profiles ([`deployment/edge_profiles.py`](file:///home/suyashpradhan/Downloads/AHRAS_Suyash-master/deployment/edge_profiles.py))**:
+   - `DeploymentProfileManager`: Configures and validates architectural profiles across `CENTRAL` ($32\text{GB}$ RAM, full GNN), `EDGE` ($4\text{GB}$ RAM, $2.5\text{ms}$ SLA), `ENDPOINT` ($256\text{MB}$ RAM, $0.15\text{ms}$ SLA), and `HYBRID`.
+
+4. **Federated Privacy-Utility Research ([`federated/privacy_utility.py`](file:///home/suyashpradhan/Downloads/AHRAS_Suyash-master/federated/privacy_utility.py))**:
+   - `FederatedPrivacyUtilityResearcher`: Evaluates Gaussian Differential Privacy ($\epsilon$-DP) noise across non-IID enterprise silos, mapping the Pareto trade-off between privacy budget and rare-attack recall.
+
+5. **EXP-41 Benchmark Results**:
+   - **Energy Reduction**: $\mathbf{95.64\%}$ energy savings via early-exit routing.
+   - **Security-Per-Watt Gain**: $\mathbf{+2,182.92\%}$.
+   - **INT8 Quantization Memory Savings**: $\mathbf{68.5\%}$.
+   - **Distilled Student Latency**: $\mathbf{0.25\ \mu\text{s}}$ per sample.
+6. **Evaluation Artifacts**:
+   - [`evaluation/results/ENERGY_COMPRESSION_EDGE_REPORT.json`](file:///home/suyashpradhan/Downloads/AHRAS_Suyash-master/evaluation/results/ENERGY_COMPRESSION_EDGE_REPORT.json)
+   - [`publication/tables/energy_compression_edge.tex`](file:///home/suyashpradhan/Downloads/AHRAS_Suyash-master/publication/tables/energy_compression_edge.tex)
+7. **Documentation**: [`docs/PHASE_10_ENERGY_COMPRESSION_AND_EDGE_COMPLETION.md`](file:///home/suyashpradhan/Downloads/AHRAS_Suyash-master/docs/PHASE_10_ENERGY_COMPRESSION_AND_EDGE_COMPLETION.md).
+
+
 
 
 

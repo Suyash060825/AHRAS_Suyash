@@ -1,0 +1,195 @@
+{
+  "experiment_id": "EXP-41",
+  "benchmark_name": "Energy-Aware Security, Model Compression, Edge Profiles & Privacy Research",
+  "timestamp": "2026-09-28T06:23:27.296693+00:00",
+  "git_commit": "a2911cc",
+  "sections": [
+    "51",
+    "52",
+    "53",
+    "54"
+  ],
+  "part_a_energy": {
+    "monolithic": {
+      "tier_name": "FULL_MONOLITHIC",
+      "event_count": 500,
+      "execution_time_sec": 0.011044,
+      "latency_per_event_us": 22.09,
+      "energy_consumed_joules": 0.571533,
+      "microjoules_per_event": 1143.07,
+      "estimated_power_watts": 51.75,
+      "detection_f1": 0.986,
+      "security_per_watt": 0.8626
+    },
+    "resource_aware": {
+      "tier_name": "RESOURCE_AWARE_ROUTED",
+      "event_count": 500,
+      "execution_time_sec": 0.000482,
+      "latency_per_event_us": 0.96,
+      "energy_consumed_joules": 0.024934,
+      "microjoules_per_event": 49.87,
+      "estimated_power_watts": 51.75,
+      "detection_f1": 0.982,
+      "security_per_watt": 19.6923
+    },
+    "energy_saved_percent": 95.64,
+    "latency_speedup_ratio": 22.92,
+    "security_per_watt_gain_percent": 2182.92
+  },
+  "part_b_compression": {
+    "ORIGINAL_FP32": {
+      "technique": "ORIGINAL_FP32",
+      "original_size_bytes": 1028,
+      "compressed_size_bytes": 1028,
+      "compression_ratio": 1.0,
+      "memory_reduction_pct": 0.0,
+      "latency_us_per_sample": 0.91,
+      "speedup_ratio": 1.0,
+      "f1_score": 0.6573,
+      "unknown_ood_recall": 1.0,
+      "brier_calibration": 0.2565,
+      "fallback_available": true
+    },
+    "QUANTIZED_INT8": {
+      "technique": "QUANTIZED_INT8",
+      "original_size_bytes": 1028,
+      "compressed_size_bytes": 324,
+      "compression_ratio": 3.17,
+      "memory_reduction_pct": 68.48,
+      "latency_us_per_sample": 5.57,
+      "speedup_ratio": 0.16,
+      "f1_score": 0.962,
+      "unknown_ood_recall": 0.915,
+      "brier_calibration": 0.048,
+      "fallback_available": true
+    },
+    "PRUNED_SPARSE": {
+      "technique": "PRUNED_SPARSE",
+      "original_size_bytes": 1028,
+      "compressed_size_bytes": 565,
+      "compression_ratio": 1.82,
+      "memory_reduction_pct": 45.04,
+      "latency_us_per_sample": 3.57,
+      "speedup_ratio": 0.26,
+      "f1_score": 0.958,
+      "unknown_ood_recall": 0.9,
+      "brier_calibration": 0.052,
+      "fallback_available": true
+    },
+    "DISTILLED_STUDENT": {
+      "technique": "DISTILLED_STUDENT",
+      "original_size_bytes": 1028,
+      "compressed_size_bytes": 260,
+      "compression_ratio": 3.95,
+      "memory_reduction_pct": 74.71,
+      "latency_us_per_sample": 0.25,
+      "speedup_ratio": 3.64,
+      "f1_score": 0.6531,
+      "unknown_ood_recall": 0.92,
+      "brier_calibration": 0.2574,
+      "fallback_available": true
+    }
+  },
+  "part_c_deployment_profiles": {
+    "CENTRAL": {
+      "target_environment": "Cloud Datacenter / High-Capacity K8s Cluster",
+      "memory_limit_mb": 32768,
+      "cpu_cores": 16.0,
+      "model_precision": "FP32",
+      "max_latency_ms": 25.0,
+      "bandwidth_kbps": 0.0,
+      "stages_active_count": 9,
+      "local_containment": true,
+      "estimated_throughput_eps": 480.0
+    },
+    "EDGE": {
+      "target_environment": "Branch Office Micro-Server / Secure Gateway",
+      "memory_limit_mb": 4096,
+      "cpu_cores": 4.0,
+      "model_precision": "INT8",
+      "max_latency_ms": 2.5,
+      "bandwidth_kbps": 2048.0,
+      "stages_active_count": 6,
+      "local_containment": true,
+      "estimated_throughput_eps": 1200.0
+    },
+    "ENDPOINT": {
+      "target_environment": "Host Endpoint / eBPF / Windows ETW Daemon",
+      "memory_limit_mb": 256,
+      "cpu_cores": 0.5,
+      "model_precision": "HEURISTIC_ONLY",
+      "max_latency_ms": 0.15,
+      "bandwidth_kbps": 256.0,
+      "stages_active_count": 3,
+      "local_containment": false,
+      "estimated_throughput_eps": 2500.0
+    },
+    "HYBRID": {
+      "target_environment": "Hierarchical Enterprise Mesh (Endpoint -> Edge -> Central)",
+      "memory_limit_mb": 8192,
+      "cpu_cores": 8.0,
+      "model_precision": "ADAPTIVE_MIXED",
+      "max_latency_ms": 5.0,
+      "bandwidth_kbps": 1024.0,
+      "stages_active_count": 3,
+      "local_containment": true,
+      "estimated_throughput_eps": 1200.0
+    }
+  },
+  "part_d_federated_privacy_frontier": [
+    {
+      "epsilon": 0.5,
+      "sigma_noise": 9.6896,
+      "communication_bytes": 1433,
+      "compression_ratio": 2.86,
+      "global_f1_score": 0.65,
+      "rare_attack_recall": 0.5,
+      "convergence_rounds": 25
+    },
+    {
+      "epsilon": 1.0,
+      "sigma_noise": 4.8448,
+      "communication_bytes": 1433,
+      "compression_ratio": 2.86,
+      "global_f1_score": 0.65,
+      "rare_attack_recall": 0.5,
+      "convergence_rounds": 25
+    },
+    {
+      "epsilon": 2.0,
+      "sigma_noise": 2.4224,
+      "communication_bytes": 1433,
+      "compression_ratio": 2.86,
+      "global_f1_score": 0.7912,
+      "rare_attack_recall": 0.6499,
+      "convergence_rounds": 17
+    },
+    {
+      "epsilon": 5.0,
+      "sigma_noise": 0.969,
+      "communication_bytes": 1433,
+      "compression_ratio": 2.86,
+      "global_f1_score": 0.9075,
+      "rare_attack_recall": 0.836,
+      "convergence_rounds": 11
+    },
+    {
+      "epsilon": 10.0,
+      "sigma_noise": 0.4845,
+      "communication_bytes": 1433,
+      "compression_ratio": 2.86,
+      "global_f1_score": 0.9462,
+      "rare_attack_recall": 0.898,
+      "convergence_rounds": 9
+    },
+    {
+      "epsilon": "INF",
+      "sigma_noise": 0.0,
+      "communication_bytes": 1433,
+      "compression_ratio": 2.86,
+      "global_f1_score": 0.985,
+      "rare_attack_recall": 0.96,
+      "convergence_rounds": 8
+    }
+  ]
+}

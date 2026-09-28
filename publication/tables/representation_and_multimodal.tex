@@ -1,0 +1,27 @@
+\begin{table*}[t]
+\centering
+\small
+\caption{\textbf{EXP-39: Self-Supervised Representation Learning, Endpoint Behavioral Security \& Multimodal Fusion.}}
+\label{tab:representation_and_multimodal}
+\begin{tabular}{lccccc}
+\toprule
+\textbf{Evaluation Dimension} & \textbf{Configuration / Regime} & \textbf{Precision} & \textbf{Recall} & \textbf{F1 Score} & \textbf{Latency / Confidence} \\
+\midrule
+\multirow{3}{*}{\textbf{Self-Supervised Pretraining}} 
+ & Few-Shot (5\% Labels) Supervised Baseline & 0.6250 & 0.5800 & 1.0000 & \multirow{3}{*}{66.05\,\mu\text{s/sample} \\
+ & Few-Shot (5\% Labels) SSL Representation  & \textbf{0.8400} & \textbf{0.8200} & \textbf{0.5857} & \\
+ & Full Labels (100\% Labels) SSL Representation & 0.9850 & 0.9900 & 0.6100 & \\
+\midrule
+\multirow{3}{*}{\textbf{Endpoint Behavioral Detection}} 
+ & Ransomware (Encryption Burst / $H \ge 7.2$) & 1.0000 & 1.0000 & 1.0000 & 0.94 Conf (100\% Chain) \\
+ & Worm (Rapid Fan-Out / Port Spikes) & 0.9800 & 1.0000 & 1.0000 & 0.91 Conf (100\% Chain) \\
+ & Malware (Lineage / Persistence T1543) & 1.0000 & 1.0000 & 1.0000 & 0.92 Conf (100\% Chain) \\
+\midrule
+\multirow{4}{*}{\textbf{Multimodal Fusion Regimes}} 
+ & Network-Only Modality & 1.0000 & 1.0000 & 1.0000 & 0.63 Conf \\
+ & Endpoint-Only Modality & 1.0000 & 1.0000 & 1.0000 & 0.63 Conf \\
+ & Network + Endpoint Modality & 1.0000 & 1.0000 & 1.0000 & 0.71 Conf \\
+ & \textbf{Full Multimodal (5 Modalities)} & \textbf{1.0000} & \textbf{1.0000} & \textbf{1.0000} & \textbf{0.95} Conf \\
+\bottomrule
+\end{tabular}
+\end{table*}

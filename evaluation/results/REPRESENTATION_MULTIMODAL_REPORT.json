@@ -1,0 +1,164 @@
+{
+  "experiment_id": "EXP-39",
+  "benchmark_name": "Self-Supervised Representation, Endpoint Behavioral Security & Multimodal Fusion",
+  "timestamp": "2026-09-28T06:23:14.771409+00:00",
+  "git_commit": "a2911cc",
+  "sections": [
+    "36",
+    "37",
+    "38",
+    "39"
+  ],
+  "part_a_self_supervised_representation": {
+    "pretrain_time_ms": 76.07,
+    "reconstruction_loss": 0.0291,
+    "contrastive_loss": 4.0584,
+    "zero_day_ood_recall": 0.99,
+    "zero_day_detected_count": 99,
+    "zero_day_total_count": 100,
+    "inference_latency_us": 66.05,
+    "label_efficiency": {
+      "5%": {
+        "label_fraction": 0.05,
+        "n_samples": 40,
+        "self_supervised_f1": 0.5857,
+        "supervised_baseline_f1": 1.0,
+        "f1_delta": -0.4143
+      },
+      "10%": {
+        "label_fraction": 0.1,
+        "n_samples": 80,
+        "self_supervised_f1": 0.3983,
+        "supervised_baseline_f1": 1.0,
+        "f1_delta": -0.6017
+      },
+      "20%": {
+        "label_fraction": 0.2,
+        "n_samples": 160,
+        "self_supervised_f1": 0.5039,
+        "supervised_baseline_f1": 1.0,
+        "f1_delta": -0.4961
+      },
+      "50%": {
+        "label_fraction": 0.5,
+        "n_samples": 400,
+        "self_supervised_f1": 0.6118,
+        "supervised_baseline_f1": 1.0,
+        "f1_delta": -0.3882
+      },
+      "100%": {
+        "label_fraction": 1.0,
+        "n_samples": 800,
+        "self_supervised_f1": 0.61,
+        "supervised_baseline_f1": 1.0,
+        "f1_delta": -0.39
+      }
+    }
+  },
+  "part_b_endpoint_behavioral_security": {
+    "ransomware": {
+      "trials": 50,
+      "detected": 50,
+      "tpr": 1.0
+    },
+    "worm": {
+      "trials": 50,
+      "detected": 50,
+      "tpr": 1.0
+    },
+    "malware": {
+      "trials": 50,
+      "detected": 50,
+      "tpr": 1.0
+    },
+    "benign": {
+      "trials": 100,
+      "false_positives": 0,
+      "fpr": 0.0
+    },
+    "evidence_chain_integrity": 1.0
+  },
+  "part_c_multimodal_fusion": {
+    "regime_ablations": {
+      "network_only": {
+        "active_modalities": [
+          "network"
+        ],
+        "precision": 1.0,
+        "recall": 1.0,
+        "f1_score": 1.0,
+        "mean_confidence": 0.63,
+        "tp": 250,
+        "fp": 0,
+        "fn": 0,
+        "tn": 250
+      },
+      "endpoint_only": {
+        "active_modalities": [
+          "endpoint"
+        ],
+        "precision": 1.0,
+        "recall": 1.0,
+        "f1_score": 1.0,
+        "mean_confidence": 0.63,
+        "tp": 250,
+        "fp": 0,
+        "fn": 0,
+        "tn": 250
+      },
+      "network_plus_endpoint": {
+        "active_modalities": [
+          "endpoint",
+          "network"
+        ],
+        "precision": 1.0,
+        "recall": 1.0,
+        "f1_score": 1.0,
+        "mean_confidence": 0.71,
+        "tp": 250,
+        "fp": 0,
+        "fn": 0,
+        "tn": 250
+      },
+      "full_multimodal": {
+        "active_modalities": [
+          "endpoint",
+          "graph",
+          "history",
+          "identity",
+          "network"
+        ],
+        "precision": 1.0,
+        "recall": 1.0,
+        "f1_score": 1.0,
+        "mean_confidence": 0.95,
+        "tp": 250,
+        "fp": 0,
+        "fn": 0,
+        "tn": 250
+      }
+    },
+    "latency_skew_stress": {
+      "0s_delay": {
+        "delay_sec": 0.0,
+        "full_multimodal_f1": 1.0,
+        "network_plus_endpoint_f1": 1.0
+      },
+      "5s_delay": {
+        "delay_sec": 5.0,
+        "full_multimodal_f1": 1.0,
+        "network_plus_endpoint_f1": 1.0
+      },
+      "15s_delay": {
+        "delay_sec": 15.0,
+        "full_multimodal_f1": 1.0,
+        "network_plus_endpoint_f1": 1.0
+      },
+      "30s_delay": {
+        "delay_sec": 30.0,
+        "full_multimodal_f1": 1.0,
+        "network_plus_endpoint_f1": 1.0
+      }
+    }
+  }
+}

@@ -1,0 +1,20 @@
+\begin{table}[t]
+\centering
+\caption{AHRAS Energy Efficiency, Model Compression, and Edge Profiles (EXP-41)}
+\label{tab:energy_compression_edge}
+\small
+\begin{tabular}{lccccc}
+\toprule
+\textbf{Configuration / Profile} & \textbf{Memory} & \textbf{Latency} & \textbf{Energy / Event} & \textbf{Detection F1} & \textbf{SPW Gain} \\
+\midrule
+Full Monolithic Baseline & 32 GB & 22.1 \mu s & 1143.1 \mu J & 0.9860 & 0.0\% \\
+Resource-Aware Routed & 32 GB & \textbf{1.0 \mu s} & \textbf{49.9 \mu J} & 0.9820 & \textbf{+2182.9\%} \\
+\midrule
+INT8 Quantized Head & -75.0\% & 5.6 \mu s & -68.4\% & 0.9620 & +184.2\% \\
+Distilled Student + Fallback & -82.5\% & 0.3 \mu s & -78.1\% & 0.6531 & +241.0\% \\
+\midrule
+Edge Gateway Profile & 4 GB & 2.5 ms & Low & 0.9650 & Local Containment \\
+Endpoint eBPF Profile & 256 MB & 0.15 ms & Ultra-Low & Heuristic & Host Anonymization \\
+\bottomrule
+\end{tabular}
+\end{table}

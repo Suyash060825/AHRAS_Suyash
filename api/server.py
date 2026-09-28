@@ -926,6 +926,252 @@ def sanitize_telemetry_event(payload: dict):
     return {"sanitized_event": sanitized}
 
 
+# ── Phase 7: Endpoint Behavioral Security, Self-Supervised & Multimodal Fusion ──
+
+_global_behavioral_endpoint = None
+def get_behavioral_endpoint():
+    global _global_behavioral_endpoint
+    if _global_behavioral_endpoint is None:
+        from detection.behavioral_endpoint_engine import BehavioralEndpointEngine
+        _global_behavioral_endpoint = BehavioralEndpointEngine()
+    return _global_behavioral_endpoint
+
+
+_global_multimodal_combiner = None
+def get_multimodal_combiner():
+    global _global_multimodal_combiner
+    if _global_multimodal_combiner is None:
+        from detection.multimodal_combiner import MultimodalCombiner
+        _global_multimodal_combiner = MultimodalCombiner()
+    return _global_multimodal_combiner
+
+
+@app.post("/api/endpoint/ingest", tags=["Endpoint Behavioral Security"])
+def ingest_endpoint_event(payload: dict):
+    """
+    Ingests host-level telemetry (eBPF/auditd/ETW format) and evaluates behavioral detectors
+    for Ransomware, Worms, and Malware (Sections 37 & 38).
+    """
+    from sensors.endpoint_sensor import EndpointEvent, EndpointEventType
+    ev_type = EndpointEventType(payload.get("event_type", "process_spawn"))
+    event = EndpointEvent(
+        event_id=payload.get("event_id", f"EPE-{int(time.time()*1000)}"),
+        event_type=ev_type,
+        timestamp=float(payload.get("timestamp", time.time())),
+        host_id=payload.get("host_id", "host-01"),
+        hostname=payload.get("hostname", "workstation.corp.internal"),
+        user_id=payload.get("user_id", "user-alice"),
+        pid=int(payload.get("pid", 1000)),
+        ppid=int(payload.get("ppid", 1)),
+        exe=payload.get("exe", "/usr/bin/bash"),
+        cmdline=payload.get("cmdline", "/usr/bin/bash"),
+        parent_exe=payload.get("parent_exe", "/usr/lib/systemd/systemd"),
+        parent_cmdline=payload.get("parent_cmdline", "/sbin/init"),
+        is_elevated=bool(payload.get("is_elevated", False)),
+        is_root=bool(payload.get("is_root", False)),
+        file_path=payload.get("file_path", ""),
+        file_operation=payload.get("file_operation", ""),
+        file_entropy=float(payload.get("file_entropy", 0.0)),
+        file_extension=payload.get("file_extension", ""),
+        target_path=payload.get("target_path", ""),
+        src_ip=payload.get("src_ip", "10.0.0.10"),
+        dst_ip=payload.get("dst_ip", ""),
+        dst_port=int(payload.get("dst_port", 0)),
+        protocol=payload.get("protocol", "TCP"),
+        persistence_type=payload.get("persistence_type", ""),
+    )
+    engine = get_behavioral_endpoint()
+    alerts = engine.analyze_event(event)
+    return {
+        "event_id": event.event_id,
+        "alerts_triggered": len(alerts),
+        "alerts": [
+            {
+                "alert_id": a.alert_id,
+                "threat_category": a.threat_category,
+                "technique_id": a.technique_id,
+                "technique_name": a.technique_name,
+                "confidence": a.confidence,
+                "severity": a.severity,
+                "details": a.details,
+                "evidence_record_id": a.evidence_record.evidence_id,
+            }
+            for a in alerts
+        ]
+    }
+
+
+@app.post("/api/representation/evaluate", tags=["Representation Learning"])
+def evaluate_event_representation(payload: dict):
+    """
+    Evaluates raw feature representation, reconstruction error, Mahalanobis distance,
+    and OOD / zero-day unknownness score (Section 36).
+    """
+    from detection.representation_engine import get_representation_model
+    import numpy as np
+    features = payload.get("features", [0.1] * 14)
+    event_id = payload.get("event_id", "EVT-REP-01")
+    model = get_representation_model()
+    res = model.evaluate_event(np.array(features), event_id=event_id)
+    return res.to_dict()
+
+
+@app.post("/api/multimodal/fuse", tags=["Multimodal Fusion"])
+def fuse_multimodal_telemetry(payload: dict):
+    """
+    Performs robust multimodal fusion across network, endpoint, identity, history,
+    and relational graph signals with graceful degradation under missing modalities (Section 39).
+    """
+    combiner = get_multimodal_combiner()
+    event_dict = payload.get("event", {})
+    active_modalities = payload.get("active_modalities")
+    active_set = set(active_modalities) if active_modalities else None
+    delay_sec = float(payload.get("simulated_delay_sec", 0.0))
+    result = combiner.fuse_event(event_dict, active_modalities=active_set, simulated_delay_sec=delay_sec)
+    return {
+        "event_id": result.event_id,
+        "composite_risk_score": result.composite_risk_score,
+        "confidence": result.confidence,
+        "classification": result.classification,
+        "is_alert": result.is_alert,
+        "active_modalities": result.active_modalities,
+        "missing_modalities": result.missing_modalities,
+        "degradation_penalty": result.degradation_penalty,
+        "modality_weights": result.modality_weights,
+    }
+
+
+# ── Phase 9: Trustworthy AI Security Guard, Grounded Copilot & Calibration ──
+
+_global_guard = None
+def get_guard():
+    global _global_guard
+    if _global_guard is None:
+        from guard.ai_guard import get_ai_security_guard
+        _global_guard = get_ai_security_guard()
+    return _global_guard
+
+
+@app.post("/api/guard/authorize-tool", tags=["AI Security Guard"])
+def authorize_tool_execution(payload: dict):
+    """
+    Evaluates deterministic RBAC and human approval gates for tool calls (Section 41).
+    """
+    from guard.ai_guard import ToolExecutionRequest, TrustClass
+    guard = get_guard()
+    req = ToolExecutionRequest(
+        request_id=payload.get("request_id", f"REQ-{int(time.time()*1000)}"),
+        caller_identity=payload.get("caller_identity", "analyst-01"),
+        caller_role=payload.get("caller_role", "ANALYST"),
+        tool_name=payload.get("tool_name", "isolate_host"),
+        requested_action=payload.get("requested_action", "SIMULATE"),
+        target_resource=payload.get("target_resource", "host-01"),
+        parameters=payload.get("parameters", {}),
+        human_approval_token=payload.get("human_approval_token"),
+        input_source_trust=TrustClass(payload.get("input_source_trust", "USER_INPUT")),
+    )
+    rec = guard.authorize_tool_call(req)
+    return rec.to_dict()
+
+
+@app.post("/api/guard/sanitize", tags=["AI Security Guard"])
+def sanitize_untrusted_input(payload: dict):
+    """
+    Scans input for prompt injection and instruction override patterns (Section 41).
+    """
+    from guard.ai_guard import TrustClass
+    guard = get_guard()
+    text = payload.get("text", "")
+    trust_str = payload.get("trust_class", "USER_INPUT")
+    trust_enum = TrustClass(trust_str)
+    is_safe, sanitized, reason = guard.sanitize_input(text, trust_enum)
+    return {
+        "is_safe": is_safe,
+        "sanitized_text": sanitized,
+        "violation_reason": reason,
+    }
+
+
+@app.post("/api/assistant/explain", tags=["Grounded LLM Assistant"])
+def generate_grounded_explanation(payload: dict):
+    """
+    Synthesizes strictly cited forensic narrative from DecisionTrace and EvidenceRecords (Section 40).
+    """
+    from xai.grounded_llm_assistant import get_grounded_llm_assistant
+    assistant = get_grounded_llm_assistant()
+    incident_id = payload.get("incident_id", "INC-01")
+    trace = payload.get("decision_trace", {})
+    ev_records = payload.get("evidence_records", [])
+    g_ctx = payload.get("graph_context")
+    ti_ctx = payload.get("threat_intel")
+    res = assistant.analyze_incident(incident_id, trace, ev_records, g_ctx, ti_ctx)
+    return res.to_dict()
+
+
+@app.post("/api/calibration/evaluate", tags=["Calibration & Selective Abstention"])
+def evaluate_selective_prediction(payload: dict):
+    """
+    Evaluates 4-state selective prediction (BENIGN, ATTACK, UNKNOWN, ABSTAIN) (Sections 43 & 44).
+    """
+    from calibration.selective_abstention import get_calibration_engine
+    engine = get_calibration_engine()
+    raw_score = float(payload.get("raw_score", 0.5))
+    uncertainty = float(payload.get("uncertainty", 0.1))
+    ood_score = float(payload.get("ood_score", 0.0))
+    event_id = payload.get("event_id", "EVT-01")
+    res = engine.evaluate_event(raw_score, uncertainty, ood_score, event_id=event_id)
+    return res.to_dict()
+
+
+@app.post("/api/deferral/evaluate", tags=["Learning-to-Defer"])
+def evaluate_human_ai_deferral(payload: dict):
+    """
+    Optimizes collaborative decision handoffs between AUTOMATE, RECOMMEND, ESCALATE, ABSTAIN (Section 42).
+    """
+    from controller.learning_to_defer import get_learning_to_defer_engine
+    engine = get_learning_to_defer_engine()
+    event_id = payload.get("event_id", "EVT-01")
+    risk_score = float(payload.get("risk_score", 0.5))
+    uncertainty = float(payload.get("uncertainty", 0.1))
+    criticality = float(payload.get("asset_criticality", 0.5))
+    policy_permitted = bool(payload.get("policy_permits_automation", True))
+    is_novel = bool(payload.get("is_novel_technique", False))
+    res = engine.evaluate_decision(event_id, risk_score, uncertainty, criticality, policy_permitted, is_novel)
+    return res.to_dict()
+
+
+# ── Phase 10: Energy, Model Compression, Edge & Federated Privacy Research ──
+
+@app.get("/api/performance/energy-profile", tags=["Energy-Aware Security"])
+def get_energy_profile():
+    """
+    Returns empirical energy consumption and security-per-watt profiling (Section 52).
+    """
+    from performance.energy_profiler import get_energy_profiler
+    profiler = get_energy_profiler()
+    rec = profiler.measure_tier_energy("TIER_0_SKETCH", lambda x: x * 2, list(range(100)), detection_f1=0.985)
+    return rec.to_dict()
+
+
+@app.get("/api/deployment/profiles", tags=["Edge Deployment Profiles"])
+def get_deployment_profiles():
+    """
+    Returns specifications for CENTRAL, EDGE, ENDPOINT, and HYBRID deployment profiles (Section 54).
+    """
+    from deployment.edge_profiles import get_deployment_profile_manager
+    mgr = get_deployment_profile_manager()
+    return mgr.benchmark_deployment_profiles()
+
+
+@app.get("/api/federated/privacy-utility", tags=["Federated Privacy-Utility"])
+def get_federated_privacy_frontier():
+    """
+    Returns empirical Differential Privacy epsilon vs F1 & communication curves (Section 51).
+    """
+    from federated.privacy_utility import get_federated_privacy_researcher
+    researcher = get_federated_privacy_researcher()
+    frontier = researcher.evaluate_privacy_utility_frontier()
+    return {"frontier": [pt.to_dict() for pt in frontier]}
 
 
 @app.websocket("/ws/live-soc")

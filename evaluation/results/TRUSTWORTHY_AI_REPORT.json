@@ -1,0 +1,70 @@
+{
+  "experiment_id": "EXP-40",
+  "benchmark_name": "Trustworthy AI Security Guard, Grounded Copilot, Calibration & Selective Deferral",
+  "timestamp": "2026-09-28T06:23:22.278367+00:00",
+  "git_commit": "a2911cc",
+  "sections": [
+    "40",
+    "41",
+    "42",
+    "43",
+    "44"
+  ],
+  "part_a_guard": {
+    "injection_blocking_rate": 1.0,
+    "benign_fpr": 0.0,
+    "human_approval_gate_enforced": true,
+    "audit_ledger_hash": "85c5bbc817ed24eff9723e9513e5015563f5ffbaa7adbe9955677b58afab19e1"
+  },
+  "part_b_assistant": {
+    "safety_disclaimer_enforced": true,
+    "grounding_evidence_citations": 3,
+    "epistemic_abstention_triggered": true
+  },
+  "part_c_calibration": {
+    "pre_calibration_ece": 0.0338,
+    "post_calibration_ece": 0.0191,
+    "pre_calibration_brier": 0.176,
+    "post_calibration_brier": 0.1752,
+    "ece_reduction_pct": 43.49,
+    "coverage_vs_error_curve": [
+      {
+        "uncertainty_threshold": 0.1,
+        "coverage": 0.095,
+        "error_rate": 0.2421,
+        "retained_samples": 95
+      },
+      {
+        "uncertainty_threshold": 0.3,
+        "coverage": 0.463,
+        "error_rate": 0.2808,
+        "retained_samples": 463
+      },
+      {
+        "uncertainty_threshold": 0.5,
+        "coverage": 0.82,
+        "error_rate": 0.2829,
+        "retained_samples": 820
+      },
+      {
+        "uncertainty_threshold": 0.7,
+        "coverage": 1.0,
+        "error_rate": 0.279,
+        "retained_samples": 1000
+      },
+      {
+        "uncertainty_threshold": 0.9,
+        "coverage": 1.0,
+        "error_rate": 0.279,
+        "retained_samples": 1000
+      }
+    ]
+  },
+  "part_d_deferral": {
+    "automate_count": 2,
+    "recommend_count": 26,
+    "escalate_count": 29,
+    "abstain_count": 43,
+    "policy_violations": 0
+  }
+}

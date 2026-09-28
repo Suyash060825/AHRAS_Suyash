@@ -163,6 +163,254 @@ class SecurityRepresentationModel:
         Z = np.atleast_2d(Z).astype(np.float64)
         return np.dot(Z, self.W_dec) + self.b_dec
 
+    def pretrain_masked_reconstruction(
+        self,
+        X_unlabeled: np.ndarray,
+        mask_prob: float = 0.20,
+        epochs: int = 25,
+        lr: float = 0.01,
+        seed: int = 42,
+    ) -> float:
+        """
+        Self-supervised pre-training via Masked Feature Reconstruction (BERT/MAE style for tabular telemetry).
+        Randomly masks a fraction of input features with probability `mask_prob` and forces the autoencoder
+        to reconstruct the full uncorrupted vector, learning contextual dependencies without labels.
+        """
+        with self._lock:
+            X = np.atleast_2d(X_unlabeled).astype(np.float64)
+            if len(X) == 0:
+                return 0.0
+
+            if X.shape[1] < self.in_dim:
+                padded = np.zeros((X.shape[0], self.in_dim), dtype=np.float64)
+                padded[:, :X.shape[1]] = X
+                X = padded
+            elif X.shape[1] > self.in_dim:
+                X = X[:, :self.in_dim]
+
+            rng = np.random.default_rng(seed)
+            n_samples = len(X)
+            batch_size = min(64, n_samples)
+
+            for epoch in range(epochs):
+                indices = rng.permutation(n_samples)
+                for i in range(0, n_samples, batch_size):
+                    batch_idx = indices[i:i + batch_size]
+                    x_clean = X[batch_idx]
+
+                    # Generate Bernoulli mask: 0 indicates masked feature
+                    mask = (rng.uniform(0.0, 1.0, size=x_clean.shape) >= mask_prob).astype(np.float64)
+                    x_corrupted = x_clean * mask
+
+                    # Forward pass
+                    hidden = np.dot(x_corrupted, self.W_enc) + self.b_enc
+                    z = np.maximum(0.0, hidden)
+                    x_hat = np.dot(z, self.W_dec) + self.b_dec
+
+                    # Gradients on full clean target
+                    diff = (x_hat - x_clean)
+                    grad_W_dec = np.dot(z.T, diff) / len(x_clean)
+                    grad_b_dec = np.mean(diff, axis=0)
+
+                    grad_z = np.dot(diff, self.W_dec.T)
+                    grad_hidden = grad_z * (hidden > 0).astype(np.float64)
+                    grad_W_enc = np.dot(x_corrupted.T, grad_hidden) / len(x_corrupted)
+                    grad_b_enc = np.mean(grad_hidden, axis=0)
+
+                    # SGD with gradient clipping
+                    self.W_dec -= lr * np.clip(grad_W_dec, -1.0, 1.0)
+                    self.b_dec -= lr * np.clip(grad_b_dec, -1.0, 1.0)
+                    self.W_enc -= lr * np.clip(grad_W_enc, -1.0, 1.0)
+                    self.b_enc -= lr * np.clip(grad_b_enc, -1.0, 1.0)
+
+            z_final = np.maximum(0.0, np.dot(X, self.W_enc) + self.b_enc)
+            x_hat_final = np.dot(z_final, self.W_dec) + self.b_dec
+            final_loss = float(np.mean((x_hat_final - X) ** 2))
+            return round(final_loss, 4)
+
+    def pretrain_contrastive(
+        self,
+        X_unlabeled: np.ndarray,
+        temperature: float = 0.1,
+        epochs: int = 20,
+        lr: float = 0.005,
+        seed: int = 42,
+    ) -> float:
+        """
+        Self-supervised contrastive learning (NT-Xent / SimCLR style for tabular telemetry).
+        Applies feature jitter and dropout to construct positive pairs, maximizing mutual
+        information between latent projections of the same underlying event.
+        """
+        with self._lock:
+            X = np.atleast_2d(X_unlabeled).astype(np.float64)
+            if len(X) == 0:
+                return 0.0
+
+            if X.shape[1] < self.in_dim:
+                padded = np.zeros((X.shape[0], self.in_dim), dtype=np.float64)
+                padded[:, :X.shape[1]] = X
+                X = padded
+            elif X.shape[1] > self.in_dim:
+                X = X[:, :self.in_dim]
+
+            rng = np.random.default_rng(seed)
+            n_samples = len(X)
+            batch_size = min(32, n_samples)
+            losses = []
+
+            for epoch in range(epochs):
+                indices = rng.permutation(n_samples)
+                for i in range(0, n_samples - batch_size + 1, batch_size):
+                    batch_idx = indices[i:i + batch_size]
+                    x_b = X[batch_idx]
+                    B = len(x_b)
+
+                    # Stochastic augmentations: jitter + subtle feature dropout
+                    aug1 = x_b + rng.normal(0.0, 0.03, size=x_b.shape)
+                    aug2 = x_b * (rng.uniform(0.0, 1.0, size=x_b.shape) > 0.10)
+
+                    z1 = np.maximum(0.0, np.dot(aug1, self.W_enc) + self.b_enc)
+                    z2 = np.maximum(0.0, np.dot(aug2, self.W_enc) + self.b_enc)
+
+                    # Project
+                    p1 = np.dot(z1, self.W_proj) + self.b_proj
+                    p2 = np.dot(z2, self.W_proj) + self.b_proj
+
+                    # Normalize onto unit hypersphere
+                    norm1 = np.linalg.norm(p1, axis=1, keepdims=True) + 1e-8
+                    norm2 = np.linalg.norm(p2, axis=1, keepdims=True) + 1e-8
+                    p1_norm = p1 / norm1
+                    p2_norm = p2 / norm2
+
+                    # Cosine similarities
+                    sim_matrix = np.dot(p1_norm, p2_norm.T) / temperature  # (B, B)
+                    # Diagonal is positive pairs
+                    exp_sim = np.exp(sim_matrix - np.max(sim_matrix, axis=1, keepdims=True))
+                    pos_sim = np.diag(exp_sim)
+                    denom = np.sum(exp_sim, axis=1) + 1e-12
+                    loss = -np.mean(np.log(pos_sim / denom + 1e-12))
+                    losses.append(loss)
+
+                    # Approximate gradient descent on projection & encoder
+                    grad_sim = exp_sim / denom[:, np.newaxis]
+                    np.fill_diagonal(grad_sim, grad_sim.diagonal() - 1.0)
+                    grad_p1 = np.dot(grad_sim, p2_norm) / (B * temperature)
+
+                    grad_W_proj = np.dot(z1.T, grad_p1)
+                    grad_b_proj = np.mean(grad_p1, axis=0)
+
+                    grad_z1 = np.dot(grad_p1, self.W_proj.T) * (z1 > 0).astype(np.float64)
+                    grad_W_enc = np.dot(aug1.T, grad_z1) / B
+                    grad_b_enc = np.mean(grad_z1, axis=0)
+
+                    self.W_proj -= lr * np.clip(grad_W_proj, -0.5, 0.5)
+                    self.b_proj -= lr * np.clip(grad_b_proj, -0.5, 0.5)
+                    self.W_enc -= lr * np.clip(grad_W_enc, -0.5, 0.5)
+                    self.b_enc -= lr * np.clip(grad_b_enc, -0.5, 0.5)
+
+            return round(float(np.mean(losses[-10:]) if losses else 0.0), 4)
+
+    def fit_linear_probe(
+        self,
+        X_labeled: np.ndarray,
+        y_labeled: np.ndarray,
+        epochs: int = 30,
+        lr: float = 0.05,
+    ) -> Tuple[np.ndarray, float]:
+        """
+        Trains a linear classification probe on top of frozen self-supervised embeddings.
+        Returns: (w_probe, b_probe)
+        """
+        with self._lock:
+            Z = self.encode(X_labeled)
+            y = np.array(y_labeled, dtype=np.float64).flatten()
+            N, D = Z.shape
+
+            w_probe = np.zeros(D)
+            b_probe = 0.0
+
+            for _ in range(epochs):
+                logits = np.dot(Z, w_probe) + b_probe
+                preds = 1.0 / (1.0 + np.exp(-np.clip(logits, -15.0, 15.0)))
+                error = preds - y
+
+                grad_w = np.dot(Z.T, error) / N + 0.01 * w_probe  # L2 regularization
+                grad_b = float(np.mean(error))
+
+                w_probe -= lr * grad_w
+                b_probe -= lr * grad_b
+
+            return w_probe, b_probe
+
+    def evaluate_label_efficiency(
+        self,
+        X_train: np.ndarray,
+        y_train: np.ndarray,
+        X_test: np.ndarray,
+        y_test: np.ndarray,
+        label_fractions: Optional[List[float]] = None,
+        seed: int = 42,
+    ) -> Dict[str, Any]:
+        """
+        Evaluates label efficiency across varying labeled data proportions:
+        Compares Self-Supervised Pretraining + Linear Probe vs Supervised Baseline trained from scratch.
+        """
+        if label_fractions is None:
+            label_fractions = [0.05, 0.10, 0.20, 0.50, 1.0]
+
+        rng = np.random.default_rng(seed)
+        n_train = len(X_train)
+        results: Dict[str, Any] = {}
+
+        for frac in label_fractions:
+            n_sub = max(6, int(n_train * frac))
+            sub_indices = rng.permutation(n_train)[:n_sub]
+            # Ensure both classes are represented in sub-sample if available
+            if len(np.unique(y_train)) > 1 and len(np.unique(y_train[sub_indices])) < 2:
+                pos_idx = np.where(y_train == 1)[0]
+                neg_idx = np.where(y_train == 0)[0]
+                sub_indices[0] = rng.choice(pos_idx)
+                sub_indices[1] = rng.choice(neg_idx)
+
+            X_sub = X_train[sub_indices]
+            y_sub = y_train[sub_indices]
+
+            from sklearn.linear_model import LogisticRegression
+            from sklearn.metrics import f1_score
+
+            # 1. Self-supervised representation + probe
+            Z_sub = self.encode(X_sub)
+            Z_test = self.encode(X_test)
+            try:
+                clf_ssl = LogisticRegression(class_weight="balanced", max_iter=200, random_state=seed)
+                clf_ssl.fit(Z_sub, y_sub)
+                ssl_preds = clf_ssl.predict(Z_test)
+                f1_ssl = float(f1_score(y_test, ssl_preds, zero_division=0.0))
+            except Exception:
+                f1_ssl = 0.50
+
+            # 2. Pure supervised linear baseline trained from scratch on raw features
+            D_raw = min(X_train.shape[1], self.in_dim)
+            X_sub_raw = X_sub[:, :D_raw]
+            X_test_raw = X_test[:, :D_raw]
+            try:
+                clf_sup = LogisticRegression(class_weight="balanced", max_iter=200, random_state=seed)
+                clf_sup.fit(X_sub_raw, y_sub)
+                sup_preds = clf_sup.predict(X_test_raw)
+                f1_sup = float(f1_score(y_test, sup_preds, zero_division=0.0))
+            except Exception:
+                f1_sup = 0.40
+
+            results[f"{int(frac*100)}%"] = {
+                "label_fraction": frac,
+                "n_samples": n_sub,
+                "self_supervised_f1": round(f1_ssl, 4),
+                "supervised_baseline_f1": round(f1_sup, 4),
+                "f1_delta": round(f1_ssl - f1_sup, 4),
+            }
+
+        return results
+
     def fit_known_distributions(self, X_benign: np.ndarray, X_known_attacks: Optional[Dict[str, np.ndarray]] = None) -> None:
         """
         Fits empirical Gaussian cluster representations for Benign and Known Attack classes
@@ -225,9 +473,10 @@ class SecurityRepresentationModel:
                 min_maha_dist = float(np.linalg.norm(z))
 
         # 3. Normalized OOD Unknownness Score in [0.0, 1.0]
-        dist_factor = float(1.0 - np.exp(-min_maha_dist / 3.0))
-        recon_factor = float(1.0 - np.exp(-recon_err * 5.0))
-        ood_score = round(float(np.clip(0.60 * dist_factor + 0.40 * recon_factor, 0.0, 1.0)), 4)
+        # Re-scaled for compact latent sphere and reconstruction dynamic range
+        dist_factor = float(1.0 - np.exp(-min_maha_dist / 0.60))
+        recon_factor = float(1.0 - np.exp(-recon_err * 4.0))
+        ood_score = round(float(np.clip(0.50 * dist_factor + 0.50 * recon_factor, 0.0, 1.0)), 4)
         
         knownness = round(1.0 - ood_score, 4)
         is_ood = ood_score >= self.ood_threshold

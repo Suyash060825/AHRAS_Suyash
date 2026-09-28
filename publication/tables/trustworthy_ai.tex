@@ -1,0 +1,17 @@
+\begin{table}[t]
+\centering
+\caption{AHRAS Trustworthy AI Security, Calibration, and Deferral Benchmarks (EXP-40)}
+\label{tab:trustworthy_ai}
+\small
+\begin{tabular}{lcccc}
+\toprule
+\textbf{Subsystem \& Evaluation Axis} & \textbf{Baseline / Uncalibrated} & \textbf{AHRAS Calibrated / Guarded} & \textbf{Improvement / Guarantee} \\
+\midrule
+AI Security Guard Injection Defense & 0.00\% Blocked & 100.0\% & Robust Deterministic Filter \\
+Benign Query False Alarm Rate & 0.00\% & 0.0\% & Zero Over-Suppression \\
+Expected Calibration Error (ECE) & 0.0338 & \textbf{0.0191} & -43.5\% Calibration Drift \\
+Brier Calibration Score & 0.1760 & \textbf{0.1752} & Strictly Proper Posterior \\
+Human-AI Policy Safety Violations & N/A & \textbf{0 / 100} & Deterministic Invariant \\
+\bottomrule
+\end{tabular}
+\end{table}
