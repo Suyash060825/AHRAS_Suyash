@@ -417,6 +417,7 @@
         }
 
         // Live WebSocket Telemetry Connection
+        let _wsRetryDelay = 1000;
         function initWebSocket() {
             const proto = window.location.protocol === 'https:' ? 'wss:' : 'ws:';
             const wsUrl = `${proto}//${window.location.host}/ws/live-soc`;
@@ -424,6 +425,7 @@
             try {
                 ws = new WebSocket(wsUrl);
                 ws.onopen = () => {
+                    _wsRetryDelay = 1000;
                     document.getElementById('ws-badge').innerText = '● WS Live Connected';
                     document.getElementById('ws-badge').style.color = 'var(--accent-green)';
                 };
@@ -440,18 +442,44 @@
                         tbody.innerHTML = '';
                         data.active_threats.forEach(t => {
                             const badgeCls = t.severity === 'CRITICAL' ? 'badge-critical' : 'badge-high';
-                            const xaiText = `${t.xai.decisive_evidence} | Gate: ${t.xai.gate}`;
                             const tr = document.createElement('tr');
-                            tr.innerHTML = `
-                                <td>${t.time}</td>
-                                <td>${t.entity}</td>
-                                <td>${t.class}</td>
-                                <td><span class="${badgeCls}">${t.severity}</span></td>
-                                <td>${t.risk.toFixed(3)}</td>
-                                <td>${t.technique}</td>
-                                <td><button class="btn-action" onclick="showXaiModal('${t.entity}', ${t.risk}, '${t.technique}', '${xaiText}')">Explain</button></td>
-                                <td><button class="btn-action">${t.status}</button></td>
-                            `;
+                            // time
+                            let td = document.createElement('td'); td.textContent = t.time || ''; tr.appendChild(td);
+                            // entity
+                            td = document.createElement('td'); td.textContent = t.entity || ''; tr.appendChild(td);
+                            // class
+                            td = document.createElement('td'); td.textContent = t.class || ''; tr.appendChild(td);
+                            // severity badge
+                            td = document.createElement('td');
+                            const badge = document.createElement('span');
+                            badge.className = badgeCls;
+                            badge.textContent = t.severity || '';
+                            td.appendChild(badge); tr.appendChild(td);
+                            // risk
+                            td = document.createElement('td'); td.textContent = t.risk != null ? t.risk.toFixed(3) : '0.000'; tr.appendChild(td);
+                            // technique
+                            td = document.createElement('td'); td.textContent = t.technique || ''; tr.appendChild(td);
+                            // Explain button
+                            td = document.createElement('td');
+                            const btn = document.createElement('button');
+                            btn.className = 'btn-action';
+                            btn.textContent = 'Explain';
+                            btn.dataset.xaiJson = JSON.stringify(t.xai || {});
+                            btn.dataset.entity = t.entity || '';
+                            btn.dataset.risk = t.risk || 0;
+                            btn.dataset.technique = t.technique || '';
+                            btn.addEventListener('click', function() {
+                                const xai = JSON.parse(this.dataset.xaiJson);
+                                const xaiText = (xai.decisive_evidence || '') + ' | Gate: ' + (xai.gate || '');
+                                showXaiModal(this.dataset.entity, parseFloat(this.dataset.risk), this.dataset.technique, xaiText);
+                            });
+                            td.appendChild(btn); tr.appendChild(td);
+                            // Status button
+                            td = document.createElement('td');
+                            const statusBtn = document.createElement('button');
+                            statusBtn.className = 'btn-action';
+                            statusBtn.textContent = t.status || '';
+                            td.appendChild(statusBtn); tr.appendChild(td);
                             tbody.appendChild(tr);
                         });
                     }
@@ -459,7 +487,8 @@
                 ws.onclose = () => {
                     document.getElementById('ws-badge').innerText = '○ WS Polling Fallback';
                     document.getElementById('ws-badge').style.color = 'var(--accent-amber)';
-                    setTimeout(initWebSocket, 4000);
+                    _wsRetryDelay = Math.min(30000, _wsRetryDelay * 2 + Math.random() * 500);
+                    setTimeout(initWebSocket, _wsRetryDelay);
                 };
             } catch (e) {
                 console.log('WS fallback to HTTP polling');

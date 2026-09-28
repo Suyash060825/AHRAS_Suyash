@@ -75,6 +75,17 @@ class ConformalRiskGate:
         self._conformal_errors_observed: int = 0
         self._total_inferences: int = 0
 
+    @property
+    def calibration_status(self) -> str:
+        """Returns diagnostic string for gate calibration health."""
+        if not self.is_calibrated:
+            return "UNCALIBRATED"
+        if self.calibrated_tau >= 0.99:
+            return "DEGENERATE_TAU_MAX"
+        if len(self._calibration_scores) < 100:
+            return "INSUFFICIENT_CALIBRATION_SAMPLES"
+        return "VALID"
+
     def calibrate(self, risk_scores: List[float], labels: List[int]) -> float:
         """
         Calibrate conformal nonconformity threshold tau* on validation dataset:
@@ -94,6 +105,12 @@ class ConformalRiskGate:
         self._calibration_scores = list(nonconformity)
         
         log.info(f"ConformalRiskGate calibrated on n={n} samples: tau*={self.calibrated_tau:.4f} @ coverage={self.target_coverage:.2f}")
+        if self.calibrated_tau >= 0.99:
+            log.warning(
+                f"[ConformalGate] DEGENERATE calibration: tau*={self.calibrated_tau:.4f}. "
+                "Gate will abstain on most real inputs. Root cause: training/calibration feature "
+                "distribution mismatch. Recalibrate on real dataset split."
+            )
         return self.calibrated_tau
 
     def compute_expected_loss(self, action: str, risk_p: float, uncertainty: float) -> float:

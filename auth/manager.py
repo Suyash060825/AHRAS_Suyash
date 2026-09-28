@@ -244,6 +244,12 @@ else:
     else:
         log.warning("[AUTH SECURITY] No default users seeded in PRODUCTION. User accounts must be provisioned via IAM/SSO.")
 
+if DEV_MODE and DEFAULT_USERS:
+    log.warning(
+        "[AUTH] DEV_MODE is active. Default credential accounts (admin, analyst, hunter, responder) "
+        "are loaded. NEVER run with DEV_MODE=true in production."
+    )
+
 _user_db = dict(DEFAULT_USERS)
 
 

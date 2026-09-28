@@ -180,6 +180,55 @@ class EvidenceLedger:
             self._by_entity.clear()
             self._by_evidence_id.clear()
 
+    def prune_older_than_days(self, days: int = 90) -> int:
+        """Removes evidence records older than `days` days from the chain. Returns pruned count.
+        Note: Breaks hash chain continuity for removed records. Run verify_chain() before pruning.
+        """
+        from datetime import datetime, timezone, timedelta
+        cutoff = datetime.now(timezone.utc) - timedelta(days=days)
+        with self._lock:
+            before = len(self._chain)
+            kept = []
+            pruned_ids: set = set()
+            for rec in self._chain:
+                ts = getattr(rec, 'timestamp', None)
+                if ts is None:
+                    kept.append(rec)
+                    continue
+                if isinstance(ts, (int, float)):
+                    rec_dt = datetime.fromtimestamp(float(ts), tz=timezone.utc)
+                elif hasattr(ts, 'tzinfo'):
+                    rec_dt = ts if ts.tzinfo else ts.replace(tzinfo=timezone.utc)
+                else:
+                    kept.append(rec)
+                    continue
+                if rec_dt >= cutoff:
+                    kept.append(rec)
+                else:
+                    pruned_ids.add(rec.evidence_id)
+            for i, rec in enumerate(kept):
+                rec.seq_num = i
+            self._chain = kept
+            new_by_event: Dict[str, List] = defaultdict(list)
+            new_by_entity: Dict[str, List] = defaultdict(list)
+            for rec in kept:
+                new_by_event[rec.event_id].append(rec)
+                new_by_entity[rec.entity_id].append(rec)
+            self._by_event = new_by_event
+            self._by_entity = new_by_entity
+            self._by_evidence_id = {r.evidence_id: r for r in kept}
+            pruned_count = before - len(kept)
+            if pruned_count:
+                log.info(f"[Ledger] Pruned {pruned_count} records older than {days} days. Chain length: {len(kept)}")
+            return pruned_count
+
+    @property
+    def ledger_size_estimate(self) -> int:
+        """Rough estimate of ledger memory size in bytes."""
+        import sys
+        with self._lock:
+            return sum(sys.getsizeof(r) for r in self._chain)
+
 
 # Singleton instance
 _evidence_ledger_instance: Optional[EvidenceLedger] = None
