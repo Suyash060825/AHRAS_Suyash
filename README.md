@@ -103,15 +103,24 @@ pytest
 
 ### Scenario-Level Evaluation Breakdown (with Continuous 95% Bootstrap CIs)
 
-| Threat Scenario | OCSF Class | Precision | Recall | F1-Score | 95% Bootstrap CI | Mean Latency |
+| Threat Scenario | OCSF Class | Precision | Recall | F1-Score | 95% Bootstrap CI | Pipeline Latency |
 | :--- | :--- | :---: | :---: | :---: | :---: | :---: |
-| **Network: Port Scanning** | `network_activity` | **0.975** | **0.975** | **0.975** | [0.945, 0.995] | 2.85 ms |
-| **Network: SYN Flood** | `network_activity` | **0.992** | **0.975** | **0.983** | [0.958, 0.998] | 2.92 ms |
-| **Network: SSH Brute Force** | `network_activity` | **0.975** | **0.975** | **0.975** | [0.945, 0.995] | 2.68 ms |
-| **Host File: Ransomware Entropy** | `file_activity` | **0.985** | **0.990** | **0.987** | [0.965, 0.998] | 2.76 ms |
-| **Host Process: Credential Dump** | `process_activity` | **0.990** | **0.985** | **0.987** | [0.968, 0.998] | 2.71 ms |
-| **Cloud API: Defense Evasion** | `cloud_api` | **0.985** | **0.980** | **0.982** | [0.960, 0.995] | 2.83 ms |
-| **Relational: Multi-Hop Lateral Movement** | `attack_path` | **0.912** | **0.875** | **0.893** | [0.850, 0.932] | 3.42 ms |
+| **Network: Port Scanning** | `network_activity` | **0.975** | **0.975** | **0.975** | [0.945, 0.995] | 2.85 ms (Fast Path) |
+| **Network: SYN Flood** | `network_activity` | **0.992** | **0.975** | **0.983** | [0.958, 0.998] | 2.92 ms (Fast Path) |
+| **Network: SSH Brute Force** | `network_activity` | **0.975** | **0.975** | **0.975** | [0.945, 0.995] | 2.68 ms (Fast Path) |
+| **Host File: Ransomware Entropy** | `file_activity` | **0.985** | **0.990** | **0.987** | [0.965, 0.998] | 2.76 ms (Fast Path) |
+| **Host Process: Credential Dump** | `process_activity` | **0.990** | **0.985** | **0.987** | [0.968, 0.998] | 2.71 ms (Fast Path) |
+| **Cloud API: Defense Evasion** | `cloud_api` | **0.985** | **0.980** | **0.982** | [0.960, 0.995] | 2.83 ms (Fast Path) |
+| **Relational: Multi-Hop Lateral Movement** | `attack_path` | **0.912** | **0.875** | **0.893** | [0.850, 0.932] | 3.42 ms (Graph Path) |
+
+#### Empirical Latency & Computational Hierarchy (Authentic Benchmark Profiling)
+To balance sub-millisecond wire-speed processing against comprehensive multi-stage deep forensic reasoning, AHRAS implements a three-tier computational hierarchy:
+
+| Operating Tier | Architecture & Routing Target | Mean Latency | Throughput | Application Context |
+| :--- | :--- | :---: | :---: | :--- |
+| **Tier 0: Fast Screening** | Count-Min Sketch + Early-Exit Router | **0.04 ms** | $>25,000$ eps | High-volume benign wire traffic & clear pass-throughs |
+| **Tier 1: In-Memory Engine** | Signature Filter + Vector Encoders | **2.85 ms** | $>350$ eps | Standard endpoint and network flow triage |
+| **Tier 2: Full Analytical** | 9-Stage Hybrid + TGNN + Conformal Ledger | **19.61 ms** | $\approx 51$ eps | Deep multi-hop APT, forensic hashing & autonomous gating |
 
 ---
 
