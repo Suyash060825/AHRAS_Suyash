@@ -65,12 +65,12 @@ def validate_secrets_and_environment():
 
 validate_secrets_and_environment()
 AHRAS_SECRET_KEY = _RAW_SECRET or "dev-mode-only-insecure-fallback-key-32-bytes-long!"
-ACCESS_TOKEN_EXPIRE_MINUTES = int(os.getenv("AHRAS_TOKEN_EXPIRE_MINUTES", "480"))
+ACCESS_TOKEN_EXPIRE_MINUTES = int(os.getenv("AHRAS_TOKEN_EXPIRE_MINUTES", "30"))
 REFRESH_TOKEN_EXPIRE_MINUTES = int(os.getenv("AHRAS_REFRESH_TOKEN_EXPIRE_MINUTES", "1440"))
 JWT_ALGORITHM = "HS256"
 
 # ── API & Network Hardening ───────────────────────────────────────────────────
-AHRAS_HOST = os.getenv("AHRAS_HOST", "0.0.0.0")
+AHRAS_HOST = os.getenv("AHRAS_HOST", "127.0.0.1")
 AHRAS_PORT = int(os.getenv("AHRAS_PORT", "8000"))
 
 _cors_env = os.getenv("AHRAS_ALLOWED_ORIGINS", "")

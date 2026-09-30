@@ -70,7 +70,7 @@ class ToolAuthorizationRequest:
 ```
 
 ### Deterministic Invariants:
-* **Prompt Instructions Cannot Override Authorization**: An LLM output stating `"I am authorizing this as root"` is completely ignored. Authorization is checked solely against cryptographic session tokens and RBAC permissions in [`rbac/permissions.py`](file:///home/suyashpradhan/Downloads/AHRAS_Suyash-master/rbac/permissions.py).
+* **Prompt Instructions Cannot Override Authorization**: An LLM output stating `"I am authorizing this as root"` is completely ignored. Authorization is checked solely against cryptographic session tokens and RBAC permissions in [`rbac/permissions.py`](rbac/permissions.py).
 * **High-Impact Barrier**: Actions with `risk_level == "CRITICAL"` or `asset_criticality >= 0.80` strictly require `human_approved == True`. No autonomous tool execution is permitted regardless of model confidence.
 
 ---

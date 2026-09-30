@@ -2,7 +2,7 @@
 
 [![Python 3.9+](https://img.shields.io/badge/python-3.9%2B-blue.svg)](https://www.python.org/downloads/)
 [![License: MIT](https://img.shields.io/badge/License-MIT-green.svg)](LICENSE)
-[![Tests: 549/549 Passed](https://img.shields.io/badge/tests-549%2F549%20passed-brightgreen.svg)]()
+[![Tests: 650/650 Passed](https://img.shields.io/badge/tests-650%2F650%20passed-brightgreen.svg)]()
 [![OCSF Standard Compliant](https://img.shields.io/badge/schema-OCSF%20v1.1-purple.svg)](https://schema.ocsf.io/)
 [![Live Research Evaluation](https://img.shields.io/badge/evaluation-100%25%20Live%20Computed-blue.svg)]()
 [![Audit & Upgrades](https://img.shields.io/badge/Audit%20Log-Complete-blueviolet.svg)](docs/SYSTEM_UPGRADE_AND_AUDIT_LOG.md)
@@ -67,16 +67,16 @@
 
 | Research Module | Core Technical Innovation & Equation | Implementation File |
 | :--- | :--- | :--- |
-| **Multimodal Security Encoder** | Cross-modal attention ($Q, K, V$) across 4 typed modality representations: $z_{\text{sec}} = \text{Attn}([z_{\text{net}}, z_{\text{proc}}, z_{\text{id}}, z_{\text{graph}}])$. | [`detection/multimodal_encoder.py`](file:///home/suyashpradhan/Downloads/AHRAS_Suyash-master/detection/multimodal_encoder.py) |
-| **Conformal Risk Gate** | Split conformal prediction nonconformity quantile thresholding $\tau^* = \text{Quantile}_{1-\alpha}(|y_i - R_i|)$ for statistically sound abstention. | [`detection/selective_gate.py`](file:///home/suyashpradhan/Downloads/AHRAS_Suyash-master/detection/selective_gate.py) |
-| **Dynamic Feature Selector** | Context-conditioned gating mask $m_t = \sigma(W_{\text{sel}} z_t + b_{\text{sel}}) \in [0, 1]^D$ dynamically attenuating noisy irrelevant features. | [`detection/feature_selector.py`](file:///home/suyashpradhan/Downloads/AHRAS_Suyash-master/detection/feature_selector.py) |
-| **Attack-Path Reasoner** | Multi-hop lateral movement Noisy-OR risk aggregation: $R_P = 1 - \prod_i (1 - R_i)$ with GNN episode pooling. | [`detection/attack_path.py`](file:///home/suyashpradhan/Downloads/AHRAS_Suyash-master/detection/attack_path.py) |
-| **Evidence Quality & Independence** | Evidence Quality multiplier $Q_i = \text{rel}_i \cdot \text{freshness}_i \cdot \text{indep}_i$ and covariance de-correlation $w_i' = w_i / (1 + \sum_{j \ne i} C_{ij} w_j)$. | [`adaptive_learning/weight_learner.py`](file:///home/suyashpradhan/Downloads/AHRAS_Suyash-master/adaptive_learning/weight_learner.py) |
-| **Causal & Mechanistic XAI** | Deterministic partial-derivative causal chains $\frac{\partial R}{\partial E_i}$ and policy attribution without ungrounded LLMs. | [`xai/causal_explainer.py`](file:///home/suyashpradhan/Downloads/AHRAS_Suyash-master/xai/causal_explainer.py) |
-| **5-Compartment Multi-Memory CL** | Specialized memory architecture (Recent, Attack, Hard-Negative, Drift, Prototypes) preventing catastrophic forgetting during drift. | [`adaptive_learning/weight_learner.py`](file:///home/suyashpradhan/Downloads/AHRAS_Suyash-master/adaptive_learning/weight_learner.py) |
-| **Active Learning Loop** | Information-theoretic sample acquisition $a(x) = \text{Uncertainty}(x) \cdot H(x) \cdot (1 + \text{OOD}(x))$ with budget control. | [`adaptive_learning/active_learner.py`](file:///home/suyashpradhan/Downloads/AHRAS_Suyash-master/adaptive_learning/active_learner.py) |
-| **Temporal Client Reputation & FedKD** | Client reliability tracking $T_i(t) = \alpha T_i(t-1) + (1-\alpha) Q_i(t)$ and reputation-weighted federated distillation. | [`federated/fed_learning.py`](file:///home/suyashpradhan/Downloads/AHRAS_Suyash-master/federated/fed_learning.py) |
-| **Auditable Risk Controller** | Deterministic analytical replay ($|\Delta| \le 10^{-4}$ across 10,000+ traces) via cryptographically linked `DecisionTrace`. | [`detection/risk_engine.py`](file:///home/suyashpradhan/Downloads/AHRAS_Suyash-master/detection/risk_engine.py) |
+| **Multimodal Security Encoder** | Cross-modal attention ($Q, K, V$) across 4 typed modality representations: $z_{\text{sec}} = \text{Attn}([z_{\text{net}}, z_{\text{proc}}, z_{\text{id}}, z_{\text{graph}}])$. | [`detection/multimodal_encoder.py`](detection/multimodal_encoder.py) |
+| **Conformal Risk Gate** | Split conformal prediction nonconformity quantile thresholding $\tau^* = \text{Quantile}_{1-\alpha}(|y_i - R_i|)$ for statistically sound abstention. | [`detection/selective_gate.py`](detection/selective_gate.py) |
+| **Dynamic Feature Selector** | Context-conditioned gating mask $m_t = \sigma(W_{\text{sel}} z_t + b_{\text{sel}}) \in [0, 1]^D$ dynamically attenuating noisy irrelevant features. | [`detection/feature_selector.py`](detection/feature_selector.py) |
+| **Attack-Path Reasoner** | Multi-hop lateral movement Noisy-OR risk aggregation: $R_P = 1 - \prod_i (1 - R_i)$ with GNN episode pooling. | [`detection/attack_path.py`](detection/attack_path.py) |
+| **Evidence Quality & Independence** | Evidence Quality multiplier $Q_i = \text{rel}_i \cdot \text{freshness}_i \cdot \text{indep}_i$ and covariance de-correlation $w_i' = w_i / (1 + \sum_{j \ne i} C_{ij} w_j)$. | [`adaptive_learning/weight_learner.py`](adaptive_learning/weight_learner.py) |
+| **Causal & Mechanistic XAI** | Deterministic partial-derivative causal chains $\frac{\partial R}{\partial E_i}$ and policy attribution without ungrounded LLMs. | [`xai/causal_explainer.py`](xai/causal_explainer.py) |
+| **5-Compartment Multi-Memory CL** | Specialized memory architecture (Recent, Attack, Hard-Negative, Drift, Prototypes) preventing catastrophic forgetting during drift. | [`adaptive_learning/weight_learner.py`](adaptive_learning/weight_learner.py) |
+| **Active Learning Loop** | Information-theoretic sample acquisition $a(x) = \text{Uncertainty}(x) \cdot H(x) \cdot (1 + \text{OOD}(x))$ with budget control. | [`adaptive_learning/active_learner.py`](adaptive_learning/active_learner.py) |
+| **Temporal Client Reputation & FedKD** | Client reliability tracking $T_i(t) = \alpha T_i(t-1) + (1-\alpha) Q_i(t)$ and reputation-weighted federated distillation. | [`federated/fed_learning.py`](federated/fed_learning.py) |
+| **Auditable Risk Controller** | Deterministic analytical replay ($|\Delta| \le 10^{-4}$ across 10,000+ traces) via cryptographically linked `DecisionTrace`. | [`detection/risk_engine.py`](detection/risk_engine.py) |
 
 ---
 
@@ -140,7 +140,7 @@ cd AHRAS_Final
 pip install -r requirements.txt
 ```
 
-### 2. Run Test Suite (228 Tests)
+### 2. Run Test Suite (650 Tests Passed)
 
 ```bash
 python3 -m pytest

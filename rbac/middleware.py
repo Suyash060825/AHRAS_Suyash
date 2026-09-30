@@ -30,9 +30,10 @@ def require_permission(required_perm: Perm) -> Callable:
     def _dependency(credentials: HTTPAuthorizationCredentials = Security(security_scheme)):
         from auth.manager import verify_token
         
-        # If no auth header supplied in open dev mode, allow fallback or require auth
         if credentials is None:
-            # Check if dev token bypass is enabled or raise 401
+            from config.settings import DEV_MODE
+            if DEV_MODE:
+                return {"sub": "dev_admin", "role": "admin", "dev_mode": True}
             raise HTTPException(
                 status_code=status.HTTP_401_UNAUTHORIZED,
                 detail="Authentication credentials required",

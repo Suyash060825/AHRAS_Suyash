@@ -181,8 +181,8 @@ def verify_password(plain_password: str, hashed_password: str) -> bool:
         salt = parts[1]
         expected_hash = hash_password(plain_password, salt=salt)
         return hmac.compare_digest(expected_hash, hashed_password)
-    except Exception as e:
-        log.error(f"[AUTH] Password verification error: {e}")
+    except Exception:
+        log.error("[AUTH] Password verification failed due to internal error.")
         return False
 
 

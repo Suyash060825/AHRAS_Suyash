@@ -4,17 +4,17 @@
 **Standard**: Non-Monolithic, Auditable, Uncertainty-Bounded Defense Platform  
 **Target Specifications**: Sections 17, 18, 19, 25, 26 of the Ultimate Implementation Prompt  
 **Benchmarks**: `EXP-30` (Few-Shot Adaptation), `EXP-31` (Sensor Acquisition), `EXP-32` (Shadow Promotion), `EXP-26` (Multi-Tier Controller)  
-**Target Packages**: [`adaptive_learning/`](file:///home/suyashpradhan/Downloads/AHRAS_Suyash-master/adaptive_learning), [`sensors/`](file:///home/suyashpradhan/Downloads/AHRAS_Suyash-master/sensors), [`controller/`](file:///home/suyashpradhan/Downloads/AHRAS_Suyash-master/controller), [`evaluation/`](file:///home/suyashpradhan/Downloads/AHRAS_Suyash-master/evaluation), [`api/`](file:///home/suyashpradhan/Downloads/AHRAS_Suyash-master/api)  
+**Target Packages**: [`adaptive_learning/`](adaptive_learning), [`sensors/`](sensors), [`controller/`](controller), [`evaluation/`](evaluation), [`api/`](api)  
 **Primary Artifacts**:
-- [`evaluation/results/FEW_SHOT_ADAPTATION_REPORT.json`](file:///home/suyashpradhan/Downloads/AHRAS_Suyash-master/evaluation/results/FEW_SHOT_ADAPTATION_REPORT.json)
-- [`evaluation/results/SENSOR_ACQUISITION_REPORT.json`](file:///home/suyashpradhan/Downloads/AHRAS_Suyash-master/evaluation/results/SENSOR_ACQUISITION_REPORT.json)
-- [`evaluation/results/SHADOW_PROMOTION_REPORT.json`](file:///home/suyashpradhan/Downloads/AHRAS_Suyash-master/evaluation/results/SHADOW_PROMOTION_REPORT.json)
-- [`evaluation/model_registry.json`](file:///home/suyashpradhan/Downloads/AHRAS_Suyash-master/evaluation/model_registry.json)
-- [`evaluation/detection_registry.json`](file:///home/suyashpradhan/Downloads/AHRAS_Suyash-master/evaluation/detection_registry.json)
-- [`publication/tables/few_shot_adaptation.tex`](file:///home/suyashpradhan/Downloads/AHRAS_Suyash-master/publication/tables/few_shot_adaptation.tex)
-- [`publication/tables/sensor_acquisition.tex`](file:///home/suyashpradhan/Downloads/AHRAS_Suyash-master/publication/tables/sensor_acquisition.tex)
-- [`publication/tables/shadow_promotion.tex`](file:///home/suyashpradhan/Downloads/AHRAS_Suyash-master/publication/tables/shadow_promotion.tex)
-- Test Suites: 48 tests passed across [`tests/test_few_shot.py`](file:///home/suyashpradhan/Downloads/AHRAS_Suyash-master/tests/test_few_shot.py), [`tests/test_sensor_acquisition.py`](file:///home/suyashpradhan/Downloads/AHRAS_Suyash-master/tests/test_sensor_acquisition.py), [`tests/test_shadow_promotion.py`](file:///home/suyashpradhan/Downloads/AHRAS_Suyash-master/tests/test_shadow_promotion.py), [`tests/test_registries.py`](file:///home/suyashpradhan/Downloads/AHRAS_Suyash-master/tests/test_registries.py), [`tests/test_api_endpoints.py`](file:///home/suyashpradhan/Downloads/AHRAS_Suyash-master/tests/test_api_endpoints.py), [`tests/test_resource_controller.py`](file:///home/suyashpradhan/Downloads/AHRAS_Suyash-master/tests/test_resource_controller.py), [`tests/test_model_router.py`](file:///home/suyashpradhan/Downloads/AHRAS_Suyash-master/tests/test_model_router.py)  
+- [`evaluation/results/FEW_SHOT_ADAPTATION_REPORT.json`](evaluation/results/FEW_SHOT_ADAPTATION_REPORT.json)
+- [`evaluation/results/SENSOR_ACQUISITION_REPORT.json`](evaluation/results/SENSOR_ACQUISITION_REPORT.json)
+- [`evaluation/results/SHADOW_PROMOTION_REPORT.json`](evaluation/results/SHADOW_PROMOTION_REPORT.json)
+- [`evaluation/model_registry.json`](evaluation/model_registry.json)
+- [`evaluation/detection_registry.json`](evaluation/detection_registry.json)
+- [`publication/tables/few_shot_adaptation.tex`](publication/tables/few_shot_adaptation.tex)
+- [`publication/tables/sensor_acquisition.tex`](publication/tables/sensor_acquisition.tex)
+- [`publication/tables/shadow_promotion.tex`](publication/tables/shadow_promotion.tex)
+- Test Suites: 48 tests passed across [`tests/test_few_shot.py`](tests/test_few_shot.py), [`tests/test_sensor_acquisition.py`](tests/test_sensor_acquisition.py), [`tests/test_shadow_promotion.py`](tests/test_shadow_promotion.py), [`tests/test_registries.py`](tests/test_registries.py), [`tests/test_api_endpoints.py`](tests/test_api_endpoints.py), [`tests/test_resource_controller.py`](tests/test_resource_controller.py), [`tests/test_model_router.py`](tests/test_model_router.py)  
 **Status**: **COMPLETED & EMPIRICALLY VALIDATED (Zero Regressions, 100% Pass Rate)**
 
 ---

@@ -126,3 +126,58 @@ def test_vulnerabilities_prioritize_endpoint():
     assert len(data["prioritized_vulnerabilities"]) >= 1
     # Top vulnerability should be CVE-2021-44228 on the DMZ web server
     assert data["prioritized_vulnerabilities"][0]["cve_id"] == "CVE-2021-44228"
+
+
+def test_auth_token_and_logout_flow():
+    # 1. Login for token
+    login_resp = client.post("/api/auth/token", json={"username": "admin", "password": "AdminSecurePass2026!"})
+    assert login_resp.status_code == 200
+    token = login_resp.json()["access_token"]
+    headers = {"Authorization": f"Bearer {token}"}
+
+    # 2. Access protected endpoint with token
+    users_resp = client.get("/api/auth/users", headers=headers)
+    assert users_resp.status_code == 200
+    assert len(users_resp.json()["users"]) >= 1
+
+    # 3. Logout
+    logout_resp = client.post("/api/auth/logout", headers=headers)
+    assert logout_resp.status_code == 200
+    assert logout_resp.json()["status"] == "SUCCESS"
+
+    # 4. Re-access with revoked token must fail with 401
+    revoked_resp = client.get("/api/auth/users", headers=headers)
+    assert revoked_resp.status_code == 401
+
+
+def test_api_v1_versioned_routes():
+    # Test that v1 aliases work identically
+    resp_v1_models = client.get("/api/v1/registry/models")
+    assert resp_v1_models.status_code == 200
+    assert "models" in resp_v1_models.json()
+
+    resp_v1_iocs = client.get("/api/v1/threat-intel/iocs")
+    assert resp_v1_iocs.status_code == 200
+
+
+def test_entity_path_sanitization():
+    # Valid entity key
+    valid_resp = client.get("/entities/host-192.168.1.50/report")
+    assert valid_resp.status_code == 200
+
+    # Directory traversal or illegal characters rejected
+    invalid_resp = client.get("/entities/..%2F..%2Fetc%2Fpasswd/report")
+    assert invalid_resp.status_code in [400, 404]
+
+
+def test_unified_response_approval_and_rejection():
+    # Test approval
+    appr_resp = client.post("/api/response/approve", json={"alert_id": "ALT-2026-001"})
+    assert appr_resp.status_code == 200
+    assert appr_resp.json()["status"] == "success"
+
+    # Test rejection
+    rej_resp = client.post("/api/response/reject", json={"alert_id": "ALT-2026-002", "reason": "Benign false trigger"})
+    assert rej_resp.status_code == 200
+    assert rej_resp.json()["status"] == "success"
+

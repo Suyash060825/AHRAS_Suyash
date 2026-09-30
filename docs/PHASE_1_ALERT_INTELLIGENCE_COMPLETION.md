@@ -3,9 +3,9 @@
 **Platform**: Adaptive Hybrid Risk-Aware Security (AHRAS)  
 **Standard**: Non-Monolithic, Auditable, Uncertainty-Bounded Defense Platform  
 **Benchmark ID**: `EXP-ALERT-INTEL-01`  
-**Package**: [`alert_intelligence/`](file:///home/suyashpradhan/Downloads/AHRAS_Suyash-master/alert_intelligence)  
-**Primary Artifact**: [`evaluation/results/ALERT_INTELLIGENCE_REPORT.json`](file:///home/suyashpradhan/Downloads/AHRAS_Suyash-master/evaluation/results/ALERT_INTELLIGENCE_REPORT.json)  
-**Test Suite**: [`tests/test_alert_intelligence.py`](file:///home/suyashpradhan/Downloads/AHRAS_Suyash-master/tests/test_alert_intelligence.py) (9/9 Passed)  
+**Package**: [`alert_intelligence/`](alert_intelligence)  
+**Primary Artifact**: [`evaluation/results/ALERT_INTELLIGENCE_REPORT.json`](evaluation/results/ALERT_INTELLIGENCE_REPORT.json)  
+**Test Suite**: [`tests/test_alert_intelligence.py`](tests/test_alert_intelligence.py) (9/9 Passed)  
 **Status**: **COMPLETED & EMPIRICALLY VALIDATED**
 
 ---
@@ -63,18 +63,18 @@ flowchart TD
 
 ### 2.1 Component Specifications
 
-1. **`AdaptiveAlertDeduplicator`** ([`alert_intelligence/deduplication.py`](file:///home/suyashpradhan/Downloads/AHRAS_Suyash-master/alert_intelligence/deduplication.py)):
+1. **`AdaptiveAlertDeduplicator`** ([`alert_intelligence/deduplication.py`](alert_intelligence/deduplication.py)):
    - Generates composite deduplication key: $K = (\text{entity\_key}, \text{source\_engine}, \text{detector\_name}, \text{mitre\_technique})$.
    - Implements exponential geometric emission ($C \ge 5, 10, 20, 40, \dots$) to update downstream systems during sustained volume floods without flooding queues.
    - Enforces eviction callback (`on_evict`) on window expiry to forward all accumulated cryptographic evidence pointers into active clusters.
 
-2. **`AlertClusteringEngine`** ([`alert_intelligence/clustering.py`](file:///home/suyashpradhan/Downloads/AHRAS_Suyash-master/alert_intelligence/clustering.py)):
+2. **`AlertClusteringEngine`** ([`alert_intelligence/clustering.py`](alert_intelligence/clustering.py)):
    - Tracks active open clusters within correlation window $\Delta t = 300\text{s}$.
    - Dynamically merges separate clusters when a lateral movement or pivot alert bridges multiple previously independent entity keys.
    - Calculates kill-chain progression score:
      $$S_{\text{prog}} = \min\left(1.0, 0.20 \cdot |\mathcal{T}_{\text{present}}| + 0.50 \cdot \frac{\text{span}(\mathcal{T}_{\text{order}})}{|\mathcal{T}_{\text{total}}|}\right)$$
 
-3. **`ExposureAwarePrioritizer`** ([`alert_intelligence/prioritizer.py`](file:///home/suyashpradhan/Downloads/AHRAS_Suyash-master/alert_intelligence/prioritizer.py)):
+3. **`ExposureAwarePrioritizer`** ([`alert_intelligence/prioritizer.py`](alert_intelligence/prioritizer.py)):
    - Computes calibrated triage priority:
      $$P = \text{clip}\left( \left(0.35 \cdot S_{\text{det}} + 0.25 \cdot S_{\text{prog}} + 0.20 \cdot S_{\text{crit}} + 0.20 \cdot S_{\text{expo}}\right) \cdot (1 - 0.30 \cdot \bar{U}), 0.0, 1.0 \right)$$
    - Maps $P$ to 5 triage tiers:
@@ -84,7 +84,7 @@ flowchart TD
      - $0.15 \le P < 0.35 \implies \text{LOW}$ (Continuous monitoring)
      - $P < 0.15 \implies \text{INFO}$ (Telemetry record)
 
-4. **`AlertIntelligencePipeline`** ([`alert_intelligence/pipeline.py`](file:///home/suyashpradhan/Downloads/AHRAS_Suyash-master/alert_intelligence/pipeline.py)):
+4. **`AlertIntelligencePipeline`** ([`alert_intelligence/pipeline.py`](alert_intelligence/pipeline.py)):
    - Unified facade orchestrating deduplication, clustering, and prioritization with flush and query APIs.
 
 ---
@@ -93,7 +93,7 @@ flowchart TD
 
 Evaluated across a benchmark stream of **5,000 alerts** including volumetric DoS bursts, multi-stage APT campaigns, and sporadic background anomalies across 6 monitored enterprise entities.
 
-Recorded in [`evaluation/results/ALERT_INTELLIGENCE_REPORT.json`](file:///home/suyashpradhan/Downloads/AHRAS_Suyash-master/evaluation/results/ALERT_INTELLIGENCE_REPORT.json):
+Recorded in [`evaluation/results/ALERT_INTELLIGENCE_REPORT.json`](evaluation/results/ALERT_INTELLIGENCE_REPORT.json):
 
 | Metric | Result | Target / Threshold | Status |
 | :--- | :---: | :---: | :---: |
@@ -119,7 +119,7 @@ The engine autonomously isolated and synthesized the multi-stage APT:
 
 ## 4. REST API Endpoints Implemented
 
-Integrated into [`api/server.py`](file:///home/suyashpradhan/Downloads/AHRAS_Suyash-master/api/server.py):
+Integrated into [`api/server.py`](api/server.py):
 
 | Endpoint | Method | Description |
 | :--- | :---: | :--- |
@@ -132,7 +132,7 @@ Integrated into [`api/server.py`](file:///home/suyashpradhan/Downloads/AHRAS_Suy
 
 ## 5. Verification & Test Suite Summary
 
-- **Unit Test File**: [`tests/test_alert_intelligence.py`](file:///home/suyashpradhan/Downloads/AHRAS_Suyash-master/tests/test_alert_intelligence.py)
+- **Unit Test File**: [`tests/test_alert_intelligence.py`](tests/test_alert_intelligence.py)
 - **Test Results**: **9 passed in 1.26s (100% pass rate)**.
 - **Invariants Verified**:
   - `test_models_and_evidence_preservation`: Atomic evidence pointers retained through clustering.

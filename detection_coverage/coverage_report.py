@@ -13,11 +13,11 @@ import logging
 from pathlib import Path
 from typing import Any, Dict, List, Optional
 
-from coverage.implementation_catalog import ImplementationCatalog
-from coverage.telemetry_mapper import TelemetryMapper
-from coverage.technique_mapper import TechniqueMapper
-from coverage.detection_analyzer import DetectionAnalyzer
-from coverage.coverage_calculator import CoverageCalculator, SystemCoverageReport, TechniqueCoverageSummary
+from detection_coverage.implementation_catalog import ImplementationCatalog
+from detection_coverage.telemetry_mapper import TelemetryMapper
+from detection_coverage.technique_mapper import TechniqueMapper
+from detection_coverage.detection_analyzer import DetectionAnalyzer
+from detection_coverage.coverage_calculator import CoverageCalculator, SystemCoverageReport, TechniqueCoverageSummary
 
 log = logging.getLogger(__name__)
 
@@ -103,7 +103,7 @@ class CoverageReporter:
         analyzer: Optional[DetectionAnalyzer] = None,
         calculator: Optional[CoverageCalculator] = None,
     ) -> None:
-        from coverage.implementation_catalog import get_default_catalog
+        from detection_coverage.implementation_catalog import get_default_catalog
         self.catalog = catalog or get_default_catalog()
         self.telemetry_mapper = telemetry_mapper or TelemetryMapper()
         self.technique_mapper = technique_mapper or TechniqueMapper()

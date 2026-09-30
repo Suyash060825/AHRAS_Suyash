@@ -3,11 +3,11 @@
 **Platform**: Adaptive Hybrid Risk-Aware Security (AHRAS)  
 **Standard**: Non-Monolithic, Auditable, Uncertainty-Bounded Defense Platform  
 **Benchmark ID**: `EXP-24`  
-**Target Package**: [`adversarial/`](file:///home/suyashpradhan/Downloads/AHRAS_Suyash-master/adversarial), [`detection/signature_engine/`](file:///home/suyashpradhan/Downloads/AHRAS_Suyash-master/detection/signature_engine)  
+**Target Package**: [`adversarial/`](adversarial), [`detection/signature_engine/`](detection/signature_engine)  
 **Primary Artifacts**:
-- [`evaluation/results/EVASION_ROBUSTNESS_REPORT.json`](file:///home/suyashpradhan/Downloads/AHRAS_Suyash-master/evaluation/results/EVASION_ROBUSTNESS_REPORT.json)
-- [`publication/tables/evasion_robustness.tex`](file:///home/suyashpradhan/Downloads/AHRAS_Suyash-master/publication/tables/evasion_robustness.tex)
-- [`tests/test_evasion_robustness.py`](file:///home/suyashpradhan/Downloads/AHRAS_Suyash-master/tests/test_evasion_robustness.py) (6/6 Passed)  
+- [`evaluation/results/EVASION_ROBUSTNESS_REPORT.json`](evaluation/results/EVASION_ROBUSTNESS_REPORT.json)
+- [`publication/tables/evasion_robustness.tex`](publication/tables/evasion_robustness.tex)
+- [`tests/test_evasion_robustness.py`](tests/test_evasion_robustness.py) (6/6 Passed)  
 **Status**: **COMPLETED & EMPIRICALLY VALIDATED**
 
 ---
@@ -28,7 +28,7 @@ In Phase 2, AHRAS addressed the top 5 high-leverage evasion strategies identifie
 ## 2. Hardening Interventions Implemented
 
 ### 2.1 Lexical Commandline De-obfuscation (`_deobfuscate_cmdline`)
-Implemented in [`detection/signature_engine/rules.py`](file:///home/suyashpradhan/Downloads/AHRAS_Suyash-master/detection/signature_engine/rules.py#L291-L305):
+Implemented in [`detection/signature_engine/rules.py`](detection/signature_engine/rules.py#L291-L305):
 ```python
 def _deobfuscate_cmdline(raw_cmd: Any) -> str:
     """
@@ -62,7 +62,7 @@ Integrated across `_rule_shell_exec_in_cmdline` (`PROC-002`) and `_rule_credenti
 
 Evaluated across **52 concrete technique vectors** and **189 semantics-preserving mutation trials** across host process, network traffic, and cloud API modalities.
 
-Recorded in [`evaluation/results/EVASION_ROBUSTNESS_REPORT.json`](file:///home/suyashpradhan/Downloads/AHRAS_Suyash-master/evaluation/results/EVASION_ROBUSTNESS_REPORT.json):
+Recorded in [`evaluation/results/EVASION_ROBUSTNESS_REPORT.json`](evaluation/results/EVASION_ROBUSTNESS_REPORT.json):
 
 ### 3.1 Detector Robustness Scores ($R_{\text{det}}$)
 

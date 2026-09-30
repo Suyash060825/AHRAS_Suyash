@@ -230,12 +230,13 @@ def run_full_research_pipeline():
     ood_threshold = 0.55
     ood_preds = (ood_scores >= ood_threshold).astype(int)
 
-    try:
+    if len(np.unique(y_true)) > 1:
         ood_auroc = round(float(roc_auc_score(y_true, ood_scores)), 4)
         prec_arr, rec_arr, _ = precision_recall_curve(y_true, ood_scores)
         ood_auprc = round(float(auc(rec_arr, prec_arr)), 4)
-    except Exception:
-        ood_auroc, ood_auprc = 0.985, 0.980
+    else:
+        ood_auroc = 0.50
+        ood_auprc = float(np.mean(y_true))
 
     known_atk_f1 = round(float(f1_score(y_true, [1 if r.predicted_state in ("KNOWN_ATTACK", "UNKNOWN_OOD") else 0 for r in rep_results])), 4)
     zero_day_rec = round(float(recall_score(y_true, ood_preds)), 4)

@@ -7,16 +7,16 @@
 \toprule
 \textbf{Adaptation Strategy} & \textbf{Label Delay ($\Delta$)} & \textbf{Macro F1} & \textbf{Final Recall} & \textbf{Brier Score} & \textbf{Adaptation Lag} & \textbf{Memory (MB)} \\
 \midrule
-Static & No Feedback (Frozen) & 75.3\% & 96.4\% & 0.123 & N/A & 0.003 MB \\
-Streaming\_Updated & Immediate Oracle & 97.1\% & 78.6\% & 0.048 & N/A & 0.024 MB \\
-Streaming\_Updated & 1-Hour Delay & 88.2\% & 67.9\% & 0.065 & N/A & 0.031 MB \\
-Streaming\_Updated & 1-Day Delay & 80.3\% & 50.0\% & 0.104 & N/A & 0.047 MB \\
-Streaming\_Updated & 1-Week Delay & 74.1\% & 96.4\% & 0.125 & 11 steps & 0.071 MB \\
+Static & No Feedback (Frozen) & 72.2\% & 96.4\% & 0.129 & N/A & 0.003 MB \\
+Streaming\_Updated & Immediate Oracle & 97.1\% & 78.6\% & 0.047 & N/A & 0.024 MB \\
+Streaming\_Updated & 1-Hour Delay & 88.1\% & 67.9\% & 0.066 & N/A & 0.031 MB \\
+Streaming\_Updated & 1-Day Delay & 77.5\% & 50.0\% & 0.103 & N/A & 0.047 MB \\
+Streaming\_Updated & 1-Week Delay & 74.1\% & 96.4\% & 0.124 & 11 steps & 0.071 MB \\
 \midrule
 \multicolumn{7}{l}{\textbf{Performance Breakdown Across Non-Stationary Drift Regimes:}} \\
-\quad Sudden\_Drift & \multicolumn{2}{l}{Static F1: 58.1\%} & \multicolumn{2}{l}{Streaming F1: 100.0\%} & \multicolumn{2}{l}{Adaptation Gain: \textbf{+41.9\%}} \\
-\quad Gradual\_Drift & \multicolumn{2}{l}{Static F1: 58.2\%} & \multicolumn{2}{l}{Streaming F1: 100.0\%} & \multicolumn{2}{l}{Adaptation Gain: \textbf{+41.8\%}} \\
-\quad Recurring\_Drift & \multicolumn{2}{l}{Static F1: 87.9\%} & \multicolumn{2}{l}{Streaming F1: 86.2\%} & \multicolumn{2}{l}{Adaptation Gain: \textbf{+-1.7\%}} \\
+\quad Sudden\_Drift & \multicolumn{2}{l}{Static F1: 60.5\%} & \multicolumn{2}{l}{Streaming F1: 100.0\%} & \multicolumn{2}{l}{Adaptation Gain: \textbf{+39.5\%}} \\
+\quad Gradual\_Drift & \multicolumn{2}{l}{Static F1: 59.1\%} & \multicolumn{2}{l}{Streaming F1: 100.0\%} & \multicolumn{2}{l}{Adaptation Gain: \textbf{+40.9\%}} \\
+\quad Recurring\_Drift & \multicolumn{2}{l}{Static F1: 87.5\%} & \multicolumn{2}{l}{Streaming F1: 86.2\%} & \multicolumn{2}{l}{Adaptation Gain: \textbf{+-1.3\%}} \\
 \bottomrule
 \end{tabular}
 \end{table*}

@@ -247,7 +247,11 @@
                 <p>Adaptive Hybrid Risk-Aware Security Framework v4.0</p>
             </div>
         </div>
-        <div style="display: flex; align-items: center; gap: 16px;">
+        <div style="display: flex; align-items: center; gap: 12px; flex-wrap: wrap;">
+            <div id="auth-status-container" style="display: flex; align-items: center; gap: 8px;">
+                <span id="auth-user-badge" style="font-size: 11px; padding: 4px 10px; border-radius: 12px; background: rgba(79, 172, 254, 0.15); color: var(--accent-blue); border: 1px solid var(--accent-blue); font-family: 'JetBrains Mono';">Analyst: Authenticated</span>
+                <button id="btn-login-logout" class="btn-action" style="padding: 4px 10px; font-size: 11px;" onclick="handleAuthToggle()">Login / Switch</button>
+            </div>
             <div class="status-badge">
                 <div class="pulse-dot"></div>
                 SYSTEM OPERATIONAL
@@ -476,10 +480,76 @@
                 .attr("d", line);
         }
 
+        // ── Authentication & Token Management ─────────────────────────────────────
+        function getAuthToken() {
+            return localStorage.getItem('ahras_token') || '';
+        }
+        function setAuthToken(token) {
+            if (token) localStorage.setItem('ahras_token', token);
+            else localStorage.removeItem('ahras_token');
+            updateAuthUI();
+        }
+        function updateAuthUI() {
+            const token = getAuthToken();
+            const badge = document.getElementById('auth-user-badge');
+            const btn = document.getElementById('btn-login-logout');
+            if (token) {
+                badge.textContent = 'Analyst: Authenticated';
+                badge.style.color = 'var(--accent-green)';
+                badge.style.borderColor = 'var(--accent-green)';
+                btn.textContent = 'Logout';
+            } else {
+                badge.textContent = 'Role: Active Session';
+                badge.style.color = 'var(--accent-blue)';
+                badge.style.borderColor = 'var(--accent-blue)';
+                btn.textContent = 'Login';
+            }
+        }
+        async function handleAuthToggle() {
+            const token = getAuthToken();
+            if (token) {
+                try {
+                    await authFetch('/api/auth/logout', { method: 'POST' });
+                } catch (e) {}
+                setAuthToken('');
+                location.reload();
+            } else {
+                const user = prompt("Enter username (default: analyst):", "analyst");
+                if (!user) return;
+                const pass = prompt("Enter password (default: AnalystPass2026!):", "AnalystPass2026!");
+                if (!pass) return;
+                try {
+                    const res = await fetch('/api/auth/token', {
+                        method: 'POST',
+                        headers: { 'Content-Type': 'application/json' },
+                        body: JSON.stringify({ username: user, password: pass })
+                    });
+                    if (res.ok) {
+                        const data = await res.json();
+                        setAuthToken(data.access_token);
+                        alert("Authentication successful!");
+                        location.reload();
+                    } else {
+                        alert("Authentication failed: invalid credentials");
+                    }
+                } catch (e) {
+                    alert("Error authenticating: " + e.message);
+                }
+            }
+        }
+        async function authFetch(url, options = {}) {
+            options.headers = options.headers || {};
+            const token = getAuthToken();
+            if (token) {
+                options.headers['Authorization'] = `Bearer ${token}`;
+            }
+            return fetch(url, options);
+        }
+
         // ── D3.js Force-Directed GNN Graph ─────────────────────────────────────────
         async function fetchGnnGraph() {
             try {
-                const res = await fetch('/api/gnn/graph');
+                const res = await authFetch('/api/gnn/graph');
                 if (!res.ok) return;
                 const data = await res.json();
                 renderD3Gnn(data);
@@ -546,7 +616,7 @@
         // ── Dynamic MITRE ATT&CK Matrix ──────────────────────────────────────────
         async function fetchMitreActive() {
             try {
-                const res = await fetch('/api/mitre/active');
+                const res = await authFetch('/api/mitre/active');
                 if (!res.ok) return;
                 const items = await res.json();
                 const container = document.getElementById("mitre-container");
@@ -582,7 +652,7 @@
         // ── Dynamic Human Approvals Queue ─────────────────────────────────────────
         async function fetchPendingApprovals() {
             try {
-                const res = await fetch('/api/pending-approvals');
+                const res = await authFetch('/api/pending-approvals');
                 if (!res.ok) return;
                 const approvals = await res.json();
                 const tbody = document.getElementById("pending-approvals-body");
@@ -632,7 +702,7 @@
         async function sendApproval(alertId, action) {
             try {
                 const endpoint = action === "approve" ? "/api/response/approve" : "/api/response/reject";
-                const res = await fetch(endpoint, {
+                const res = await authFetch(endpoint, {
                     method: "POST",
                     headers: { "Content-Type": "application/json" },
                     body: JSON.stringify({ alert_id: alertId })
@@ -649,7 +719,9 @@
         let _wsRetryDelay = 1000;
         function initWebSocket() {
             const proto = window.location.protocol === 'https:' ? 'wss:' : 'ws:';
-            const wsUrl = `${proto}//${window.location.host}/ws/live-soc`;
+            const token = getAuthToken();
+            const tokenQuery = token ? `?token=${encodeURIComponent(token)}` : '';
+            const wsUrl = `${proto}//${window.location.host}/ws/live-soc${tokenQuery}`;
             let ws;
             try {
                 ws = new WebSocket(wsUrl);
@@ -741,6 +813,7 @@
         }
 
         // Initialize components
+        updateAuthUI();
         setInterval(fetchMetricsFallback, 5000);
         setInterval(fetchPendingApprovals, 4000);
         setInterval(fetchMitreActive, 8000);

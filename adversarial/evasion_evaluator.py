@@ -17,8 +17,8 @@ from dataclasses import dataclass, field
 from typing import Any, Dict, List, Optional, Set, Tuple
 
 from adversarial.mutation_engine import MutationEngine, AdversarialPerturbationBatch, MutatedVariant
-from coverage.implementation_catalog import ImplementationCatalog, get_default_catalog
-from coverage.detection_analyzer import DetectionAnalyzer
+from detection_coverage.implementation_catalog import ImplementationCatalog, get_default_catalog
+from detection_coverage.detection_analyzer import DetectionAnalyzer
 from detection.signature_engine.rules import run_signature_engine
 from detection.encrypted_session import EncryptedSessionIntelligence, PacketMetadata
 

@@ -20,7 +20,7 @@ Phase 0 establishes the empirical baseline, code contracts, hardware/software ma
 
 ## 2. Environment & Infrastructure Verification
 
-Documented in [`evaluation/environment_manifest.json`](file:///home/suyashpradhan/Downloads/AHRAS_Suyash-master/evaluation/environment_manifest.json).
+Documented in [`evaluation/environment_manifest.json`](evaluation/environment_manifest.json).
 
 * **Git Commit**: `4a0214e596aa39f52ca4b0cdd221f34d15fab322`
 * **Git Branch**: `new-features` (Working tree clean)
@@ -45,7 +45,7 @@ Documented in [`evaluation/environment_manifest.json`](file:///home/suyashpradha
 
 ## 3. Dataset Registry & Provenance Audit
 
-Documented in [`evaluation/data/dataset_registry.json`](file:///home/suyashpradhan/Downloads/AHRAS_Suyash-master/evaluation/data/dataset_registry.json).
+Documented in [`evaluation/data/dataset_registry.json`](evaluation/data/dataset_registry.json).
 
 Both authentic benchmark datasets have been physically verified on the filesystem with cryptographic SHA-256 digests matching the registry:
 
@@ -95,7 +95,7 @@ Both authentic benchmark datasets have been physically verified on the filesyste
 
 ## 5. Authentic Real-World Benchmark Performance
 
-Documented in [`evaluation/results/real_world_benchmarks_report.json`](file:///home/suyashpradhan/Downloads/AHRAS_Suyash-master/evaluation/results/real_world_benchmarks_report.json).
+Documented in [`evaluation/results/real_world_benchmarks_report.json`](evaluation/results/real_world_benchmarks_report.json).
 
 | Benchmark / Dataset | Precision | Recall | F1 Score | 95% CI | Balanced Acc | Conformal $\tau^*$ | Status |
 | :--- | :---: | :---: | :---: | :---: | :---: | :---: | :---: |
@@ -123,14 +123,14 @@ The following security findings were audited and verified fixed:
 
 ## 7. Deliverables Produced in Phase 0
 
-1. [`evaluation/environment_manifest.json`](file:///home/suyashpradhan/Downloads/AHRAS_Suyash-master/evaluation/environment_manifest.json): Machine-readable hardware, OS, runtime, and dependency manifest.
-2. [`evaluation/data/dataset_registry.json`](file:///home/suyashpradhan/Downloads/AHRAS_Suyash-master/evaluation/data/dataset_registry.json): Cryptographic registry of all authentic datasets with SHA-256 digests and record counts.
-3. [`docs/CURRENT_CAPABILITY_MATRIX.md`](file:///home/suyashpradhan/Downloads/AHRAS_Suyash-master/docs/CURRENT_CAPABILITY_MATRIX.md): Comprehensive audit of all 37 capabilities classified by status, test suites, and required extensions.
-4. [`docs/RESEARCH_FRONTIER_BASELINE.md`](file:///home/suyashpradhan/Downloads/AHRAS_Suyash-master/docs/RESEARCH_FRONTIER_BASELINE.md): Locked baseline metrics, latency hierarchy, and empirical findings.
-5. [`docs/AHRAS_NEXTGEN_ARCHITECTURE.md`](file:///home/suyashpradhan/Downloads/AHRAS_Suyash-master/docs/AHRAS_NEXTGEN_ARCHITECTURE.md): Complete 9-stage closed-loop architecture specification and data contracts.
-6. [`docs/IMPLEMENTATION_PRIORITY_MATRIX.md`](file:///home/suyashpradhan/Downloads/AHRAS_Suyash-master/docs/IMPLEMENTATION_PRIORITY_MATRIX.md): Phased roadmap mapping Phases 1 through 10 with engineering prerequisites.
-7. [`docs/RESEARCH_EXPERIMENT_MATRIX.md`](file:///home/suyashpradhan/Downloads/AHRAS_Suyash-master/docs/RESEARCH_EXPERIMENT_MATRIX.md): Master registry of EXP-01 through EXP-31 + EXP-ABL with hypotheses, scripts, and artifact paths.
-8. [`docs/PHASE_0_INTEGRITY_REPORT.md`](file:///home/suyashpradhan/Downloads/AHRAS_Suyash-master/docs/PHASE_0_INTEGRITY_REPORT.md): This integrity certification document.
+1. [`evaluation/environment_manifest.json`](evaluation/environment_manifest.json): Machine-readable hardware, OS, runtime, and dependency manifest.
+2. [`evaluation/data/dataset_registry.json`](evaluation/data/dataset_registry.json): Cryptographic registry of all authentic datasets with SHA-256 digests and record counts.
+3. [`docs/CURRENT_CAPABILITY_MATRIX.md`](docs/CURRENT_CAPABILITY_MATRIX.md): Comprehensive audit of all 37 capabilities classified by status, test suites, and required extensions.
+4. [`docs/RESEARCH_FRONTIER_BASELINE.md`](docs/RESEARCH_FRONTIER_BASELINE.md): Locked baseline metrics, latency hierarchy, and empirical findings.
+5. [`docs/AHRAS_NEXTGEN_ARCHITECTURE.md`](docs/AHRAS_NEXTGEN_ARCHITECTURE.md): Complete 9-stage closed-loop architecture specification and data contracts.
+6. [`docs/IMPLEMENTATION_PRIORITY_MATRIX.md`](docs/IMPLEMENTATION_PRIORITY_MATRIX.md): Phased roadmap mapping Phases 1 through 10 with engineering prerequisites.
+7. [`docs/RESEARCH_EXPERIMENT_MATRIX.md`](docs/RESEARCH_EXPERIMENT_MATRIX.md): Master registry of EXP-01 through EXP-31 + EXP-ABL with hypotheses, scripts, and artifact paths.
+8. [`docs/PHASE_0_INTEGRITY_REPORT.md`](docs/PHASE_0_INTEGRITY_REPORT.md): This integrity certification document.
 
 ---
 

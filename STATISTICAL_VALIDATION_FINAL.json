@@ -1,95 +1,15 @@
 {
   "A1_Remove_Signatures": {
-    "baseline_f1": 0.8268156424581006,
-    "ablated_f1": 0.8227848101265822,
-    "delta_f1": -0.004,
+    "baseline_f1": 0.5708502024291499,
+    "ablated_f1": 0.7272727272727272,
+    "delta_f1": 0.1564,
     "n_pairs": 450,
-    "observed_statistic": 0.029145,
-    "raw_p": 0.0002,
-    "effect_size": 0.1711,
-    "bootstrap_ci": [
-      0.013674,
-      0.045136
-    ],
-    "permutations": 10000,
-    "statistically_significant": true,
-    "independent_sanity_check": "SANITY_PASSED",
-    "metric_used": "f1",
-    "note": "",
-    "adjusted_p": 0.0028,
-    "significant_after_holm_bonferroni": true
-  },
-  "A2_Remove_ML_Ensemble": {
-    "baseline_f1": 0.8268156424581006,
-    "ablated_f1": 0.8031496062992126,
-    "delta_f1": -0.0237,
-    "n_pairs": 450,
-    "observed_statistic": -0.041845,
-    "raw_p": 0.0187,
-    "effect_size": -0.1103,
-    "bootstrap_ci": [
-      -0.073455,
-      -0.009433
-    ],
-    "permutations": 10000,
-    "statistically_significant": true,
-    "independent_sanity_check": "SANITY_PASSED",
-    "metric_used": "f1",
-    "note": "",
-    "adjusted_p": 0.1309,
-    "significant_after_holm_bonferroni": false
-  },
-  "A3_Remove_Statistical": {
-    "baseline_f1": 0.8268156424581006,
-    "ablated_f1": 0.8087774294670846,
-    "delta_f1": -0.018,
-    "n_pairs": 450,
-    "observed_statistic": -0.026786,
-    "raw_p": 0.014,
-    "effect_size": -0.1157,
-    "bootstrap_ci": [
-      -0.045975,
-      -0.006274
-    ],
-    "permutations": 10000,
-    "statistically_significant": true,
-    "independent_sanity_check": "SANITY_PASSED",
-    "metric_used": "f1",
-    "note": "",
-    "adjusted_p": 0.112,
-    "significant_after_holm_bonferroni": false
-  },
-  "A4_Remove_Self_Supervised_Rep": {
-    "baseline_f1": 0.8268156424581006,
-    "ablated_f1": 0.8031496062992126,
-    "delta_f1": -0.0237,
-    "n_pairs": 450,
-    "observed_statistic": -0.03803,
-    "raw_p": 0.0357,
-    "effect_size": -0.0989,
-    "bootstrap_ci": [
-      -0.070202,
-      -0.005284
-    ],
-    "permutations": 10000,
-    "statistically_significant": true,
-    "independent_sanity_check": "SANITY_PASSED",
-    "metric_used": "f1",
-    "note": "",
-    "adjusted_p": 0.1785,
-    "significant_after_holm_bonferroni": false
-  },
-  "A5_Remove_Multimodal_Fusion": {
-    "baseline_f1": 0.8268156424581006,
-    "ablated_f1": 0.594059405940594,
-    "delta_f1": -0.2328,
-    "n_pairs": 450,
-    "observed_statistic": 0.158369,
+    "observed_statistic": -0.096277,
     "raw_p": 1e-06,
-    "effect_size": 0.9545,
+    "effect_size": -0.3884,
     "bootstrap_ci": [
-      0.142883,
-      0.173364
+      -0.118791,
+      -0.072658
     ],
     "permutations": 10000,
     "statistically_significant": true,
@@ -99,17 +19,37 @@
     "adjusted_p": 2.4e-05,
     "significant_after_holm_bonferroni": true
   },
-  "A6_Remove_Temporal_Attention": {
-    "baseline_f1": 0.8268156424581006,
-    "ablated_f1": 0.8142076502732241,
-    "delta_f1": -0.0126,
+  "A2_Remove_ML_Ensemble": {
+    "baseline_f1": 0.5708502024291499,
+    "ablated_f1": 0.8396946564885496,
+    "delta_f1": 0.2688,
     "n_pairs": 450,
-    "observed_statistic": 0.000285,
-    "raw_p": 0.7955,
-    "effect_size": 0.0123,
+    "observed_statistic": -0.072704,
+    "raw_p": 0.0002,
+    "effect_size": -0.1729,
     "bootstrap_ci": [
-      -0.001927,
-      0.00239
+      -0.10873,
+      -0.035728
+    ],
+    "permutations": 10000,
+    "statistically_significant": true,
+    "independent_sanity_check": "SANITY_PASSED",
+    "metric_used": "f1",
+    "note": "",
+    "adjusted_p": 0.002,
+    "significant_after_holm_bonferroni": true
+  },
+  "A3_Remove_Statistical": {
+    "baseline_f1": 0.5708502024291499,
+    "ablated_f1": 0.5091743119266056,
+    "delta_f1": -0.0617,
+    "n_pairs": 450,
+    "observed_statistic": -0.016277,
+    "raw_p": 0.1717,
+    "effect_size": -0.0641,
+    "bootstrap_ci": [
+      -0.037832,
+      0.00762
     ],
     "permutations": 10000,
     "statistically_significant": false,
@@ -119,117 +59,57 @@
     "adjusted_p": 1.0,
     "significant_after_holm_bonferroni": false
   },
-  "A7_Remove_Graph": {
-    "baseline_lateral_movement_f1": 0.8931,
-    "ablated_lateral_movement_f1": 0.0,
-    "delta_lateral_movement_f1": -0.8931,
+  "A4_Remove_Self_Supervised_Rep": {
+    "baseline_f1": 0.5708502024291499,
+    "ablated_f1": 0.844106463878327,
+    "delta_f1": 0.2733,
     "n_pairs": 450,
-    "observed_statistic": -0.020569,
-    "raw_p": 1e-06,
-    "effect_size": -0.6285,
+    "observed_statistic": -0.070754,
+    "raw_p": 0.0002,
+    "effect_size": -0.1658,
     "bootstrap_ci": [
-      -0.023593,
-      -0.017314
+      -0.107961,
+      -0.033294
     ],
     "permutations": 10000,
     "statistically_significant": true,
     "independent_sanity_check": "SANITY_PASSED",
-    "metric_used": "lateral_movement_f1",
-    "note": "F1 increases when removing safety gates because they abstain on uncertain predictions (reducing recall). This is an intended safety feature, not a bug.",
+    "metric_used": "f1",
+    "note": "",
+    "adjusted_p": 0.0018,
+    "significant_after_holm_bonferroni": true
+  },
+  "A5_Remove_Multimodal_Fusion": {
+    "baseline_f1": 0.5708502024291499,
+    "ablated_f1": 0.5160142348754448,
+    "delta_f1": -0.0548,
+    "n_pairs": 450,
+    "observed_statistic": 0.107228,
+    "raw_p": 1e-06,
+    "effect_size": 0.7952,
+    "bootstrap_ci": [
+      0.09475,
+      0.119332
+    ],
+    "permutations": 10000,
+    "statistically_significant": true,
+    "independent_sanity_check": "SANITY_PASSED",
+    "metric_used": "f1",
+    "note": "",
     "adjusted_p": 2.3e-05,
     "significant_after_holm_bonferroni": true
   },
-  "A8_Remove_Episode_Reasoning": {
-    "baseline_f1": 0.8268156424581006,
-    "ablated_f1": 0.8142076502732241,
-    "delta_f1": -0.0126,
+  "A6_Remove_Temporal_Attention": {
+    "baseline_f1": 0.5708502024291499,
+    "ablated_f1": 0.5674044265593562,
+    "delta_f1": -0.0034,
     "n_pairs": 450,
-    "observed_statistic": -0.004141,
-    "raw_p": 0.0071,
-    "effect_size": -0.1288,
-    "bootstrap_ci": [
-      -0.007314,
-      -0.001274
-    ],
-    "permutations": 10000,
-    "statistically_significant": true,
-    "independent_sanity_check": "SANITY_PASSED",
-    "metric_used": "f1",
-    "note": "",
-    "adjusted_p": 0.0781,
-    "significant_after_holm_bonferroni": false
-  },
-  "A9_Remove_OOD_ZeroDay": {
-    "baseline_f1": 0.8268156424581006,
-    "ablated_f1": 0.8119891008174387,
-    "delta_f1": -0.0148,
-    "n_pairs": 450,
-    "observed_statistic": -0.004198,
-    "raw_p": 0.0096,
-    "effect_size": -0.1231,
-    "bootstrap_ci": [
-      -0.007598,
-      -0.001135
-    ],
-    "permutations": 10000,
-    "statistically_significant": true,
-    "independent_sanity_check": "SANITY_PASSED",
-    "metric_used": "f1",
-    "note": "",
-    "adjusted_p": 0.096,
-    "significant_after_holm_bonferroni": false
-  },
-  "A10_Remove_Evidence_Quality": {
-    "baseline_f1": 0.8268156424581006,
-    "ablated_f1": 0.8032345013477089,
-    "delta_f1": -0.0236,
-    "n_pairs": 450,
-    "observed_statistic": 0.00513,
-    "raw_p": 0.0129,
-    "effect_size": 0.1175,
-    "bootstrap_ci": [
-      0.001018,
-      0.008973
-    ],
-    "permutations": 10000,
-    "statistically_significant": true,
-    "independent_sanity_check": "SANITY_PASSED",
-    "metric_used": "f1",
-    "note": "",
-    "adjusted_p": 0.1161,
-    "significant_after_holm_bonferroni": false
-  },
-  "A11_Remove_Independence_Correction": {
-    "baseline_f1": 0.8268156424581006,
-    "ablated_f1": 0.8032345013477089,
-    "delta_f1": -0.0236,
-    "n_pairs": 450,
-    "observed_statistic": 0.004552,
-    "raw_p": 0.0295,
-    "effect_size": 0.1034,
-    "bootstrap_ci": [
-      0.000361,
-      0.008408
-    ],
-    "permutations": 10000,
-    "statistically_significant": true,
-    "independent_sanity_check": "SANITY_PASSED",
-    "metric_used": "f1",
-    "note": "",
-    "adjusted_p": 0.177,
-    "significant_after_holm_bonferroni": false
-  },
-  "A12_Remove_Adaptive_Fusion": {
-    "baseline_f1": 0.8268156424581006,
-    "ablated_f1": 0.7874015748031495,
-    "delta_f1": -0.0394,
-    "n_pairs": 450,
-    "observed_statistic": 0.024453,
+    "observed_statistic": 0.003995,
     "raw_p": 1e-06,
-    "effect_size": 0.4106,
+    "effect_size": 0.2269,
     "bootstrap_ci": [
-      0.019396,
-      0.029956
+      0.002311,
+      0.005609
     ],
     "permutations": 10000,
     "statistically_significant": true,
@@ -239,137 +119,77 @@
     "adjusted_p": 2.2e-05,
     "significant_after_holm_bonferroni": true
   },
-  "A13_Remove_Trust": {
-    "baseline_f1": 0.8268156424581006,
-    "ablated_f1": 0.7936507936507936,
-    "delta_f1": -0.0332,
+  "A7_Remove_Graph": {
+    "baseline_lateral_movement_f1": 0.8931,
+    "ablated_lateral_movement_f1": 0.0,
+    "delta_lateral_movement_f1": -0.8931,
     "n_pairs": 450,
-    "observed_statistic": 0.050381,
+    "observed_statistic": -0.023376,
     "raw_p": 1e-06,
-    "effect_size": 0.7583,
+    "effect_size": -0.771,
     "bootstrap_ci": [
-      0.044021,
-      0.056117
+      -0.025975,
+      -0.020543
     ],
     "permutations": 10000,
     "statistically_significant": true,
     "independent_sanity_check": "SANITY_PASSED",
-    "metric_used": "f1",
-    "note": "",
+    "metric_used": "lateral_movement_f1",
+    "note": "F1 increases when removing safety gates because they abstain on uncertain predictions (reducing recall). This is an intended safety feature, not a bug.",
     "adjusted_p": 2.1e-05,
     "significant_after_holm_bonferroni": true
   },
-  "A14_Remove_Historical": {
-    "baseline_f1": 0.8268156424581006,
-    "ablated_f1": 0.8119891008174387,
-    "delta_f1": -0.0148,
+  "A8_Remove_Episode_Reasoning": {
+    "baseline_f1": 0.5708502024291499,
+    "ablated_f1": 0.570281124497992,
+    "delta_f1": -0.0006,
     "n_pairs": 450,
-    "observed_statistic": -0.002201,
-    "raw_p": 0.1875,
-    "effect_size": -0.0617,
+    "observed_statistic": 0.001041,
+    "raw_p": 0.3424,
+    "effect_size": 0.0441,
     "bootstrap_ci": [
-      -0.005645,
-      0.0012
+      -0.001295,
+      0.00319
     ],
     "permutations": 10000,
     "statistically_significant": false,
     "independent_sanity_check": "SANITY_PASSED",
     "metric_used": "f1",
     "note": "",
-    "adjusted_p": 0.75,
+    "adjusted_p": 1.0,
     "significant_after_holm_bonferroni": false
   },
-  "A15_Remove_Threat_Intel": {
-    "baseline_f1": 0.8268156424581006,
-    "ablated_f1": 0.8119891008174387,
-    "delta_f1": -0.0148,
+  "A9_Remove_OOD_ZeroDay": {
+    "baseline_f1": 0.5708502024291499,
+    "ablated_f1": 0.570281124497992,
+    "delta_f1": -0.0006,
     "n_pairs": 450,
-    "observed_statistic": 0.001736,
-    "raw_p": 0.3145,
-    "effect_size": 0.0475,
+    "observed_statistic": 0.000897,
+    "raw_p": 0.4216,
+    "effect_size": 0.0374,
     "bootstrap_ci": [
-      -0.001718,
-      0.005205
+      -0.001506,
+      0.003069
     ],
     "permutations": 10000,
     "statistically_significant": false,
     "independent_sanity_check": "SANITY_PASSED",
     "metric_used": "f1",
     "note": "",
-    "adjusted_p": 0.9435,
+    "adjusted_p": 1.0,
     "significant_after_holm_bonferroni": false
   },
-  "A16_Remove_Forecasting": {
-    "baseline_f1": 0.8268156424581006,
-    "ablated_f1": 0.8119891008174387,
-    "delta_f1": -0.0148,
+  "A10_Remove_Evidence_Quality": {
+    "baseline_f1": 0.5708502024291499,
+    "ablated_f1": 0.5680000000000001,
+    "delta_f1": -0.0029,
     "n_pairs": 450,
-    "observed_statistic": -0.006211,
-    "raw_p": 0.0002,
-    "effect_size": -0.1682,
-    "bootstrap_ci": [
-      -0.009823,
-      -0.002772
-    ],
-    "permutations": 10000,
-    "statistically_significant": true,
-    "independent_sanity_check": "SANITY_PASSED",
-    "metric_used": "f1",
-    "note": "",
-    "adjusted_p": 0.0026,
-    "significant_after_holm_bonferroni": true
-  },
-  "A17_Remove_Uncertainty": {
-    "baseline_brier_score": 0.17,
-    "ablated_brier_score": 0.13430803602222224,
-    "delta_brier_score": -0.0357,
-    "n_pairs": 450,
-    "observed_statistic": -6.4e-05,
-    "raw_p": 0.9763,
-    "effect_size": -0.0014,
-    "bootstrap_ci": [
-      -0.00432,
-      0.003927
-    ],
-    "permutations": 10000,
-    "statistically_significant": false,
-    "independent_sanity_check": "SANITY_PASSED",
-    "metric_used": "brier_score",
-    "note": "F1 increases when removing safety gates because they abstain on uncertain predictions (reducing recall). This is an intended safety feature, not a bug.",
-    "adjusted_p": 0.9763,
-    "significant_after_holm_bonferroni": false
-  },
-  "A18_Remove_Conformal_Gate": {
-    "baseline_brier_score": 0.17,
-    "ablated_brier_score": 0.12848160951111112,
-    "delta_brier_score": -0.0415,
-    "n_pairs": 450,
-    "observed_statistic": -0.007287,
-    "raw_p": 7.3e-05,
-    "effect_size": -0.187,
-    "bootstrap_ci": [
-      -0.011215,
-      -0.003744
-    ],
-    "permutations": 10000,
-    "statistically_significant": true,
-    "independent_sanity_check": "SANITY_PASSED",
-    "metric_used": "brier_score",
-    "note": "F1 increases when removing safety gates because they abstain on uncertain predictions (reducing recall). This is an intended safety feature, not a bug.",
-    "adjusted_p": 0.001095,
-    "significant_after_holm_bonferroni": true
-  },
-  "A19_Remove_Active_Learning": {
-    "baseline_f1": 0.8268156424581006,
-    "ablated_f1": 0.8465909090909091,
-    "delta_f1": 0.0198,
-    "n_pairs": 450,
-    "observed_statistic": -0.032024,
+    "observed_statistic": 0.0105,
     "raw_p": 1e-06,
-    "effect_size": -0.5196,
+    "effect_size": 0.321,
     "bootstrap_ci": [
-      -0.037429,
-      -0.026288
+      0.007261,
+      0.013426
     ],
     "permutations": 10000,
     "statistically_significant": true,
@@ -379,17 +199,17 @@
     "adjusted_p": 2e-05,
     "significant_after_holm_bonferroni": true
   },
-  "A20_Remove_Continual_Memory": {
-    "baseline_f1": 0.8268156424581006,
-    "ablated_f1": 0.8484848484848485,
-    "delta_f1": 0.0217,
+  "A11_Remove_Independence_Correction": {
+    "baseline_f1": 0.5708502024291499,
+    "ablated_f1": 0.5680000000000001,
+    "delta_f1": -0.0029,
     "n_pairs": 450,
-    "observed_statistic": -0.072774,
+    "observed_statistic": 0.010365,
     "raw_p": 1e-06,
-    "effect_size": -0.4377,
+    "effect_size": 0.3147,
     "bootstrap_ci": [
-      -0.086603,
-      -0.057452
+      0.00706,
+      0.013326
     ],
     "permutations": 10000,
     "statistically_significant": true,
@@ -399,37 +219,37 @@
     "adjusted_p": 1.9e-05,
     "significant_after_holm_bonferroni": true
   },
-  "A21_Remove_Personalized_FL": {
-    "baseline_f1": 0.8268156424581006,
-    "ablated_f1": 0.8119891008174387,
-    "delta_f1": -0.0148,
+  "A12_Remove_Adaptive_Fusion": {
+    "baseline_f1": 0.5708502024291499,
+    "ablated_f1": 0.5525291828793775,
+    "delta_f1": -0.0183,
     "n_pairs": 450,
-    "observed_statistic": -0.006274,
-    "raw_p": 0.0013,
-    "effect_size": -0.1506,
+    "observed_statistic": -0.003629,
+    "raw_p": 0.1952,
+    "effect_size": -0.0608,
     "bootstrap_ci": [
-      -0.010079,
-      -0.002354
+      -0.008906,
+      0.001816
     ],
     "permutations": 10000,
-    "statistically_significant": true,
+    "statistically_significant": false,
     "independent_sanity_check": "SANITY_PASSED",
     "metric_used": "f1",
     "note": "",
-    "adjusted_p": 0.0156,
-    "significant_after_holm_bonferroni": true
+    "adjusted_p": 1.0,
+    "significant_after_holm_bonferroni": false
   },
-  "A22_Remove_Byzantine_Defense": {
-    "baseline_f1": 0.8268156424581006,
-    "ablated_f1": 0.8621700879765396,
-    "delta_f1": 0.0354,
+  "A13_Remove_Trust": {
+    "baseline_f1": 0.5708502024291499,
+    "ablated_f1": 0.576,
+    "delta_f1": 0.0051,
     "n_pairs": 450,
-    "observed_statistic": -0.048991,
+    "observed_statistic": 0.010716,
     "raw_p": 1e-06,
-    "effect_size": -0.38,
+    "effect_size": 0.2301,
     "bootstrap_ci": [
-      -0.060248,
-      -0.037414
+      0.006138,
+      0.014987
     ],
     "permutations": 10000,
     "statistically_significant": true,
@@ -439,44 +259,224 @@
     "adjusted_p": 1.8e-05,
     "significant_after_holm_bonferroni": true
   },
-  "A23_Remove_Causal_XAI": {
-    "baseline_f1": 0.8268156424581006,
-    "ablated_f1": 0.8119891008174387,
-    "delta_f1": -0.0148,
+  "A14_Remove_Historical": {
+    "baseline_f1": 0.5708502024291499,
+    "ablated_f1": 0.5685483870967742,
+    "delta_f1": -0.0023,
     "n_pairs": 450,
-    "observed_statistic": -0.008264,
-    "raw_p": 9e-06,
-    "effect_size": -0.2092,
+    "observed_statistic": 0.003388,
+    "raw_p": 0.0015,
+    "effect_size": 0.1447,
     "bootstrap_ci": [
-      -0.01226,
-      -0.004661
+      0.001173,
+      0.005404
     ],
     "permutations": 10000,
     "statistically_significant": true,
     "independent_sanity_check": "SANITY_PASSED",
     "metric_used": "f1",
     "note": "",
-    "adjusted_p": 0.000144,
+    "adjusted_p": 0.012,
     "significant_after_holm_bonferroni": true
   },
-  "A24_Remove_Safety_Gate": {
-    "baseline_brier_score": 0.17,
-    "ablated_brier_score": 0.15950626146666666,
-    "delta_brier_score": -0.0105,
+  "A15_Remove_Threat_Intel": {
+    "baseline_f1": 0.5708502024291499,
+    "ablated_f1": 0.5685483870967742,
+    "delta_f1": -0.0023,
     "n_pairs": 450,
-    "observed_statistic": 0.050364,
+    "observed_statistic": 0.006737,
     "raw_p": 1e-06,
-    "effect_size": 0.7525,
+    "effect_size": 0.2717,
     "bootstrap_ci": [
-      0.044006,
-      0.056146
+      0.004535,
+      0.008931
+    ],
+    "permutations": 10000,
+    "statistically_significant": true,
+    "independent_sanity_check": "SANITY_PASSED",
+    "metric_used": "f1",
+    "note": "",
+    "adjusted_p": 1.7e-05,
+    "significant_after_holm_bonferroni": true
+  },
+  "A16_Remove_Forecasting": {
+    "baseline_f1": 0.5708502024291499,
+    "ablated_f1": 0.5685483870967742,
+    "delta_f1": -0.0023,
+    "n_pairs": 450,
+    "observed_statistic": 0.000351,
+    "raw_p": 0.7603,
+    "effect_size": 0.0145,
+    "bootstrap_ci": [
+      -0.00197,
+      0.002425
+    ],
+    "permutations": 10000,
+    "statistically_significant": false,
+    "independent_sanity_check": "SANITY_PASSED",
+    "metric_used": "f1",
+    "note": "",
+    "adjusted_p": 1.0,
+    "significant_after_holm_bonferroni": false
+  },
+  "A17_Remove_Uncertainty": {
+    "baseline_brier_score": 0.17,
+    "ablated_brier_score": 0.32446283577777774,
+    "delta_brier_score": 0.1545,
+    "n_pairs": 450,
+    "observed_statistic": 0.009206,
+    "raw_p": 1e-06,
+    "effect_size": 0.2614,
+    "bootstrap_ci": [
+      0.005741,
+      0.012462
     ],
     "permutations": 10000,
     "statistically_significant": true,
     "independent_sanity_check": "SANITY_PASSED",
     "metric_used": "brier_score",
     "note": "F1 increases when removing safety gates because they abstain on uncertain predictions (reducing recall). This is an intended safety feature, not a bug.",
-    "adjusted_p": 1.7e-05,
+    "adjusted_p": 1.6e-05,
+    "significant_after_holm_bonferroni": true
+  },
+  "A18_Remove_Conformal_Gate": {
+    "baseline_brier_score": 0.17,
+    "ablated_brier_score": 0.3106945661555555,
+    "delta_brier_score": 0.1407,
+    "n_pairs": 450,
+    "observed_statistic": 1.4e-05,
+    "raw_p": 0.9918,
+    "effect_size": 0.0005,
+    "bootstrap_ci": [
+      -0.002625,
+      0.002427
+    ],
+    "permutations": 10000,
+    "statistically_significant": false,
+    "independent_sanity_check": "SANITY_PASSED",
+    "metric_used": "brier_score",
+    "note": "F1 increases when removing safety gates because they abstain on uncertain predictions (reducing recall). This is an intended safety feature, not a bug.",
+    "adjusted_p": 0.9918,
+    "significant_after_holm_bonferroni": false
+  },
+  "A19_Remove_Active_Learning": {
+    "baseline_f1": 0.5708502024291499,
+    "ablated_f1": 0.5850622406639003,
+    "delta_f1": 0.0142,
+    "n_pairs": 450,
+    "observed_statistic": -0.040331,
+    "raw_p": 1e-06,
+    "effect_size": -0.6624,
+    "bootstrap_ci": [
+      -0.045537,
+      -0.035017
+    ],
+    "permutations": 10000,
+    "statistically_significant": true,
+    "independent_sanity_check": "SANITY_PASSED",
+    "metric_used": "f1",
+    "note": "",
+    "adjusted_p": 1.5e-05,
+    "significant_after_holm_bonferroni": true
+  },
+  "A20_Remove_Continual_Memory": {
+    "baseline_f1": 0.5708502024291499,
+    "ablated_f1": 0.5900216919739696,
+    "delta_f1": 0.0192,
+    "n_pairs": 450,
+    "observed_statistic": -0.069445,
+    "raw_p": 1e-06,
+    "effect_size": -0.4157,
+    "bootstrap_ci": [
+      -0.083302,
+      -0.054877
+    ],
+    "permutations": 10000,
+    "statistically_significant": true,
+    "independent_sanity_check": "SANITY_PASSED",
+    "metric_used": "f1",
+    "note": "",
+    "adjusted_p": 1.4e-05,
+    "significant_after_holm_bonferroni": true
+  },
+  "A21_Remove_Personalized_FL": {
+    "baseline_f1": 0.5708502024291499,
+    "ablated_f1": 0.5714285714285714,
+    "delta_f1": 0.0006,
+    "n_pairs": 450,
+    "observed_statistic": -0.023419,
+    "raw_p": 1e-06,
+    "effect_size": -0.5266,
+    "bootstrap_ci": [
+      -0.027271,
+      -0.019513
+    ],
+    "permutations": 10000,
+    "statistically_significant": true,
+    "independent_sanity_check": "SANITY_PASSED",
+    "metric_used": "f1",
+    "note": "",
+    "adjusted_p": 1.3e-05,
+    "significant_after_holm_bonferroni": true
+  },
+  "A22_Remove_Byzantine_Defense": {
+    "baseline_f1": 0.5708502024291499,
+    "ablated_f1": 0.6064516129032258,
+    "delta_f1": 0.0356,
+    "n_pairs": 450,
+    "observed_statistic": -0.07136,
+    "raw_p": 1e-06,
+    "effect_size": -0.5201,
+    "bootstrap_ci": [
+      -0.083065,
+      -0.059721
+    ],
+    "permutations": 10000,
+    "statistically_significant": true,
+    "independent_sanity_check": "SANITY_PASSED",
+    "metric_used": "f1",
+    "note": "",
+    "adjusted_p": 1.2e-05,
+    "significant_after_holm_bonferroni": true
+  },
+  "A23_Remove_Causal_XAI": {
+    "baseline_f1": 0.5708502024291499,
+    "ablated_f1": 0.5714285714285714,
+    "delta_f1": 0.0006,
+    "n_pairs": 450,
+    "observed_statistic": -0.000397,
+    "raw_p": 0.7506,
+    "effect_size": -0.0146,
+    "bootstrap_ci": [
+      -0.003079,
+      0.00203
+    ],
+    "permutations": 10000,
+    "statistically_significant": false,
+    "independent_sanity_check": "SANITY_PASSED",
+    "metric_used": "f1",
+    "note": "",
+    "adjusted_p": 1.0,
+    "significant_after_holm_bonferroni": false
+  },
+  "A24_Remove_Safety_Gate": {
+    "baseline_brier_score": 0.17,
+    "ablated_brier_score": 0.3141998916222222,
+    "delta_brier_score": 0.1442,
+    "n_pairs": 450,
+    "observed_statistic": 0.010737,
+    "raw_p": 1e-06,
+    "effect_size": 0.2274,
+    "bootstrap_ci": [
+      0.006034,
+      0.015112
+    ],
+    "permutations": 10000,
+    "statistically_significant": true,
+    "independent_sanity_check": "SANITY_PASSED",
+    "metric_used": "brier_score",
+    "note": "F1 increases when removing safety gates because they abstain on uncertain predictions (reducing recall). This is an intended safety feature, not a bug.",
+    "adjusted_p": 1.1e-05,
     "significant_after_holm_bonferroni": true
   }
 }

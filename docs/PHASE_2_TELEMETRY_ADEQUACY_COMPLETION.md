@@ -3,11 +3,11 @@
 
 > **Status**: Completed, Empirically Validated, 100% Test Suite Pass (492 Passed, 43 Subtests Passed)  
 > **Benchmark ID**: `EXP-23`  
-> **Target Package**: [`telemetry/`](file:///home/suyashpradhan/Downloads/AHRAS_Suyash-master/telemetry)  
+> **Target Package**: [`telemetry/`](telemetry)  
 > **Primary Artifacts**:
-> - [`evaluation/results/TELEMETRY_MINIMALITY_REPORT.json`](file:///home/suyashpradhan/Downloads/AHRAS_Suyash-master/evaluation/results/TELEMETRY_MINIMALITY_REPORT.json)
-> - [`publication/tables/telemetry_minimality.tex`](file:///home/suyashpradhan/Downloads/AHRAS_Suyash-master/publication/tables/telemetry_minimality.tex)
-> - [`tests/test_telemetry_minimality.py`](file:///home/suyashpradhan/Downloads/AHRAS_Suyash-master/tests/test_telemetry_minimality.py)
+> - [`evaluation/results/TELEMETRY_MINIMALITY_REPORT.json`](evaluation/results/TELEMETRY_MINIMALITY_REPORT.json)
+> - [`publication/tables/telemetry_minimality.tex`](publication/tables/telemetry_minimality.tex)
+> - [`tests/test_telemetry_minimality.py`](tests/test_telemetry_minimality.py)
 
 ---
 

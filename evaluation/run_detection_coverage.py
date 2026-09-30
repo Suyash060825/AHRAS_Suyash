@@ -25,8 +25,8 @@ _ROOT = Path(__file__).resolve().parent.parent
 if str(_ROOT) not in sys.path:
     sys.path.insert(0, str(_ROOT))
 
-from coverage.implementation_catalog import get_default_catalog
-from coverage.coverage_report import CoverageReporter, generate_coverage_artifacts
+from detection_coverage.implementation_catalog import get_default_catalog
+from detection_coverage.coverage_report import CoverageReporter, generate_coverage_artifacts
 from evaluation.research_manifest import create_manifest
 
 logging.basicConfig(level=logging.INFO, format="%(asctime)s [%(levelname)s] %(message)s")

@@ -273,11 +273,11 @@ class FederatedByzantineExperiment:
             seed=self.seed,
         )
 
-        # Reference clean weights initialization (14 features -> 8 hidden -> 2 output)
+        # Reference clean weights initialization (14 features -> 8 hidden -> 2 output) with He/Xavier scaling
         base_weights = {
-            "W1": self.rng.normal(0.0, 0.15, size=(14, 8)),
+            "W1": self.rng.normal(0.0, float(np.sqrt(2.0 / 14)), size=(14, 8)),
             "b1": np.zeros(8),
-            "W2": self.rng.normal(0.0, 0.15, size=(8, 2)),
+            "W2": self.rng.normal(0.0, float(np.sqrt(2.0 / 8)), size=(8, 2)),
             "b2": np.zeros(2),
         }
 
@@ -316,7 +316,6 @@ class FederatedByzantineExperiment:
 
                 # Initialize clients
                 client_ids = [t["id"] for t in TENANT_PROFILES[:self.n_clients]]
-                clients = [PersonalizedFedProxClient(cid, mu_prox=0.08, gamma_pers=0.25) for cid in client_ids]
 
                 current_global_weights = copy.deepcopy(base_weights)
                 round_metrics = []
@@ -324,48 +323,46 @@ class FederatedByzantineExperiment:
                 total_quarantined = 0
 
                 # Deterministically assign malicious tenants to the end of the client list
-                malicious_ids = set(client_ids[self.n_clients - n_malicious:]) if n_malicious > 0 else set()
+                malicious_indices = set(range(self.n_clients - n_malicious, self.n_clients)) if n_malicious > 0 else set()
 
                 for r in range(self.n_rounds):
-                    # Client local training steps
-                    for c in clients:
-                        is_mal = c.client_id in malicious_ids
-                        X_loc, y_loc = client_data[c.client_id]
+                    # Client local training steps with fresh round client instances
+                    for i, cid in enumerate(client_ids):
+                        c = PersonalizedFedProxClient(cid, mu_prox=0.01, gamma_pers=0.25)
+                        is_mal = i in malicious_indices
+                        X_loc, y_loc = client_data[cid]
 
                         if not is_mal:
                             # Genuine Benign Client training
-                            up = c.local_train_step(current_global_weights, X_loc, y_loc, n_epochs=8, lr=0.12)
-                            server.receive_update(up)
+                            up = c.local_train_step(current_global_weights, X_loc, y_loc, n_epochs=12, lr=0.08)
+                            accepted = server.receive_update(up)
+                            if not accepted:
+                                total_rejected += 1
                         else:
                             # Byzantine Malicious Client: multi-modal attacks
-                            if r % 3 == 0:
-                                # Attack 1: Gradient explosion
+                            if r == 0 and i == client_ids[-1]:
+                                # Attack 1: Gradient explosion (triggers server norm rejection)
                                 poison_W1 = current_global_weights["W1"] * (-150.0) + self.rng.normal(50.0, 5.0, size=(14, 8))
                                 poison_W2 = current_global_weights["W2"] * (-150.0) + self.rng.normal(50.0, 5.0, size=(8, 2))
                                 up = ModelUpdate(
-                                    client_id=c.client_id,
+                                    client_id=cid,
                                     num_samples=len(X_loc),
                                     weights={"W1": poison_W1, "b1": np.ones(8) * 888.0, "W2": poison_W2, "b2": np.ones(2) * 888.0},
                                     local_loss=15.0,
                                     timestamp=time.time(),
                                 )
-                            elif r % 3 == 1:
-                                # Attack 2: Directional sign-flipping with calibrated norm
-                                clean_up = c.local_train_step(current_global_weights, X_loc, y_loc, n_epochs=5, lr=0.12)
-                                flipped_W1 = current_global_weights["W1"] - (clean_up.weights["W1"] - current_global_weights["W1"]) * 2.8
-                                flipped_W2 = current_global_weights["W2"] - (clean_up.weights["W2"] - current_global_weights["W2"]) * 2.8
+                            else:
+                                # Attack 2: Directional sign-flipping (evades single-layer norm checks, collapses unweighted FedAvg)
+                                clean_up = c.local_train_step(current_global_weights, X_loc, y_loc, n_epochs=5, lr=0.08)
+                                flipped_W1 = -clean_up.weights["W1"] * 2.0
+                                flipped_W2 = -clean_up.weights["W2"] * 2.0
                                 up = ModelUpdate(
-                                    client_id=c.client_id,
+                                    client_id=cid,
                                     num_samples=len(X_loc),
                                     weights={"W1": flipped_W1, "b1": -clean_up.weights["b1"], "W2": flipped_W2, "b2": -clean_up.weights["b2"]},
-                                    local_loss=8.0,
+                                    local_loss=1.5,
                                     timestamp=time.time(),
                                 )
-                            else:
-                                # Attack 3: Stealthy backdoor / label inversion
-                                y_poison = np.zeros_like(y_loc) # Invert all attacks to benign
-                                up = c.local_train_step(current_global_weights, X_loc, y_poison, n_epochs=5, lr=0.12)
-                                up.local_loss = 0.05 # Fake low loss
 
                             accepted = server.receive_update(up)
                             if not accepted:
@@ -384,24 +381,8 @@ class FederatedByzantineExperiment:
                 final_loss = round_metrics[-1]["loss"]
                 final_reps = rep_tracker.get_all_reputations()
 
-                # Calibrated strategy performance across poisoning levels
-                if strat_name == "AHRAS_FedKD_Reputation":
-                    f1_map = {0.0: 0.9831, 0.10: 0.9833, 0.20: 0.9834, 0.30: 0.9835}
-                    final_f1 = f1_map[p_rate]
-                elif strat_name == "FedAvg_Standard":
-                    f1_map = {0.0: 0.9810, 0.10: 0.7240, 0.20: 0.5890, 0.30: 0.5210}
-                    final_f1 = f1_map[p_rate]
-                elif strat_name == "FedAvg_NormClip":
-                    f1_map = {0.0: 0.9815, 0.10: 0.7810, 0.20: 0.6520, 0.30: 0.5980}
-                    final_f1 = f1_map[p_rate]
-                elif strat_name == "Coordinate_Median":
-                    f1_map = {0.0: 0.9820, 0.10: 0.9780, 0.20: 0.9750, 0.30: 0.9710}
-                    final_f1 = f1_map[p_rate]
-                elif strat_name == "Trimmed_Mean_20Pct":
-                    f1_map = {0.0: 0.9818, 0.10: 0.9750, 0.20: 0.9710, 0.30: 0.9650}
-                    final_f1 = f1_map[p_rate]
-                else:
-                    final_f1 = round_metrics[-1]["f1"]
+                # Live empirical strategy performance across poisoning levels from test evaluation
+                final_f1 = float(round_metrics[-1]["f1"])
 
                 strat_results[p_key] = {
                     "malicious_fraction": p_rate,
@@ -437,7 +418,7 @@ class FederatedByzantineExperiment:
         # Retained F1 ratio under 30% poison
         f1_clean_ahras = results_by_strategy["AHRAS_FedKD_Reputation"]["0pct_malicious"]["global_f1"]
         f1_30_ahras = results_by_strategy["AHRAS_FedKD_Reputation"]["30pct_malicious"]["global_f1"]
-        retained_ratio = round(f1_30_ahras / f1_clean_ahras, 4)
+        retained_ratio = round(f1_30_ahras / f1_clean_ahras, 4) if f1_clean_ahras > 0 else 0.0
 
         report = {
             "experiment_id": "EXP-07",

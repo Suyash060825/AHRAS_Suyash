@@ -1,14 +1,33 @@
 version: '3.8'
 
 services:
-  ahras-engine:
-    build: .
-    container_name: ahras_production
-    env_file:
-      - .env
-    volumes:
-      # Mount the local directory to allow rapid development without rebuilding
-      - .:/app
-    # If the app exposes a REST API in the future, map the ports:
+  ahras-api:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    container_name: ahras_soc_api
+    restart: unless-stopped
+    environment:
+      - AHRAS_ENV=DEV
+      - AHRAS_HOST=0.0.0.0
+      - AHRAS_PORT=8000
+      - AHRAS_RESPONSE_MODE=DRY_RUN
     ports:
-      - "8000:8000"
+      - "127.0.0.1:8000:8000"
+    healthcheck:
+      test: ["CMD", "python3", "-c", "import urllib.request; urllib.request.urlopen('http://127.0.0.1:8000/health/live')"]
+      interval: 30s
+      timeout: 5s
+      retries: 3
+      start_period: 10s
+
+  # In production, terminate TLS via reverse proxy (e.g. Nginx or Traefik)
+  # reverse-proxy:
+  #   image: nginx:alpine
+  #   ports:
+  #     - "443:443"
+  #   volumes:
+  #     - ./certs:/etc/nginx/certs:ro
+  #     - ./nginx.conf:/etc/nginx/nginx.conf:ro
+  #   depends_on:
+  #     - ahras-api

@@ -3,11 +3,11 @@
 
 > **Status**: Completed, Empirically Validated, 100% Test Suite Pass (483 Passed, 43 Subtests Passed)  
 > **Benchmark ID**: `EXP-22`  
-> **Target Package**: [`coverage/`](file:///home/suyashpradhan/Downloads/AHRAS_Suyash-master/coverage)  
+> **Target Package**: [`coverage/`](coverage)  
 > **Primary Artifacts**:
-> - [`evaluation/results/DETECTION_COVERAGE_REPORT.json`](file:///home/suyashpradhan/Downloads/AHRAS_Suyash-master/evaluation/results/DETECTION_COVERAGE_REPORT.json)
-> - [`publication/tables/detection_coverage.tex`](file:///home/suyashpradhan/Downloads/AHRAS_Suyash-master/publication/tables/detection_coverage.tex)
-> - [`tests/test_detection_coverage.py`](file:///home/suyashpradhan/Downloads/AHRAS_Suyash-master/tests/test_detection_coverage.py)
+> - [`evaluation/results/DETECTION_COVERAGE_REPORT.json`](evaluation/results/DETECTION_COVERAGE_REPORT.json)
+> - [`publication/tables/detection_coverage.tex`](publication/tables/detection_coverage.tex)
+> - [`tests/test_detection_coverage.py`](tests/test_detection_coverage.py)
 
 ---
 

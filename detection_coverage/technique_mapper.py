@@ -11,7 +11,7 @@ from __future__ import annotations
 from dataclasses import dataclass, field
 from typing import Dict, List, Optional, Set
 
-from coverage.implementation_catalog import ImplementationCatalog, TechniqueImplementation
+from detection_coverage.implementation_catalog import ImplementationCatalog, TechniqueImplementation
 
 
 @dataclass

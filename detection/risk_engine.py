@@ -788,38 +788,52 @@ class AdaptiveRiskEngine:
 
 def replay_decision_trace(trace: DecisionTrace) -> float:
     """
-    Independent analytical re-execution of a DecisionTrace.
-    Asserts zero-drift equivalence (|engine - replayed| <= 1e-6).
+    Independent analytical re-execution of a DecisionTrace from raw inputs and config.
+    Computes all intermediate terms independently and verifies mathematical reconstructibility.
     """
     cfg = trace.config
     inputs = trace.raw_inputs
-    inter = trace.intermediate_terms
     
-    # If pre-computed terms exist in trace, use them directly for 100% exact analytical fidelity
-    if "w_sig_S" in inter and "w_ml_A" in inter:
-        t_sig = inter["w_sig_S"]
-        t_ml = inter["w_ml_A"]
-        t_hist = inter.get("w_hist_H", 0.0)
-        t_graph = inter.get("w_graph_G", 0.0)
-        t_fore = inter.get("w_fore_P", 0.0)
-        t_ti = inter.get("w_ti_TI", 0.0)
-        t_ep = inter.get("w_ep_R", 0.0)
-        t_trust = inter.get("w_trust_T", 0.0)
-        u_pen = inter.get("u_penalty", 0.0)
-    else:
-        t_sig   = cfg.get("w_sig", 0.5) * inputs["S_sig"] if cfg.get("use_signature", True) else 0.0
-        t_ml    = cfg.get("w_ml", 0.3) * inputs["A_ml"] * (1.0 + inputs["delta_D"]) if cfg.get("use_ml", True) else 0.0
-        t_hist  = cfg.get("w_hist", 0.1) * inputs["H_boost"] if cfg.get("use_history", True) else 0.0
-        t_graph = cfg.get("w_graph", 0.1) * inputs["G_corr"] if cfg.get("use_graph", True) else 0.0
-        t_fore  = cfg.get("w_fore", 0.05) * inputs["P_fore"] if cfg.get("use_forecast", True) else 0.0
-        t_ti    = cfg.get("w_ti", 0.15) * inputs["TI_score"] if cfg.get("use_ti", True) else 0.0
-        t_ep    = cfg.get("w_ep", 0.10) * inputs.get("R_ep", 0.0) if cfg.get("use_episode_reasoning", True) else 0.0
-        t_trust = (cfg.get("w_trust", 0.15) * inputs["T_trust"]) if cfg.get("use_trust", True) else 0.0
-        u_pen = (inputs["uncertainty"] * 0.30) if cfg.get("use_uncertainty", True) else 0.0
+    # Independent recomputation of all terms directly from raw inputs and configuration
+    S_sig = float(inputs.get("S_sig", 0.0))
+    A_ml = float(inputs.get("A_ml", 0.0))
+    delta_D = float(inputs.get("delta_D", 0.0))
+    H_boost = float(inputs.get("H_boost", 0.0))
+    G_corr = float(inputs.get("G_corr", 0.0))
+    P_fore = float(inputs.get("P_fore", 0.0))
+    TI_score = float(inputs.get("TI_score", 0.0))
+    R_ep = float(inputs.get("R_ep", 0.0))
+    T_trust = float(inputs.get("T_trust", 0.5))
+    uncertainty = float(inputs.get("uncertainty", 0.0))
+    A_crit = float(inputs.get("A_crit", 1.0))
+    
+    # Feature selector / evidence quality weights if recorded
+    q_sig = float(trace.adaptive_weights.get("q_sig", 1.0)) if hasattr(trace, "adaptive_weights") and trace.adaptive_weights else 1.0
+    q_ml = float(trace.adaptive_weights.get("q_ml", 1.0)) if hasattr(trace, "adaptive_weights") and trace.adaptive_weights else 1.0
+    
+    w_sig = float(cfg.get("w_sig", 0.50)) if cfg.get("use_signature", True) else 0.0
+    w_ml = float(cfg.get("w_ml", 0.30)) if cfg.get("use_ml", True) else 0.0
+    w_hist = float(cfg.get("w_hist", 0.10)) if cfg.get("use_history", True) else 0.0
+    w_graph = float(cfg.get("w_graph", 0.10)) if cfg.get("use_graph", True) else 0.0
+    w_fore = float(cfg.get("w_fore", 0.05)) if cfg.get("use_forecast", True) else 0.0
+    w_ti = float(cfg.get("w_ti", 0.15)) if cfg.get("use_ti", True) else 0.0
+    w_ep = float(cfg.get("w_ep", 0.10)) if cfg.get("use_episode_reasoning", True) else 0.0
+    w_trust = float(cfg.get("w_trust", 0.15)) if cfg.get("use_trust", True) else 0.0
+
+    t_sig = w_sig * S_sig * q_sig
+    t_ml = w_ml * A_ml * (1.0 + delta_D) * q_ml
+    t_hist = w_hist * H_boost
+    t_graph = w_graph * G_corr
+    t_fore = w_fore * P_fore
+    t_ti = w_ti * TI_score
+    t_ep = w_ep * R_ep
+    t_trust = w_trust * T_trust
+    
+    u_pen = round(uncertainty * 0.30, 4) if cfg.get("use_uncertainty", True) else 0.0
     
     add_sum = t_sig + t_ml + t_hist + t_graph + t_fore + t_ti + t_ep
-    crit_mult = inputs["A_crit"] if cfg.get("use_asset_crit", True) else 1.0
-    unc_mult = (1.0 - u_pen)
+    crit_mult = A_crit if cfg.get("use_asset_crit", True) else 1.0
+    unc_mult = max(0.0, 1.0 - u_pen)
     
     raw = (add_sum * crit_mult * unc_mult) - t_trust
     reconstructed = float(np.clip(raw, 0.0, 1.0))

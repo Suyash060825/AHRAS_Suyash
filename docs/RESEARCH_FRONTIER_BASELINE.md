@@ -19,7 +19,7 @@
 
 ## 2. Runtime & Execution Environment
 
-Cataloged in [`evaluation/environment_manifest.json`](file:///home/suyashpradhan/Downloads/AHRAS_Suyash-master/evaluation/environment_manifest.json).
+Cataloged in [`evaluation/environment_manifest.json`](evaluation/environment_manifest.json).
 
 * **Hardware Host**: 11th Gen Intel(R) Core(TM) i5-11260H @ 2.60GHz (12 vCPUs), 31.0 GB RAM, 8.0 GB Swap
 * **Operating System**: Linux 7.1.8-100.fc43.x86_64 (x86_64 architecture with glibc 2.42)
@@ -39,7 +39,7 @@ Cataloged in [`evaluation/environment_manifest.json`](file:///home/suyashpradhan
 
 ## 3. Dataset Registry & Ingestion Status
 
-All datasets are cataloged in [`evaluation/data/dataset_registry.json`](file:///home/suyashpradhan/Downloads/AHRAS_Suyash-master/evaluation/data/dataset_registry.json).
+All datasets are cataloged in [`evaluation/data/dataset_registry.json`](evaluation/data/dataset_registry.json).
 
 | Dataset Name | Relative Path | File Size | SHA-256 Digest | Records | Status |
 | :--- | :--- | :---: | :--- | :---: | :---: |
@@ -72,7 +72,7 @@ When an external raw dataset is unavailable, the evaluation harness fails with a
 
 ## 5. Empirical Benchmark Results (Authentic Real Datasets)
 
-Recorded in [`evaluation/results/real_world_benchmarks_report.json`](file:///home/suyashpradhan/Downloads/AHRAS_Suyash-master/evaluation/results/real_world_benchmarks_report.json).
+Recorded in [`evaluation/results/real_world_benchmarks_report.json`](evaluation/results/real_world_benchmarks_report.json).
 
 ### 5.1 CICIDS2017 (Wednesday Working Hours — Botnet & DoS Traffic)
 * **Sample Evaluated**: 10,000 authentic flow records (Stratified temporal sampling across 692,703 records).

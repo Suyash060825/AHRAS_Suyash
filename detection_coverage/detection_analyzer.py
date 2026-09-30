@@ -12,9 +12,9 @@ import logging
 from dataclasses import dataclass, field
 from typing import Any, Dict, List, Optional
 
-from coverage.implementation_catalog import ImplementationCatalog, TechniqueImplementation
-from coverage.telemetry_mapper import TelemetryMapper
-from coverage.technique_mapper import TechniqueMapper
+from detection_coverage.implementation_catalog import ImplementationCatalog, TechniqueImplementation
+from detection_coverage.telemetry_mapper import TelemetryMapper
+from detection_coverage.technique_mapper import TechniqueMapper
 from detection.signature_engine.rules import run_signature_engine
 from detection.encrypted_session import EncryptedSessionIntelligence, PacketMetadata
 

@@ -1,7 +1,7 @@
 {
   "manifest": {
     "experiment_id": "EXP-27",
-    "code_version": "d2386454506b50620e07cfde07b8fc0d76d24f8e",
+    "code_version": "a7342acef447bc4ccd108f440a23fe74cd730b0f",
     "git_branch": "new-features",
     "dataset_name": "Multi-Stage Heterogeneous Telemetry Stream",
     "dataset_version": "1.0",
@@ -22,7 +22,7 @@
       }
     },
     "result_path": "/home/suyashpradhan/Downloads/AHRAS_Suyash-master/evaluation/results/ATTACK_PATH_REASONING_REPORT.json",
-    "timestamp": 1790571724.6287777
+    "timestamp": 1790734767.7628002
   },
   "architectures_evaluated": [
     {
@@ -42,7 +42,7 @@
       "noise_compression_pct": 0.0,
       "chokepoint_precision_pct": 55.0,
       "lead_time_hops": 3.2,
-      "mean_latency_ms": 0.029,
+      "mean_latency_ms": 0.041,
       "false_causal_link_rate_pct": 42.8
     },
     {
@@ -52,7 +52,7 @@
       "noise_compression_pct": 93.2,
       "chokepoint_precision_pct": 95.0,
       "lead_time_hops": 3.5,
-      "mean_latency_ms": 0.017,
+      "mean_latency_ms": 0.024,
       "false_causal_link_rate_pct": 2.1
     }
   ],

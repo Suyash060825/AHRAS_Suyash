@@ -14,31 +14,31 @@ import json
 from pathlib import Path
 import pytest
 
-from coverage.implementation_catalog import (
+from detection_coverage.implementation_catalog import (
     TechniqueImplementation,
     TechniqueDefinition,
     ImplementationCatalog,
     get_default_catalog,
 )
-from coverage.telemetry_mapper import (
+from detection_coverage.telemetry_mapper import (
     TelemetryMapper,
     TelemetryObservationResult,
     DEFAULT_AHRAS_AVAILABLE_TELEMETRY,
 )
-from coverage.technique_mapper import (
+from detection_coverage.technique_mapper import (
     TechniqueMapper,
     MappedDetector,
 )
-from coverage.detection_analyzer import (
+from detection_coverage.detection_analyzer import (
     DetectionAnalyzer,
     ImplementationAnalysisResult,
 )
-from coverage.coverage_calculator import (
+from detection_coverage.coverage_calculator import (
     CoverageCalculator,
     TechniqueCoverageSummary,
     SystemCoverageReport,
 )
-from coverage.coverage_report import (
+from detection_coverage.coverage_report import (
     CoverageReporter,
     generate_coverage_artifacts,
 )

@@ -23,7 +23,7 @@ from adversarial.evasion_evaluator import (
     DetectorRobustnessScore,
     EvasionEvaluationReport,
 )
-from coverage.implementation_catalog import get_default_catalog
+from detection_coverage.implementation_catalog import get_default_catalog
 from evaluation.run_evasion_robustness import run_benchmark
 
 

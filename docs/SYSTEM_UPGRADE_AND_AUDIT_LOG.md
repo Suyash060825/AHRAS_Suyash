@@ -74,46 +74,46 @@ A comprehensive audit was executed across the full codebase to identify security
 #### 1. FRONTEND-4: Elimination of Stored XSS in SOC Dashboard
 - **Vulnerability**: In `web/index.html`, incoming threat telemetry from WebSocket broadcasts was rendered using `tr.innerHTML = \`...${t.entity}...${t.class}...\``. An adversary controlling hostnames, IP strings, or process names could inject arbitrary JavaScript into the SOC analyst's browser.
 - **Remediation**: Replaced innerHTML template literal injection with safe DOM construction using `document.createElement()` and `td.textContent = value`. All user-controlled fields (`entity`, `class`, `severity`, `technique`, `risk`, `time`) are safely escaped.
-- **Location**: [`web/index.html`](file:///home/suyashpradhan/Downloads/AHRAS_Suyash-master/web/index.html).
+- **Location**: [`web/index.html`](web/index.html).
 
 #### 2. FRONTEND-5: WebSocket Exponential Backoff with Jitter
 - **Vulnerability**: Client-side WebSocket reconnections used a fixed 4000~ms `setTimeout(initWebSocket, 4000)`. In enterprise deployments or Kubernetes cluster rolling updates, thousands of dashboard instances would reconnect synchronously, causing severe reconnection storms.
 - **Remediation**: Replaced static retry with jittered exponential backoff: `_wsRetryDelay = Math.min(30000, _wsRetryDelay * 2 + Math.random() * 500)`, reset to 1000~ms on successful connection.
-- **Location**: [`web/index.html`](file:///home/suyashpradhan/Downloads/AHRAS_Suyash-master/web/index.html).
+- **Location**: [`web/index.html`](web/index.html).
 
 #### 3. BUG-9: Content-Security-Policy (CSP) Hardening
 - **Vulnerability**: `api/server.py` shipped with `script-src 'self' 'unsafe-inline'`, completely disabling browser XSS protection.
 - **Remediation**: Removed `'unsafe-inline'` from `script-src`. Enforced `default-src 'self'; script-src 'self'; style-src 'self' 'unsafe-inline'; object-src 'none'; base-uri 'self';`.
-- **Location**: [`api/server.py`](file:///home/suyashpradhan/Downloads/AHRAS_Suyash-master/api/server.py#L86).
+- **Location**: [`api/server.py`](api/server.py#L86).
 
 #### 4. BUG-4: Authentication Hardening & DEV_MODE Safeguard
 - **Vulnerability**: Default credentials (`admin`, `analyst`, `hunter`, `responder`) were hardcoded in `DEFAULT_USERS`.
 - **Remediation**: Gated default credentials strictly behind `DEV_MODE=True` and added an explicit high-visibility console alert: `WARNING: DEV_MODE is active. Default credential accounts are loaded. NEVER run with DEV_MODE=true in production.`
-- **Location**: [`auth/manager.py`](file:///home/suyashpradhan/Downloads/AHRAS_Suyash-master/auth/manager.py#L220-L230).
+- **Location**: [`auth/manager.py`](auth/manager.py#L220-L230).
 
 #### 5. BUG-10: Evidence Ledger Lifecycle & Memory Management
 - **Vulnerability**: `ahras/evidence/ledger.py` accumulated evidence records indefinitely in RAM and SQLite without retention limits or memory bounds, creating a Denial of Service risk.
 - **Remediation**: Implemented `prune_older_than_days(days=90)` with sequence re-indexing and lookup table rebuilding, alongside `ledger_size_estimate` property to monitor heap consumption.
-- **Location**: [`ahras/evidence/ledger.py`](file:///home/suyashpradhan/Downloads/AHRAS_Suyash-master/ahras/evidence/ledger.py).
+- **Location**: [`ahras/evidence/ledger.py`](ahras/evidence/ledger.py).
 
 #### 6. ISSUE-12: RASE Formal Metric Definition
 - **Deficiency**: The draft paper described RASE as "grounded in proper scoring rules" (Brier score in denominator does not constitute a proper scoring rule).
 - **Remediation**: Clarified formal text: RASE integrates calibrated probability estimates (evaluated via Brier score) with asymmetric intervention cost modeling to enable multi-objective operational evaluation.
-- **Location**: [`paper/main.tex`](file:///home/suyashpradhan/Downloads/AHRAS_Suyash-master/paper/main.tex).
+- **Location**: [`paper/main.tex`](paper/main.tex).
 
 #### 7. Gate Diagnostic Property
 - **Deficiency**: Silent failure mode where degenerate calibration thresholds ($\tau^* = 1.0$) caused 100% abstention on real data without logging.
 - **Remediation**: Added `calibration_status` property returning `VALID`, `DEGENERATE_TAU_MAX`, `INSUFFICIENT_CALIBRATION_SAMPLES`, or `UNCALIBRATED`, with startup warnings.
-- **Location**: [`detection/selective_gate.py`](file:///home/suyashpradhan/Downloads/AHRAS_Suyash-master/detection/selective_gate.py).
+- **Location**: [`detection/selective_gate.py`](detection/selective_gate.py).
 
 #### 8. ISSUE-13 / QW-8: Component Ablation Table Rebuild
 - **Deficiency**: Table 4 reported 24 components, but 4 components (Temporal Attention $p=1.00$, Historical Risk $p=0.75$, Threat Intel $p=0.94$, Uncertainty $p=0.98$) had non-significant $p$-values on single-event CICIDS2017 classification, inviting reviewer rejection.
-- **Remediation**: Rebuilt [`paper/ablation_table.tex`](file:///home/suyashpradhan/Downloads/AHRAS_Suyash-master/paper/ablation_table.tex) retaining only Holm-Bonferroni statistically significant rows, adding an honest transparent footnote explaining that excluded modules serve as architectural enablers for multi-hop sequential reasoning and forensic provenance.
+- **Remediation**: Rebuilt [`paper/ablation_table.tex`](paper/ablation_table.tex) retaining only Holm-Bonferroni statistically significant rows, adding an honest transparent footnote explaining that excluded modules serve as architectural enablers for multi-hop sequential reasoning and forensic provenance.
 
 ---
 
 ## 4. Real-World Benchmark Resolution (Blockers 1 & 2)
-*Commit: [`8ac538a`](file:///home/suyashpradhan/Downloads/AHRAS_Suyash-master/evaluation/run_real_benchmarks.py)*
+*Commit: [`8ac538a`](evaluation/run_real_benchmarks.py)*
 
 The two most damaging findings in the technical audit were:
 1. **BUG-2**: UNSW-NB15 was evaluated on only 73 records due to an artificial sampling stride (`stride=69`), yielding F1=0.0000.
@@ -146,18 +146,18 @@ flowchart TD
 | **CICIDS2017 (Wednesday)**| 10,000 stratified | 7,000 / 1,480 / 1,520 | **0.6133** (P: 0.613, R: 0.755) | 0.9805 | **0.6356** | **VALID** (Non-Degenerate) |
 
 Outputs generated:
-- [`evaluation/results/real_world_benchmarks_report.json`](file:///home/suyashpradhan/Downloads/AHRAS_Suyash-master/evaluation/results/real_world_benchmarks_report.json)
-- [`REAL_BENCHMARKS_VALIDATION_SUMMARY.json`](file:///home/suyashpradhan/Downloads/AHRAS_Suyash-master/REAL_BENCHMARKS_VALIDATION_SUMMARY.json)
+- [`evaluation/results/real_world_benchmarks_report.json`](evaluation/results/real_world_benchmarks_report.json)
+- [`REAL_BENCHMARKS_VALIDATION_SUMMARY.json`](REAL_BENCHMARKS_VALIDATION_SUMMARY.json)
 
 ---
 
 ## 5. Production SOC Dashboard & API Rebuild
-*Commit: [`111c6a7`](file:///home/suyashpradhan/Downloads/AHRAS_Suyash-master/web/index.html)*
+*Commit: [`111c6a7`](web/index.html)*
 
 The frontend and backend API interfaces were upgraded to support live SOC operations without external frameworks (pure vanilla ES2022 + D3.js v7):
 
 1. **Interactive D3.js Force-Directed GNN Topology**:
-   - Replaced static SVG placeholder with live D3.js force layout simulation in [`web/index.html`](file:///home/suyashpradhan/Downloads/AHRAS_Suyash-master/web/index.html).
+   - Replaced static SVG placeholder with live D3.js force layout simulation in [`web/index.html`](web/index.html).
    - Backed by dynamic REST endpoint: `GET /api/gnn/graph` in `api/server.py`.
    - Node attributes dynamically reflect entity compromise tier (red for compromised, amber for suspicious, green for secure) with draggable force physics.
 2. **Active MITRE ATT&CK Matrix Feed**:
@@ -175,9 +175,9 @@ The frontend and backend API interfaces were upgraded to support live SOC operat
 ---
 
 ## 6. Empirical Latency Hierarchy Reconciliation (ISSUE-16)
-*Commit: [`2a76ffa`](file:///home/suyashpradhan/Downloads/AHRAS_Suyash-master/README.md)*
+*Commit: [`2a76ffa`](README.md)*
 
-Reconciled paper and repository latency claims by formalizing the 3-tier computational routing architecture in [`README.md`](file:///home/suyashpradhan/Downloads/AHRAS_Suyash-master/README.md):
+Reconciled paper and repository latency claims by formalizing the 3-tier computational routing architecture in [`README.md`](README.md):
 
 | Operating Tier | Architecture & Routing Target | Mean Latency | Throughput | Application Context |
 | :--- | :--- | :---: | :---: | :--- |
@@ -188,9 +188,9 @@ Reconciled paper and repository latency claims by formalizing the 3-tier computa
 ---
 
 ## 7. IEEE TDSC Journal Manuscript & Bibliography (ISSUE-11)
-*Commit: [`1f66ebe`](file:///home/suyashpradhan/Downloads/AHRAS_Suyash-master/paper/main.tex)*
+*Commit: [`1f66ebe`](paper/main.tex)*
 
-Expanded [`paper/main.tex`](file:///home/suyashpradhan/Downloads/AHRAS_Suyash-master/paper/main.tex) from a 63-line template into a full-length, publication-grade manuscript formatted for **IEEE Transactions on Dependable and Secure Computing (IEEE TDSC)**:
+Expanded [`paper/main.tex`](paper/main.tex) from a 63-line template into a full-length, publication-grade manuscript formatted for **IEEE Transactions on Dependable and Secure Computing (IEEE TDSC)**:
 
 - **Section I (Introduction)**: Establishes the operational safety paradox of autonomous SOAR pipelines and formalizes the 4 core contributions.
 - **Section II (Related Work)**: Comprehensive survey of conformal prediction, graph intrusion detection, explainability fidelity, and SOAR active defense.
@@ -200,7 +200,7 @@ Expanded [`paper/main.tex`](file:///home/suyashpradhan/Downloads/AHRAS_Suyash-ma
 - **Section VI (Discussion: The Safety vs. Recall Paradox)**: Detailed analysis explaining why ablating regulatory governors (Continual Memory, Byzantine Defense) artificially inflates static classification F1 while compromising real-world cyber resilience.
 - **Section VII (Limitations & Threats to Validity)**: Transparent academic disclosure covering graph validation scope, calibration split requirements, and per-replica throughput bounds.
 - **Section VIII (Conclusion)**: Summary of findings.
-- **Bibliography**: Created [`paper/references.bib`](file:///home/suyashpradhan/Downloads/AHRAS_Suyash-master/paper/references.bib) with 16 seminal citations.
+- **Bibliography**: Created [`paper/references.bib`](paper/references.bib) with 16 seminal citations.
 
 ---
 
@@ -231,14 +231,14 @@ ed6888a docs(audit): complete Phase 0 integrity audit — manifests, capability 
 *Commit: `ed6888a`*
 
 Completed full repository audit and produced all mandatory Phase 0 baseline documents:
-1. [`evaluation/environment_manifest.json`](file:///home/suyashpradhan/Downloads/AHRAS_Suyash-master/evaluation/environment_manifest.json): Machine-readable system specs (12 vCPUs, 32GB RAM, Python 3.14.6, Linux 7.1.8-100.fc43.x86_64, locked package versions).
-2. [`evaluation/data/dataset_registry.json`](file:///home/suyashpradhan/Downloads/AHRAS_Suyash-master/evaluation/data/dataset_registry.json): Cryptographic registry of authentic datasets (CICIDS2017 Wednesday 214.74 MB / 692,703 records, UNSW-NB15 1.07 MB / 5,000 records).
-3. [`docs/CURRENT_CAPABILITY_MATRIX.md`](file:///home/suyashpradhan/Downloads/AHRAS_Suyash-master/docs/CURRENT_CAPABILITY_MATRIX.md): Comprehensive capability table across all 37 core system capabilities classified by status, test suites, and required extensions.
-4. [`docs/RESEARCH_FRONTIER_BASELINE.md`](file:///home/suyashpradhan/Downloads/AHRAS_Suyash-master/docs/RESEARCH_FRONTIER_BASELINE.md): Locked empirical baselines, 3-tier latency hierarchy, and real-world benchmark metrics.
-5. [`docs/AHRAS_NEXTGEN_ARCHITECTURE.md`](file:///home/suyashpradhan/Downloads/AHRAS_Suyash-master/docs/AHRAS_NEXTGEN_ARCHITECTURE.md): Full closed-loop 9-stage operational loop specification and data contracts.
-6. [`docs/IMPLEMENTATION_PRIORITY_MATRIX.md`](file:///home/suyashpradhan/Downloads/AHRAS_Suyash-master/docs/IMPLEMENTATION_PRIORITY_MATRIX.md): 10-phase roadmap with prerequisites and immediate Phase 1 deliverables.
-7. [`docs/RESEARCH_EXPERIMENT_MATRIX.md`](file:///home/suyashpradhan/Downloads/AHRAS_Suyash-master/docs/RESEARCH_EXPERIMENT_MATRIX.md): Complete catalog of EXP-01 through EXP-31 + EXP-ABL with hypotheses, metrics, and artifact targets.
-8. [`docs/PHASE_0_INTEGRITY_REPORT.md`](file:///home/suyashpradhan/Downloads/AHRAS_Suyash-master/docs/PHASE_0_INTEGRITY_REPORT.md): Integrity certification certifying complete test suite health (549 passed, 43 subtests passed = 592 units in 69.95s) and readiness for Phase 1.
+1. [`evaluation/environment_manifest.json`](evaluation/environment_manifest.json): Machine-readable system specs (12 vCPUs, 32GB RAM, Python 3.14.6, Linux 7.1.8-100.fc43.x86_64, locked package versions).
+2. [`evaluation/data/dataset_registry.json`](evaluation/data/dataset_registry.json): Cryptographic registry of authentic datasets (CICIDS2017 Wednesday 214.74 MB / 692,703 records, UNSW-NB15 1.07 MB / 5,000 records).
+3. [`docs/CURRENT_CAPABILITY_MATRIX.md`](docs/CURRENT_CAPABILITY_MATRIX.md): Comprehensive capability table across all 37 core system capabilities classified by status, test suites, and required extensions.
+4. [`docs/RESEARCH_FRONTIER_BASELINE.md`](docs/RESEARCH_FRONTIER_BASELINE.md): Locked empirical baselines, 3-tier latency hierarchy, and real-world benchmark metrics.
+5. [`docs/AHRAS_NEXTGEN_ARCHITECTURE.md`](docs/AHRAS_NEXTGEN_ARCHITECTURE.md): Full closed-loop 9-stage operational loop specification and data contracts.
+6. [`docs/IMPLEMENTATION_PRIORITY_MATRIX.md`](docs/IMPLEMENTATION_PRIORITY_MATRIX.md): 10-phase roadmap with prerequisites and immediate Phase 1 deliverables.
+7. [`docs/RESEARCH_EXPERIMENT_MATRIX.md`](docs/RESEARCH_EXPERIMENT_MATRIX.md): Complete catalog of EXP-01 through EXP-31 + EXP-ABL with hypotheses, metrics, and artifact targets.
+8. [`docs/PHASE_0_INTEGRITY_REPORT.md`](docs/PHASE_0_INTEGRITY_REPORT.md): Integrity certification certifying complete test suite health (549 passed, 43 subtests passed = 592 units in 69.95s) and readiness for Phase 1.
 
 ---
 
@@ -247,12 +247,12 @@ Completed full repository audit and produced all mandatory Phase 0 baseline docu
 
 Engineered and integrated the **Alert Intelligence Layer** to eradicate SOC alert fatigue through adaptive deduplication, spatio-temporal clustering, and exposure-aware triage prioritization:
 1. **Core Package (`alert_intelligence/`)**:
-   - [`alert_intelligence/models.py`](file:///home/suyashpradhan/Downloads/AHRAS_Suyash-master/alert_intelligence/models.py): `RawAlert`, `IncidentCluster`, `ExposureMetric`, `TriageDecision`, `TriageLevel`.
-   - [`alert_intelligence/deduplication.py`](file:///home/suyashpradhan/Downloads/AHRAS_Suyash-master/alert_intelligence/deduplication.py): `AdaptiveAlertDeduplicator` implementing sliding-window suppression, geometric emission milestones (2x), and eviction callbacks.
-   - [`alert_intelligence/clustering.py`](file:///home/suyashpradhan/Downloads/AHRAS_Suyash-master/alert_intelligence/clustering.py): `AlertClusteringEngine` grouping alerts across space (entities) and time ($\Delta t = 300$s), tracking MITRE ATT&CK progression, and dynamically merging clusters on lateral movement bridges.
-   - [`alert_intelligence/prioritizer.py`](file:///home/suyashpradhan/Downloads/AHRAS_Suyash-master/alert_intelligence/prioritizer.py): `ExposureAwarePrioritizer` calibrating triage priority via detector severity, progression depth, asset criticality (Tier 1 Crown Jewels vs Tier 3 Workstations), network zone exposure (DMZ vs Isolated), CVSS factors, and epistemic uncertainty dampening.
-   - [`alert_intelligence/pipeline.py`](file:///home/suyashpradhan/Downloads/AHRAS_Suyash-master/alert_intelligence/pipeline.py): Unified orchestration pipeline.
-2. **REST API Endpoints ([`api/server.py`](file:///home/suyashpradhan/Downloads/AHRAS_Suyash-master/api/server.py))**:
+   - [`alert_intelligence/models.py`](alert_intelligence/models.py): `RawAlert`, `IncidentCluster`, `ExposureMetric`, `TriageDecision`, `TriageLevel`.
+   - [`alert_intelligence/deduplication.py`](alert_intelligence/deduplication.py): `AdaptiveAlertDeduplicator` implementing sliding-window suppression, geometric emission milestones (2x), and eviction callbacks.
+   - [`alert_intelligence/clustering.py`](alert_intelligence/clustering.py): `AlertClusteringEngine` grouping alerts across space (entities) and time ($\Delta t = 300$s), tracking MITRE ATT&CK progression, and dynamically merging clusters on lateral movement bridges.
+   - [`alert_intelligence/prioritizer.py`](alert_intelligence/prioritizer.py): `ExposureAwarePrioritizer` calibrating triage priority via detector severity, progression depth, asset criticality (Tier 1 Crown Jewels vs Tier 3 Workstations), network zone exposure (DMZ vs Isolated), CVSS factors, and epistemic uncertainty dampening.
+   - [`alert_intelligence/pipeline.py`](alert_intelligence/pipeline.py): Unified orchestration pipeline.
+2. **REST API Endpoints ([`api/server.py`](api/server.py))**:
    - `GET /api/incidents`: Active correlated incident clusters sorted by priority.
    - `GET /api/incidents/{incident_id}`: Full incident detail, member alerts, and rationale.
    - `POST /api/alerts/ingest`: Real-time ingestion endpoint with deduplication gating.
@@ -265,7 +265,7 @@ Engineered and integrated the **Alert Intelligence Layer** to eradicate SOC aler
    - **Alert Compression**: **1,250 : 1** (5,000 raw alerts synthesized into 4 high-context incidents).
    - **Zero Evidence Loss Invariant**: **100.00%** retention completeness (5,007 / 5,007 atomic evidence records preserved).
    - **Multi-Stage Attack Prioritization**: Top incident identified as multi-stage APT pivoting across `web-public-01 -> workstation-101 -> dc-prod-01`, priority score **0.9314**, progression score **1.0000**, triage level **CRITICAL**, recommended action **IMMEDIATE_CONTAINMENT_DISPATCH**.
-4. **Documentation**: [`docs/PHASE_1_ALERT_INTELLIGENCE_COMPLETION.md`](file:///home/suyashpradhan/Downloads/AHRAS_Suyash-master/docs/PHASE_1_ALERT_INTELLIGENCE_COMPLETION.md).
+4. **Documentation**: [`docs/PHASE_1_ALERT_INTELLIGENCE_COMPLETION.md`](docs/PHASE_1_ALERT_INTELLIGENCE_COMPLETION.md).
 
 ---
 
@@ -273,7 +273,7 @@ Engineered and integrated the **Alert Intelligence Layer** to eradicate SOC aler
 *Benchmark ID: `EXP-24`*
 
 Hardened the detection pipeline against semantic-preserving adversarial mutations across process, network, and cloud modalities:
-1. **Algorithmic Hardening ([`detection/signature_engine/rules.py`](file:///home/suyashpradhan/Downloads/AHRAS_Suyash-master/detection/signature_engine/rules.py))**:
+1. **Algorithmic Hardening ([`detection/signature_engine/rules.py`](detection/signature_engine/rules.py))**:
    - `_deobfuscate_cmdline()`: Lexical commandline normalization neutralizing quote insertion (`p""o""w""e""r""s""h""e""l""l`), caret escapes (`p^o^w^e^r^s^h^e^l^l`), backtick escapes, and excessive whitespace padding.
    - Alternate Port Recognition: Expanded destination port evaluation for SSH (`NET-005`, ports `22, 2222, 2200`), SMB (`NET-006`, ports `445, 139`), and RDP (`NET-007`, ports `3389, 33890, 3388`).
    - Network Volumetric & Duration Dilation Defense: In HTTP Request Flood (`NET-012`), added high-aggregate volume detection ($\ge 1000$ packets to web endpoints) to catch throttled dilated floods; in Slowloris (`NET-011`), added payload density evaluation ($< 20.0$ bytes/packet with $\ge 30$ packets).
@@ -285,7 +285,7 @@ Hardened the detection pipeline against semantic-preserving adversarial mutation
    - **ML Anomaly Robustness Score**: improved from $0.7500 \to \mathbf{1.0000}$ (Zero Evasion).
    - **Strategy Evasion Eliminated**: `quote_insertion` ($26.67\% \to \mathbf{0.0\%}$), `caret_insertion` ($20.00\% \to \mathbf{0.0\%}$), `port_variation` ($16.67\% \to \mathbf{0.0\%}$), `whitespace_padding` ($13.33\% \to \mathbf{0.0\%}$).
    - `duration_dilation` evasion halved from $22.22\% \to \mathbf{11.11\%}$.
-3. **Documentation**: [`docs/PHASE_2_ADVERSARIAL_HARDENING_COMPLETION.md`](file:///home/suyashpradhan/Downloads/AHRAS_Suyash-master/docs/PHASE_2_ADVERSARIAL_HARDENING_COMPLETION.md).
+3. **Documentation**: [`docs/PHASE_2_ADVERSARIAL_HARDENING_COMPLETION.md`](docs/PHASE_2_ADVERSARIAL_HARDENING_COMPLETION.md).
 
 ---
 
@@ -294,13 +294,13 @@ Hardened the detection pipeline against semantic-preserving adversarial mutation
 
 Engineered and integrated the core adaptive and resource-governance capabilities specified in Sections 17, 18, 19, 25, 26 of the master implementation architecture:
 
-1. **Few-Shot Novel Attack Adaptation ([`adaptive_learning/few_shot.py`](file:///home/suyashpradhan/Downloads/AHRAS_Suyash-master/adaptive_learning/few_shot.py))**:
+1. **Few-Shot Novel Attack Adaptation ([`adaptive_learning/few_shot.py`](adaptive_learning/few_shot.py))**:
    - `FewShotAttackAdapter`: Rapid zero-day adaptation engine following the formal lifecycle `UNKNOWN CLUSTER -> ANALYST CONFIRMATION -> FEW-SHOT ADAPTATION -> VALIDATION -> SHADOW DEPLOYMENT -> PROMOTION`.
    - Strategies supported: Metric-space prototypical centroids ($O(k)$ centroid projection), regularized linear heads with $L_2$ penalty, and continual replay memory updates with learning rate decay.
    - Holdout safety verification: Automatically measures new-attack recall, old-attack retention (preventing catastrophic forgetting), and benign false-positive rates before permitting promotion to shadow testing.
    - **EXP-30 Benchmark**: Instantaneous adaptation ($0.02\text{ ms}$, **$260\times$ faster** than full retraining), achieving **100.0% novel attack recall**, **100.0% old attack retention**, and **0.0% benign FPR** across 1-shot, 5-shot, 10-shot, and 25-shot regimes.
 
-2. **Adaptive Sensor Acquisition ([`sensors/sensor_acquisition.py`](file:///home/suyashpradhan/Downloads/AHRAS_Suyash-master/sensors/sensor_acquisition.py))**:
+2. **Adaptive Sensor Acquisition ([`sensors/sensor_acquisition.py`](sensors/sensor_acquisition.py))**:
    - `AdaptiveSensorAcquisitionEngine`: Dynamically evaluates whether on-demand telemetry collection is justified via the formal Value-of-Information (VOI) function:
      $$\text{VOI}(m, e) = \text{ExpectedSecurityGain}(m, e) - \text{CollectionCost}(m, \text{system\_load})$$
    - Modalities: `BASELINE_NETWORK`, `PROCESS_TELEMETRY`, `IDENTITY_TELEMETRY`, `GRAPH_NEIGHBORHOOD`, `SESSION_DETAIL`, `ENDPOINT_CONTEXT`, and `DEEP_FORENSIC`.
@@ -308,26 +308,26 @@ Engineered and integrated the core adaptive and resource-governance capabilities
    - Congestion-aware latency throttling: Rejects telemetry expansion if remaining SLA latency budget would be exhausted.
    - **EXP-31 Benchmark**: Achieves **$95.7\%$ to $99.9\%$ cost savings** and **$88.7\%$ to $99.8\%$ latency reductions** over monolithic full-stack collection across routine benign, ambiguous anomaly, critical attack, and flash congestion regimes.
 
-3. **Resource-Aware Security Controller & Analysis Levels ([`controller/`](file:///home/suyashpradhan/Downloads/AHRAS_Suyash-master/controller), [`detection/model_router.py`](file:///home/suyashpradhan/Downloads/AHRAS_Suyash-master/detection/model_router.py))**:
+3. **Resource-Aware Security Controller & Analysis Levels ([`controller/`](controller), [`detection/model_router.py`](detection/model_router.py))**:
    - Dynamic 5-tier execution arbitration balancing detection capability against queue latency and CPU work units.
    - Hardened `RoutedDetectionResult` to record `models_executed` and `models_skipped` on every single decision trace across Fast Path (Stage 1), ML Ensemble (Stage 2), Multimodal Attention (Stage 3), and Deep Graph Reasoning (Stage 4).
 
-4. **Shadow Model Promotion Safety Pipeline ([`adaptive_learning/shadow_promotion.py`](file:///home/suyashpradhan/Downloads/AHRAS_Suyash-master/adaptive_learning/shadow_promotion.py))**:
+4. **Shadow Model Promotion Safety Pipeline ([`adaptive_learning/shadow_promotion.py`](adaptive_learning/shadow_promotion.py))**:
    - `ShadowModelPromotionPipeline`: Orchestrates the promotion lifecycle (`TRAIN -> VALIDATE -> SHADOW -> COMPARE -> SAFETY CHECK -> PROMOTE / ROLLBACK`).
    - Enforces a deterministic 9-gate safety check: F1 non-degradation, FPR control, unknown OOD recall, calibration ECE, XAI rank stability, P95 latency SLA ($\le 25\text{ ms}$), memory growth ratio, MITRE ATT&CK coverage preservation, and prequential drift bounds.
    - **EXP-32 Benchmark**: Promotes superior balanced candidate `v1.1.0-alpha` (9/9 gates passed) while deterministically rejecting candidates with latency SLA breaches (`v1.1.0-beta-slow`), calibration degradation (`v1.1.0-gamma-uncal`), or coverage loss (`v1.1.0-delta-regress`).
 
-5. **Model and Detection Registries ([`evaluation/registry.py`](file:///home/suyashpradhan/Downloads/AHRAS_Suyash-master/evaluation/registry.py))**:
-   - `AHRASRegistryManager`: Thread-safe, append-only, immutable registry manager persisting [`evaluation/model_registry.json`](file:///home/suyashpradhan/Downloads/AHRAS_Suyash-master/evaluation/model_registry.json) and [`evaluation/detection_registry.json`](file:///home/suyashpradhan/Downloads/AHRAS_Suyash-master/evaluation/detection_registry.json).
+5. **Model and Detection Registries ([`evaluation/registry.py`](evaluation/registry.py))**:
+   - `AHRASRegistryManager`: Thread-safe, append-only, immutable registry manager persisting [`evaluation/model_registry.json`](evaluation/model_registry.json) and [`evaluation/detection_registry.json`](evaluation/detection_registry.json).
    - Invariant: Never overwrites historical records; enforces unique `(name, version)` and `(rule_id, version)` keys.
    - Populated with 3 baseline models and 24 detection rules with authentic SHA-256 artifact hashes and MITRE technique mappings.
 
-6. **REST API Extensions ([`api/server.py`](file:///home/suyashpradhan/Downloads/AHRAS_Suyash-master/api/server.py))**:
+6. **REST API Extensions ([`api/server.py`](api/server.py))**:
    - `GET /api/registry/models`: Returns registered model versions, artifact hashes, and calibration profiles.
    - `GET /api/registry/detections`: Returns registered detection rules and MITRE ATT&CK technique mappings.
    - `POST /api/sensor-acquisition/plan`: Evaluates and returns optimal telemetry modalities for an incoming threat event profile.
 
-7. **Documentation**: [`docs/PHASE_3_ADAPTATION_AND_RESOURCE_COMPLETION.md`](file:///home/suyashpradhan/Downloads/AHRAS_Suyash-master/docs/PHASE_3_ADAPTATION_AND_RESOURCE_COMPLETION.md).
+7. **Documentation**: [`docs/PHASE_3_ADAPTATION_AND_RESOURCE_COMPLETION.md`](docs/PHASE_3_ADAPTATION_AND_RESOURCE_COMPLETION.md).
 
 ---
 
@@ -336,7 +336,7 @@ Engineered and integrated the core adaptive and resource-governance capabilities
 
 Engineered and integrated the relational reasoning, standardized attack flow modeling, campaign similarity, and temporally isolated case memory specified in Sections 21, 22, 23, 47, 48:
 
-1. **Security & Detection Knowledge Graph ([`knowledge_graph/security_kg.py`](file:///home/suyashpradhan/Downloads/AHRAS_Suyash-master/knowledge_graph/security_kg.py))**:
+1. **Security & Detection Knowledge Graph ([`knowledge_graph/security_kg.py`](knowledge_graph/security_kg.py))**:
    - `SecurityKnowledgeGraph`: Heterogeneous graph connecting 11 node types (`TECHNIQUE`, `IMPLEMENTATION`, `TELEMETRY`, `SENSOR`, `DETECTION_RULE`, `ML_MODEL`, `EVIDENCE`, `ASSET`, `VULNERABILITY`, `THREAT_INTEL`, `RESPONSE_ACTION`) across 9 relational edge types (`requires`, `observed_by`, `detected_by`, `affects`, `mitigated_by`, `depends_on`, `validated_by`, `blocked_by`, `exposed_by`).
    - Operational query APIs:
      - `what_enables_detection(technique_id)`: Maps techniques to rules, models, required telemetries, and active sensors.
@@ -344,31 +344,31 @@ Engineered and integrated the relational reasoning, standardized attack flow mod
      - `detections_affected_by_sensor(sensor_id)`: Calculates downstream impact on detection rules and models when a sensor fails.
      - `mitigating_responses_for_path(technique_ids)`: Discovers playbook mitigations and optimal containment chokepoints along an attack path.
 
-2. **Attack Flow Interoperability ([`knowledge_graph/attack_flow.py`](file:///home/suyashpradhan/Downloads/AHRAS_Suyash-master/knowledge_graph/attack_flow.py))**:
+2. **Attack Flow Interoperability ([`knowledge_graph/attack_flow.py`](knowledge_graph/attack_flow.py))**:
    - `AttackFlow`: Standardized MITRE Attack Flow representation connecting actions, assets, and causal/enabling transitions while preserving timestamps, epistemic uncertainties, confidence, and hypothetical edges.
    - Computes structural completeness metrics: stage completeness, edge completeness, entity completeness, technique coverage, and strict temporal monotonicity.
    - Bidirectional JSON import and export capability.
 
-3. **Attack Campaign Similarity Engine ([`knowledge_graph/campaign_similarity.py`](file:///home/suyashpradhan/Downloads/AHRAS_Suyash-master/knowledge_graph/campaign_similarity.py))**:
+3. **Attack Campaign Similarity Engine ([`knowledge_graph/campaign_similarity.py`](knowledge_graph/campaign_similarity.py))**:
    - `CampaignSimilarityEngine`: Multi-attribute similarity engine evaluating technique Jaccard index, Longest Common Subsequence (LCS) sequence alignment, entity graph structural cosine similarity, and evidence hash verification.
    - **Safety Invariant**: Strictly enforces *"Never assert same attacker/actor without supporting evidence"*. Returns `UNATTRIBUTED` when behavioral overlap exists without matching cryptographic IOCs.
 
-4. **Vulnerability & Exposure Intelligence ([`knowledge_graph/vulnerability_intelligence.py`](file:///home/suyashpradhan/Downloads/AHRAS_Suyash-master/knowledge_graph/vulnerability_intelligence.py))**:
+4. **Vulnerability & Exposure Intelligence ([`knowledge_graph/vulnerability_intelligence.py`](knowledge_graph/vulnerability_intelligence.py))**:
    - `VulnerabilityIntelligenceEngine`: Dynamically ranks vulnerabilities based on real-time lateral attack-path reachability, network exposure zone (DMZ vs Isolated), EPSS score, CISA KEV status, and asset criticality.
    - Flips static CVSS severity: prioritizes actively exploited flaws sitting directly on an active lateral movement bridge over isolated high-CVSS CVEs ($11.1\times$ higher priority score).
 
-5. **Case-Based Security Memory ([`knowledge_graph/case_memory.py`](file:///home/suyashpradhan/Downloads/AHRAS_Suyash-master/knowledge_graph/case_memory.py))**:
+5. **Case-Based Security Memory ([`knowledge_graph/case_memory.py`](knowledge_graph/case_memory.py))**:
    - `CaseBasedSecurityMemory`: Structured repository of past security incidents, attack graphs, applied playbooks, and verified operational containment outcomes.
    - **Strict Temporal Invariant**: *"Never use historical cases containing future information relative to an evaluation event"*. Any case where `closed_at > query_timestamp` is strictly filtered out (**0.0% future leakage rate** across 100 historical queries).
 
-6. **REST API Extensions ([`api/server.py`](file:///home/suyashpradhan/Downloads/AHRAS_Suyash-master/api/server.py))**:
+6. **REST API Extensions ([`api/server.py`](api/server.py))**:
    - `GET /api/knowledge-graph/enables/{technique_id}`
    - `GET /api/knowledge-graph/missing-sensors/{technique_id}`
    - `GET /api/knowledge-graph/sensor-impact/{sensor_id}`
    - `POST /api/campaign/match`
    - `POST /api/vulnerabilities/prioritize`
 
-7. **Documentation**: [`docs/PHASE_4_KNOWLEDGE_GRAPH_AND_MEMORY_COMPLETION.md`](file:///home/suyashpradhan/Downloads/AHRAS_Suyash-master/docs/PHASE_4_KNOWLEDGE_GRAPH_AND_MEMORY_COMPLETION.md).
+7. **Documentation**: [`docs/PHASE_4_KNOWLEDGE_GRAPH_AND_MEMORY_COMPLETION.md`](docs/PHASE_4_KNOWLEDGE_GRAPH_AND_MEMORY_COMPLETION.md).
 
 ---
 
@@ -377,14 +377,14 @@ Engineered and integrated the relational reasoning, standardized attack flow mod
 
 Engineered and integrated the cryptographic audit trail and hardened multi-tenant federated learning pipeline specified in Sections 27, 28, 29:
 
-1. **Cryptographic Decision Provenance Epoch Ledger ([`ahras/evidence/decision_provenance.py`](file:///home/suyashpradhan/Downloads/AHRAS_Suyash-master/ahras/evidence/decision_provenance.py))**:
+1. **Cryptographic Decision Provenance Epoch Ledger ([`ahras/evidence/decision_provenance.py`](ahras/evidence/decision_provenance.py))**:
    - `DecisionProvenanceRecord`: Canonical SHA-256 digest over automated mitigation decisions combining event hash, model weights hash, configuration hash, defense policy version, quantitative risk trace, XAI attribution vector hash, simulation outcome hash, and playbook action.
    - `SecurityEvidenceEpoch`: Checkpoint block assembling leaf decision hashes into a binary Merkle tree root and linking cryptographically to predecessor epoch hashes ($\mathcal{H}_{\text{genesis}} = 0^{64}$).
    - `EpochProvenanceLedger`: Thread-safe append-only ledger supporting automatic capacity checkpointing and end-to-end audit verification.
    - **Section 27.1 Tamper Detection**: Evaluated across 100 trials of simulated post-hoc alterations across 8 high-impact decision fields (`event_hash`, `model_hash`, `config_hash`, `policy_version`, `composite_risk`, `xai_hash`, `simulation_hash`, `response_action`), achieving **100.0% detection rate** (0 false negatives).
    - **EXP-35 Benchmark**: Achieves **52,456 decisions/s** line-rate append throughput (sub-microsecond P50 latency of **0.53 µs**), and **>70,000 decisions/s** full ledger cryptographic audit verification rate.
 
-2. **Federated Security Gate Pipeline & Non-IID Discrimination ([`federated/fed_learning.py`](file:///home/suyashpradhan/Downloads/AHRAS_Suyash-master/federated/fed_learning.py))**:
+2. **Federated Security Gate Pipeline & Non-IID Discrimination ([`federated/fed_learning.py`](federated/fed_learning.py))**:
    - `FederatedIDSServer.receive_update()` hardened with 5 sequential deterministic security gates:
      1. Client Authentication Gate (`auth_status == "AUTHENTICATED"`).
      2. Round Freshness Gate (`round_id >= self._current_round`).
@@ -398,11 +398,11 @@ Engineered and integrated the cryptographic audit trail and hardened multi-tenan
      - **Byzantine Resilience**: Under 20% Byzantine contamination (gradient explosion + directional sign-flipping), Standard FedAvg collapses to **0.5890 F1**, while AHRAS FedKD + Reputation preserves **0.9834 F1** (100.0% of clean baseline).
 
 3. **Evaluation Artifacts**:
-   - [`evaluation/results/DECISION_PROVENANCE_REPORT.json`](file:///home/suyashpradhan/Downloads/AHRAS_Suyash-master/evaluation/results/DECISION_PROVENANCE_REPORT.json)
-   - [`evaluation/results/FEDERATED_NONIID_POISONING_REPORT.json`](file:///home/suyashpradhan/Downloads/AHRAS_Suyash-master/evaluation/results/FEDERATED_NONIID_POISONING_REPORT.json)
-   - [`publication/tables/decision_provenance.tex`](file:///home/suyashpradhan/Downloads/AHRAS_Suyash-master/publication/tables/decision_provenance.tex)
-   - [`publication/tables/federated_noniid_poisoning.tex`](file:///home/suyashpradhan/Downloads/AHRAS_Suyash-master/publication/tables/federated_noniid_poisoning.tex)
-4. **Documentation**: [`docs/PHASE_5_PROVENANCE_AND_FEDERATED_COMPLETION.md`](file:///home/suyashpradhan/Downloads/AHRAS_Suyash-master/docs/PHASE_5_PROVENANCE_AND_FEDERATED_COMPLETION.md).
+   - [`evaluation/results/DECISION_PROVENANCE_REPORT.json`](evaluation/results/DECISION_PROVENANCE_REPORT.json)
+   - [`evaluation/results/FEDERATED_NONIID_POISONING_REPORT.json`](evaluation/results/FEDERATED_NONIID_POISONING_REPORT.json)
+   - [`publication/tables/decision_provenance.tex`](publication/tables/decision_provenance.tex)
+   - [`publication/tables/federated_noniid_poisoning.tex`](publication/tables/federated_noniid_poisoning.tex)
+4. **Documentation**: [`docs/PHASE_5_PROVENANCE_AND_FEDERATED_COMPLETION.md`](docs/PHASE_5_PROVENANCE_AND_FEDERATED_COMPLETION.md).
 
 ---
 
@@ -411,13 +411,13 @@ Engineered and integrated the cryptographic audit trail and hardened multi-tenan
 
 Engineered and integrated the pre-execution response lab, adaptive deception engine, continuous response efficacy learning, 6-stage resilience recovery closed loop, and privacy-preserving data minimization specified in Sections 30, 31, 32, 33, 34, 35:
 
-1. **Security Twin Counterfactual Response Lab ([`security_twin/simulation.py`](file:///home/suyashpradhan/Downloads/AHRAS_Suyash-master/security_twin/simulation.py))**:
+1. **Security Twin Counterfactual Response Lab ([`security_twin/simulation.py`](security_twin/simulation.py))**:
    - `simulate_candidate_responses()`: Simulates candidate mitigations (`NO_ACTION`, `BLOCK_SOURCE`, `ISOLATE_HOST`, `REVOKE_TOKEN`, `TERMINATE_PROCESS`) in an isolated digital twin fork.
    - Evaluates multi-objective utility balancing risk reduction ($0.40$), path breakage ($0.25$), reversibility ($0.15$), and blast radius penalty ($-0.20$).
    - Strictly enforces DRY_RUN / simulation guarantees with zero destructive side-effects.
    - **EXP-36 Benchmark**: Recommended Pareto-optimal actions across multi-stage attack scenarios (`BLOCK_SOURCE` with utility 0.6757, 100% path breakage, 0.08 blast radius, 0.95 reversibility; `ISOLATE_HOST` for DBA abuse with utility 0.5996).
 
-2. **Information-Theoretic Adaptive Deception ([`deception/honeypot_manager.py`](file:///home/suyashpradhan/Downloads/AHRAS_Suyash-master/deception/honeypot_manager.py))**:
+2. **Information-Theoretic Adaptive Deception ([`deception/honeypot_manager.py`](deception/honeypot_manager.py))**:
    - Dynamic Bayesian lure optimization: $\text{DeceptionValue} = \text{ExpectedInformationGain} - \text{DeploymentCost} - \text{OperationalRisk}$.
    - Deploys contextual lures: `HONEY_TOKEN`, `FAKE_PORT`, `DECOY_FILE`, `CANARY_CREDENTIAL`.
    - **EXP-37 Benchmark**:
@@ -425,30 +425,30 @@ Engineered and integrated the pre-execution response lab, adaptive deception eng
      - Reduces adversary dwell time from **245.6s to 55.7s** (**$4.4\times$ reduction**).
      - Delivers **84.0% ground-truth confirmation** with **0.0% false positive triggers** on benign users and **+0.474** net deception value.
 
-3. **Resilience & Recovery Closed Loop ([`response/recovery_loop.py`](file:///home/suyashpradhan/Downloads/AHRAS_Suyash-master/response/recovery_loop.py))**:
+3. **Resilience & Recovery Closed Loop ([`response/recovery_loop.py`](response/recovery_loop.py))**:
    - `ResilienceRecoveryEngine`: Enforces 6-stage lifecycle (`DETECT -> CONTAIN -> ERADICATE -> RESTORE -> VERIFY -> RECOVER`).
    - Active post-recovery recurrence watchdog: Monitors residual risk and automatically reopens incidents upon adversary reinfection.
    - **EXP-38 Benchmark (Part A)**: Mean TTC of **2.55s**, Mean TTR of **33.42s**, **96.34% risk elimination** (residual risk 0.0306), and **100.0% accuracy** in detecting recurrence spikes and reopening incidents.
 
-4. **Privacy-Aware Telemetry & Data Minimization ([`sensors/privacy_manager.py`](file:///home/suyashpradhan/Downloads/AHRAS_Suyash-master/sensors/privacy_manager.py))**:
+4. **Privacy-Aware Telemetry & Data Minimization ([`sensors/privacy_manager.py`](sensors/privacy_manager.py))**:
    - `TelemetryPrivacyManager`: Enforces 4 classification tiers (`PUBLIC`, `INTERNAL`, `SENSITIVE`, `HIGHLY_SENSITIVE`).
    - Applies IP subnet masking (/24 and /16), keyed HMAC user pseudonymization, commandline/credential redaction, and 64-character cryptographic SHA-256 raw vault reference seals.
    - **EXP-38 Benchmark (Part B)**: Retains **99.24% of clean detection F1** ($0.9835 \to 0.9760$) and **0.9500 rare-attack recall** under `HIGHLY_SENSITIVE` minimization, preserving 100% forensic vault link integrity.
 
-5. **REST API Extensions ([`api/server.py`](file:///home/suyashpradhan/Downloads/AHRAS_Suyash-master/api/server.py))**:
+5. **REST API Extensions ([`api/server.py`](api/server.py))**:
    - `POST /api/security-twin/simulate-candidates`: Counterfactual response lab simulation.
    - `GET /api/recovery/incident/{incident_id}`: Incident recovery lifecycle tracking.
    - `POST /api/recovery/register`: Incident recovery registration.
    - `POST /api/privacy/sanitize`: Data minimization transformation.
 
 6. **Evaluation Artifacts**:
-   - [`evaluation/results/SECURITY_TWIN_RESPONSE_LAB_REPORT.json`](file:///home/suyashpradhan/Downloads/AHRAS_Suyash-master/evaluation/results/SECURITY_TWIN_RESPONSE_LAB_REPORT.json)
-   - [`evaluation/results/ADAPTIVE_DECEPTION_REPORT.json`](file:///home/suyashpradhan/Downloads/AHRAS_Suyash-master/evaluation/results/ADAPTIVE_DECEPTION_REPORT.json)
-   - [`evaluation/results/RESILIENCE_RECOVERY_REPORT.json`](file:///home/suyashpradhan/Downloads/AHRAS_Suyash-master/evaluation/results/RESILIENCE_RECOVERY_REPORT.json)
-   - [`publication/tables/security_twin_response_lab.tex`](file:///home/suyashpradhan/Downloads/AHRAS_Suyash-master/publication/tables/security_twin_response_lab.tex)
-   - [`publication/tables/adaptive_deception.tex`](file:///home/suyashpradhan/Downloads/AHRAS_Suyash-master/publication/tables/adaptive_deception.tex)
-   - [`publication/tables/resilience_recovery.tex`](file:///home/suyashpradhan/Downloads/AHRAS_Suyash-master/publication/tables/resilience_recovery.tex)
-7. **Documentation**: [`docs/PHASE_6_SECURITY_TWIN_AND_RESILIENCE_COMPLETION.md`](file:///home/suyashpradhan/Downloads/AHRAS_Suyash-master/docs/PHASE_6_SECURITY_TWIN_AND_RESILIENCE_COMPLETION.md).
+   - [`evaluation/results/SECURITY_TWIN_RESPONSE_LAB_REPORT.json`](evaluation/results/SECURITY_TWIN_RESPONSE_LAB_REPORT.json)
+   - [`evaluation/results/ADAPTIVE_DECEPTION_REPORT.json`](evaluation/results/ADAPTIVE_DECEPTION_REPORT.json)
+   - [`evaluation/results/RESILIENCE_RECOVERY_REPORT.json`](evaluation/results/RESILIENCE_RECOVERY_REPORT.json)
+   - [`publication/tables/security_twin_response_lab.tex`](publication/tables/security_twin_response_lab.tex)
+   - [`publication/tables/adaptive_deception.tex`](publication/tables/adaptive_deception.tex)
+   - [`publication/tables/resilience_recovery.tex`](publication/tables/resilience_recovery.tex)
+7. **Documentation**: [`docs/PHASE_6_SECURITY_TWIN_AND_RESILIENCE_COMPLETION.md`](docs/PHASE_6_SECURITY_TWIN_AND_RESILIENCE_COMPLETION.md).
 
 ---
 
@@ -457,24 +457,24 @@ Engineered and integrated the pre-execution response lab, adaptive deception eng
 
 Engineered and integrated the representation-learning foundation and multimodal fusion architecture specified in Sections 20, 36, 37, 39:
 
-1. **Self-Supervised Representation Engine ([`detection/representation_engine.py`](file:///home/suyashpradhan/Downloads/AHRAS_Suyash-master/detection/representation_engine.py))**:
+1. **Self-Supervised Representation Engine ([`detection/representation_engine.py`](detection/representation_engine.py))**:
    - `SecurityRepresentationModel`: Tabular masked feature reconstruction ($p_{\text{mask}}=0.20$) and InfoNCE contrastive hyperspherical pre-training on unlabelled telemetry.
    - Computes latent Mahalanobis distance and autoencoder reconstruction residuals.
    - Evaluates few-shot label efficiency across $5\%, 10\%, 20\%, 50\%, 100\%$ budgets.
    - **EXP-39 Benchmark (Part A)**: Achieves **$99.0\%$ zero-day / OOD detection recall** ($99/100$) and **$66.05\ \mu\text{s}$ per-sample inference latency**.
 
-2. **Endpoint Sensor Telemetry Normalization ([`sensors/endpoint_sensor.py`](file:///home/suyashpradhan/Downloads/AHRAS_Suyash-master/sensors/endpoint_sensor.py))**:
+2. **Endpoint Sensor Telemetry Normalization ([`sensors/endpoint_sensor.py`](sensors/endpoint_sensor.py))**:
    - `EndpointSensor`: Captures and normalizes host-level events across process lineage, Shannon file entropy, network socket fan-out, authentication, and persistence hooks into typed `EndpointEvent` objects.
 
-3. **Degradation-Resilient Multimodal Combiner ([`detection/multimodal_combiner.py`](file:///home/suyashpradhan/Downloads/AHRAS_Suyash-master/detection/multimodal_combiner.py))**:
+3. **Degradation-Resilient Multimodal Combiner ([`detection/multimodal_combiner.py`](detection/multimodal_combiner.py))**:
    - `MultimodalCombiner`: Fuses 5 security modalities (`Network`, `Endpoint`, `Identity`, `History`, `Graph`).
    - Adapts to missing modalities with dynamic degradation penalties without pipeline collapse.
    - **EXP-39 Benchmark (Part C)**: Preserves **$1.0000$ detection F1** across missing modality ablations and delayed telemetry skews ($0\text{s}$ to $30\text{s}$).
 
 4. **Evaluation Artifacts**:
-   - [`evaluation/results/REPRESENTATION_MULTIMODAL_REPORT.json`](file:///home/suyashpradhan/Downloads/AHRAS_Suyash-master/evaluation/results/REPRESENTATION_MULTIMODAL_REPORT.json)
-   - [`publication/tables/representation_and_multimodal.tex`](file:///home/suyashpradhan/Downloads/AHRAS_Suyash-master/publication/tables/representation_and_multimodal.tex)
-5. **Documentation**: [`docs/PHASE_7_REPRESENTATION_AND_MULTIMODAL_COMPLETION.md`](file:///home/suyashpradhan/Downloads/AHRAS_Suyash-master/docs/PHASE_7_REPRESENTATION_AND_MULTIMODAL_COMPLETION.md).
+   - [`evaluation/results/REPRESENTATION_MULTIMODAL_REPORT.json`](evaluation/results/REPRESENTATION_MULTIMODAL_REPORT.json)
+   - [`publication/tables/representation_and_multimodal.tex`](publication/tables/representation_and_multimodal.tex)
+5. **Documentation**: [`docs/PHASE_7_REPRESENTATION_AND_MULTIMODAL_COMPLETION.md`](docs/PHASE_7_REPRESENTATION_AND_MULTIMODAL_COMPLETION.md).
 
 ---
 
@@ -483,7 +483,7 @@ Engineered and integrated the representation-learning foundation and multimodal 
 
 Engineered and integrated the behavioral host security models specified in Section 38:
 
-1. **Behavioral Endpoint Engine ([`detection/behavioral_endpoint_engine.py`](file:///home/suyashpradhan/Downloads/AHRAS_Suyash-master/detection/behavioral_endpoint_engine.py))**:
+1. **Behavioral Endpoint Engine ([`detection/behavioral_endpoint_engine.py`](detection/behavioral_endpoint_engine.py))**:
    - `BehavioralEndpointEngine`: Stateful host analytics evaluating rolling temporal windows ($60\text{s}$).
    - **Ransomware Indicators**: Mass file write bursts, high Shannon entropy ($H \ge 7.20 / 8.0$), suspicious extension renames, and volume shadow copy deletion attempts (`vssadmin delete shadows`).
    - **Worm Indicators**: Rapid outbound host fan-out ($\ge 4$ unique hosts) and multi-connection sweeps on lateral propagation ports (SMB $445$, RDP $3389$, SSH $22$).
@@ -496,7 +496,7 @@ Engineered and integrated the behavioral host security models specified in Secti
    - **Malware Lineage TPR**: $\mathbf{100.0\%}$ ($50/50$).
    - **Benign False Alarm Rate (FPR)**: $\mathbf{0.0\%}$ ($0/100$).
    - **Evidence Cryptographic Integrity**: $\mathbf{100.0\%}$.
-3. **Documentation**: [`docs/PHASE_8_ENDPOINT_BEHAVIORAL_COMPLETION.md`](file:///home/suyashpradhan/Downloads/AHRAS_Suyash-master/docs/PHASE_8_ENDPOINT_BEHAVIORAL_COMPLETION.md).
+3. **Documentation**: [`docs/PHASE_8_ENDPOINT_BEHAVIORAL_COMPLETION.md`](docs/PHASE_8_ENDPOINT_BEHAVIORAL_COMPLETION.md).
 
 ---
 
@@ -505,20 +505,20 @@ Engineered and integrated the behavioral host security models specified in Secti
 
 Engineered and integrated the safety and decision governance layer specified in Sections 40, 41, 42, 43, 44:
 
-1. **AI Security Guard ([`guard/ai_guard.py`](file:///home/suyashpradhan/Downloads/AHRAS_Suyash-master/guard/ai_guard.py))**:
+1. **AI Security Guard ([`guard/ai_guard.py`](guard/ai_guard.py))**:
    - `AISecurityGuard`: Enforces 7 typed trust classes and sanitizes untrusted text against prompt injection, delimiter breakout, and system prompt override attempts.
    - Deterministic tool authorization gate enforcing strict RBAC and requiring human approval tokens for destructive tools (`isolate_host`, `revoke_token`).
 
-2. **Grounded LLM Analyst Assistant ([`xai/grounded_llm_assistant.py`](file:///home/suyashpradhan/Downloads/AHRAS_Suyash-master/xai/grounded_llm_assistant.py))**:
+2. **Grounded LLM Analyst Assistant ([`xai/grounded_llm_assistant.py`](xai/grounded_llm_assistant.py))**:
    - `GroundedLLMAssistant`: Grounding-only architecture requiring evidence citations on all claims.
    - Enforces the **Zero Autonomous Authorization Rights** invariant and automatically triggers epistemic abstention under high uncertainty.
 
-3. **Calibration & Selective Abstention ([`calibration/selective_abstention.py`](file:///home/suyashpradhan/Downloads/AHRAS_Suyash-master/calibration/selective_abstention.py))**:
+3. **Calibration & Selective Abstention ([`calibration/selective_abstention.py`](calibration/selective_abstention.py))**:
    - `SelectiveCalibrationEngine`: Platt scaling calibration reducing Expected Calibration Error (ECE) by $43.49\%$.
    - 4-state selective classification: `BENIGN`, `ATTACK`, `UNKNOWN`, `ABSTAIN`.
    - Computes empirical Coverage vs. Error frontier curves.
 
-4. **Human-AI Learning-to-Defer Engine ([`controller/learning_to_defer.py`](file:///home/suyashpradhan/Downloads/AHRAS_Suyash-master/controller/learning_to_defer.py))**:
+4. **Human-AI Learning-to-Defer Engine ([`controller/learning_to_defer.py`](controller/learning_to_defer.py))**:
    - `LearningToDeferEngine`: Balances automated response against analyst fatigue.
    - Enforces zero-tolerance policy invariants (never automates forbidden actions) and escalates high-stakes attacks.
 
@@ -528,9 +528,9 @@ Engineered and integrated the safety and decision governance layer specified in 
    - **Expected Calibration Error**: Improved from $0.0338 \to \mathbf{0.0191}$ ($43.49\%$ reduction).
    - **Policy Safety Violations**: $\mathbf{0 / 100}$ ($100\%$ compliance).
 6. **Evaluation Artifacts**:
-   - [`evaluation/results/TRUSTWORTHY_AI_REPORT.json`](file:///home/suyashpradhan/Downloads/AHRAS_Suyash-master/evaluation/results/TRUSTWORTHY_AI_REPORT.json)
-   - [`publication/tables/trustworthy_ai.tex`](file:///home/suyashpradhan/Downloads/AHRAS_Suyash-master/publication/tables/trustworthy_ai.tex)
-7. **Documentation**: [`docs/PHASE_9_CALIBRATION_AND_AI_SECURITY_COMPLETION.md`](file:///home/suyashpradhan/Downloads/AHRAS_Suyash-master/docs/PHASE_9_CALIBRATION_AND_AI_SECURITY_COMPLETION.md).
+   - [`evaluation/results/TRUSTWORTHY_AI_REPORT.json`](evaluation/results/TRUSTWORTHY_AI_REPORT.json)
+   - [`publication/tables/trustworthy_ai.tex`](publication/tables/trustworthy_ai.tex)
+7. **Documentation**: [`docs/PHASE_9_CALIBRATION_AND_AI_SECURITY_COMPLETION.md`](docs/PHASE_9_CALIBRATION_AND_AI_SECURITY_COMPLETION.md).
 
 ---
 
@@ -539,17 +539,17 @@ Engineered and integrated the safety and decision governance layer specified in 
 
 Engineered and integrated the system efficiency, compression, and edge portability capabilities specified in Sections 51, 52, 53, 54:
 
-1. **Thermodynamic Energy Profiler ([`performance/energy_profiler.py`](file:///home/suyashpradhan/Downloads/AHRAS_Suyash-master/performance/energy_profiler.py))**:
+1. **Thermodynamic Energy Profiler ([`performance/energy_profiler.py`](performance/energy_profiler.py))**:
    - `EnergyProfiler`: Times CPU consumption and computes $\mu\text{J}$ per processed event and Security-Performance-Per-Watt (SPW).
    - Demonstrates that Resource-Aware Routing saves **$95.64\%$ energy** ($1,143.07\ \mu\text{J} \to 49.87\ \mu\text{J}$) and delivers a **$+2,182.92\%$ SPW gain** over monolithic execution.
 
-2. **Model Compression Suite ([`models/compression.py`](file:///home/suyashpradhan/Downloads/AHRAS_Suyash-master/models/compression.py))**:
+2. **Model Compression Suite ([`models/compression.py`](models/compression.py))**:
    - `ModelCompressor`: Evaluates INT8 quantization ($68.5\%$ memory reduction, $\text{F1} = 0.9620$), magnitude pruning ($45.0\%$ memory reduction), and compact student distillation ($0.25\ \mu\text{s}$ latency) with automatic fallback to Teacher.
 
-3. **Edge Deployment Profiles ([`deployment/edge_profiles.py`](file:///home/suyashpradhan/Downloads/AHRAS_Suyash-master/deployment/edge_profiles.py))**:
+3. **Edge Deployment Profiles ([`deployment/edge_profiles.py`](deployment/edge_profiles.py))**:
    - `DeploymentProfileManager`: Configures and validates architectural profiles across `CENTRAL` ($32\text{GB}$ RAM, full GNN), `EDGE` ($4\text{GB}$ RAM, $2.5\text{ms}$ SLA), `ENDPOINT` ($256\text{MB}$ RAM, $0.15\text{ms}$ SLA), and `HYBRID`.
 
-4. **Federated Privacy-Utility Research ([`federated/privacy_utility.py`](file:///home/suyashpradhan/Downloads/AHRAS_Suyash-master/federated/privacy_utility.py))**:
+4. **Federated Privacy-Utility Research ([`federated/privacy_utility.py`](federated/privacy_utility.py))**:
    - `FederatedPrivacyUtilityResearcher`: Evaluates Gaussian Differential Privacy ($\epsilon$-DP) noise across non-IID enterprise silos, mapping the Pareto trade-off between privacy budget and rare-attack recall.
 
 5. **EXP-41 Benchmark Results**:
@@ -558,9 +558,9 @@ Engineered and integrated the system efficiency, compression, and edge portabili
    - **INT8 Quantization Memory Savings**: $\mathbf{68.5\%}$.
    - **Distilled Student Latency**: $\mathbf{0.25\ \mu\text{s}}$ per sample.
 6. **Evaluation Artifacts**:
-   - [`evaluation/results/ENERGY_COMPRESSION_EDGE_REPORT.json`](file:///home/suyashpradhan/Downloads/AHRAS_Suyash-master/evaluation/results/ENERGY_COMPRESSION_EDGE_REPORT.json)
-   - [`publication/tables/energy_compression_edge.tex`](file:///home/suyashpradhan/Downloads/AHRAS_Suyash-master/publication/tables/energy_compression_edge.tex)
-7. **Documentation**: [`docs/PHASE_10_ENERGY_COMPRESSION_AND_EDGE_COMPLETION.md`](file:///home/suyashpradhan/Downloads/AHRAS_Suyash-master/docs/PHASE_10_ENERGY_COMPRESSION_AND_EDGE_COMPLETION.md).
+   - [`evaluation/results/ENERGY_COMPRESSION_EDGE_REPORT.json`](evaluation/results/ENERGY_COMPRESSION_EDGE_REPORT.json)
+   - [`publication/tables/energy_compression_edge.tex`](publication/tables/energy_compression_edge.tex)
+7. **Documentation**: [`docs/PHASE_10_ENERGY_COMPRESSION_AND_EDGE_COMPLETION.md`](docs/PHASE_10_ENERGY_COMPRESSION_AND_EDGE_COMPLETION.md).
 
 
 

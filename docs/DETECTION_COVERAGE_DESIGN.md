@@ -70,7 +70,7 @@ flowchart TD
 
 ## 4. Module Architecture & Component Breakdown
 
-The engine is isolated in [`coverage/`](file:///home/suyashpradhan/Downloads/AHRAS_Suyash-master/coverage):
+The engine is isolated in [`coverage/`](coverage):
 
 ```
 coverage/

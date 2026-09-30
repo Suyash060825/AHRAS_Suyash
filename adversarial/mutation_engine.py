@@ -16,7 +16,7 @@ from typing import Any, Dict, List, Optional, Tuple
 from adversarial.process_mutator import ProcessMutator, ProcessMutationStrategy
 from adversarial.traffic_mutator import TrafficMutator, TrafficMutationStrategy
 from adversarial.cloud_mutator import CloudMutator, CloudMutationStrategy
-from coverage.implementation_catalog import TechniqueImplementation, get_default_catalog
+from detection_coverage.implementation_catalog import TechniqueImplementation, get_default_catalog
 
 log = logging.getLogger(__name__)
 

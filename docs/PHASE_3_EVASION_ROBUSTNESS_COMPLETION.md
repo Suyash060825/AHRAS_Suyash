@@ -3,11 +3,11 @@
 
 > **Status**: Completed, Empirically Validated, 100% Test Suite Pass (498 Passed, 43 Subtests Passed)  
 > **Benchmark ID**: `EXP-24`  
-> **Target Package**: [`adversarial/`](file:///home/suyashpradhan/Downloads/AHRAS_Suyash-master/adversarial)  
+> **Target Package**: [`adversarial/`](adversarial)  
 > **Primary Artifacts**:
-> - [`evaluation/results/EVASION_ROBUSTNESS_REPORT.json`](file:///home/suyashpradhan/Downloads/AHRAS_Suyash-master/evaluation/results/EVASION_ROBUSTNESS_REPORT.json)
-> - [`publication/tables/evasion_robustness.tex`](file:///home/suyashpradhan/Downloads/AHRAS_Suyash-master/publication/tables/evasion_robustness.tex)
-> - [`tests/test_evasion_robustness.py`](file:///home/suyashpradhan/Downloads/AHRAS_Suyash-master/tests/test_evasion_robustness.py)
+> - [`evaluation/results/EVASION_ROBUSTNESS_REPORT.json`](evaluation/results/EVASION_ROBUSTNESS_REPORT.json)
+> - [`publication/tables/evasion_robustness.tex`](publication/tables/evasion_robustness.tex)
+> - [`tests/test_evasion_robustness.py`](tests/test_evasion_robustness.py)
 
 ---
 
