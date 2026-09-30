@@ -1,0 +1,37 @@
+{
+  "graph_id": "AHRAS_RISK_COMPUTATION_V1",
+  "root_node": "Final_Clamped_Risk_Score",
+  "nodes": [
+    { "id": "S_sig", "type": "input", "domain": [0.0, 1.0], "source": "signature_engine" },
+    { "id": "A_ml", "type": "input", "domain": [0.0, 1.0], "source": "anomaly_engine" },
+    { "id": "delta_D", "type": "input", "domain": [0.0, 5.0], "source": "welford_stat_engine" },
+    { "id": "H_boost", "type": "input", "domain": [0.0, 1.0], "source": "historical_risk" },
+    { "id": "G_corr", "type": "input", "domain": [0.0, 1.0], "source": "temporal_gnn" },
+    { "id": "P_fore", "type": "input", "domain": [0.0, 1.0], "source": "attack_predictor" },
+    { "id": "TI_score", "type": "input", "domain": [0.0, 1.0], "source": "threat_intel" },
+    { "id": "R_ep", "type": "input", "domain": [0.0, 1.0], "source": "attack_path_reasoner" },
+    { "id": "A_crit", "type": "multiplier", "domain": [0.5, 2.0], "source": "asset_inventory" },
+    { "id": "Uncertainty", "type": "attenuator", "domain": [0.0, 1.0], "source": "detector_disagreement" },
+    { "id": "T_trust", "type": "subtractor", "domain": [0.0, 1.0], "source": "trust_manager" },
+    { "id": "Additive_Threat_Sum", "type": "intermediate_sum", "formula": "sum(w_i * S_i * q_i)" },
+    { "id": "Modulated_Threat", "type": "intermediate_product", "formula": "Additive_Threat_Sum * A_crit * (1 - 0.3 * Uncertainty)" },
+    { "id": "Raw_Risk", "type": "intermediate_difference", "formula": "Modulated_Threat - (w_trust * T_trust)" },
+    { "id": "Final_Clamped_Risk_Score", "type": "output", "formula": "clip(Raw_Risk, 0.0, 1.0)" }
+  ],
+  "edges": [
+    { "from": "S_sig", "to": "Additive_Threat_Sum" },
+    { "from": "A_ml", "to": "Additive_Threat_Sum" },
+    { "from": "delta_D", "to": "Additive_Threat_Sum" },
+    { "from": "H_boost", "to": "Additive_Threat_Sum" },
+    { "from": "G_corr", "to": "Additive_Threat_Sum" },
+    { "from": "P_fore", "to": "Additive_Threat_Sum" },
+    { "from": "TI_score", "to": "Additive_Threat_Sum" },
+    { "from": "R_ep", "to": "Additive_Threat_Sum" },
+    { "from": "Additive_Threat_Sum", "to": "Modulated_Threat" },
+    { "from": "A_crit", "to": "Modulated_Threat" },
+    { "from": "Uncertainty", "to": "Modulated_Threat" },
+    { "from": "Modulated_Threat", "to": "Raw_Risk" },
+    { "from": "T_trust", "to": "Raw_Risk" },
+    { "from": "Raw_Risk", "to": "Final_Clamped_Risk_Score" }
+  ]
+}

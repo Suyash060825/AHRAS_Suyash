@@ -10,11 +10,11 @@
     "pytest_version": "9.1.1"
   },
   "test_suite": {
-    "total_tests": 262,
-    "passed": 262,
+    "total_tests": 650,
+    "passed": 650,
     "failed": 0,
     "errors": 0,
-    "duration_seconds": 37.12,
+    "duration_seconds": 76.45,
     "status": "ALL_PASSED"
   },
   "architecture_frozen": true,

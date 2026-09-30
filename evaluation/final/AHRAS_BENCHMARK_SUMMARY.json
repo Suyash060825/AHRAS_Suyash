@@ -1,0 +1,116 @@
+{
+  "timestamp": 1790741089.9550717,
+  "registered_datasets_count": 7,
+  "available_datasets": [
+    "cicids2017",
+    "unsw_nb15"
+  ],
+  "sections": {
+    "dataset_audit": {
+      "cicids2017": {
+        "name": "CIC-IDS2017 Intrusion Detection Benchmark",
+        "status": "VERIFIED_AVAILABLE",
+        "sha256": "893c27dc968bf7a8adef1689f90be55ca4a4dc3088fb63d6ff247ac56856df2a",
+        "provenance": "Canadian Institute for Cybersecurity (UNB)"
+      },
+      "unsw_nb15": {
+        "name": "UNSW-NB15 Synthetic-Realistic Security Dataset",
+        "status": "VERIFIED_AVAILABLE",
+        "sha256": "a71a9dc641b2878d63133d46a2a5bc8488e82010208cf237c89f3fa710b8c628",
+        "provenance": "Cyber Range Lab of the Australian Centre for Cyber Security (ACCS)"
+      },
+      "cse_cic_ids2018": {
+        "name": "CSE-CIC-IDS2018 on AWS",
+        "status": "BLOCKED_NOT_FOUND_OR_HASH_MISMATCH",
+        "sha256": null,
+        "provenance": "Communications Security Establishment (CSE) & CIC (UNB)"
+      },
+      "ugr16": {
+        "name": "UGR'16 Long-Term Network Flow Dataset",
+        "status": "BLOCKED_NOT_FOUND_OR_HASH_MISMATCH",
+        "sha256": null,
+        "provenance": "University of Granada (NESG)"
+      },
+      "ctu13": {
+        "name": "CTU-13 Botnet Traffic Dataset",
+        "status": "BLOCKED_NOT_FOUND_OR_HASH_MISMATCH",
+        "sha256": null,
+        "provenance": "Stratosphere IPS Laboratory (Czech Technical University)"
+      },
+      "iot23": {
+        "name": "Aposemat IoT-23 Dataset",
+        "status": "BLOCKED_NOT_FOUND_OR_HASH_MISMATCH",
+        "sha256": null,
+        "provenance": "Stratosphere Laboratory & Avast Software"
+      },
+      "lanl_cyber1": {
+        "name": "Los Alamos National Laboratory (LANL) Comprehensive Multi-Event Cyber Security Dataset",
+        "status": "BLOCKED_NOT_FOUND_OR_HASH_MISMATCH",
+        "sha256": null,
+        "provenance": "Los Alamos National Laboratory"
+      }
+    },
+    "combinatorial_coverage": {
+      "pairwise_generated_count": 90,
+      "threeway_generated_count": 30,
+      "total_scenarios_evaluated": 120,
+      "coverage_rate": 1.0
+    },
+    "metamorphic_testing": {
+      "all_passed": true,
+      "pass_rate": 1.0,
+      "details": [
+        {
+          "mr": "MR1_EventDuplication",
+          "passed": true,
+          "r_orig": 0.7000000000000001,
+          "r_transformed": 0.7000000000000001,
+          "delta": 0.0
+        },
+        {
+          "mr": "MR2_IrrelevantMetadata",
+          "passed": true,
+          "r_orig": 0.7000000000000001,
+          "r_transformed": 0.7000000000000001
+        },
+        {
+          "mr": "MR3_MonotonicMaliciousIncrement",
+          "passed": true,
+          "r_orig": 0.7000000000000001,
+          "r_transformed": 0.9
+        },
+        {
+          "mr": "MR4_EvidenceRemoval",
+          "passed": true,
+          "r_orig": 0.7000000000000001,
+          "r_transformed": 0.0
+        },
+        {
+          "mr": "MR5_OrderPermutation",
+          "passed": true,
+          "r_orig": 0.7000000000000001,
+          "r_transformed": 0.7000000000000001,
+          "delta": 0.0
+        },
+        {
+          "mr": "MR6_BenignBackgroundScaling",
+          "passed": true,
+          "r_orig": 0.7000000000000001,
+          "r_transformed": 0.15454545454545454
+        },
+        {
+          "mr": "MR7_AssetCriticalityEscalation",
+          "passed": true,
+          "r_orig": 0.7000000000000001,
+          "r_transformed": 0.85
+        }
+      ]
+    },
+    "telemetry_fault_injection": {
+      "test_fault_rate": 0.2,
+      "events_in": 2,
+      "events_out": 1,
+      "fault_tolerance_verified": true
+    }
+  }
+}

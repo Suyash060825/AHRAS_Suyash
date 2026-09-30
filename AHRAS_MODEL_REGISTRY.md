@@ -8,7 +8,7 @@
 
 | Model Name | Purpose | Input Dimensions / Types | Output Schema / Range | Version | Training Data / Priors | Evaluation Status |
 | :--- | :--- | :--- | :--- | :--- | :--- | :--- |
-| **Suricata Signature Rule Engine** | Deterministic IOC matching & MITRE attack mapping | Raw/Normalized OCSF event dictionary | `List[SignatureMatch]` (severity 1-5, confidence $\in [0, 1]$) | `2.1.0` | 23 curated MITRE rules (CVEs, Scans, BruteForce) | Verified (Baseline $B_0$, 262/262 tests pass) |
+| **Suricata Signature Rule Engine** | Deterministic IOC matching & MITRE attack mapping | Raw/Normalized OCSF event dictionary | `List[SignatureMatch]` (severity 1-5, confidence $\in [0, 1]$) | `2.1.0` | 23 curated MITRE rules (CVEs, Scans, BruteForce) | Verified (Baseline $B_0$, 650/650 tests pass) |
 | **Isolation Forest Point Anomaly** | Fast tree-based partition outlier detection | Standardized 14-dim numerical vector | `isolation_score` $\in [0, 1]$ | `1.4.0` | Unsupervised benign network flows | Verified (Ensemble component) |
 | **Deep Feature Autoencoder** | Non-linear manifold reconstruction error | 14-dim standardized vector | `reconstruction_error` $\in [0, \infty)$ | `1.2.0` | Unsupervised benign baseline telemetry | Verified (Ensemble component) |
 | **One-Class SVM** | Support-vector boundary outlier detection | 14-dim standardized vector | `svm_score` $\in [0, 1]$ | `1.1.0` | Normal network/process features | Verified (Ensemble component) |

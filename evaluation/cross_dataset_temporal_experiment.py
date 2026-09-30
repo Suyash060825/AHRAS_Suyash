@@ -144,17 +144,20 @@ class CrossDatasetTemporalExperiment:
     """
     Executes journal-grade cross-dataset & temporal generalization evaluation
     comparing standard supervised/unsupervised classifiers against AHRAS adaptive drift engine.
+    Supports STRICT_REAL (raises FileNotFoundError / blocks) and SYNTHETIC modes explicitly.
     """
     def __init__(
         self,
         cicids_path: Optional[str] = None,
         unsw_path: Optional[str] = None,
         seed: int = 42,
+        evaluation_mode: str = "STRICT_REAL",
     ):
         self.seed = seed
         self.rng = np.random.default_rng(seed)
         self.cicids_path = cicids_path or os.path.join(_ROOT, "data", "cicids2017", "Wednesday-workingHours.pcap_ISCX.csv")
         self.unsw_path = unsw_path or os.path.join(_ROOT, "data", "unsw_nb15", "UNSW-NB15_1.csv")
+        self.evaluation_mode = evaluation_mode
 
     def load_in_domain_partition(self, sample_size: int = 4000) -> Tuple[List[FlowRecord], List[FlowRecord], List[FlowRecord]]:
         """
@@ -187,11 +190,13 @@ class CrossDatasetTemporalExperiment:
     def load_cross_dataset_partition(self, sample_size: int = 4000) -> List[FlowRecord]:
         """
         Loads authentic UNSW-NB15 network flows spanning foreign network topology
-        and diverse protocol distributions (with deterministic synthetic generation if file absent).
+        and diverse protocol distributions.
         """
         records: List[FlowRecord] = []
         if not os.path.exists(self.unsw_path):
-            log.warning(f"[BENCHMARK] UNSW-NB15 raw CSV not found at {self.unsw_path}; generating synthetic test partition.")
+            if self.evaluation_mode == "STRICT_REAL":
+                raise FileNotFoundError(f"[BLOCKED] Strict real-data evaluation requires authentic UNSW-NB15 dataset at {self.unsw_path}")
+            log.warning(f"[BENCHMARK] UNSW-NB15 raw CSV not found at {self.unsw_path}; generating synthetic test partition (evaluation_mode=SYNTHETIC).")
             rng = np.random.default_rng(self.seed + 100)
             for i in range(sample_size):
                 is_atk = 1 if rng.random() < 0.35 else 0
@@ -234,7 +239,9 @@ class CrossDatasetTemporalExperiment:
 
     def _parse_cicids_slice(self, start_row: int, end_row: int, target_count: int) -> List[FlowRecord]:
         if not os.path.exists(self.cicids_path):
-            log.warning(f"[BENCHMARK] CICIDS raw CSV not found at {self.cicids_path}; generating deterministic synthetic partition.")
+            if self.evaluation_mode == "STRICT_REAL":
+                raise FileNotFoundError(f"[BLOCKED] Strict real-data evaluation requires authentic CIC-IDS2017 dataset at {self.cicids_path}")
+            log.warning(f"[BENCHMARK] CICIDS raw CSV not found at {self.cicids_path}; generating deterministic synthetic partition (evaluation_mode=SYNTHETIC).")
             rng = np.random.default_rng(self.seed + start_row)
             records: List[FlowRecord] = []
             for i in range(target_count):

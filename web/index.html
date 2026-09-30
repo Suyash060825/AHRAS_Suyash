@@ -388,6 +388,31 @@
         </div>
     </div>
 
+    <!-- Authentication Login Modal -->
+    <div id="login-modal" style="display: none; position: fixed; inset: 0; background: rgba(0,0,0,0.75); backdrop-filter: blur(8px); z-index: 1000; align-items: center; justify-content: center;">
+        <div style="background: var(--card-bg); border: 1px solid var(--accent-blue); border-radius: 16px; width: 400px; max-width: 95%; padding: 24px; box-shadow: 0 16px 48px rgba(79,172,254,0.25);">
+            <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 16px;">
+                <h3 style="font-size: 16px; color: var(--accent-blue);">🔐 SOC Analyst Authentication</h3>
+                <button onclick="closeLoginModal()" style="background: transparent; border: none; color: var(--text-muted); font-size: 24px; cursor: pointer;">&times;</button>
+            </div>
+            <form id="login-form" onsubmit="submitLoginForm(event)" style="display: flex; flex-direction: column; gap: 14px;">
+                <div id="login-error-banner" style="display: none; padding: 8px 12px; background: rgba(255,75,75,0.15); border: 1px solid var(--accent-red); border-radius: 8px; color: var(--accent-red); font-size: 12px;"></div>
+                <div>
+                    <label style="font-size: 12px; color: var(--text-muted); display: block; margin-bottom: 4px;">Username</label>
+                    <input type="text" id="login-username" required autocomplete="username" style="width: 100%; padding: 10px 12px; background: rgba(0,0,0,0.4); border: 1px solid var(--card-border); border-radius: 8px; color: var(--text-main); font-size: 14px; outline: none;" placeholder="Username">
+                </div>
+                <div>
+                    <label style="font-size: 12px; color: var(--text-muted); display: block; margin-bottom: 4px;">Password</label>
+                    <input type="password" id="login-password" required autocomplete="current-password" style="width: 100%; padding: 10px 12px; background: rgba(0,0,0,0.4); border: 1px solid var(--card-border); border-radius: 8px; color: var(--text-main); font-size: 14px; outline: none;" placeholder="Password">
+                </div>
+                <div style="display: flex; justify-content: flex-end; gap: 10px; margin-top: 8px;">
+                    <button type="button" onclick="closeLoginModal()" style="padding: 8px 16px; background: rgba(255,255,255,0.05); border: 1px solid var(--card-border); border-radius: 8px; color: var(--text-muted); cursor: pointer;">Cancel</button>
+                    <button type="submit" class="btn-action" style="background: linear-gradient(135deg, var(--accent-cyan), var(--accent-blue)); color: #090d16; font-weight: 600;">Sign In</button>
+                </div>
+            </form>
+        </div>
+    </div>
+
     <script>
         // ── Modal Handlers ────────────────────────────────────────────────────────
         function showXaiModal(entity, risk, tech, details) {
@@ -404,49 +429,44 @@
             document.getElementById('xai-modal').style.display = 'none';
         }
 
-        function renderXaiDagSvg() {
-            const svg = d3.select("#xai-dag-svg");
-            svg.selectAll("*").remove();
-            
-            // Draw Causal DAG: Sig Match + ML Anomaly -> Conformal Gate -> Action
-            const nodes = [
-                { id: "SIG", x: 60, y: 30, label: "Sig: NET-011", color: "#ffb703" },
-                { id: "ML", x: 60, y: 65, label: "ML: Anomaly (0.92)", color: "#00f2fe" },
-                { id: "GATE", x: 280, y: 48, label: "Conformal Gate", color: "#ff4b4b" },
-                { id: "ACT", x: 490, y: 48, label: "CONTAINMENT", color: "#00e676" }
-            ];
-            const links = [
-                { source: nodes[0], target: nodes[2] },
-                { source: nodes[1], target: nodes[2] },
-                { source: nodes[2], target: nodes[3] }
-            ];
+        function showLoginModal() {
+            document.getElementById('login-username').value = '';
+            document.getElementById('login-password').value = '';
+            document.getElementById('login-error-banner').style.display = 'none';
+            document.getElementById('login-modal').style.display = 'flex';
+        }
 
-            svg.selectAll("line")
-                .data(links)
-                .enter().append("line")
-                .attr("x1", d => d.source.x)
-                .attr("y1", d => d.source.y)
-                .attr("x2", d => d.target.x)
-                .attr("y2", d => d.target.y)
-                .attr("stroke", "rgba(255,255,255,0.2)")
-                .attr("stroke-width", 2);
+        function closeLoginModal() {
+            document.getElementById('login-modal').style.display = 'none';
+        }
 
-            const g = svg.selectAll("g")
-                .data(nodes)
-                .enter().append("g")
-                .attr("transform", d => `translate(${d.x},${d.y})`);
+        async function submitLoginForm(event) {
+            event.preventDefault();
+            const user = document.getElementById('login-username').value.trim();
+            const pass = document.getElementById('login-password').value;
+            const errBanner = document.getElementById('login-error-banner');
+            errBanner.style.display = 'none';
 
-            g.append("circle")
-                .attr("r", 12)
-                .attr("fill", d => d.color);
-
-            g.append("text")
-                .attr("x", 16)
-                .attr("y", 4)
-                .attr("fill", "#f1f5f9")
-                .attr("font-size", "10px")
-                .attr("font-family", "JetBrains Mono")
-                .text(d => d.label);
+            try {
+                const res = await fetch('/api/auth/token', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ username: user, password: pass })
+                });
+                if (res.ok) {
+                    const data = await res.json();
+                    setAuthToken(data.access_token);
+                    closeLoginModal();
+                    location.reload();
+                } else {
+                    const err = await res.json().catch(() => ({ detail: 'Invalid credentials' }));
+                    errBanner.textContent = err.detail || 'Authentication failed: Invalid credentials';
+                    errBanner.style.display = 'block';
+                }
+            } catch (e) {
+                errBanner.textContent = 'Connection error: ' + e.message;
+                errBanner.style.display = 'block';
+            }
         }
 
         // ── Sparkline Rendering ───────────────────────────────────────────────────
@@ -482,11 +502,34 @@
 
         // ── Authentication & Token Management ─────────────────────────────────────
         function getAuthToken() {
-            return localStorage.getItem('ahras_token') || '';
+            const token = localStorage.getItem('ahras_token');
+            const exp = localStorage.getItem('ahras_token_exp');
+            if (!token) return '';
+            if (exp && Date.now() > parseInt(exp, 10)) {
+                localStorage.removeItem('ahras_token');
+                localStorage.removeItem('ahras_token_exp');
+                updateAuthUI();
+                return '';
+            }
+            return token;
         }
         function setAuthToken(token) {
-            if (token) localStorage.setItem('ahras_token', token);
-            else localStorage.removeItem('ahras_token');
+            if (token) {
+                localStorage.setItem('ahras_token', token);
+                try {
+                    const payload = JSON.parse(atob(token.split('.')[1]));
+                    if (payload.exp) {
+                        localStorage.setItem('ahras_token_exp', (payload.exp * 1000).toString());
+                    } else {
+                        localStorage.setItem('ahras_token_exp', (Date.now() + 30 * 60 * 1000).toString());
+                    }
+                } catch (e) {
+                    localStorage.setItem('ahras_token_exp', (Date.now() + 30 * 60 * 1000).toString());
+                }
+            } else {
+                localStorage.removeItem('ahras_token');
+                localStorage.removeItem('ahras_token_exp');
+            }
             updateAuthUI();
         }
         function updateAuthUI() {
@@ -514,27 +557,7 @@
                 setAuthToken('');
                 location.reload();
             } else {
-                const user = prompt("Enter username (default: analyst):", "analyst");
-                if (!user) return;
-                const pass = prompt("Enter password (default: AnalystPass2026!):", "AnalystPass2026!");
-                if (!pass) return;
-                try {
-                    const res = await fetch('/api/auth/token', {
-                        method: 'POST',
-                        headers: { 'Content-Type': 'application/json' },
-                        body: JSON.stringify({ username: user, password: pass })
-                    });
-                    if (res.ok) {
-                        const data = await res.json();
-                        setAuthToken(data.access_token);
-                        alert("Authentication successful!");
-                        location.reload();
-                    } else {
-                        alert("Authentication failed: invalid credentials");
-                    }
-                } catch (e) {
-                    alert("Error authenticating: " + e.message);
-                }
+                showLoginModal();
             }
         }
         async function authFetch(url, options = {}) {

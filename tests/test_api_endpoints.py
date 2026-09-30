@@ -171,13 +171,28 @@ def test_entity_path_sanitization():
 
 
 def test_unified_response_approval_and_rejection():
+    import time
+    from response.orchestrator import get_response_orchestrator, ResponseAction
+    orch = get_response_orchestrator()
+
+    # Stage actions in orchestrator pending queue
+    act1 = ResponseAction("ACT-TEST-001", "workstation-01", "ISOLATE_HOST", "HIGH", 0.85, "T1059", "STAGED", "PENDING", time.time(), {})
+    act2 = ResponseAction("ACT-TEST-002", "workstation-02", "BLOCK_IP", "HIGH", 0.80, "T1071", "STAGED", "PENDING", time.time(), {})
+    with orch._lock:
+        orch._pending_queue["ACT-TEST-001"] = act1
+        orch._pending_queue["ACT-TEST-002"] = act2
+
     # Test approval
-    appr_resp = client.post("/api/response/approve", json={"alert_id": "ALT-2026-001"})
+    appr_resp = client.post("/api/response/approve", json={"alert_id": "ACT-TEST-001"})
     assert appr_resp.status_code == 200
     assert appr_resp.json()["status"] == "success"
 
     # Test rejection
-    rej_resp = client.post("/api/response/reject", json={"alert_id": "ALT-2026-002", "reason": "Benign false trigger"})
+    rej_resp = client.post("/api/response/reject", json={"alert_id": "ACT-TEST-002", "reason": "Benign false trigger"})
     assert rej_resp.status_code == 200
     assert rej_resp.json()["status"] == "success"
+
+    # Verify non-existent action fails closed with 404
+    missing_resp = client.post("/api/response/approve", json={"alert_id": "NON-EXISTENT-ACTION"})
+    assert missing_resp.status_code == 404
 

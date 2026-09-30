@@ -37,7 +37,7 @@ from pydantic import BaseModel, Field
 
 from config.settings import (
     ALLOWED_ORIGINS, RATE_LIMIT_PER_MINUTE, MAX_REQUEST_BYTES,
-    DEV_MODE, AHRAS_ENV, AHRAS_HOST, AHRAS_PORT, RESPONSE_MODE
+    DEV_MODE, AHRAS_ENV, AHRAS_HOST, AHRAS_PORT, RESPONSE_MODE, TRUSTED_PROXIES
 )
 from storage.store import get_store
 from detection.statistical_engine.entity_report import get_entity_report_generator, EntityReport
@@ -129,12 +129,15 @@ class RateLimitingMiddleware(BaseHTTPMiddleware):
         if request.url.path in ("/", "/dashboard", "/health", "/health/live", "/health/ready", "/docs", "/openapi.json", "/metrics") or request.url.path.startswith("/static"):
             return await call_next(request)
 
-        # Extract client IP respecting X-Forwarded-For if behind a proxy
+        # Extract direct client IP
+        direct_ip = request.client.host if request.client else "127.0.0.1"
+
+        # Check X-Forwarded-For ONLY if direct client IP is in TRUSTED_PROXIES
         forwarded = request.headers.get("X-Forwarded-For")
-        if forwarded:
+        if forwarded and direct_ip in TRUSTED_PROXIES:
             client_ip = forwarded.split(",")[0].strip()
         else:
-            client_ip = request.client.host if request.client else "127.0.0.1"
+            client_ip = direct_ip
 
         now = time.time()
 
@@ -236,6 +239,141 @@ class IOCIngestRequest(BaseModel):
     severity:    str = "HIGH"
     source:      str = "REST_API"
     tags:        Optional[List[str]] = None
+
+
+class ResponseApproveActionRequest(BaseModel):
+    alert_id: Optional[str] = None
+    action_id: Optional[str] = None
+    action: Optional[str] = "ISOLATE_HOST"
+
+
+class ResponseRejectActionRequest(BaseModel):
+    alert_id: Optional[str] = None
+    action_id: Optional[str] = None
+    reason: Optional[str] = "Analyst dismissed"
+
+
+class SensorAcquisitionPlanRequest(BaseModel):
+    event_id: Optional[str] = None
+    threat_prior: float = 0.5
+    uncertainty: float = 0.5
+    asset_criticality: float = 1.0
+    cpu_load: float = 0.3
+
+
+class CampaignMatchRequest(BaseModel):
+    incident_id: str = "query-01"
+    name: str = "Active Incident"
+    techniques: List[str] = Field(default_factory=list)
+    affected_entities: List[str] = Field(default_factory=list)
+    duration_seconds: float = 300.0
+    evidence_hashes: List[str] = Field(default_factory=list)
+    structural_features: Dict[str, Any] = Field(default_factory=dict)
+    known_actor_indicator: Optional[str] = None
+    top_k: int = 5
+
+
+class VulnerabilityPrioritizeRequest(BaseModel):
+    active_path_entities: List[str] = Field(default_factory=list)
+    observed_techniques: List[str] = Field(default_factory=list)
+
+
+class SecurityTwinSimulateRequest(BaseModel):
+    scenario_id: str = "scen-api-01"
+    name: str = "Simulated Threat Scenario"
+    attacker_ip: str = "198.51.100.44"
+    candidates: Optional[List[List[str]]] = None
+    current_risk: float = 0.85
+
+
+class RecoveryRegisterRequest(BaseModel):
+    incident_id: str
+    entity_id: str
+    initial_risk: float = 0.85
+
+
+class PrivacySanitizeRequest(BaseModel):
+    event: Dict[str, Any] = Field(default_factory=dict)
+    target_tier: Optional[str] = None
+
+
+class EndpointIngestRequest(BaseModel):
+    event_id: Optional[str] = None
+    event_type: str = "process_spawn"
+    timestamp: Optional[float] = None
+    host_id: str = "host-01"
+    hostname: str = "workstation.corp.internal"
+    user_id: str = "user-alice"
+    pid: int = 1000
+    ppid: int = 1
+    exe: str = "/usr/bin/bash"
+    cmdline: str = "/usr/bin/bash"
+    parent_exe: str = "/usr/lib/systemd/systemd"
+    parent_cmdline: str = "/sbin/init"
+    is_elevated: bool = False
+    is_root: bool = False
+    file_path: str = ""
+    file_operation: str = ""
+    file_entropy: float = 0.0
+    file_extension: str = ""
+    target_path: str = ""
+    src_ip: str = "10.0.0.10"
+    dst_ip: str = ""
+    dst_port: int = 0
+    protocol: str = "TCP"
+    persistence_type: str = ""
+
+
+class RepresentationEvaluateRequest(BaseModel):
+    features: List[float] = Field(default_factory=lambda: [0.1] * 14)
+    event_id: str = "EVT-REP-01"
+
+
+class MultimodalFuseRequest(BaseModel):
+    event: Dict[str, Any] = Field(default_factory=dict)
+    active_modalities: Optional[List[str]] = None
+    simulated_delay_sec: float = 0.0
+
+
+class GuardAuthorizeToolRequest(BaseModel):
+    request_id: Optional[str] = None
+    caller_identity: str = "analyst-01"
+    caller_role: str = "ANALYST"
+    tool_name: str = "isolate_host"
+    requested_action: str = "SIMULATE"
+    target_resource: str = "host-01"
+    parameters: Dict[str, Any] = Field(default_factory=dict)
+    human_approval_token: Optional[str] = None
+    input_source_trust: str = "USER_INPUT"
+
+
+class GuardSanitizeRequest(BaseModel):
+    text: str = ""
+    trust_class: str = "USER_INPUT"
+
+
+class AssistantExplainRequest(BaseModel):
+    incident_id: str = "INC-01"
+    decision_trace: Dict[str, Any] = Field(default_factory=dict)
+    evidence_records: List[Dict[str, Any]] = Field(default_factory=list)
+    graph_context: Optional[Dict[str, Any]] = None
+    threat_intel: Optional[Dict[str, Any]] = None
+
+
+class CalibrationEvaluateRequest(BaseModel):
+    raw_score: float = 0.5
+    uncertainty: float = 0.1
+    ood_score: float = 0.0
+    event_id: str = "EVT-01"
+
+
+class DeferralEvaluateRequest(BaseModel):
+    event_id: str = "EVT-01"
+    risk_score: float = 0.5
+    uncertainty: float = 0.1
+    asset_criticality: float = 0.5
+    policy_permits_automation: bool = True
+    is_novel_technique: bool = False
 
 
 _SAFE_ENTITY_KEY_REGEX = re.compile(r'^[a-zA-Z0-9_\-\.\:\@]{1,128}$')
@@ -427,7 +565,7 @@ def submit_analyst_feedback(
 
 
 @app.get("/metrics", tags=["System"])
-def get_metrics():
+def get_metrics(current_user: dict = Depends(require_permission(Perm.METRICS_READ))):
     """Provides Prometheus-compatible operational and detection metrics."""
     stat_eng = get_statistical_engine()
     orch = get_response_orchestrator()
@@ -671,44 +809,64 @@ def get_xai_fidelity_summary(current_user: dict = Depends(require_permission(Per
 
 @app.get("/api/graph/inspect", tags=["Graph & Lateral Movement"])
 @app.get("/api/v1/graph/inspect", tags=["Graph & Lateral Movement"])
-def get_graph_inspection(current_user: dict = Depends(require_permission(Perm.ALERTS_READ))):
+def get_graph_inspection(current_user: dict = Depends(require_permission(Perm.GRAPH_QUERY))):
     """Returns real-time episode subgraphs, lateral movement paths, and entity nodes."""
+    kg = get_security_kg()
+    nodes = [
+        {
+            "id": nid,
+            "label": n.label or nid,
+            "type": n.node_type.value.lower(),
+            "status": n.status,
+            "risk": n.metadata.get("risk", 0.5) if hasattr(n, "metadata") and isinstance(n.metadata, dict) else 0.5,
+        }
+        for nid, n in kg.nodes.items()
+    ]
+    edges = [
+        {
+            "source": e.source_id,
+            "target": e.target_id,
+            "relation": e.relation.value,
+            "weight": round(e.weight, 3),
+        }
+        for e_list in kg.adjacency.values()
+        for e in e_list
+    ]
     return {
-        "nodes": [
-            {"id": "workstation-01", "label": "Workstation 01 (192.168.1.45)", "type": "host", "risk": 0.962, "status": "ISOLATED"},
-            {"id": "workstation-02", "label": "Workstation 02 (192.168.1.46)", "type": "host", "risk": 0.784, "status": "ESCALATED"},
-            {"id": "domain-ctrl-01", "label": "Domain Controller (10.0.0.1)", "type": "critical_asset", "risk": 0.312, "status": "MONITORING"},
-            {"id": "srv-db-01", "label": "Database Server (10.0.0.5)", "type": "critical_asset", "risk": 0.893, "status": "CONTAINED"},
-        ],
-        "edges": [
-            {"source": "workstation-01", "target": "workstation-02", "relation": "SMB_LATERAL_PROBE", "weight": 0.893, "mitre": "T1021.002"},
-            {"source": "workstation-02", "target": "srv-db-01", "relation": "PRIVILEGED_RPC_SESSION", "weight": 0.912, "mitre": "T1078"},
-            {"source": "srv-db-01", "target": "domain-ctrl-01", "relation": "KERBEROS_TGS_REQUEST", "weight": 0.450, "mitre": "T1558.003"},
-        ],
-        "active_campaigns": [
-            {"id": "CAMP-2026-08-A", "title": "Multi-Stage Ransomware Pre-Positioning", "risk": 0.917, "conformal_tau": 0.25, "action": "AUTONOMOUS_ACT"}
-        ]
+        "nodes": nodes,
+        "edges": edges,
+        "total_nodes": len(nodes),
+        "total_edges": len(edges),
     }
 
 
 @app.get("/api/gnn/graph", tags=["Graph & Lateral Movement"])
 @app.get("/api/v1/gnn/graph", tags=["Graph & Lateral Movement"])
-def get_gnn_graph(current_user: dict = Depends(require_permission(Perm.ALERTS_READ))):
+def get_gnn_graph(current_user: dict = Depends(require_permission(Perm.GRAPH_QUERY))):
     """Returns dynamic heterogeneous graph topology for D3.js visualization."""
+    kg = get_security_kg()
+    nodes = [
+        {
+            "id": nid,
+            "label": n.label or nid,
+            "type": n.node_type.value.lower(),
+            "status": n.status,
+        }
+        for nid, n in kg.nodes.items()
+    ]
+    edges = [
+        {
+            "source": e.source_id,
+            "target": e.target_id,
+            "relation": e.relation.value,
+            "weight": round(e.weight, 3),
+        }
+        for e_list in kg.adjacency.values()
+        for e in e_list
+    ]
     return {
-        "nodes": [
-            {"id": "WS-01", "label": "WS-01 (192.168.1.45)", "type": "endpoint", "risk": 0.962, "status": "ISOLATED"},
-            {"id": "WS-02", "label": "WS-02 (192.168.1.46)", "type": "endpoint", "risk": 0.784, "status": "PENDING_APPROVAL"},
-            {"id": "SRV-DB", "label": "SRV-DB (10.0.0.5)", "type": "database", "risk": 0.893, "status": "CONTAINED"},
-            {"id": "DC-01", "label": "DC-01 (10.0.0.1)", "type": "server", "risk": 0.120, "status": "MONITOR"},
-            {"id": "C2-EXT", "label": "C2-EXT (198.51.100.23)", "type": "attacker", "risk": 0.999, "status": "BLOCKED"},
-        ],
-        "edges": [
-            {"source": "C2-EXT", "target": "WS-01", "relation": "C2_BEACON", "weight": 0.95},
-            {"source": "WS-01", "target": "WS-02", "relation": "SMB_LATERAL", "weight": 0.88},
-            {"source": "WS-02", "target": "SRV-DB", "relation": "RPC_CONNECT", "weight": 0.74},
-            {"source": "SRV-DB", "target": "DC-01", "relation": "AUTH_PROBE", "weight": 0.35},
-        ]
+        "nodes": nodes,
+        "edges": edges,
     }
 
 
@@ -716,13 +874,31 @@ def get_gnn_graph(current_user: dict = Depends(require_permission(Perm.ALERTS_RE
 @app.get("/api/v1/mitre/active", tags=["MITRE ATT&CK"])
 def get_mitre_active(current_user: dict = Depends(require_permission(Perm.ALERTS_READ))):
     """Returns active MITRE ATT&CK techniques with real-time incident hits."""
-    return [
-        {"technique_id": "T1486", "name": "Data Encrypted for Impact", "tactic": "Impact", "hits": 7, "severity": "CRITICAL"},
-        {"technique_id": "T1021.002", "name": "SMB / RPC Lateral Movement", "tactic": "Lateral Movement", "hits": 5, "severity": "HIGH"},
-        {"technique_id": "T1059.001", "name": "PowerShell Command Execution", "tactic": "Execution", "hits": 4, "severity": "HIGH"},
-        {"technique_id": "T1071.001", "name": "Web Protocols C2 Beaconing", "tactic": "Command & Control", "hits": 3, "severity": "MEDIUM"},
-        {"technique_id": "T1499.003", "name": "Application Exhaustion Flood", "tactic": "Impact", "hits": 6, "severity": "HIGH"},
-    ]
+    from mitre.mapper import MITRE_MAPPING
+    from evaluation.registry import AHRASRegistryManager
+    try:
+        mgr = AHRASRegistryManager()
+        detections = mgr.get_detections()
+    except Exception:
+        detections = []
+
+    technique_counts = {}
+    for d in detections:
+        t_id = d.get("mitre_technique_id")
+        if t_id:
+            technique_counts[t_id] = technique_counts.get(t_id, 0) + 1
+
+    active = []
+    for k, v in MITRE_MAPPING.items():
+        tid = v.get("technique_id", "T1000")
+        active.append({
+            "technique_id": tid,
+            "name": v.get("name", k),
+            "tactic": v.get("tactic", "Generic"),
+            "hits": technique_counts.get(tid, 1),
+            "severity": "CRITICAL" if v.get("severity_boost", 0) >= 0.25 else ("HIGH" if v.get("severity_boost", 0) >= 0.15 else "MEDIUM"),
+        })
+    return active
 
 
 # ── Unified Response Orchestration & Pending Approvals ───────────────────────
@@ -734,29 +910,7 @@ def get_pending_approvals(current_user: dict = Depends(require_permission(Perm.A
     orch = get_response_orchestrator()
     actions = orch.get_pending_actions()
     if not actions:
-        # Provide staged template when queue empty for realistic SOC dashboard display
-        return [
-            {
-                "alert_id": "ALT-2026-001",
-                "action_id": "ALT-2026-001",
-                "entity": "workstation-02 (192.168.1.46)",
-                "action": "ISOLATE_HOST",
-                "risk": 0.784,
-                "technique": "T1059 (PowerShell Encoded)",
-                "status": "PENDING",
-                "requested_at": "15:44:30 UTC",
-            },
-            {
-                "alert_id": "ALT-2026-002",
-                "action_id": "ALT-2026-002",
-                "entity": "srv-db-01 (10.0.0.5)",
-                "action": "BLOCK_IP_RANGE",
-                "risk": 0.893,
-                "technique": "T1021.002 (SMB Lateral Movement)",
-                "status": "PENDING",
-                "requested_at": "15:45:12 UTC",
-            }
-        ]
+        return []
     return [
         {
             "alert_id": a.get("action_id", a.get("alert_id")),
@@ -775,21 +929,22 @@ def get_pending_approvals(current_user: dict = Depends(require_permission(Perm.A
 @app.post("/api/response/approve", tags=["Response Orchestration"])
 @app.post("/api/v1/response/approve", tags=["Response Orchestration"])
 def approve_response_action(
-    payload: dict,
-    current_user: dict = Depends(require_permission(Perm.SOAR_EXECUTE)),
+    payload: ResponseApproveActionRequest,
+    current_user: dict = Depends(require_permission(Perm.SOAR_APPROVE)),
 ):
     """Approves and executes a staged response action via the ResponseOrchestrator."""
-    action_id = payload.get("alert_id") or payload.get("action_id")
+    action_id = payload.alert_id or payload.action_id
     if not action_id:
         raise HTTPException(status_code=400, detail="alert_id or action_id is required")
     orch = get_response_orchestrator()
     success = orch.approve_action(action_id)
-    # Always succeed gracefully for dashboard mock IDs or real orchestrator items
+    if not success:
+        raise HTTPException(status_code=404, detail=f"Action '{action_id}' not found or already processed")
     return {
         "status": "success",
         "alert_id": action_id,
         "action_id": action_id,
-        "action": payload.get("action", "ISOLATE_HOST"),
+        "action": payload.action or "ISOLATE_HOST",
         "decision": "EXECUTED"
     }
 
@@ -797,15 +952,17 @@ def approve_response_action(
 @app.post("/api/response/reject", tags=["Response Orchestration"])
 @app.post("/api/v1/response/reject", tags=["Response Orchestration"])
 def reject_response_action(
-    payload: dict,
-    current_user: dict = Depends(require_permission(Perm.SOAR_EXECUTE)),
+    payload: ResponseRejectActionRequest,
+    current_user: dict = Depends(require_permission(Perm.SOAR_APPROVE)),
 ):
     """Rejects a staged response action via the ResponseOrchestrator."""
-    action_id = payload.get("alert_id") or payload.get("action_id")
+    action_id = payload.alert_id or payload.action_id
     if not action_id:
         raise HTTPException(status_code=400, detail="alert_id or action_id is required")
     orch = get_response_orchestrator()
-    orch.reject_action(action_id, reason=payload.get("reason", "Analyst dismissed"))
+    success = orch.reject_action(action_id, reason=payload.reason or "Analyst dismissed")
+    if not success:
+        raise HTTPException(status_code=404, detail=f"Action '{action_id}' not found or already processed")
     return {
         "status": "success",
         "alert_id": action_id,
@@ -912,17 +1069,17 @@ def get_registered_detections(
 @app.post("/api/sensor-acquisition/plan", tags=["Adaptive Telemetry"])
 @app.post("/api/v1/sensor-acquisition/plan", tags=["Adaptive Telemetry"])
 def plan_sensor_acquisition(
-    payload: dict,
+    payload: SensorAcquisitionPlanRequest,
     current_user: dict = Depends(require_permission(Perm.ALERTS_READ)),
 ):
     """Evaluates optimal sensor modalities based on formal Value of Information (VOI)."""
     from sensors.sensor_acquisition import AdaptiveSensorAcquisitionEngine
     engine = AdaptiveSensorAcquisitionEngine()
-    event_id = payload.get("event_id", f"evt-{int(time.time())}")
-    threat_prior = float(payload.get("threat_prior", 0.5))
-    uncertainty = float(payload.get("uncertainty", 0.5))
-    criticality = float(payload.get("asset_criticality", 1.0))
-    cpu_load = float(payload.get("cpu_load", 0.3))
+    event_id = payload.event_id or f"evt-{int(time.time())}"
+    threat_prior = float(payload.threat_prior)
+    uncertainty = float(payload.uncertainty)
+    criticality = float(payload.asset_criticality)
+    cpu_load = float(payload.cpu_load)
 
     plan = engine.plan_event_telemetry(
         event_id=event_id,
@@ -986,7 +1143,7 @@ def get_sensor_unhealthy_impact(
 @app.post("/api/campaign/match", tags=["Campaign Intelligence"])
 @app.post("/api/v1/campaign/match", tags=["Campaign Intelligence"])
 def match_campaign_similarity(
-    payload: dict,
+    payload: CampaignMatchRequest,
     current_user: dict = Depends(require_permission(Perm.ALERTS_READ)),
 ):
     """Matches active incident against indexed historical campaigns with attribution safety."""
@@ -996,23 +1153,23 @@ def match_campaign_similarity(
         IncidentProfile("camp-hist-01", "Known Ransomware Campaign", ["T1190", "T1059", "T1021", "T1486"], ["srv-1"], 1800.0)
     )
     query = IncidentProfile(
-        incident_id=payload.get("incident_id", "query-01"),
-        name=payload.get("name", "Active Incident"),
-        techniques=payload.get("techniques", []),
-        affected_entities=payload.get("affected_entities", []),
-        duration_seconds=float(payload.get("duration_seconds", 300.0)),
-        evidence_hashes=payload.get("evidence_hashes", []),
-        structural_features=payload.get("structural_features", {}),
-        known_actor_indicator=payload.get("known_actor_indicator"),
+        incident_id=payload.incident_id,
+        name=payload.name,
+        techniques=payload.techniques,
+        affected_entities=payload.affected_entities,
+        duration_seconds=float(payload.duration_seconds),
+        evidence_hashes=payload.evidence_hashes,
+        structural_features=payload.structural_features,
+        known_actor_indicator=payload.known_actor_indicator,
     )
-    matches = engine.find_similar_campaigns(query, top_k=int(payload.get("top_k", 5)))
+    matches = engine.find_similar_campaigns(query, top_k=int(payload.top_k))
     return {"query_incident_id": query.incident_id, "matches": [m.to_dict() for m in matches]}
 
 
 @app.post("/api/vulnerabilities/prioritize", tags=["Vulnerability Intelligence"])
 @app.post("/api/v1/vulnerabilities/prioritize", tags=["Vulnerability Intelligence"])
 def prioritize_vulnerabilities(
-    payload: dict,
+    payload: VulnerabilityPrioritizeRequest,
     current_user: dict = Depends(require_permission(Perm.ALERTS_READ)),
 ):
     """Prioritizes asset vulnerabilities contextualized by active lateral movement paths."""
@@ -1032,8 +1189,8 @@ def prioritize_vulnerabilities(
         AssetExposure("ast-dc-01", "dc-prod-01", NetworkZone.ISOLATED_SECURE, 1, ["CVE-2020-1472"])
     )
 
-    active_paths = set(payload.get("active_path_entities", []))
-    active_techs = set(payload.get("observed_techniques", []))
+    active_paths = set(payload.active_path_entities)
+    active_techs = set(payload.observed_techniques)
     prioritized = engine.prioritize_vulnerabilities(active_paths, active_techs)
     return {"prioritized_vulnerabilities": [p.to_dict() for p in prioritized]}
 
@@ -1066,7 +1223,7 @@ def get_privacy_manager():
 @app.post("/api/security-twin/simulate-candidates", tags=["Security Twin Response Lab"])
 @app.post("/api/v1/security-twin/simulate-candidates", tags=["Security Twin Response Lab"])
 def simulate_candidate_responses_endpoint(
-    payload: dict,
+    payload: SecurityTwinSimulateRequest,
     current_user: dict = Depends(require_permission(Perm.SOAR_EXECUTE)),
 ):
     """Simulates candidate response mitigations in an isolated digital twin fork."""
@@ -1079,25 +1236,25 @@ def simulate_candidate_responses_endpoint(
     twin.add_host(Host(host_id="db-prod-01", hostname="db-prod-01", ip_address="10.0.1.50", criticality=0.95))
 
     scenario = AttackScenario(
-        scenario_id=payload.get("scenario_id", "scen-api-01"),
-        name=payload.get("name", "Simulated Threat Scenario"),
+        scenario_id=payload.scenario_id,
+        name=payload.name,
         description="API simulated kill-chain progression",
         steps=[
             AttackStep(
                 step_id="step-1",
                 stage=AttackStage.INITIAL_ACCESS,
                 timestamp=time.time(),
-                source=payload.get("attacker_ip", "198.51.100.44"),
+                source=payload.attacker_ip,
                 destination="10.0.1.10",
                 technique="T1190",
                 technique_name="Exploit Public-Facing Application",
-                preconditions={"src_ip": payload.get("attacker_ip", "198.51.100.44"), "dst_host": "web-prod-01"},
+                preconditions={"src_ip": payload.attacker_ip, "dst_host": "web-prod-01"},
             )
         ],
     )
     simulator = SecurityTwinSimulator(twin)
-    candidates = payload.get("candidates", [("NO_ACTION", "web-prod-01"), ("BLOCK_SOURCE", payload.get("attacker_ip", "198.51.100.44"))])
-    evals = simulator.simulate_candidate_responses(scenario, candidates, current_risk=float(payload.get("current_risk", 0.85)))
+    candidates = payload.candidates or [["NO_ACTION", "web-prod-01"], ["BLOCK_SOURCE", payload.attacker_ip]]
+    evals = simulator.simulate_candidate_responses(scenario, candidates, current_risk=float(payload.current_risk))
     return {"scenario_id": scenario.scenario_id, "candidate_evaluations": evals}
 
 
@@ -1118,15 +1275,15 @@ def get_incident_recovery_status(
 @app.post("/api/recovery/register", tags=["Resilience & Recovery"])
 @app.post("/api/v1/recovery/register", tags=["Resilience & Recovery"])
 def register_recovery_incident(
-    payload: dict,
+    payload: RecoveryRegisterRequest,
     current_user: dict = Depends(require_permission(Perm.SOAR_EXECUTE)),
 ):
     """Registers an incident into the 6-stage resilience recovery tracking loop."""
     engine = get_recovery_engine()
     rec = engine.register_incident(
-        incident_id=payload["incident_id"],
-        entity_id=payload["entity_id"],
-        initial_risk=float(payload.get("initial_risk", 0.85)),
+        incident_id=payload.incident_id,
+        entity_id=payload.entity_id,
+        initial_risk=float(payload.initial_risk),
     )
     return rec.to_dict()
 
@@ -1134,13 +1291,13 @@ def register_recovery_incident(
 @app.post("/api/privacy/sanitize", tags=["Privacy-Aware Telemetry"])
 @app.post("/api/v1/privacy/sanitize", tags=["Privacy-Aware Telemetry"])
 def sanitize_telemetry_event(
-    payload: dict,
+    payload: PrivacySanitizeRequest,
     current_user: dict = Depends(require_permission(Perm.ALERTS_READ)),
 ):
     """Sanitizes an incoming telemetry event according to regulatory privacy classification."""
     mgr = get_privacy_manager()
-    event_dict = payload.get("event", {})
-    tier_str = payload.get("target_tier")
+    event_dict = payload.event
+    tier_str = payload.target_tier
     from sensors.privacy_manager import PrivacyTier
     target_tier = PrivacyTier(tier_str) if tier_str else None
     sanitized = mgr.sanitize_event(event_dict, target_tier=target_tier)
@@ -1170,37 +1327,37 @@ def get_multimodal_combiner():
 @app.post("/api/endpoint/ingest", tags=["Endpoint Behavioral Security"])
 @app.post("/api/v1/endpoint/ingest", tags=["Endpoint Behavioral Security"])
 def ingest_endpoint_event(
-    payload: dict,
+    payload: EndpointIngestRequest,
     current_user: dict = Depends(require_permission(Perm.EVENTS_INGEST)),
 ):
     """Ingests host-level telemetry and evaluates behavioral detectors."""
     from sensors.endpoint_sensor import EndpointEvent, EndpointEventType
-    ev_type = EndpointEventType(payload.get("event_type", "process_spawn"))
+    ev_type = EndpointEventType(payload.event_type)
     event = EndpointEvent(
-        event_id=payload.get("event_id", f"EPE-{int(time.time()*1000)}"),
+        event_id=payload.event_id or f"EPE-{int(time.time()*1000)}",
         event_type=ev_type,
-        timestamp=float(payload.get("timestamp", time.time())),
-        host_id=payload.get("host_id", "host-01"),
-        hostname=payload.get("hostname", "workstation.corp.internal"),
-        user_id=payload.get("user_id", "user-alice"),
-        pid=int(payload.get("pid", 1000)),
-        ppid=int(payload.get("ppid", 1)),
-        exe=payload.get("exe", "/usr/bin/bash"),
-        cmdline=payload.get("cmdline", "/usr/bin/bash"),
-        parent_exe=payload.get("parent_exe", "/usr/lib/systemd/systemd"),
-        parent_cmdline=payload.get("parent_cmdline", "/sbin/init"),
-        is_elevated=bool(payload.get("is_elevated", False)),
-        is_root=bool(payload.get("is_root", False)),
-        file_path=payload.get("file_path", ""),
-        file_operation=payload.get("file_operation", ""),
-        file_entropy=float(payload.get("file_entropy", 0.0)),
-        file_extension=payload.get("file_extension", ""),
-        target_path=payload.get("target_path", ""),
-        src_ip=payload.get("src_ip", "10.0.0.10"),
-        dst_ip=payload.get("dst_ip", ""),
-        dst_port=int(payload.get("dst_port", 0)),
-        protocol=payload.get("protocol", "TCP"),
-        persistence_type=payload.get("persistence_type", ""),
+        timestamp=float(payload.timestamp or time.time()),
+        host_id=payload.host_id,
+        hostname=payload.hostname,
+        user_id=payload.user_id,
+        pid=int(payload.pid),
+        ppid=int(payload.ppid),
+        exe=payload.exe,
+        cmdline=payload.cmdline,
+        parent_exe=payload.parent_exe,
+        parent_cmdline=payload.parent_cmdline,
+        is_elevated=bool(payload.is_elevated),
+        is_root=bool(payload.is_root),
+        file_path=payload.file_path,
+        file_operation=payload.file_operation,
+        file_entropy=float(payload.file_entropy),
+        file_extension=payload.file_extension,
+        target_path=payload.target_path,
+        src_ip=payload.src_ip,
+        dst_ip=payload.dst_ip,
+        dst_port=int(payload.dst_port),
+        protocol=payload.protocol,
+        persistence_type=payload.persistence_type,
     )
     engine = get_behavioral_endpoint()
     alerts = engine.analyze_event(event)
@@ -1226,14 +1383,14 @@ def ingest_endpoint_event(
 @app.post("/api/representation/evaluate", tags=["Representation Learning"])
 @app.post("/api/v1/representation/evaluate", tags=["Representation Learning"])
 def evaluate_event_representation(
-    payload: dict,
+    payload: RepresentationEvaluateRequest,
     current_user: dict = Depends(require_permission(Perm.ALERTS_READ)),
 ):
     """Evaluates raw feature representation, reconstruction error, Mahalanobis distance, and OOD score."""
     from detection.representation_engine import get_representation_model
     import numpy as np
-    features = payload.get("features", [0.1] * 14)
-    event_id = payload.get("event_id", "EVT-REP-01")
+    features = payload.features
+    event_id = payload.event_id
     model = get_representation_model()
     res = model.evaluate_event(np.array(features), event_id=event_id)
     return res.to_dict()
@@ -1242,15 +1399,15 @@ def evaluate_event_representation(
 @app.post("/api/multimodal/fuse", tags=["Multimodal Fusion"])
 @app.post("/api/v1/multimodal/fuse", tags=["Multimodal Fusion"])
 def fuse_multimodal_telemetry(
-    payload: dict,
+    payload: MultimodalFuseRequest,
     current_user: dict = Depends(require_permission(Perm.ALERTS_READ)),
 ):
     """Performs robust multimodal fusion across network, endpoint, identity, and graph signals."""
     combiner = get_multimodal_combiner()
-    event_dict = payload.get("event", {})
-    active_modalities = payload.get("active_modalities")
+    event_dict = payload.event
+    active_modalities = payload.active_modalities
     active_set = set(active_modalities) if active_modalities else None
-    delay_sec = float(payload.get("simulated_delay_sec", 0.0))
+    delay_sec = float(payload.simulated_delay_sec)
     result = combiner.fuse_event(event_dict, active_modalities=active_set, simulated_delay_sec=delay_sec)
     return {
         "event_id": result.event_id,
@@ -1279,22 +1436,22 @@ def get_guard():
 @app.post("/api/guard/authorize-tool", tags=["AI Security Guard"])
 @app.post("/api/v1/guard/authorize-tool", tags=["AI Security Guard"])
 def authorize_tool_execution(
-    payload: dict,
+    payload: GuardAuthorizeToolRequest,
     current_user: dict = Depends(require_permission(Perm.SOAR_EXECUTE)),
 ):
     """Evaluates deterministic RBAC and human approval gates for tool calls."""
     from guard.ai_guard import ToolExecutionRequest, TrustClass
     guard = get_guard()
     req = ToolExecutionRequest(
-        request_id=payload.get("request_id", f"REQ-{int(time.time()*1000)}"),
-        caller_identity=payload.get("caller_identity", "analyst-01"),
-        caller_role=payload.get("caller_role", "ANALYST"),
-        tool_name=payload.get("tool_name", "isolate_host"),
-        requested_action=payload.get("requested_action", "SIMULATE"),
-        target_resource=payload.get("target_resource", "host-01"),
-        parameters=payload.get("parameters", {}),
-        human_approval_token=payload.get("human_approval_token"),
-        input_source_trust=TrustClass(payload.get("input_source_trust", "USER_INPUT")),
+        request_id=payload.request_id or f"REQ-{int(time.time()*1000)}",
+        caller_identity=payload.caller_identity,
+        caller_role=payload.caller_role,
+        tool_name=payload.tool_name,
+        requested_action=payload.requested_action,
+        target_resource=payload.target_resource,
+        parameters=payload.parameters,
+        human_approval_token=payload.human_approval_token,
+        input_source_trust=TrustClass(payload.input_source_trust),
     )
     rec = guard.authorize_tool_call(req)
     return rec.to_dict()
@@ -1303,14 +1460,14 @@ def authorize_tool_execution(
 @app.post("/api/guard/sanitize", tags=["AI Security Guard"])
 @app.post("/api/v1/guard/sanitize", tags=["AI Security Guard"])
 def sanitize_untrusted_input(
-    payload: dict,
+    payload: GuardSanitizeRequest,
     current_user: dict = Depends(require_permission(Perm.ALERTS_READ)),
 ):
     """Scans input for prompt injection and instruction override patterns."""
     from guard.ai_guard import TrustClass
     guard = get_guard()
-    text = payload.get("text", "")
-    trust_str = payload.get("trust_class", "USER_INPUT")
+    text = payload.text
+    trust_str = payload.trust_class
     trust_enum = TrustClass(trust_str)
     is_safe, sanitized, reason = guard.sanitize_input(text, trust_enum)
     return {
@@ -1323,17 +1480,17 @@ def sanitize_untrusted_input(
 @app.post("/api/assistant/explain", tags=["Grounded LLM Assistant"])
 @app.post("/api/v1/assistant/explain", tags=["Grounded LLM Assistant"])
 def generate_grounded_explanation(
-    payload: dict,
+    payload: AssistantExplainRequest,
     current_user: dict = Depends(require_permission(Perm.ALERTS_READ)),
 ):
     """Synthesizes strictly cited forensic narrative from DecisionTrace and EvidenceRecords."""
     from xai.grounded_llm_assistant import get_grounded_llm_assistant
     assistant = get_grounded_llm_assistant()
-    incident_id = payload.get("incident_id", "INC-01")
-    trace = payload.get("decision_trace", {})
-    ev_records = payload.get("evidence_records", [])
-    g_ctx = payload.get("graph_context")
-    ti_ctx = payload.get("threat_intel")
+    incident_id = payload.incident_id
+    trace = payload.decision_trace
+    ev_records = payload.evidence_records
+    g_ctx = payload.graph_context
+    ti_ctx = payload.threat_intel
     res = assistant.analyze_incident(incident_id, trace, ev_records, g_ctx, ti_ctx)
     return res.to_dict()
 
@@ -1341,16 +1498,16 @@ def generate_grounded_explanation(
 @app.post("/api/calibration/evaluate", tags=["Calibration & Selective Abstention"])
 @app.post("/api/v1/calibration/evaluate", tags=["Calibration & Selective Abstention"])
 def evaluate_selective_prediction(
-    payload: dict,
+    payload: CalibrationEvaluateRequest,
     current_user: dict = Depends(require_permission(Perm.ALERTS_READ)),
 ):
     """Evaluates 4-state selective prediction (BENIGN, ATTACK, UNKNOWN, ABSTAIN)."""
     from calibration.selective_abstention import get_calibration_engine
     engine = get_calibration_engine()
-    raw_score = float(payload.get("raw_score", 0.5))
-    uncertainty = float(payload.get("uncertainty", 0.1))
-    ood_score = float(payload.get("ood_score", 0.0))
-    event_id = payload.get("event_id", "EVT-01")
+    raw_score = float(payload.raw_score)
+    uncertainty = float(payload.uncertainty)
+    ood_score = float(payload.ood_score)
+    event_id = payload.event_id
     res = engine.evaluate_event(raw_score, uncertainty, ood_score, event_id=event_id)
     return res.to_dict()
 
@@ -1358,18 +1515,18 @@ def evaluate_selective_prediction(
 @app.post("/api/deferral/evaluate", tags=["Learning-to-Defer"])
 @app.post("/api/v1/deferral/evaluate", tags=["Learning-to-Defer"])
 def evaluate_human_ai_deferral(
-    payload: dict,
+    payload: DeferralEvaluateRequest,
     current_user: dict = Depends(require_permission(Perm.SOAR_EXECUTE)),
 ):
     """Optimizes collaborative decision handoffs between AUTOMATE, RECOMMEND, ESCALATE, ABSTAIN."""
     from controller.learning_to_defer import get_learning_to_defer_engine
     engine = get_learning_to_defer_engine()
-    event_id = payload.get("event_id", "EVT-01")
-    risk_score = float(payload.get("risk_score", 0.5))
-    uncertainty = float(payload.get("uncertainty", 0.1))
-    criticality = float(payload.get("asset_criticality", 0.5))
-    policy_permitted = bool(payload.get("policy_permits_automation", True))
-    is_novel = bool(payload.get("is_novel_technique", False))
+    event_id = payload.event_id
+    risk_score = float(payload.risk_score)
+    uncertainty = float(payload.uncertainty)
+    criticality = float(payload.asset_criticality)
+    policy_permitted = bool(payload.policy_permits_automation)
+    is_novel = bool(payload.is_novel_technique)
     res = engine.evaluate_decision(event_id, risk_score, uncertainty, criticality, policy_permitted, is_novel)
     return res.to_dict()
 
@@ -1415,7 +1572,7 @@ async def websocket_live_soc(
     token: Optional[str] = Query(None)
 ):
     """Real-time bi-directional SOC WebSocket streaming live alert events with token authentication."""
-    # Check authentication token
+    # Check authentication token via query parameter or header
     ws_token = token
     if not ws_token and "sec-websocket-protocol" in websocket.headers:
         ws_token = websocket.headers.get("sec-websocket-protocol")
@@ -1441,11 +1598,11 @@ async def websocket_live_soc(
             stat_eng = get_statistical_engine()
             orch = get_response_orchestrator()
             s_stats = stat_eng.get_stats() if stat_eng else {}
-            
+
             # Fetch real pending approvals & alert actions
             pending_list = orch.get_pending_actions() if orch else []
             history_list = orch.get_action_history() if orch else []
-            
+
             # Construct dynamic live active threats list from actual pending actions
             threats_payload = []
             if pending_list:
@@ -1453,12 +1610,12 @@ async def websocket_live_soc(
                     threats_payload.append({
                         "time": ts_str,
                         "entity": p.get("entity_key", p.get("entity", "unknown")),
-                        "class": "network_activity",
+                        "class": p.get("ocsf_class", "network_activity"),
                         "severity": p.get("severity", "HIGH"),
                         "risk": float(p.get("risk_score", p.get("risk", 0.85))),
                         "technique": p.get("technique", "T1071 (Standard Application Layer Protocol)"),
                         "action": p.get("action_type", p.get("action", "STAGED_CONTAINMENT")),
-                        "status": "Pending Approval",
+                        "status": p.get("status", "Pending Approval"),
                         "xai": {
                             "decisive_evidence": p.get("reason", "Anomaly threshold exceeded"),
                             "causal_delta_sig": 0.35,
@@ -1467,38 +1624,16 @@ async def websocket_live_soc(
                             "gate": "HUMAN_APPROVAL_STAGED",
                         }
                     })
-            
-            # Fallback to realistic operational live stream
-            if not threats_payload:
-                threats_payload = [
-                    {
-                        "time": ts_str,
-                        "entity": "workstation-01 (192.168.1.45)",
-                        "class": "file_activity",
-                        "severity": "CRITICAL",
-                        "risk": 0.962,
-                        "technique": "T1486 (Ransomware Entropy)",
-                        "action": "AUTO_REMEDIATE",
-                        "status": "Isolated",
-                        "xai": {
-                            "decisive_evidence": "Host file entropy spike (Shannon E=7.92) + ML anomaly score 0.98",
-                            "causal_delta_sig": 0.475,
-                            "causal_delta_ml": 0.380,
-                            "uncertainty": 0.08,
-                            "gate": "AUTONOMOUS_ACT (Tau*=0.25, Conformal Confidence=95%)",
-                        }
-                    }
-                ]
 
             live_payload = {
                 "timestamp": ts_str,
                 "epoch": t_now,
                 "active_threats": threats_payload,
                 "stats": {
-                    "total_events_scored": s_stats.get("total_scored", 128472),
-                    "active_mitigations": len(history_list) if history_list else 4,
-                    "pending_approvals": len(pending_list) if pending_list else 1,
-                    "tracked_entities": s_stats.get("tracked_entities", 1240),
+                    "total_events_scored": s_stats.get("total_scored", 0),
+                    "active_mitigations": len(history_list),
+                    "pending_approvals": len(pending_list),
+                    "tracked_entities": s_stats.get("tracked_entities", 0),
                     "mean_latency_ms": 2.74,
                 }
             }

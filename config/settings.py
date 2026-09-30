@@ -20,14 +20,24 @@ log = logging.getLogger(__name__)
 AHRAS_ENV = os.getenv("AHRAS_ENV", "").upper()
 _DEV_MODE_RAW = os.getenv("AHRAS_DEV_MODE", "").lower()
 
-if AHRAS_ENV:
-    DEV_MODE = (AHRAS_ENV == "DEV")
+if AHRAS_ENV in ("DEV", "DEVELOPMENT", "TEST", "TESTING"):
+    DEV_MODE = True
+    AHRAS_ENV = "DEV"
+elif AHRAS_ENV in ("STAGING", "PRODUCTION", "PROD"):
+    DEV_MODE = False
+    AHRAS_ENV = "STAGING" if AHRAS_ENV == "STAGING" else "PRODUCTION"
 elif _DEV_MODE_RAW:
     DEV_MODE = (_DEV_MODE_RAW in ("true", "1", "yes"))
     AHRAS_ENV = "DEV" if DEV_MODE else "PRODUCTION"
 else:
-    DEV_MODE = True
-    AHRAS_ENV = "DEV"
+    raise RuntimeError(
+        "[CRITICAL SECURITY ERROR] AHRAS_ENV must be explicitly set (DEV, STAGING, or PRODUCTION). "
+        "No safe default exists for a security system. Startup aborted (Fail-Closed)."
+    )
+
+# ── Proxy & Network Configuration ───────────────────────────────────────────
+_trusted_proxies_env = os.getenv("AHRAS_TRUSTED_PROXIES", "127.0.0.1,::1,localhost")
+TRUSTED_PROXIES: Set[str] = {p.strip() for p in _trusted_proxies_env.split(",") if p.strip()}
 
 # ── Secrets & Authentication ──────────────────────────────────────────────────
 # Insecure well-known secrets that MUST be blocked in non-DEV profiles

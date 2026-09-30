@@ -643,8 +643,8 @@
   ],
   "manifest": {
     "experiment_id": "EXP-23",
-    "code_version": "a7342acef447bc4ccd108f440a23fe74cd730b0f",
-    "git_branch": "new-features",
+    "code_version": "01fbb82f900edcb8e5a87ce201da9dcf73167dc0",
+    "git_branch": "home2",
     "dataset_name": "AHRAS_OCSF_TELEMETRY_SCHEMA_V1",
     "dataset_version": "1.0",
     "dataset_hash": "92a2f5947b7d7fe9145276993d283e28965bc2c9e23956d0eaeb3f5ed7996875",
@@ -666,6 +666,6 @@
       }
     },
     "result_path": "/home/suyashpradhan/Downloads/AHRAS_Suyash-master/evaluation/results/TELEMETRY_MINIMALITY_REPORT.json",
-    "timestamp": 1790735435.9959614
+    "timestamp": 1790741021.717203
   }
 }

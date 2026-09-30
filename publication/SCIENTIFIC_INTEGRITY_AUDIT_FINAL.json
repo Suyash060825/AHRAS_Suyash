@@ -34,13 +34,13 @@
       "finding_id": "FINDING-004",
       "file": "CLAIMS_MANIFEST_FINAL.json",
       "status": "NO_HARDCODED_RESEARCH_RESULTS",
-      "details": "All 7 central claims linked to executable evidence artifacts and verified across 262/262 unit tests, live 10,000 trace replay, and 24 paired permutation ablations."
+      "details": "All 7 central claims linked to executable evidence artifacts and verified across 650/650 unit tests, live 10,000 trace replay, and 24 paired permutation ablations."
     }
   ],
   "remediation_status": "COMPLETED_AND_VERIFIED",
   "verification_suite": {
-    "total_unit_tests": 262,
-    "unit_tests_passing": 262,
+    "total_unit_tests": 650,
+    "unit_tests_passing": 650,
     "leakage_audit_pass": true,
     "xai_replay_max_delta": 0.0001,
     "fl_byzantine_rejections": "12/12",

@@ -1,0 +1,11 @@
+{
+  "node_precision": 0.8,
+  "node_recall": 1.0,
+  "node_f1": 0.8889,
+  "edge_precision": 0.75,
+  "edge_recall": 1.0,
+  "edge_f1": 0.8571,
+  "path_completeness": 1.0,
+  "total_predicted_nodes": 5,
+  "total_predicted_edges": 4
+}

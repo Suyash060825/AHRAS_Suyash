@@ -1,0 +1,60 @@
+{
+  "verification_timestamp": 1790740200.0,
+  "audit_version": "1.0.0",
+  "environment": {
+    "python": "3.14.6",
+    "platform": "Linux-7.1.8-100.fc43.x86_64",
+    "pytest": "9.1.1",
+    "numpy": "2.5.2",
+    "sklearn": "1.9.0",
+    "yaml": "6.0.3"
+  },
+  "test_suite": {
+    "collected": 650,
+    "passed": 650,
+    "subtests_passed": 43,
+    "failed": 0,
+    "errors": 0,
+    "skipped": 0,
+    "xfailed": 0,
+    "duration_seconds": 75.65,
+    "status": "PASSED_100_PERCENT"
+  },
+  "filesystem_audit": {
+    "data/manifests/evaluation_datasets.yaml": "PRESENT",
+    "evaluation/datasets/manifest.py": "PRESENT",
+    "evaluation/datasets/verifier.py": "PRESENT",
+    "evaluation/datasets/downloader.py": "PRESENT",
+    "evaluation/datasets/loader.py": "PRESENT",
+    "evaluation/datasets/adapters.py": "PRESENT",
+    "evaluation/datasets/splitters.py": "PRESENT",
+    "evaluation/datasets/registry.py": "PRESENT",
+    "evaluation/scenarios/schema.py": "PRESENT",
+    "evaluation/scenarios/profiles.py": "PRESENT",
+    "evaluation/scenarios/generator.py": "PRESENT",
+    "evaluation/metamorphic/runner.py": "PRESENT",
+    "evaluation/faults/injector.py": "PRESENT",
+    "evaluation/master_runner.py": "PRESENT"
+  },
+  "datasets": {
+    "cicids2017": {
+      "status": "VERIFIED",
+      "sha256": "893c27dc968bf7a8adef1689f90be55ca4a4dc3088fb63d6ff247ac56856df2a",
+      "bytes": 225166395,
+      "estimated_rows": 692704
+    },
+    "unsw_nb15": {
+      "status": "VERIFIED",
+      "sha256": "a71a9dc641b2878d63133d46a2a5bc8488e82010208cf237c89f3fa710b8c628",
+      "bytes": 1120688,
+      "estimated_rows": 5001
+    },
+    "cse_cic_ids2018": { "status": "BLOCKED" },
+    "ugr16": { "status": "BLOCKED" },
+    "ctu13": { "status": "BLOCKED" },
+    "iot23": { "status": "BLOCKED" },
+    "lanl_cyber1": { "status": "BLOCKED" }
+  },
+  "xai_replay_status": "VERIFIED_6_OF_6_PASSING",
+  "synthetic_real_separation_enforced": true
+}

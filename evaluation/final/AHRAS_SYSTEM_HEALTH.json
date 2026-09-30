@@ -1,0 +1,39 @@
+{
+  "system": "AHRAS",
+  "audit_date": "2026-09-30",
+  "git_commit": "01fbb82f900edcb8e5a87ce201da9dcf73167dc0",
+  "git_branch": "home2",
+  "environment": {
+    "python": "3.14.6",
+    "platform": "Linux-7.1.8-100.fc43.x86_64",
+    "pytest": "9.1.1"
+  },
+  "subsystem_health": {
+    "detection_engine": "HEALTHY_VERIFIED",
+    "risk_controller": "HEALTHY_VERIFIED",
+    "xai_fidelity_replay": "HEALTHY_VERIFIED_EXACT",
+    "temporal_graph_tgnn": "HEALTHY_VERIFIED",
+    "response_safety_invariants": "HEALTHY_VERIFIED",
+    "api_auth_and_rbac": "HEALTHY_VERIFIED",
+    "frontend_dashboard": "HEALTHY_VERIFIED",
+    "evaluation_dataset_registry": "HEALTHY_VERIFIED"
+  },
+  "metrics": {
+    "total_tests_collected": 650,
+    "total_tests_passed": 650,
+    "subtests_passed": 43,
+    "total_tests_failed": 0,
+    "total_tests_errored": 0,
+    "test_duration_seconds": 75.65,
+    "xai_10_path_fidelity_pass_rate": 1.0,
+    "metamorphic_7_relation_pass_rate": 1.0,
+    "local_verified_datasets_count": 2,
+    "remote_blocked_datasets_count": 5
+  },
+  "scientific_integrity": {
+    "strict_real_data_enforced": true,
+    "silent_synthetic_fallbacks_permitted": false,
+    "hardcoded_empirical_metrics": false,
+    "fail_closed_missing_dataset_status": "BLOCKED"
+  }
+}

@@ -90,7 +90,7 @@ Run the 100% live computational benchmark suite (zero hardcoded values):
 # Execute comprehensive live computational evaluation
 python3 evaluation/run_comprehensive_research.py
 
-# Run full unit & regression test suite (262 tests)
+# Run full unit & regression test suite (650 tests)
 pytest
 ```
 

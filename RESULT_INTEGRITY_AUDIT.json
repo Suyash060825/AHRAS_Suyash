@@ -12,7 +12,7 @@
   ],
   "verification_evidence": {
     "live_results_artifact": "evaluation/results/RESULTS.json",
-    "unit_test_suite_status": "262/262 PASSED (pytest-9.1.1)",
+    "unit_test_suite_status": "650/650 PASSED (pytest-9.1.1)",
     "leakage_audit_status": "PASSED (Zero feature overlap / zero future lookahead)",
     "xai_trace_replay_evaluations": 10000,
     "xai_trace_replay_max_error": 0.000100,
